@@ -19,6 +19,7 @@
 		1F5787132B86DBF900C40B08 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5787122B86DBF900C40B08 /* AuthenticationViewController.swift */; };
 		1FB387352B87A0B300054816 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB387342B87A0B300054816 /* SignUpViewController.swift */; };
 		927DF4BA11D550E3439DC791 /* Pods_dxTimeCapsule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7852692F586552FA2D93EA4 /* Pods_dxTimeCapsule.framework */; };
+		FFC457602B884F74000761E9 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC4575F2B884F74000761E9 /* LaunchViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		23DDF6A42359D2BE16A2180B /* Pods-dxTimeCapsule.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.debug.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.debug.xcconfig"; sourceTree = "<group>"; };
 		51835482EA934B9B07ED8BAE /* Pods-dxTimeCapsule.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.release.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.release.xcconfig"; sourceTree = "<group>"; };
 		E7852692F586552FA2D93EA4 /* Pods_dxTimeCapsule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dxTimeCapsule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FFC4575F2B884F74000761E9 /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 			children = (
 				1F5787122B86DBF900C40B08 /* AuthenticationViewController.swift */,
 				1FB387342B87A0B300054816 /* SignUpViewController.swift */,
+				FFC4575F2B884F74000761E9 /* LaunchViewController.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -276,6 +279,7 @@
 				1F5787132B86DBF900C40B08 /* AuthenticationViewController.swift in Sources */,
 				1F5786FE2B84D69600C40B08 /* TimeCapsuleViewController.swift in Sources */,
 				1F5786F22B849CA900C40B08 /* AuthenticationViewModel.swift in Sources */,
+				FFC457602B884F74000761E9 /* LaunchViewController.swift in Sources */,
 				1F5787062B85949100C40B08 /* TimeCapsuleView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
