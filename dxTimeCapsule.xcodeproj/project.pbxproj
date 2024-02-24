@@ -20,6 +20,9 @@
 		1FB387352B87A0B300054816 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB387342B87A0B300054816 /* SignUpViewController.swift */; };
 		1FB387372B8862AF00054816 /* MainFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB387362B8862AF00054816 /* MainFeedViewController.swift */; };
 		1FB387392B8863DE00054816 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB387382B8863DE00054816 /* HomeViewController.swift */; };
+		4EC308D62B886FDE00EEE54C /* MainCapsuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC308D52B886FDE00EEE54C /* MainCapsuleViewController.swift */; };
+		4EC308D82B888AD300EEE54C /* MainCapsuleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC308D72B888AD300EEE54C /* MainCapsuleViewModel.swift */; };
+		4EC308DC2B89ABC700EEE54C /* APIKey.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 4EC308DB2B89ABC700EEE54C /* APIKey.xcconfig */; };
 		927DF4BA11D550E3439DC791 /* Pods_dxTimeCapsule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7852692F586552FA2D93EA4 /* Pods_dxTimeCapsule.framework */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +43,9 @@
 		1FB387362B8862AF00054816 /* MainFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFeedViewController.swift; sourceTree = "<group>"; };
 		1FB387382B8863DE00054816 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		23DDF6A42359D2BE16A2180B /* Pods-dxTimeCapsule.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.debug.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.debug.xcconfig"; sourceTree = "<group>"; };
+		4EC308D52B886FDE00EEE54C /* MainCapsuleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCapsuleViewController.swift; sourceTree = "<group>"; };
+		4EC308D72B888AD300EEE54C /* MainCapsuleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCapsuleViewModel.swift; sourceTree = "<group>"; };
+		4EC308DB2B89ABC700EEE54C /* APIKey.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = APIKey.xcconfig; sourceTree = "<group>"; };
 		51835482EA934B9B07ED8BAE /* Pods-dxTimeCapsule.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.release.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.release.xcconfig"; sourceTree = "<group>"; };
 		E7852692F586552FA2D93EA4 /* Pods_dxTimeCapsule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dxTimeCapsule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -77,6 +83,7 @@
 		1F5786D72B849AF800C40B08 /* dxTimeCapsule */ = {
 			isa = PBXGroup;
 			children = (
+				4EC308DB2B89ABC700EEE54C /* APIKey.xcconfig */,
 				1F5786F52B849D0D00C40B08 /* Model */,
 				1F5786EF2B849C2200C40B08 /* ViewModel */,
 				1F5786F02B849C2F00C40B08 /* View */,
@@ -96,6 +103,7 @@
 			isa = PBXGroup;
 			children = (
 				1F5786F12B849CA900C40B08 /* AuthenticationViewModel.swift */,
+				4EC308D72B888AD300EEE54C /* MainCapsuleViewModel.swift */,
 			);
 			name = ViewModel;
 			sourceTree = "<group>";
@@ -107,6 +115,7 @@
 				1FB387342B87A0B300054816 /* SignUpViewController.swift */,
 				1FB387382B8863DE00054816 /* HomeViewController.swift */,
 				1FB387362B8862AF00054816 /* MainFeedViewController.swift */,
+				4EC308D52B886FDE00EEE54C /* MainCapsuleViewController.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -221,6 +230,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F5786E82B849AFA00C40B08 /* LaunchScreen.storyboard in Resources */,
+				4EC308DC2B89ABC700EEE54C /* APIKey.xcconfig in Resources */,
 				1F5786E52B849AFA00C40B08 /* Assets.xcassets in Resources */,
 				1F5787002B84DAC200C40B08 /* GoogleService-Info.plist in Resources */,
 			);
@@ -277,6 +287,7 @@
 			files = (
 				1F5786FC2B84D5F200C40B08 /* TimeCapsuleModel.swift in Sources */,
 				1F5786D92B849AF800C40B08 /* AppDelegate.swift in Sources */,
+				4EC308D62B886FDE00EEE54C /* MainCapsuleViewController.swift in Sources */,
 				1FB387352B87A0B300054816 /* SignUpViewController.swift in Sources */,
 				1F5786DB2B849AF800C40B08 /* SceneDelegate.swift in Sources */,
 				1F5787132B86DBF900C40B08 /* AuthenticationViewController.swift in Sources */,
@@ -285,6 +296,7 @@
 				1F5786F22B849CA900C40B08 /* AuthenticationViewModel.swift in Sources */,
 				1FB387372B8862AF00054816 /* MainFeedViewController.swift in Sources */,
 				1F5787062B85949100C40B08 /* TimeCapsuleView.swift in Sources */,
+				4EC308D82B888AD300EEE54C /* MainCapsuleViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

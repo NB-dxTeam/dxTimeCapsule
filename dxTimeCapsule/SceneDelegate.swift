@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //        let viewModel = MainTabViewModel()
         
         // ViewController 초기화 및 ViewModel 전달
-        let mainViewController = AuthenticationViewController()
+        let mainViewController = MainCapsuleViewController()
         
         window?.rootViewController = mainViewController
         window?.backgroundColor = .systemBackground
