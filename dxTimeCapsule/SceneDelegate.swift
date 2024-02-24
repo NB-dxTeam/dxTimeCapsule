@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // ViewController 초기화 및 ViewModel 전달
 //        let mainViewController = AuthenticationViewController()
-        let mainViewController = TimeCapsuleCreationViewController()
+        let mainViewController = CapsuleMapViewController()
         
         window?.rootViewController = mainViewController
         window?.backgroundColor = .systemBackground
