@@ -31,7 +31,7 @@ class MainCapsuleViewController: UIViewController {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "메인타임캡슐")
         imageView.contentMode = .scaleAspectFit
-        imageView.isUserInteractionEnabled = true // 이미지 뷰가 사용자 인터랙션을 받을 수 있도록 설정합니다.
+        imageView.isUserInteractionEnabled = true // 이미지 뷰가 사용자 인터랙션을 받을 수 있도록 설정
         return imageView
     }()
     
@@ -99,7 +99,7 @@ class MainCapsuleViewController: UIViewController {
     }
 
     private func addShakeAnimation() {
-        // 총 애니메이션 시간과 흔들림 횟수를 정의합니다.
+        // 총 애니메이션 시간과 흔들림 횟수
         let totalDuration: TimeInterval = 0.5
         let numberOfShakes: Int = 10
         let animationDuration: TimeInterval = totalDuration / TimeInterval(numberOfShakes)
@@ -109,7 +109,7 @@ class MainCapsuleViewController: UIViewController {
                 // 홀수 번째는 오른쪽으로, 짝수 번째는 왼쪽으로 흔들립니다.
                 self.capsuleImageView.transform = i % 2 == 0 ? CGAffineTransform(rotationAngle: 0.03) : CGAffineTransform(rotationAngle: -0.03)
             }) { _ in
-                // 마지막 흔들림 후에 원래 상태로 돌아옵니다.
+                // 마지막 흔들림 후에 원래 상태로
 //                if i == numberOfShakes - 1 {
 //                    self.capsuleImageView.transform = CGAffineTransform.identity
 //                }
