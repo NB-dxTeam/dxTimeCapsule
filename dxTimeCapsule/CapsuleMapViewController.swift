@@ -11,6 +11,7 @@ import CoreLocation
 import SnapKit
 
 class CapsuleMapViewController: UIViewController {
+    
     // 임시 네비게이션 바
     private lazy var nvBar: UINavigationBar = {
         let bar = UINavigationBar()
@@ -31,7 +32,9 @@ class CapsuleMapViewController: UIViewController {
     }()
     private let dragBar: UIView = {
         let bar = UIView()
-        
+        bar.backgroundColor = .black
+        bar.layer.cornerRadius = 3
+        bar.translatesAutoresizingMaskIntoConstraints = false
         return bar
     }()
     
@@ -61,6 +64,7 @@ class CapsuleMapViewController: UIViewController {
         if let layout = capsuleCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.itemSize = CGSize(width: view.frame.width - 48, height: 120)
             layout.minimumLineSpacing = 12
+            layout.minimumInteritemSpacing = 12
             layout.sectionInset = UIEdgeInsets(top: 12, left: 24, bottom: 12, right: 24)
         }
     }
@@ -79,12 +83,15 @@ extension CapsuleMapViewController: UICollectionViewDelegate, UICollectionViewDa
     
 }
 
-//extension CapsuleMapViewController: UICollectionViewDelegateFlowLayout {
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        
-//    }
-//}
-
+extension CapsuleMapViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let paddingSpace = 12 * (2 - 1)
+        let itemWidth = capsuleCollectionView.bounds.width - 48
+        let itemHeight = capsuleCollectionView.bounds.height / 2 - 18
+        return CGSize(width: itemWidth, height: itemHeight)
+    }
+}
+// MARK: - UI AutoLayout
 extension CapsuleMapViewController {
     private func addSubViews() {
         self.view.addSubview(nvBar)
@@ -107,15 +114,15 @@ extension CapsuleMapViewController {
         
         capsuleCollectionView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-40)
             make.height.equalTo(350)
         }
         
         dragBar.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(12)
-            make.centerX.equalToSuperview()
+            make.centerX.equalTo(capsuleCollectionView.snp.centerX)
+            make.top.equalTo(capsuleCollectionView.snp.top).offset(12)
             make.width.equalTo(60)
-            make.height.equalTo(8)
+            make.height.equalTo(5)
         }
     }
 }
