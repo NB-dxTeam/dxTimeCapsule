@@ -7,6 +7,8 @@
 
 import UIKit
 import SnapKit
+import FirebaseFirestore
+import FirebaseAuth
 
 class MainCapsuleViewController: UIViewController {
     private var viewModel = MainCapsuleViewModel()
@@ -45,7 +47,35 @@ class MainCapsuleViewController: UIViewController {
         return label
     }()
     
-    
+    // Firestore에서 사용자의 타임캡슐 정보를 불러오는 메소드
+    func fetchTimeCapsuleData() {
+        // Firestore 인스턴스를 생성합니다.
+        let db = Firestore.firestore()
+        
+        // 로그인한 사용자의 UID를 가져옵니다.
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        
+        //test
+//        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2"
+        
+        // "timeCapsules" 컬렉션에서 사용자 ID에 해당하는 문서들을 조회합니다.
+        db.collection("timeCapsules").whereField("Id", isEqualTo: userId).getDocuments { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                for document in querySnapshot!.documents {
+                    // 문서에서 "location" 필드의 값을 가져옵니다.
+                    let userLocation = document.get("user_location") as? String ?? "Unknown Location"
+                    
+                    // 메인 스레드에서 UI 업데이트를 수행합니다.
+                    DispatchQueue.main.async {
+                        self.locationName.text = userLocation
+                    }
+                }
+            }
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -53,6 +83,7 @@ class MainCapsuleViewController: UIViewController {
         addTapGestureToCapsuleImageView()
         // D-day 확인 후 레이블 표시 로직
         checkIfItsOpeningDay()
+        fetchTimeCapsuleData() // 데이터를 불러와서 UI를 업데이트합니다.
     
     }
     
