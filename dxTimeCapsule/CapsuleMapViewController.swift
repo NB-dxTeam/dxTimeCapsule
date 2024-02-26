@@ -54,6 +54,7 @@ class CapsuleMapViewController: UIViewController {
     private var collectionHeight: CGFloat?
     // 콜렉션 뷰 드래그 할 떄, 마지막 y좌표 저장 변수
     private var lastY: CGFloat = 0
+    private var flowLayout: UICollectionViewFlowLayout?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,8 +80,10 @@ class CapsuleMapViewController: UIViewController {
             layout.scrollDirection = .horizontal // 스크롤 방향(가로)
             layout.sectionInset = UIEdgeInsets(top: 48, left: 24, bottom: 60, right: 24)
             layout.itemSize = CGSize(width: view.frame.width - 48, height: 110)
-            layout.minimumLineSpacing = 25 // 최소 줄간격
+            layout.minimumLineSpacing = 48 // 최소 줄간격
             //layout.minimumInteritemSpacing = 0
+            
+            self.flowLayout = layout
         }
         
     }
@@ -100,6 +103,16 @@ extension CapsuleMapViewController: UICollectionViewDelegate, UICollectionViewDa
     
 }
 
+extension CapsuleMapViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        // 클래스 프로퍼티를 사용
+        if let layout = self.flowLayout {
+            let width = scrollView.frame.width - (layout.sectionInset.left + layout.sectionInset.right)
+            let index = Int((scrollView.contentOffset.x + (0.5 * width)) / width)
+            pageCotrol.currentPage = max(0, min(pageCotrol.numberOfPages - 1, index))
+        }
+    }
+}
 
 // MARK: - UI AutoLayout
 extension CapsuleMapViewController {
