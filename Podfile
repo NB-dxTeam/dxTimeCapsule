@@ -13,4 +13,5 @@ target 'dxTimeCapsule' do
   pod 'FirebaseFirestore', :git => 'https://github.com/firebase/firebase-ios-sdk.git', :branch => 'main'
   pod 'FirebaseUI'
   pod 'NMapsMap'
+  pod 'SDWebImage'
 end

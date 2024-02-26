@@ -80,9 +80,9 @@ class PhotoUploadViewController: UIViewController, UIImagePickerControllerDelega
         }
     }
     
-    // 테스트페이지 버튼 설정
+    // 친구 검색 버튼 설정
     private func setupTestPageButton(){
-        startUploadButton.addTarget(self, action: #selector(testPageButtonTapped), for: .touchUpInside)
+        startUploadButton.addTarget(self, action: #selector(SearchPageButtonTapped), for: .touchUpInside)
         view.addSubview(testPageButton)
         
         testPageButton.snp.makeConstraints { make in
@@ -93,8 +93,8 @@ class PhotoUploadViewController: UIViewController, UIImagePickerControllerDelega
         }
     }
     // MARK: - Actions
-    @objc private func testPageButtonTapped() {
-        let vc = CreationViewController()
+    @objc private func SearchPageButtonTapped() {
+        let vc = SearchUserViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
         

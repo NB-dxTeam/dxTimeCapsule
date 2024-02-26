@@ -1,6 +1,7 @@
 import UIKit
 import SnapKit
 import FirebaseAuth
+import FirebaseFirestore
 
 class AuthenticationViewController: UIViewController {
     
@@ -132,6 +133,7 @@ class AuthenticationViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "확인", style: .default))
         present(alert, animated: true)
     }
+    
 
     
     // MARK: - Actions
@@ -146,9 +148,8 @@ class AuthenticationViewController: UIViewController {
             return
         }
         
-        Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] (authResult, error) in
             guard let self = self else { return }
-            
             DispatchQueue.main.async {
                 if let error = error {
                     // 로그인 실패: 에러 메시지 처리 및 알림 표시
@@ -160,7 +161,8 @@ class AuthenticationViewController: UIViewController {
                     let alert = UIAlertController(title: "로그인 성공", message: "로그인 되었습니다", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "확인", style: .default) { [weak self] _ in
                         guard let self = self else { return }
-                        let mainFeedVC = CreationViewController()
+                        
+                        let mainFeedVC = SearchUserViewController()
                         // 네비게이션 컨트롤러가 있는 경우
                         self.navigationController?.pushViewController(mainFeedVC, animated: true)
                         // 네비게이션 컨트롤러가 없는 경우
@@ -173,7 +175,6 @@ class AuthenticationViewController: UIViewController {
         }
     }
 
-    
     // 회원가입 버튼 탭 처리
     @objc private func didTapSignUpButton() {
         let signUpViewController = SignUpViewController()
