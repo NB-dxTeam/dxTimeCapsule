@@ -37,9 +37,6 @@ class AuthenticationViewModel {
         }
     }
 
-
-
-    
     // 로그인 함수
     func signIn(email: String, password: String) {
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in

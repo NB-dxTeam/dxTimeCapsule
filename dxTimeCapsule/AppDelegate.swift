@@ -7,7 +7,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
 
-    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         let NMFClientId = Bundle.main.infoDictionary?["NMFClientId"] as! String
@@ -15,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // 윈도우 초기화 및 루트 뷰 컨트롤러 설정
         window = UIWindow(frame: UIScreen.main.bounds)
-        let rootViewController = PhotoUploadViewController()
+        let rootViewController = AuthenticationViewController()
         let navigationController = UINavigationController(rootViewController: rootViewController)
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
