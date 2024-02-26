@@ -16,7 +16,7 @@ class AuthenticationViewModel {
         // Firebase Authentication을 사용하여 사용자 생성
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
-                print("Error creating user: \(error)")
+                print("Error creating user: \(error.localizedDescription)")
                 return
             }
             
@@ -25,17 +25,19 @@ class AuthenticationViewModel {
             let userDocument = Firestore.firestore().collection("users").document(userId)
             
             userDocument.setData([
-                "nickname": nickname
-                // 비밀번호는 저장하지 않습니다.
+                "nickname": nickname,
+                // 여기에 추가 정보를 포함시킵니다.
             ]) { error in
                 if let error = error {
-                    print("Error saving user information: \(error)")
+                    print("Error saving user information: \(error.localizedDescription)")
                 } else {
                     print("User information saved successfully")
                 }
             }
         }
     }
+
+
 
     
     // 로그인 함수

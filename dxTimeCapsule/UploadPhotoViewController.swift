@@ -8,6 +8,7 @@ class PhotoUploadViewController: UIViewController, UIImagePickerControllerDelega
     private let imageView = UIImageView()
     private let instructionLabel = UILabel()
     private let startUploadButton = UIButton()
+    private let testPageButton = UIButton()
     
     // 뷰의 생명주기: viewDidLoad
     override func viewDidLoad() {
@@ -21,6 +22,7 @@ class PhotoUploadViewController: UIViewController, UIImagePickerControllerDelega
         setupUploadAreaView()
         setupInstructionLabel()
         setupStartUploadButton()
+        setupTestPageButton()
     }
     
     // 업로드 영역 뷰 설정
@@ -78,8 +80,24 @@ class PhotoUploadViewController: UIViewController, UIImagePickerControllerDelega
         }
     }
     
-    
+    // 테스트페이지 버튼 설정
+    private func setupTestPageButton(){
+        startUploadButton.addTarget(self, action: #selector(testPageButtonTapped), for: .touchUpInside)
+        view.addSubview(testPageButton)
+        
+        testPageButton.snp.makeConstraints { make in
+            make .centerX.equalToSuperview()
+            make .top.equalTo(startUploadButton.snp.bottom).offset(60)
+            make .width.equalTo(200)
+            make.height.equalTo(44) // 버튼 높이 표준화
+        }
+    }
     // MARK: - Actions
+    @objc private func testPageButtonTapped() {
+        let vc = CreationViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+        
     @objc private func startUploadButtonTapped() {
         // 액션 시트 생성
         let actionSheet = UIAlertController(title: "선택", message: "사진을 촬영하거나 앨범에서 선택해주세요.", preferredStyle: .actionSheet)
@@ -134,17 +152,16 @@ class PhotoUploadViewController: UIViewController, UIImagePickerControllerDelega
         
         // "이 사진으로 선택하기" 액션
         let confirmAction = UIAlertAction(title: "이 사진으로 선택하기", style: .default) { [weak self] _ in
-            self?.imageView.image = image
-            // 이미지 확정 후 PhotoDetailViewController로 넘어가는 로직
-            let optionVC = PhotoDetailViewController()
+            let optionVC = UploadDetailViewController()
             self?.navigationController?.pushViewController(optionVC, animated: true)
         }
         
         // "다시 선택하기" 액션
         let cancelAction = UIAlertAction(title: "다시 선택하기", style: .cancel) { [weak self] _ in
+            self?.imageView.image = image
+            // 이미지 확정 후 UploadDetailViewController로 넘어가는 로직
             self?.startUploadButtonTapped() // 다시 이미지 선택 로직 호출
         }
-        
         actionSheet.addAction(confirmAction)
         actionSheet.addAction(cancelAction)
         
@@ -157,5 +174,5 @@ class PhotoUploadViewController: UIViewController, UIImagePickerControllerDelega
         
         self.present(actionSheet, animated: true, completion: nil)
     }
-
+    
 }
