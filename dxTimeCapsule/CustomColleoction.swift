@@ -37,8 +37,23 @@ class LockedCapsuleCell: UICollectionViewCell {
     
     private func commonInit() {
         contentView.backgroundColor = .white
-        layer.cornerRadius = 16
+        layer.cornerRadius = 25
         layer.masksToBounds = true
     }
 }
+
+extension LockedCapsuleCell {
+    private func setupRegisterImageView() {
+        // Add and configure the register image view
+    }
+
+    private func setupDayBadgeLabel() {
+        // Add and configure the day badge label
+    }
+
+    private func setupRegisterPlaceLabel() {
+        // Add and configure the register place label
+    }
+}
+
 
