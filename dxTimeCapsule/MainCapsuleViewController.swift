@@ -29,7 +29,7 @@ class MainCapsuleViewController: UIViewController {
     //캡슐이미지
     private lazy var capsuleImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "메인타임캡슐")
+        imageView.image = UIImage(named: "MainTimeCapsule")
         imageView.contentMode = .scaleAspectFit
         imageView.isUserInteractionEnabled = true // 이미지 뷰가 사용자 인터랙션을 받을 수 있도록 설정
         return imageView
