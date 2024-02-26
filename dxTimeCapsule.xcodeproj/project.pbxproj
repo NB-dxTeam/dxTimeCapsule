@@ -7,16 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1F0D3B2C2B89AA2B00A31E82 /* PhotoUploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0D3B2B2B89AA2B00A31E82 /* PhotoUploadViewController.swift */; };
-		1F0D3B322B89D85500A31E82 /* PhotoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0D3B312B89D85500A31E82 /* PhotoDetailViewController.swift */; };
+		1F0D3B2C2B89AA2B00A31E82 /* UploadPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0D3B2B2B89AA2B00A31E82 /* UploadPhotoViewController.swift */; };
+		1F0D3B322B89D85500A31E82 /* UploadDeatilViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0D3B312B89D85500A31E82 /* UploadDeatilViewController.swift */; };
 		1F5786D92B849AF800C40B08 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5786D82B849AF800C40B08 /* AppDelegate.swift */; };
 		1F5786DB2B849AF800C40B08 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5786DA2B849AF800C40B08 /* SceneDelegate.swift */; };
 		1F5786E52B849AFA00C40B08 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F5786E42B849AFA00C40B08 /* Assets.xcassets */; };
 		1F5786E82B849AFA00C40B08 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F5786E62B849AFA00C40B08 /* LaunchScreen.storyboard */; };
 		1F5786F22B849CA900C40B08 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5786F12B849CA900C40B08 /* AuthenticationViewModel.swift */; };
-		1F5787002B84DAC200C40B08 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F5786FF2B84DAC100C40B08 /* GoogleService-Info.plist */; };
-		1F5787062B85949100C40B08 /* TimeCapsuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5787052B85949100C40B08 /* TimeCapsuleView.swift */; };
 		1F5787132B86DBF900C40B08 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5787122B86DBF900C40B08 /* AuthenticationViewController.swift */; };
+		1FAB4DF62B8C48AF0054618A /* FriendsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAB4DF52B8C48AF0054618A /* FriendsViewModel.swift */; };
+		1FAB4DF82B8C49590054618A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAB4DF72B8C49590054618A /* User.swift */; };
+		1FAB4DFA2B8C59210054618A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1FAB4DF92B8C59210054618A /* GoogleService-Info.plist */; };
 		1FB387352B87A0B300054816 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB387342B87A0B300054816 /* SignUpViewController.swift */; };
 		1FB387372B8862AF00054816 /* MainFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB387362B8862AF00054816 /* MainFeedViewController.swift */; };
 		1FB387392B8863DE00054816 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB387382B8863DE00054816 /* HomeViewController.swift */; };
@@ -27,14 +28,14 @@
 		46EA9BAE2B89A27E00633EC4 /* CapsuleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */; };
 		4EC308DE2B8A200300EEE54C /* MainCapsuleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC308DD2B8A200300EEE54C /* MainCapsuleViewModel.swift */; };
 		4EC308E02B8A202400EEE54C /* MainCapsuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC308DF2B8A202400EEE54C /* MainCapsuleViewController.swift */; };
-		927DF4BA11D550E3439DC791 /* Pods_dxTimeCapsule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7852692F586552FA2D93EA4 /* Pods_dxTimeCapsule.framework */; };
+		98B1D72E5D91C0CF51BB1E6F /* Pods_dxTimeCapsule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C59E911965D15C01F14022D /* Pods_dxTimeCapsule.framework */; };
 		D25B20EB2B89CD02006CEED8 /* LaunchScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25B20EA2B89CD02006CEED8 /* LaunchScreenViewController.swift */; };
 		D28289372B8A2A9A00B1F7DB /* APIKey.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D28289362B8A2A9A00B1F7DB /* APIKey.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1F0D3B2B2B89AA2B00A31E82 /* PhotoUploadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoUploadViewController.swift; sourceTree = "<group>"; };
-		1F0D3B312B89D85500A31E82 /* PhotoDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailViewController.swift; sourceTree = "<group>"; };
+		1F0D3B2B2B89AA2B00A31E82 /* UploadPhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPhotoViewController.swift; sourceTree = "<group>"; };
+		1F0D3B312B89D85500A31E82 /* UploadDeatilViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadDeatilViewController.swift; sourceTree = "<group>"; };
 		1F5786D52B849AF800C40B08 /* dxTimeCapsule.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dxTimeCapsule.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F5786D82B849AF800C40B08 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1F5786DA2B849AF800C40B08 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -42,9 +43,10 @@
 		1F5786E72B849AFA00C40B08 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1F5786E92B849AFA00C40B08 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1F5786F12B849CA900C40B08 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
-		1F5786FF2B84DAC100C40B08 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		1F5787052B85949100C40B08 /* TimeCapsuleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCapsuleView.swift; sourceTree = "<group>"; };
 		1F5787122B86DBF900C40B08 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
+		1FAB4DF52B8C48AF0054618A /* FriendsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewModel.swift; sourceTree = "<group>"; };
+		1FAB4DF72B8C49590054618A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		1FAB4DF92B8C59210054618A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1FB387342B87A0B300054816 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		1FB387362B8862AF00054816 /* MainFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFeedViewController.swift; sourceTree = "<group>"; };
 		1FB387382B8863DE00054816 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -52,11 +54,14 @@
 		1FB3873D2B88791A00054816 /* TimeCapsuleCreationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCapsuleCreationViewModel.swift; sourceTree = "<group>"; };
 		1FB3873F2B8881DB00054816 /* TimeCapsule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCapsule.swift; sourceTree = "<group>"; };
 		23DDF6A42359D2BE16A2180B /* Pods-dxTimeCapsule.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.debug.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.debug.xcconfig"; sourceTree = "<group>"; };
+		460FE7642B8A1FE500AF8086 /* APIKey.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = APIKey.xcconfig; sourceTree = "<group>"; };
 		460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedCapsuleCell.swift; sourceTree = "<group>"; };
 		46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleMapViewController.swift; sourceTree = "<group>"; };
 		4EC308DD2B8A200300EEE54C /* MainCapsuleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCapsuleViewModel.swift; sourceTree = "<group>"; };
 		4EC308DF2B8A202400EEE54C /* MainCapsuleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCapsuleViewController.swift; sourceTree = "<group>"; };
-		51835482EA934B9B07ED8BAE /* Pods-dxTimeCapsule.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.release.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.release.xcconfig"; sourceTree = "<group>"; };
+		5C59E911965D15C01F14022D /* Pods_dxTimeCapsule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dxTimeCapsule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7CBEAD0AD7208A95F503F7F0 /* Pods-dxTimeCapsule.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.release.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.release.xcconfig"; sourceTree = "<group>"; };
+		A8720466EB6EDC06CD2D3BB6 /* Pods-dxTimeCapsule.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.debug.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.debug.xcconfig"; sourceTree = "<group>"; };
 		D25B20EA2B89CD02006CEED8 /* LaunchScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewController.swift; sourceTree = "<group>"; };
 		D28289362B8A2A9A00B1F7DB /* APIKey.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = APIKey.xcconfig; path = ../../APIKey.xcconfig; sourceTree = "<group>"; };
 		E7852692F586552FA2D93EA4 /* Pods_dxTimeCapsule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dxTimeCapsule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -67,7 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				927DF4BA11D550E3439DC791 /* Pods_dxTimeCapsule.framework in Frameworks */,
+				98B1D72E5D91C0CF51BB1E6F /* Pods_dxTimeCapsule.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,7 +85,7 @@
 				1F5786D72B849AF800C40B08 /* dxTimeCapsule */,
 				1F5786D62B849AF800C40B08 /* Products */,
 				25AD7CDE47BA0E85739F3959 /* Pods */,
-				2883F35D475B5BA1F33E2ACB /* Frameworks */,
+				2E48FAF47BEE864F6A3797F3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -98,7 +103,7 @@
 				1F5786F52B849D0D00C40B08 /* Model */,
 				1F5786EF2B849C2200C40B08 /* ViewModel */,
 				1F5786F02B849C2F00C40B08 /* View */,
-				1F5786F82B84C45C00C40B08 /* Services */,
+				1FAB4DEB2B8C238F0054618A /* Resource */,
 				1F5786FA2B84D26000C40B08 /* Legercy */,
 				1F5786D82B849AF800C40B08 /* AppDelegate.swift */,
 				1F5786DA2B849AF800C40B08 /* SceneDelegate.swift */,
@@ -106,8 +111,8 @@
 				1F5786E62B849AFA00C40B08 /* LaunchScreen.storyboard */,
 				D28289362B8A2A9A00B1F7DB /* APIKey.xcconfig */,
 				1F5786E92B849AFA00C40B08 /* Info.plist */,
-				1F5786FF2B84DAC100C40B08 /* GoogleService-Info.plist */,
-				460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */,
+				1FAB4DF92B8C59210054618A /* GoogleService-Info.plist */,
+				460FE7642B8A1FE500AF8086 /* APIKey.xcconfig */,
 			);
 			path = dxTimeCapsule;
 			sourceTree = "<group>";
@@ -115,9 +120,10 @@
 		1F5786EF2B849C2200C40B08 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				1F5786F12B849CA900C40B08 /* AuthenticationViewModel.swift */,
 				1FB3873D2B88791A00054816 /* TimeCapsuleCreationViewModel.swift */,
 				4EC308DD2B8A200300EEE54C /* MainCapsuleViewModel.swift */,
+				1F5786F12B849CA900C40B08 /* AuthenticationViewModel.swift */,
+				1FAB4DF52B8C48AF0054618A /* FriendsViewModel.swift */,
 			);
 			name = ViewModel;
 			sourceTree = "<group>";
@@ -125,14 +131,10 @@
 		1F5786F02B849C2F00C40B08 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				D25B20EA2B89CD02006CEED8 /* LaunchScreenViewController.swift */,
-				1F5787122B86DBF900C40B08 /* AuthenticationViewController.swift */,
-				1FB387342B87A0B300054816 /* SignUpViewController.swift */,
-				46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */,
-				1FB387382B8863DE00054816 /* HomeViewController.swift */,
-				1FB387362B8862AF00054816 /* MainFeedViewController.swift */,
+				1FAB4DED2B8C2AEB0054618A /* Main */,
+				1FAB4DEC2B8C29D80054618A /* Authentication */,
 				1FB3873C2B886EDA00054816 /* TimeCapsuleUpload */,
-				4EC308DF2B8A202400EEE54C /* MainCapsuleViewController.swift */,
+				1FAB4DEE2B8C2B800054618A /* Capsule */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -140,40 +142,61 @@
 		1F5786F52B849D0D00C40B08 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				1FAB4DF72B8C49590054618A /* User.swift */,
 				1FB3873F2B8881DB00054816 /* TimeCapsule.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
 		};
-		1F5786F82B84C45C00C40B08 /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				1F5786F92B84C46800C40B08 /* LocationService */,
-			);
-			name = Services;
-			sourceTree = "<group>";
-		};
-		1F5786F92B84C46800C40B08 /* LocationService */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = LocationService;
-			sourceTree = "<group>";
-		};
 		1F5786FA2B84D26000C40B08 /* Legercy */ = {
 			isa = PBXGroup;
 			children = (
-				1F5787052B85949100C40B08 /* TimeCapsuleView.swift */,
+				1FB3873A2B886E9800054816 /* CreationViewController.swift */,
 			);
 			name = Legercy;
+			sourceTree = "<group>";
+		};
+		1FAB4DEB2B8C238F0054618A /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Resource;
+			sourceTree = "<group>";
+		};
+		1FAB4DEC2B8C29D80054618A /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				1F5787122B86DBF900C40B08 /* AuthenticationViewController.swift */,
+				1FB387342B87A0B300054816 /* SignUpViewController.swift */,
+			);
+			name = Authentication;
+			sourceTree = "<group>";
+		};
+		1FAB4DED2B8C2AEB0054618A /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				D25B20EA2B89CD02006CEED8 /* LaunchScreenViewController.swift */,
+				1FB387382B8863DE00054816 /* HomeViewController.swift */,
+				1FB387362B8862AF00054816 /* MainFeedViewController.swift */,
+				4EC308DF2B8A202400EEE54C /* MainCapsuleViewController.swift */,
+			);
+			name = Main;
+			sourceTree = "<group>";
+		};
+		1FAB4DEE2B8C2B800054618A /* Capsule */ = {
+			isa = PBXGroup;
+			children = (
+				460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */,
+				46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */,
+			);
+			name = Capsule;
 			sourceTree = "<group>";
 		};
 		1FB3873C2B886EDA00054816 /* TimeCapsuleUpload */ = {
 			isa = PBXGroup;
 			children = (
-				1FB3873A2B886E9800054816 /* CreationViewController.swift */,
-				1F0D3B2B2B89AA2B00A31E82 /* PhotoUploadViewController.swift */,
-				1F0D3B312B89D85500A31E82 /* PhotoDetailViewController.swift */,
+				1F0D3B2B2B89AA2B00A31E82 /* UploadPhotoViewController.swift */,
+				1F0D3B312B89D85500A31E82 /* UploadDeatilViewController.swift */,
 			);
 			name = TimeCapsuleUpload;
 			sourceTree = "<group>";
@@ -181,16 +204,16 @@
 		25AD7CDE47BA0E85739F3959 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				23DDF6A42359D2BE16A2180B /* Pods-dxTimeCapsule.debug.xcconfig */,
-				51835482EA934B9B07ED8BAE /* Pods-dxTimeCapsule.release.xcconfig */,
+				A8720466EB6EDC06CD2D3BB6 /* Pods-dxTimeCapsule.debug.xcconfig */,
+				7CBEAD0AD7208A95F503F7F0 /* Pods-dxTimeCapsule.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		2883F35D475B5BA1F33E2ACB /* Frameworks */ = {
+		2E48FAF47BEE864F6A3797F3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E7852692F586552FA2D93EA4 /* Pods_dxTimeCapsule.framework */,
+				5C59E911965D15C01F14022D /* Pods_dxTimeCapsule.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -202,11 +225,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1F5786EC2B849AFA00C40B08 /* Build configuration list for PBXNativeTarget "dxTimeCapsule" */;
 			buildPhases = (
-				518C51783B20EEFA1A376883 /* [CP] Check Pods Manifest.lock */,
+				500FB8AF35074100C46A732D /* [CP] Check Pods Manifest.lock */,
 				1F5786D12B849AF800C40B08 /* Sources */,
 				1F5786D22B849AF800C40B08 /* Frameworks */,
 				1F5786D32B849AF800C40B08 /* Resources */,
-				FB79CD014252EECA7C4148AD /* [CP] Embed Pods Frameworks */,
+				B9F7B45B4C217E81FF5E3F2B /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -257,15 +280,16 @@
 			files = (
 				1F5786E82B849AFA00C40B08 /* LaunchScreen.storyboard in Resources */,
 				D28289372B8A2A9A00B1F7DB /* APIKey.xcconfig in Resources */,
+				1FAB4DFA2B8C59210054618A /* GoogleService-Info.plist in Resources */,
+				460FE7652B8A1FE500AF8086 /* APIKey.xcconfig in Resources */,
 				1F5786E52B849AFA00C40B08 /* Assets.xcassets in Resources */,
-				1F5787002B84DAC200C40B08 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		518C51783B20EEFA1A376883 /* [CP] Check Pods Manifest.lock */ = {
+		500FB8AF35074100C46A732D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -287,7 +311,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		FB79CD014252EECA7C4148AD /* [CP] Embed Pods Frameworks */ = {
+		B9F7B45B4C217E81FF5E3F2B /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -317,9 +341,11 @@
 				1F5786D92B849AF800C40B08 /* AppDelegate.swift in Sources */,
 				1FB387352B87A0B300054816 /* SignUpViewController.swift in Sources */,
 				4EC308DE2B8A200300EEE54C /* MainCapsuleViewModel.swift in Sources */,
-				1F0D3B322B89D85500A31E82 /* PhotoDetailViewController.swift in Sources */,
+				1F0D3B322B89D85500A31E82 /* UploadDeatilViewController.swift in Sources */,
 				1FB3873B2B886E9800054816 /* CreationViewController.swift in Sources */,
+				1FAB4DF82B8C49590054618A /* User.swift in Sources */,
 				1F5786DB2B849AF800C40B08 /* SceneDelegate.swift in Sources */,
+				1FAB4DF62B8C48AF0054618A /* FriendsViewModel.swift in Sources */,
 				1F5787132B86DBF900C40B08 /* AuthenticationViewController.swift in Sources */,
 				1FB387402B8881DB00054816 /* TimeCapsule.swift in Sources */,
 				1FB387392B8863DE00054816 /* HomeViewController.swift in Sources */,
@@ -327,8 +353,7 @@
 				1FB387372B8862AF00054816 /* MainFeedViewController.swift in Sources */,
 				1FB3873E2B88791A00054816 /* TimeCapsuleCreationViewModel.swift in Sources */,
 				D25B20EB2B89CD02006CEED8 /* LaunchScreenViewController.swift in Sources */,
-				1F5787062B85949100C40B08 /* TimeCapsuleView.swift in Sources */,
-				1F0D3B2C2B89AA2B00A31E82 /* PhotoUploadViewController.swift in Sources */,
+				1F0D3B2C2B89AA2B00A31E82 /* UploadPhotoViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -467,7 +492,7 @@
 		};
 		1F5786ED2B849AFA00C40B08 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 23DDF6A42359D2BE16A2180B /* Pods-dxTimeCapsule.debug.xcconfig */;
+			baseConfigurationReference = A8720466EB6EDC06CD2D3BB6 /* Pods-dxTimeCapsule.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -496,7 +521,7 @@
 		};
 		1F5786EE2B849AFA00C40B08 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 51835482EA934B9B07ED8BAE /* Pods-dxTimeCapsule.release.xcconfig */;
+			baseConfigurationReference = 7CBEAD0AD7208A95F503F7F0 /* Pods-dxTimeCapsule.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
