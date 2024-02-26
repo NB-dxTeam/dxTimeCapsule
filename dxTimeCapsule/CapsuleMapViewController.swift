@@ -14,7 +14,6 @@ class CapsuleMapViewController: UIViewController {
     // 임시 네비게이션 바
     private lazy var nvBar: UINavigationBar = {
         let bar = UINavigationBar()
-        bar.translatesAutoresizingMaskIntoConstraints = false
         return bar
     }()
     // 지도(타임캡슐이 등록된 장소표시)
@@ -37,7 +36,6 @@ class CapsuleMapViewController: UIViewController {
         let bar = UIButton()
         bar.backgroundColor = .black
         bar.layer.cornerRadius = 3
-        bar.translatesAutoresizingMaskIntoConstraints = false
         return bar
     }()
     private var pageCotrol: UIPageControl = { // 컬렉션 뷰 페이지
@@ -46,7 +44,6 @@ class CapsuleMapViewController: UIViewController {
         page.numberOfPages = 3
         page.currentPageIndicatorTintColor = .black
         page.pageIndicatorTintColor = .white
-        page.translatesAutoresizingMaskIntoConstraints = false
         page.addTarget(CapsuleMapViewController.self, action: #selector(pageControlDidChange(_:)), for: .valueChanged)
         return page
     }()
@@ -76,13 +73,13 @@ class CapsuleMapViewController: UIViewController {
         capsuleCollectionView.isPagingEnabled = true
         capsuleCollectionView.showsHorizontalScrollIndicator = false
         capsuleCollectionView.decelerationRate = .fast
+        
         if let layout = capsuleCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .horizontal // 스크롤 방향(가로)
             layout.sectionInset = UIEdgeInsets(top: 48, left: 24, bottom: 60, right: 24)
             layout.itemSize = CGSize(width: view.frame.width - 48, height: 110)
             layout.minimumLineSpacing = 48 // 최소 줄간격
             //layout.minimumInteritemSpacing = 0
-            
             self.flowLayout = layout
         }
         
@@ -133,7 +130,6 @@ extension CapsuleMapViewController {
             make.top.equalTo(nvBar.snp.bottom)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(capsuleCollectionView.snp.top).offset(30)
-            
         }
         capsuleCollectionView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
@@ -163,7 +159,7 @@ extension CapsuleMapViewController {
     }
     
     @objc private func handleDrag(_ gestureRecognizer: UIPanGestureRecognizer) {
-        let translation = gestureRecognizer.translation(in: view)
+        let translation = gestureRecognizer.translation(in: self.view)
         
         switch gestureRecognizer.state {
         case .began:
@@ -188,7 +184,44 @@ extension CapsuleMapViewController {
         gestureRecognizer.setTranslation(CGPoint.zero, in: view)
     }
     private func updateCollectionHeight(_ height: CGFloat) {
+        // 각 단계에서의 높이 값을 상수로 설정합니다.
+        let dragBarHeight: CGFloat = 20 // dragBar의 높이
+        let cellHeight: CGFloat = 100 // 셀 한 개의 높이
+        let pageControlHeight: CGFloat = 30 // pageControl의 높이
+        let topPadding: CGFloat = 10 // 상단 패딩 값
         
+        // 첫 번째 단계 (dragBar + 셀 1개 + pageControl))
+        let firstStageHeight: CGFloat = dragBarHeight + cellHeight + pageControlHeight + topPadding
+        // 두 번째 단계 (dragBar만)
+        let secondStageHeight: CGFloat = dragBarHeight
+        
+        //실제 적용 높이 저장
+        var newHeight: CGFloat = 0
+        
+        if height > firstStageHeight {
+            newHeight = firstStageHeight
+        } else if height <= firstStageHeight  && height > secondStageHeight {
+            newHeight = height
+        } else {
+            newHeight = secondStageHeight
+        }
+        
+        // 컬렉션 뷰, 지도 뷰의 높이 제약 조건 업데이트
+        capsuleCollectionView.snp.makeConstraints { make in
+            make.height.equalTo(newHeight)
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(capsuleMap.snp.bottom)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+        }
+        capsuleMap.snp.remakeConstraints { make in
+            make.height.equalTo(self.view.snp.height).offset(-newHeight)
+            make.top.equalTo(nvBar.snp.bottom)
+            make.leading.trailing.equalToSuperview()
+        }
+        
+        UIView.animate(withDuration: 0.5) {
+            self.view.layoutIfNeeded()
+        }
     }
 }
 // MARK: - Preview
