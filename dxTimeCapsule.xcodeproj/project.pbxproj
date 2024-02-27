@@ -26,6 +26,8 @@
 		1FB387392B8863DE00054816 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB387382B8863DE00054816 /* HomeViewController.swift */; };
 		1FB3873E2B88791A00054816 /* TimeCapsuleCreationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB3873D2B88791A00054816 /* TimeCapsuleCreationViewModel.swift */; };
 		1FB387402B8881DB00054816 /* TimeCapsule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB3873F2B8881DB00054816 /* TimeCapsule.swift */; };
+		27C81E4E2B8DDE47001E3623 /* UpcomingTCCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C81E4D2B8DDE47001E3623 /* UpcomingTCCollectionViewCell.swift */; };
+		27C81E502B8DDE59001E3623 /* OpenedTCCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C81E4F2B8DDE59001E3623 /* OpenedTCCollectionViewCell.swift */; };
 		460FE7652B8A1FE500AF8086 /* APIKey.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 460FE7642B8A1FE500AF8086 /* APIKey.xcconfig */; };
 		460FE7672B8A200D00AF8086 /* LockedCapsuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */; };
 		46EA9BAE2B89A27E00633EC4 /* CapsuleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */; };
@@ -57,6 +59,8 @@
 		1FB387382B8863DE00054816 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		1FB3873D2B88791A00054816 /* TimeCapsuleCreationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCapsuleCreationViewModel.swift; sourceTree = "<group>"; };
 		1FB3873F2B8881DB00054816 /* TimeCapsule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCapsule.swift; sourceTree = "<group>"; };
+		27C81E4D2B8DDE47001E3623 /* UpcomingTCCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingTCCollectionViewCell.swift; sourceTree = "<group>"; };
+		27C81E4F2B8DDE59001E3623 /* OpenedTCCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenedTCCollectionViewCell.swift; sourceTree = "<group>"; };
 		460FE7642B8A1FE500AF8086 /* APIKey.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = APIKey.xcconfig; sourceTree = "<group>"; };
 		460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedCapsuleCell.swift; sourceTree = "<group>"; };
 		46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleMapViewController.swift; sourceTree = "<group>"; };
@@ -130,6 +134,7 @@
 		1F5786F02B849C2F00C40B08 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				27C81E4C2B8DDE0B001E3623 /* Home */,
 				1FAB4DED2B8C2AEB0054618A /* Main */,
 				1FAB4DEC2B8C29D80054618A /* Authentication */,
 				1FB3873C2B886EDA00054816 /* TimeCapsuleUpload */,
@@ -186,7 +191,6 @@
 			isa = PBXGroup;
 			children = (
 				D25B20EA2B89CD02006CEED8 /* LaunchScreenViewController.swift */,
-				1FB387382B8863DE00054816 /* HomeViewController.swift */,
 				1FB387362B8862AF00054816 /* MainFeedViewController.swift */,
 				4EC308DF2B8A202400EEE54C /* MainCapsuleViewController.swift */,
 			);
@@ -218,6 +222,16 @@
 				7CBEAD0AD7208A95F503F7F0 /* Pods-dxTimeCapsule.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		27C81E4C2B8DDE0B001E3623 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				1FB387382B8863DE00054816 /* HomeViewController.swift */,
+				27C81E4D2B8DDE47001E3623 /* UpcomingTCCollectionViewCell.swift */,
+				27C81E4F2B8DDE59001E3623 /* OpenedTCCollectionViewCell.swift */,
+			);
+			name = Home;
 			sourceTree = "<group>";
 		};
 		2E48FAF47BEE864F6A3797F3 /* Frameworks */ = {
@@ -352,6 +366,7 @@
 				4EC308DE2B8A200300EEE54C /* MainCapsuleViewModel.swift in Sources */,
 				1F0D3B322B89D85500A31E82 /* UploadDeatilViewController.swift in Sources */,
 				1FAB4DF82B8C49590054618A /* User.swift in Sources */,
+				27C81E502B8DDE59001E3623 /* OpenedTCCollectionViewCell.swift in Sources */,
 				1F5786DB2B849AF800C40B08 /* SceneDelegate.swift in Sources */,
 				1FAB4DF62B8C48AF0054618A /* FriendsViewModel.swift in Sources */,
 				1F5787132B86DBF900C40B08 /* AuthenticationViewController.swift in Sources */,
@@ -365,6 +380,7 @@
 				D25B20EB2B89CD02006CEED8 /* LaunchScreenViewController.swift in Sources */,
 				1F9DA7B52B8CA75900A74D84 /* SearchModalViewController.swift in Sources */,
 				1F0D3B2C2B89AA2B00A31E82 /* UploadPhotoViewController.swift in Sources */,
+				27C81E4E2B8DDE47001E3623 /* UpcomingTCCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
