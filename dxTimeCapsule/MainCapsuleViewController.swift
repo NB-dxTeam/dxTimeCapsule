@@ -53,19 +53,20 @@ class MainCapsuleViewController: UIViewController {
         let db = Firestore.firestore()
         
         // 로그인한 사용자의 UID를 가져옵니다.
-        guard let userId = Auth.auth().currentUser?.uid else { return }
+//        guard let userId = Auth.auth().currentUser?.uid else { return }
         
         //test
-//        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2"
+        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2"
         
         // "timeCapsules" 컬렉션에서 사용자 ID에 해당하는 문서들을 조회합니다.
-        db.collection("timeCapsules").whereField("Id", isEqualTo: userId).getDocuments { (querySnapshot, err) in
+        db.collection("timeCapsules").whereField("uid", isEqualTo: userId).getDocuments { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
             } else {
                 for document in querySnapshot!.documents {
                     // 문서에서 "location" 필드의 값을 가져옵니다.
-                    let userLocation = document.get("user_location") as? String ?? "Unknown Location"
+                    let userLocation = document.get("userLocation") as? String ?? "Unknown Location"
+                    // 가져올 필드를 계속 추가
                     
                     // 메인 스레드에서 UI 업데이트를 수행합니다.
                     DispatchQueue.main.async {
