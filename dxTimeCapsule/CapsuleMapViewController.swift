@@ -44,7 +44,6 @@ class CapsuleMapViewController: UIViewController {
         page.numberOfPages = 3
         page.currentPageIndicatorTintColor = .black
         page.pageIndicatorTintColor = .white
-        page.addTarget(CapsuleMapViewController.self, action: #selector(pageControlDidChange(_:)), for: .valueChanged)
         return page
     }()
     // 콜렉션 뷰 원래 높이
@@ -62,6 +61,8 @@ class CapsuleMapViewController: UIViewController {
         // 제스처 인식기로 드래그바 버튼 설정
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handleDrag(_:)))
         dragBar.addGestureRecognizer(panGestureRecognizer)
+        
+        pageCotrol.addTarget(self, action: #selector(pageControlDidChange(_:)), for: .valueChanged)
     }
     
     
@@ -159,7 +160,7 @@ extension CapsuleMapViewController {
     }
     
     @objc private func handleDrag(_ gestureRecognizer: UIPanGestureRecognizer) {
-        let translation = gestureRecognizer.translation(in: self.view)
+        _ = gestureRecognizer.translation(in: self.view)
         
         switch gestureRecognizer.state {
         case .began:
@@ -177,6 +178,10 @@ extension CapsuleMapViewController {
                 updateCollectionHeight(newHeight)
             }
         case .ended:
+            // 제스처가 끝났을 때, 원래 높이 돌아가는 로직
+            if let originalHeight = collectionHeight {
+                updateCollectionHeight(originalHeight)
+            }
             collectionHeight = nil
         default:
             break

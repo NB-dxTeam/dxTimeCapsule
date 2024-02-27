@@ -860,9 +860,9 @@ PODS:
     - NMapsGeometry
   - PromisesObjC (2.4.0)
   - RecaptchaInterop (100.0.0)
-  - SDWebImage (5.18.11):
-    - SDWebImage/Core (= 5.18.11)
-  - SDWebImage/Core (5.18.11)
+  - SDWebImage (5.19.0):
+    - SDWebImage/Core (= 5.19.0)
+  - SDWebImage/Core (5.19.0)
   - SnapKit (5.7.1)
 
 DEPENDENCIES:
@@ -928,10 +928,10 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   FirebaseCore:
-    :commit: 3539c2b6917cf8a4cdce71a3323a65329ddd2fe7
+    :commit: cc45d17b6ae404e54f6ef270ba6aa3e941e60641
     :git: https://github.com/firebase/firebase-ios-sdk.git
   FirebaseFirestore:
-    :commit: 3539c2b6917cf8a4cdce71a3323a65329ddd2fe7
+    :commit: cc45d17b6ae404e54f6ef270ba6aa3e941e60641
     :git: https://github.com/firebase/firebase-ios-sdk.git
 
 SPEC CHECKSUMS:
@@ -976,7 +976,7 @@ SPEC CHECKSUMS:
   NMapsMap: a5b909a31b6f3d27a670f6eb2ddc913c38975474
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
-  SDWebImage: a3ba0b8faac7228c3c8eadd1a55c9c9fe5e16457
+  SDWebImage: 981fd7e860af070920f249fd092420006014c3eb
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
 
 PODFILE CHECKSUM: 8c5a336852ca3db7021cb3f50e75df38dd96d601
