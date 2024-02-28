@@ -8,10 +8,6 @@
 import UIKit
 import SnapKit
 
-#Preview{
-   HomeViewController()
-}
-
 class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout {
     
     // MARK: - Properties
@@ -555,11 +551,11 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == openedcollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "openedCellIdentifier", for: indexPath)
-            cell.backgroundColor = .blue
+            cell.backgroundColor = .systemCyan
             return cell
         } else if collectionView == upcomingCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "upcomingCellIdentifier", for: indexPath)
-            cell.backgroundColor = .yellow
+            cell.backgroundColor = .systemYellow
             return cell
         } else {
             fatalError("Unexpected collection view")
