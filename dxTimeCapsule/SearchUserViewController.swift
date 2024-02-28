@@ -33,12 +33,13 @@ class SearchUserViewController: UIViewController, UIViewControllerTransitioningD
     // MARK: - Button Action
     @objc func searchButtonTapped() {
         let searchModalVC = SearchModalTableViewController()
-        searchModalVC.modalPresentationStyle = .custom // Custom으로 변경
-        searchModalVC.transitioningDelegate = self // 커스텀 트랜지션 딜리게이트 설정
+        searchModalVC.modalPresentationStyle = .fullScreen
+//        searchModalVC.transitioningDelegate = self // 커스텀 트랜지션 딜리게이트 설정
         present(searchModalVC, animated: true, completion: nil)
     }
 
     // MARK: - UIViewControllerTransitioningDelegate
+    // 커스텀 페이지 (임시)
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         return HalfSizePresentationController(presentedViewController: presented, presenting: presenting)
     }

@@ -14,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // 윈도우 초기화 및 루트 뷰 컨트롤러 설정
         window = UIWindow(frame: UIScreen.main.bounds)
-        let rootViewController = AuthenticationViewController()
+        let rootViewController = LoginViewController()
         let navigationController = UINavigationController(rootViewController: rootViewController)
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()

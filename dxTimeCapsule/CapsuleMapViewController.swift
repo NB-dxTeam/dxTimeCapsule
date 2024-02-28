@@ -43,7 +43,7 @@ class CapsuleMapViewController: UIViewController {
         let vc = CustomModal()
         if let sheet = vc.sheetPresentationController {
             sheet.detents = [.medium(), .large()]
-            sheet.prefersGrabberVisible = true // 모달에 Grabber 나타내기
+            sheet.prefersGrabberVisible = true // 모달 Grabber
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false // 스크롤 확장 여부
             sheet.largestUndimmedDetentIdentifier = .medium // 모달 외에 view 흐림처리 방지.
         }

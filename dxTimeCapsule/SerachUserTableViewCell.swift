@@ -28,12 +28,13 @@ class SearchUserTableViewCell: UITableViewCell {
         addSubview(userProfileImageView)
         
         nicknameLabel = UILabel()
-        nicknameLabel.font = UIFont.boldSystemFont(ofSize: 16) // 닉네임 폰트를 볼드체로 설정
+        nicknameLabel.font = UIFont.boldSystemFont(ofSize: 25) // 닉네임 폰트를 볼드체로 설정
         addSubview(nicknameLabel)
         
         // 친구 추가 또는 요청 수락 버튼 설정
         actionButton = UIButton(type: .system)
         actionButton.setTitle("친구 요청", for: .normal)
+        actionButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         actionButton.setTitleColor(.white, for: .normal)
         actionButton.layer.cornerRadius = 15 // 버튼 모서리를 둥글게 처리
         actionButton.backgroundColor = UIColor(red: 0.2, green: 0.6, blue: 1.0, alpha: 1.0) // 버튼 배경색 설정
@@ -46,7 +47,7 @@ class SearchUserTableViewCell: UITableViewCell {
         userProfileImageView.snp.makeConstraints { make in
             make.centerY.equalToSuperview() // 상하 중앙 정렬
             make.leading.equalToSuperview().offset(16) // 왼쪽 여백 설정
-            make.width.height.equalTo(50) // 이미지뷰 크기 설정
+            make.width.height.equalTo(80) // 이미지뷰 크기 설정
         }
         
         nicknameLabel.snp.makeConstraints { make in
@@ -82,3 +83,4 @@ class SearchUserTableViewCell: UITableViewCell {
         }
     }
 }
+
