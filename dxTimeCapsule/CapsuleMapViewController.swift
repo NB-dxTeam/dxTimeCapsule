@@ -11,11 +11,7 @@ import CoreLocation
 import SnapKit
 
 class CapsuleMapViewController: UIViewController {
-    private lazy var nvBar: UINavigationBar = {
-        let bar = UINavigationBar()
-        bar.translatesAutoresizingMaskIntoConstraints = false
-        return bar
-    }()
+    
     private lazy var capsuleMap: NMFMapView = {
         let map = NMFMapView(frame: view.frame)
         return map
@@ -46,12 +42,13 @@ class CapsuleMapViewController: UIViewController {
     func showModalVC() {
         let vc = CustomModal()
         if let sheet = vc.sheetPresentationController {
-            sheet.detents = [.medium()]
-
+            sheet.detents = [.medium(), .large()]
             sheet.prefersGrabberVisible = true // 모달에 Grabber 나타내기
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false // 스크롤 확장 여부
             sheet.largestUndimmedDetentIdentifier = .medium // 모달 외에 view 흐림처리 방지.
         }
+        vc.preferredContentSize = CGSize(width: vc.view.frame.width, height: 300)
+        
         self.present(vc, animated: true)
     }
 }
@@ -83,18 +80,13 @@ extension CapsuleMapViewController: UIScrollViewDelegate {
 // MARK: - UI AutoLayout
 extension CapsuleMapViewController {
     private func addSubViews() {
-        self.view.addSubview(nvBar)
         self.view.addSubview(capsuleMap)
         //self.view.addSubview(pageControl)
     }
     
     private func autoLayouts() {
-        nvBar.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.leading.trailing.equalToSuperview()
-        }
         capsuleMap.snp.makeConstraints { make in
-            make.top.equalTo(nvBar.snp.bottom)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-350)
         }
