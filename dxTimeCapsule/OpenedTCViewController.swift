@@ -6,13 +6,19 @@
 //
 
 import UIKit
+import SnapKit
 
+#Preview{
+    OpenedTCViewController()
+}
 class OpenedTCViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "저장된 타임캡슐"
         view.backgroundColor = .white
         print ("열어본(저장된) 타임캡슐 화면")
+        
     }
 
 }

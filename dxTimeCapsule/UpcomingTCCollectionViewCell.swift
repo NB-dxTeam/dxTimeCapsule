@@ -36,8 +36,8 @@ class UpcomingTCCollectionViewCell: UICollectionViewCell {
 
             // 셀에 그림자 효과 추가
             layer.shadowColor = UIColor.black.cgColor
-            layer.shadowOffset = CGSize(width: 0, height: 1.0)
-            layer.shadowRadius = 2.0
+            layer.shadowOffset = CGSize(width: 2, height: 4)
+            layer.shadowRadius = 7
             layer.shadowOpacity = 0.5
             layer.masksToBounds = false
             layer.cornerRadius = 20 // 셀 자체의 모서리도 둥글게 처리
