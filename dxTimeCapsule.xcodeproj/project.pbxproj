@@ -28,7 +28,7 @@
 		1FB387402B8881DB00054816 /* TimeCapsule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB3873F2B8881DB00054816 /* TimeCapsule.swift */; };
 		460FE7652B8A1FE500AF8086 /* APIKey.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 460FE7642B8A1FE500AF8086 /* APIKey.xcconfig */; };
 		460FE7672B8A200D00AF8086 /* LockedCapsuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */; };
-		46380ED32B8DFC2B00D8D8AF /* CustomCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46380ED22B8DFC2B00D8D8AF /* CustomCollection.swift */; };
+		46380ED32B8DFC2B00D8D8AF /* CustomModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46380ED22B8DFC2B00D8D8AF /* CustomModal.swift */; };
 		46EA9BAE2B89A27E00633EC4 /* CapsuleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */; };
 		4EC308DE2B8A200300EEE54C /* MainCapsuleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC308DD2B8A200300EEE54C /* MainCapsuleViewModel.swift */; };
 		4EC308E02B8A202400EEE54C /* MainCapsuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC308DF2B8A202400EEE54C /* MainCapsuleViewController.swift */; };
@@ -60,7 +60,7 @@
 		1FB3873F2B8881DB00054816 /* TimeCapsule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCapsule.swift; sourceTree = "<group>"; };
 		460FE7642B8A1FE500AF8086 /* APIKey.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = APIKey.xcconfig; sourceTree = "<group>"; };
 		460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedCapsuleCell.swift; sourceTree = "<group>"; };
-		46380ED22B8DFC2B00D8D8AF /* CustomCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCollection.swift; sourceTree = "<group>"; };
+		46380ED22B8DFC2B00D8D8AF /* CustomModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModal.swift; sourceTree = "<group>"; };
 		46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleMapViewController.swift; sourceTree = "<group>"; };
 		4EC308DD2B8A200300EEE54C /* MainCapsuleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCapsuleViewModel.swift; sourceTree = "<group>"; };
 		4EC308DF2B8A202400EEE54C /* MainCapsuleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCapsuleViewController.swift; sourceTree = "<group>"; };
@@ -200,7 +200,7 @@
 			children = (
 				460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */,
 				46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */,
-				46380ED22B8DFC2B00D8D8AF /* CustomCollection.swift */,
+				46380ED22B8DFC2B00D8D8AF /* CustomModal.swift */,
 			);
 			name = Capsule;
 			sourceTree = "<group>";
@@ -363,7 +363,7 @@
 				1F5786F22B849CA900C40B08 /* AuthenticationViewModel.swift in Sources */,
 				1FB387372B8862AF00054816 /* MainFeedViewController.swift in Sources */,
 				1F9DA7B12B8C93BD00A74D84 /* SerachUserTableViewCell.swift in Sources */,
-				46380ED32B8DFC2B00D8D8AF /* CustomCollection.swift in Sources */,
+				46380ED32B8DFC2B00D8D8AF /* CustomModal.swift in Sources */,
 				1FB3873E2B88791A00054816 /* TimeCapsuleCreationViewModel.swift in Sources */,
 				1F9DA7AF2B8C922800A74D84 /* SearchUserViewController.swift in Sources */,
 				D25B20EB2B89CD02006CEED8 /* LaunchScreenViewController.swift in Sources */,
@@ -388,6 +388,7 @@
 /* Begin XCBuildConfiguration section */
 		1F5786EA2B849AFA00C40B08 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 460FE7642B8A1FE500AF8086 /* APIKey.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -451,6 +452,7 @@
 		};
 		1F5786EB2B849AFA00C40B08 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 460FE7642B8A1FE500AF8086 /* APIKey.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
