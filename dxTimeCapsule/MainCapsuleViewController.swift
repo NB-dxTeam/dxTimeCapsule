@@ -21,6 +21,15 @@ class MainCapsuleViewController: UIViewController {
         return label
     }()
     
+    //생성일
+    private lazy var creationDateLabel: UILabel = {
+        let label = UILabel()
+        label.text = "생성일: "
+        label.font = .systemFont(ofSize: 14)
+        label.textColor = .darkGray
+        return label
+    }()
+    
     //D-day
     private lazy var daysLabel: UILabel = {
         let label = UILabel()
@@ -31,19 +40,19 @@ class MainCapsuleViewController: UIViewController {
     //캡슐이미지
     private lazy var capsuleImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "MainCapsule")
+        imageView.image = UIImage(named: "MainCapsule3")
         imageView.contentMode = .scaleAspectFit
         imageView.isUserInteractionEnabled = true // 이미지 뷰가 사용자 인터랙션을 받을 수 있도록 설정
         return imageView
     }()
     
     // BackLight 이미지
-    private lazy var backLightImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "BackLight")
-        imageView.contentMode = .scaleAspectFill
-        return imageView
-    }()
+//    private lazy var backLightImageView: UIImageView = {
+//        let imageView = UIImageView()
+//        imageView.image = UIImage(named: "BackLight")
+//        imageView.contentMode = .scaleAspectFill
+//        return imageView
+//    }()
     
     //개봉일이되었을때 생성되는 tap 안내문구
     private lazy var openCapsuleLabel: UILabel = {
@@ -57,7 +66,6 @@ class MainCapsuleViewController: UIViewController {
     
     // Firestore에서 사용자의 타임캡슐 정보를 불러오는 메소드
     func fetchTimeCapsuleData() {
-        // Firestore 인스턴스를 생성합니다.
         let db = Firestore.firestore()
         
         // 로그인한 사용자의 UID를 가져옵니다.
@@ -73,6 +81,7 @@ class MainCapsuleViewController: UIViewController {
              .getDocuments { (querySnapshot, err) in
                  if let err = err {
                      print("Error getting documents: \(err)")
+                     
                  } else if let document = querySnapshot?.documents.first { // 첫 번째 문서만 사용
                      // 문서에서 "userLocation" 필드의 값을 가져옵니다.
                      let userLocation = document.get("userLocation") as? String ?? "Unknown Location"
@@ -82,6 +91,16 @@ class MainCapsuleViewController: UIViewController {
                      DispatchQueue.main.async {
                          self.locationName.text = userLocation
                      }
+                     
+                // 생성일 필드 값 가져오기
+                if let creationDate = document.get("creationDate") as? Timestamp {
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd"
+                    let dateStr = dateFormatter.string(from: creationDate.dateValue())
+                    DispatchQueue.main.async {
+                        self.creationDateLabel.text = "\(dateStr) 생성된 캡슐"
+                        }
+                    }
                  } else {
                                print("No documents found") // 문서가 없는 경우 로그 추가
                            }
@@ -93,7 +112,7 @@ class MainCapsuleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        setupBackLightLayout()
+//        setupBackLightLayout()
         setupLayout()
         addTapGestureToCapsuleImageView()
         // D-day 확인 후 레이블 표시 로직
@@ -101,43 +120,55 @@ class MainCapsuleViewController: UIViewController {
         fetchTimeCapsuleData()
     }
     
-    private func setupBackLightLayout() {
-        view.addSubview(backLightImageView)
-        backLightImageView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview() // X축은 중앙
-            make.centerY.equalToSuperview().offset(-25) // Y축은 중앙에서 0만큼 위로 올림
-            make.width.equalTo(420) // backLight 이미지 너비
-            make.height.equalTo(360) // backLight 이미지 높이
-        }
-    }
+//    private func setupBackLightLayout() {
+//        view.addSubview(backLightImageView)
+//        backLightImageView.snp.makeConstraints { make in
+//            make.centerX.equalToSuperview() // X축은 중앙
+//            make.centerY.equalToSuperview().offset(-25) // Y축은 중앙에서 0만큼 위로 올림
+//            make.width.equalTo(420) // backLight 이미지 너비
+//            make.height.equalTo(360) // backLight 이미지 높이
+//        }
+//    }
     
     private func setupLayout() {
         view.addSubview(capsuleImageView)
         view.addSubview(openCapsuleLabel)
+        view.addSubview(creationDateLabel)
         [locationName, daysLabel,].forEach { view.addSubview($0) }
         
+        // 캡슐 이미지
         capsuleImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview().offset(10)
-            make.width.equalTo(320)
-            make.height.equalTo(320)
+            make.width.equalTo(380)
+            make.height.equalTo(380)
         }
         
+        // "타임캡슐을 오픈하세요!"
         openCapsuleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(capsuleImageView.snp.bottom).offset(10) // 이미지 아래에 위치
+            make.top.equalTo(capsuleImageView.snp.bottom).offset(5) // 이미지 아래에 위치
         }
         
+        // 장소명 레이블 레이아웃 설정
         locationName.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(80)
             make.centerX.equalToSuperview()
         }
         
+        // D-day 레이블 레이아웃 설정
         daysLabel.snp.makeConstraints { make in
-            make.top.equalTo(locationName.snp.bottom).offset(430)
+            make.top.equalTo(locationName.snp.bottom).offset(450)
+            make.centerX.equalToSuperview()
+        }
+        
+        // 생성 날짜 레이블 레이아웃 설정
+        creationDateLabel.snp.makeConstraints { make in
+            make.top.equalTo(daysLabel.snp.bottom).offset(5) // D-day 레이블 아래에 위치
             make.centerX.equalToSuperview()
         }
     }
+    
     //탭 제스처 인식기 추가
     private func addTapGestureToCapsuleImageView() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOnCapsule))
@@ -147,7 +178,8 @@ class MainCapsuleViewController: UIViewController {
     @objc private func handleTapOnCapsule() {
         
         // 애니메이션 동작시 다른 UI 요소 숨기기
-           backLightImageView.isHidden = true
+//           backLightImageView.isHidden = true
+           creationDateLabel.isHidden = true
            locationName.isHidden = true
            daysLabel.isHidden = true
            openCapsuleLabel.isHidden = true
@@ -185,9 +217,21 @@ class MainCapsuleViewController: UIViewController {
             self.capsuleImageView.alpha = 0
             // x,y 값으로 확대값 설정
             self.capsuleImageView.transform = self.capsuleImageView.transform.scaledBy(x: 5.0, y: 5.0)
-        }) { _ in
-            // 애니메이션이 완료된 후 필요한 동작
+        }) { [weak self] _ in
+            guard let strongSelf = self else { return }
+            // 애니메이션이 완료된 인터렉션뷰로 전환
+            self?.navigateToOpenInteractionViewController()
         }
+    }
+    
+    // OpenInteractionViewController로 네비게이션
+    private func navigateToOpenInteractionViewController() {
+        let openInteractionVC = OpenInteractionViewController()
+        
+        openInteractionVC.modalPresentationStyle = .custom // 커스텀 모달 스타일 사용
+        openInteractionVC.transitioningDelegate = self // 트랜지션 델리게이트 지정
+        openInteractionVC.modalPresentationStyle = .fullScreen
+         self.present(openInteractionVC, animated: true, completion: nil)
     }
 
     //현재 날짜와 타임캡슐의 개봉일을 비교하는 로직을 가져와 디데이에 신호를 주는것으로 변경 (아직 모르겟음)
@@ -210,5 +254,11 @@ class MainCapsuleViewController: UIViewController {
     @objc private func openTimeCapsule() {
         // 여기에 타임캡슐을 오픈할 때의 애니메이션과 로직을 구현
         print("타임캡슐 오픈 로직을 구현")
+    }
+}
+
+extension MainCapsuleViewController: UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return FadeInAnimator() // 모달 표시시 사용할 애니메이터를 반환
     }
 }

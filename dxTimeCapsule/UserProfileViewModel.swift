@@ -27,16 +27,33 @@ class UserProfileViewModel {
     }
 
     // Mock method to simulate fetching user data from Firestore
-    func fetchUserData() {
-        // This is where you would typically make your Firestore database call.
-        // For demonstration purposes, we're just assigning some dummy data.
-        self.uid = "123456"
-        self.email = "pandaruss@example.com"
-        self.nickname = "PANDA RUSS"
-        self.profileImageUrl = "https://example.com/profile/pandaruss.jpg"
-        
-        // Notify the view controller that data has been updated, typically via a delegate or notification
-        // For example:
-        // delegate?.didReceiveUserData(self)
+    func fetchUserData(completion: @escaping () -> Void) {
+            guard let currentUser = Auth.auth().currentUser else {
+                completion()
+                return
+            }
+            let uid = currentUser.uid
+            let db = Firestore.firestore()
+            let userDocRef = db.collection("users").document(uid)
+
+            userDocRef.getDocument { [weak self] (document, error) in
+                DispatchQueue.main.async {
+                    if let document = document, document.exists {
+                        self?.uid = document.get("uid") as? String
+                        self?.email = document.get("email") as? String
+                        self?.nickname = document.get("username") as? String
+                        self?.profileImageUrl = document.get("profileImageUrl") as? String
+                        print("User data fetched successfully")
+                    } else {
+                        self?.uid = "123456"
+                        self?.email = "pandaruss@example.com"
+                        self?.nickname = "PANDA RUSS"
+                        self?.profileImageUrl = "https://example.com/profile/pandaruss.jpg"
+                        print("User data not found")
+                    }
+                    completion()
+                    print("document exists: \(document?.exists ?? false)")
+                }
+            }
+        }
     }
-}

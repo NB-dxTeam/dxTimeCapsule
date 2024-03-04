@@ -8,7 +8,9 @@
 import UIKit
 import SnapKit
 
+
 class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout {
+
     
     // MARK: - Properties
     
@@ -25,6 +27,16 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout {
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
+    
+    // 친구 찾기 버튼
+    let findFriendButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(named: "State=true"), for: .normal)
+        button.addTarget(self, action: #selector(findFriendButtonTapped), for: .touchUpInside)
+        button.isUserInteractionEnabled = true
+        return button
+    }()
+
     //알림 버튼 생성
     let notificationButton: UIButton = {
         let button = UIButton(type: .system)
@@ -478,11 +490,9 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout {
     
     @objc func menuButtonTapped() {
         print("메뉴 버튼이 클릭되었습니다")
-       // let userProfileData = // 사용자의 프로필 데이터
-       // let userProfileViewModel = UserProfileViewModel(profileData: userProfileData)
-       // let userProfileVC = UserProfileViewController(viewModel: userProfileViewModel
-        // let navController = UINavigationController(rootViewController: userProfileVC)
-        // present(navController, animated: true, completion: nil)
+        let userProfileVC = UserProfileViewController()
+        let navController = UINavigationController(rootViewController: userProfileVC)
+        present(navController, animated: true, completion: nil)
     }
     
     @objc func notificationButtonTapped() {
@@ -501,7 +511,7 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout {
     
     @objc func addNewTCButtonTapped() {
         print("새로운 타임캡슐 만들기 버튼이 클릭되었습니다")
-        let createTCVC = CreateTimeCapsuleViewController()
+        let createTCVC = MainCreateCapsuleViewController()
         let navController = UINavigationController(rootViewController: createTCVC)
         present(navController, animated: true, completion: nil)
     }
@@ -518,6 +528,13 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout {
         print("다가오는 타임캡슐 열기 버튼이 클릭되었습니다")
         let upcomingVC = CapsuleMapViewController()
         let navController = UINavigationController(rootViewController: upcomingVC)
+        present(navController, animated: true, completion: nil)
+    }
+    
+    @objc func findFriendButtonTapped(){
+        print("다가오는 타임캡슐 열기 버튼이 클릭되었습니다")
+        let serarchUserVC = SearchUserViewController()
+        let navController = UINavigationController(rootViewController: serarchUserVC)
         present(navController, animated: true, completion: nil)
     }
 }

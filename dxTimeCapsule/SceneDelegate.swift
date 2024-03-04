@@ -15,25 +15,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        window.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
+        window.overrideUserInterfaceStyle = .light
         
-        let splashVC = LaunchScreenViewController()
+        let splashVC = SplashViewController()
         window.rootViewController = splashVC
         window.makeKeyAndVisible()
-
         
         self.window = window
-        
-        let rootVC = LoginViewController()
-        
-        // 스플래시 화면 2초 노출
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            let navigationController = UINavigationController(rootViewController: rootVC)
             
-            self.window?.rootViewController = navigationController
-        }
-
     }
+
+
 
 
     func sceneDidDisconnect(_ scene: UIScene) {

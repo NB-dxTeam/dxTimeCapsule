@@ -1,22 +1,27 @@
 import UIKit
 import SnapKit
 import SDWebImage
+import FirebaseAuth
 
-class SearchModalTableViewController:
-    UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIViewControllerTransitioningDelegate, UIGestureRecognizerDelegate {
+class SearchModalTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UISearchBarDelegate {
+
     
-    // MARK: - Properties
+    private var searchLabel: UILabel!
+    private var searchContainerView: UIView!
     
-    private var searchResults: [User] = []
+    private let userProfileViewModel = UserProfileViewModel()
     private let friendsViewModel = FriendsViewModel()
+    private var searchResults: [User] = []
     
-    private let searchTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "닉네임으로 검색"
-        textField.borderStyle = .roundedRect
-        textField.autocorrectionType = .no
-        textField.spellCheckingType = .no
-        return textField
+    private var searchDebounceTimer: Timer?
+    
+    private let searchBar: UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.placeholder = "Search UserName"
+        searchBar.autocorrectionType = .no
+        searchBar.spellCheckingType = .no
+        searchBar.backgroundImage = UIImage() // 선 제거
+        return searchBar
     }()
     
     private let tableView: UITableView = {
@@ -25,170 +30,128 @@ class SearchModalTableViewController:
         return tableView
     }()
     
+//    
+//    private let searchTextField: UITextField = {
+//        let textField = UITextField()
+//        textField.placeholder = "Search by username"
+//        textField.borderStyle = .roundedRect
+//        textField.autocorrectionType = .no
+//        textField.spellCheckingType = .no
+//        textField.layer.cornerRadius = 10
+//        return textField
+//    }()
+//
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchTextField.delegate = self
-        setupUI()
+        setupSearchComponents()
+        setupTableView()
         
-        // 모달 당기는 제스쳐
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
-        view.addGestureRecognizer(panGesture)
-        
-        // 모달 외부 탭 제스쳐
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(backgroundTapped))
-        tapGesture.delegate = self
-        view.addGestureRecognizer(tapGesture)
-        
-        setupModalViewDesign()
-        
+        searchBar.delegate = self
     }
     
-    // MARK: - UI Setup
-    private func setupUI() {
-        view.backgroundColor = .systemBackground
-        view.addSubview(searchTextField)
-        view.addSubview(tableView)
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//        setupUI()
+//        searchTextField.delegate = self
+//        searchTextField.becomeFirstResponder() // 이 코드 추가
+//        
+//        searchTextField.isUserInteractionEnabled  = true
+//        view.isUserInteractionEnabled = true
+//    }
+//    
+    
+    func setupSearchComponents() {
+        searchContainerView = UIView()
+        searchContainerView.backgroundColor = .white
         
-        searchTextField.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(100)
-            make.left.right.equalToSuperview().inset(20)
-            make.height.equalTo(50)
+        searchLabel = UILabel()
+        searchLabel.text = "Search Friends"
+        searchLabel.font = UIFont.systemFont(ofSize: 26, weight: .bold)
+        searchLabel.textAlignment = .left
+        
+        if let textField = searchBar.value(forKey: "searchField") as? UITextField {
+            textField.backgroundColor = UIColor.init(hex: "#EFEFEF")
+            textField.layer.cornerRadius = 15 // 원하는 라디우스 값 설정
+            textField.clipsToBounds = true
         }
         
-        tableView.snp.makeConstraints { make in
-            make.top.equalTo(searchTextField.snp.bottom).offset(20)
-            make.left.right.bottom.equalToSuperview()
+        searchContainerView.addSubview(searchLabel)
+        searchContainerView.addSubview(searchBar)
+        
+        view.addSubview(searchContainerView)
+        
+        searchContainerView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(-80)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(searchBar.snp.bottom)
+        }
+        
+        searchLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(16)
+            make.leading.equalToSuperview().offset(16)
+            make.trailing.equalToSuperview().offset(-16)
+        }
+        
+        searchBar.snp.makeConstraints { make in
+            make.top.equalTo(searchLabel.snp.bottom).offset(8)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-10)
         }
         
         tableView.delegate = self
         tableView.dataSource = self
-        
-        // 텍스트 필드의 editingChanged 이벤트에 대한 핸들러 설정
-        searchTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-        
     }
     
-        // MARK: - ModalView Designjj
-    private func setupModalViewDesign(){
-        view.layer.cornerRadius = 25  // 모달 뷰의 모서리를 둥글게
-        view.layer.masksToBounds = true  // 모서리를 둥글게 하기 위해 필요
+    func setupTableView() {
+        tableView.register(SearchUserTableViewCell.self, forCellReuseIdentifier: "SearchUserCell")
+        tableView.rowHeight = 100
         
-        // 그림자 설정
-        view.layer.shadowColor = UIColor.black.cgColor  // 그림자 색상을 검은색으로
-        view.layer.shadowOpacity = 0.5  // 그림자 투명도
-        view.layer.shadowOffset = CGSize(width: 0, height: -3)  // 그림자 방향 (위로 조금 올라가게)
-        view.layer.shadowRadius = 25  // 그림자의 퍼짐 정도
+        view.addSubview(tableView)
         
-        // 경계선 설정
-        view.layer.borderWidth = 1  // 경계선 두께
-        view.layer.borderColor = UIColor.lightGray.cgColor  // 경계선 색상
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(searchContainerView.snp.bottom) // 컨테이너 뷰의 바로 아래 시작
+            make.leading.bottom.trailing.equalToSuperview()
+        }
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
     // MARK: - Functions
-    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // 디바운싱 로직을 여기에 적용
+        searchDebounceTimer?.invalidate()
+        searchDebounceTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { [weak self] _ in
+            self?.performSearch(with: searchText)
+        })
+    }
     // 친구 검색
-    private func performSearch() {
-        guard let searchText = searchTextField.text?.lowercased(), !searchText.isEmpty else { return }
-        
-        friendsViewModel.searchUsersByNickname(nickname: searchText) { [weak self] users, error in
+    
+    private func performSearch(with searchText: String) {
+        guard !searchText.isEmpty else {
+            searchResults = []
+            tableView.reloadData()
+            return
+        }
+
+        friendsViewModel.searchUsersByUsername(username: searchText) { [weak self] users, error in
             DispatchQueue.main.async {
                 if let error = error {
-                    // 에러 처리 로직 (예: 사용자에게 에러 메시지 표시)
                     print("Error searching users: \(error.localizedDescription)")
                 } else {
-                    self?.tableView.tableFooterView = nil  // 기존에 표시된 푸터 뷰 제거
-                    if let users = users, users.isEmpty {
-                        // 검색 결과가 없을 때, "검색 결과 없음" 메시지 표시
-                        self?.showNoResultsMessage()
-                    } else {
-                        // 검색 결과가 있을 때, 테이블 뷰 리로드
-                        self?.searchResults = users ?? []
-                        self?.tableView.reloadData()
-                    }
+                    self?.searchResults = users ?? []
+                    self?.tableView.reloadData()
                 }
             }
         }
     }
-    
-    // 검색 결과 없음 메시지 표시
-    private func showNoResultsMessage() {
-        
-        // 현재 검색 결과 목록을 비워줌
-        searchResults.removeAll()
-        tableView.reloadData()
-        
-        // 검색 결과 없음을 나타내는 레이블 생성 및 설정
-        let noResultsLabel = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
-        
-        noResultsLabel.text = "검색 결과 없음"
-        noResultsLabel.textColor = .gray
-        noResultsLabel.textAlignment = .center
-        noResultsLabel.font = UIFont.systemFont(ofSize: 20)
-        
-        // 테이블 뷰의 footer로 설정하여 검색 결과가 없음을 표시
-        tableView.tableFooterView = noResultsLabel
-    }
-    
-    // UIGestureRecognizerDelegate 메서드 구현
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        let location = touch.location(in: self.view)
-        // searchTextField와 tableView의 프레임이 location을 포함하지 않는 경우에만 true 반환
-        return !searchTextField.frame.contains(location) && !tableView.frame.contains(location)
-    }
-    
-    // MARK: - Actions
-    
-    // 텍스트필드가 바뀔때마다 검색을 수행하는 메서드
-    @objc private func textFieldDidChange(_ textField: UITextField) {
-        performSearch()
-    }
-    
-    // 배경을 탭할 때 호출되는 메서드
-    @objc func backgroundTapped() {
-        dismiss(animated: true, completion: nil)
-    }
-    
-    // 모달 당기는 제스쳐
-    @objc func handlePanGesture(gesture: UIPanGestureRecognizer) {
-        let translation = gesture.translation(in: view)
-        let velocity = gesture.velocity(in: view)
-        
-        switch gesture.state {
-        case .changed:
-            // 드래그에 따른 뷰의 위치 변경 로직
-            if translation.y > 0 { // 위로 드래그하지 않도록
-                view.transform = CGAffineTransform(translationX: 0, y: translation.y)
-            }
-        case .ended:
-            if translation.y > 100 || velocity.y > 1000 {
-                // 드래그 거리 또는 속도가 임계값을 초과하면 모달 닫기
-                dismiss(animated: true, completion: nil)
-            } else {
-                // 애니메이션으로 원래 위치로 복귀
-                UIView.animate(withDuration: 0.3) {
-                    self.view.transform = .identity
-                }
-            }
-        default:
-            break
-        }
-    }
-    
-    // Tap to Dismiss
-    @objc func handleTapToDismiss(gesture: UITapGestureRecognizer) {
-        let location = gesture.location(in: view)
-        // searchTextField와 tableView의 프레임이 location을 포함하지 않는 경우에만 dismiss 실행
-        if !searchTextField.frame.contains(location) && !tableView.frame.contains(location) {
-            dismiss(animated: true, completion: nil)
-        }
-    }
-    
     
     // MARK: - TextField Delegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder() // 키보드 숨김
-        performSearch()
+        searchBar.endEditing(true)
         return true
     }
     
@@ -200,33 +163,54 @@ class SearchModalTableViewController:
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
-    
+        
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as? SearchUserTableViewCell else {
-            return UITableViewCell()
-        }
-        let user = searchResults[indexPath.row]
-        cell.configure(with: user)
-        
-        cell.addUserAction = {
-            // Firestore에 친구 추가 요청 로직 구현
-            print("친구 추가 요청: \(user.nickname)")
-        }
-        
-        return cell
-    }
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as? SearchUserTableViewCell else {
+                return UITableViewCell()
+            }
+            let user = searchResults[indexPath.row]
+            cell.configure(with: user, viewModel: friendsViewModel)
     
-}
+        // 친구 추가/요청 버튼 탭 액션 설정
+        cell.friendActionButtonTapAction = { [weak self] in
+            guard let strongSelf = self else { return }
+            
+            // 현재 사용자의 ID를 가져옵니다.
+            guard let currentUserId = Auth.auth().currentUser?.uid else {
+                print("현재 사용자 ID를 가져올 수 없습니다.")
+                return
+            }
 
-// MARK: - HalfSizePresentationController
-class HalfSizePresentationController: UIPresentationController {
-    override var frameOfPresentedViewInContainerView: CGRect {
-        guard let containerView = containerView else { return CGRect.zero }
-        let originY = containerView.bounds.height / 3 // 화면의 1/3 위치에서 모달이 시작되도록 설정 // 시작 위치
-        return CGRect(x: 0, y: originY, width: containerView.bounds.width, height: containerView.bounds.height * 2 / 3) // 화면의 2/3 만큼의 높이로 모달 크기 설정 /// 사이즈
+            // 상태에 따라 친구 요청 보내기 또는 친구 요청 수락하기 로직을 실행합니다.
+            strongSelf.friendsViewModel.checkFriendshipStatus(forUser: user.uid) { status in
+                DispatchQueue.main.async {
+                    switch status {
+                    case "친구 추가":
+                        // 친구 요청 보내기
+                        strongSelf.friendsViewModel.sendFriendRequest(toUser: user.uid, fromUser: currentUserId) { success, error in
+                            if success {
+                                print("친구 요청이 성공적으로 보내졌습니다.")
+                                // 필요한 경우 UI 업데이트
+                            } else {
+                                print("친구 요청 실패: \(error?.localizedDescription ?? "알 수 없는 오류")")
+                            }
+                        }
+                    case "요청 수락":
+                        // 친구 요청 수락하기
+                        strongSelf.friendsViewModel.acceptFriendRequest(fromUser: user.uid, forUser: currentUserId) { success, error in
+                            if success {
+                                print("친구 요청이 성공적으로 수락되었습니다.")
+                                // 필요한 경우 UI 업데이트
+                            } else {
+                                print("친구 요청 수락 실패: \(error?.localizedDescription ?? "알 수 없는 오류")")
+                            }
+                        }
+                    default:
+                        print("이미 처리된 상태입니다.")
+                    }
+                }
+            }
+        }
+          return cell
+        }
     }
-    
-    override func containerViewWillLayoutSubviews() {
-        presentedView?.frame = frameOfPresentedViewInContainerView
-    }
-}

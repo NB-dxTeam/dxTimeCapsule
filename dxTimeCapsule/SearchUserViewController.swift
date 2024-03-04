@@ -4,6 +4,7 @@ import SnapKit
 class SearchUserViewController: UIViewController, UIViewControllerTransitioningDelegate {
     let searchButton = UIButton(type: .system)
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -20,7 +21,7 @@ class SearchUserViewController: UIViewController, UIViewControllerTransitioningD
             make.height.equalTo(50)
         }
     }
-
+    
     // MARK: - Button Setup
     private func setupButton() {
         searchButton.addTarget(self, action: #selector(searchButtonTapped), for: .touchUpInside)
@@ -30,17 +31,13 @@ class SearchUserViewController: UIViewController, UIViewControllerTransitioningD
         searchButton.setTitleColor(.white, for: .normal)
     }
     
-    // MARK: - Button Action
+    // MARK: - Action
     @objc func searchButtonTapped() {
         let searchModalVC = SearchModalTableViewController()
         searchModalVC.modalPresentationStyle = .fullScreen
-//        searchModalVC.transitioningDelegate = self // 커스텀 트랜지션 딜리게이트 설정
+        //        searchModalVC.transitioningDelegate = self // 커스텀 트랜지션 딜리게이트 설정
         present(searchModalVC, animated: true, completion: nil)
     }
-
-    // MARK: - UIViewControllerTransitioningDelegate
-    // 커스텀 페이지 (임시)
-    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        return HalfSizePresentationController(presentedViewController: presented, presenting: presenting)
-    }
+    
+    
 }
