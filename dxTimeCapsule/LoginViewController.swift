@@ -225,7 +225,6 @@ class LoginViewController: UIViewController {
                     let navigationController = UINavigationController(rootViewController: mainTabVC)
                        navigationController.modalPresentationStyle = .fullScreen
                        self.present(navigationController, animated: true, completion: nil)
-
                 }
             }
         }

@@ -7,11 +7,15 @@
 
 import UIKit
 import SnapKit
+import FirebaseFirestore
+import FirebaseAuth
 
+#Preview{
+    HomeViewController()
+}
 
-class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout {
+class HomeViewController: UIViewController {
 
-    
     // MARK: - Properties
     
     // 커스텀 네비게이션 바
@@ -28,15 +32,6 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout {
         return imageView
     }()
     
-    // 친구 찾기 버튼
-    let findFriendButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "State=true"), for: .normal)
-        button.addTarget(self, action: #selector(findFriendButtonTapped), for: .touchUpInside)
-        button.isUserInteractionEnabled = true
-        return button
-    }()
-
     //알림 버튼 생성
     let notificationButton: UIButton = {
         let button = UIButton(type: .system)
@@ -45,57 +40,12 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout {
         button.isUserInteractionEnabled = true
         return button
     }()
-    
-    // 메뉴 버튼 생성
-    let menuButton: UIButton = {
-    let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "line.horizontal.3"),for: .normal)
-        button.addTarget(self, action: #selector(menuButtonTapped), for: .touchUpInside)
-        button.isUserInteractionEnabled = true
-    return button
-    }()
-    
-    // 스택뷰
-    let userStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.spacing = 10
-        return stackView
-    }()
-    
-    // 프로필 이미지뷰
-    let profileImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "profilePic"))
-        imageView.contentMode = .scaleAspectFit
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 20
-        return imageView
-    }()
-    
-    // 사용자 ID 레이블
-    let userIdLabel: UILabel = {
-        let label = UILabel()
-        label.text = "사용자 ID"
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
-        return label
-    }()
-    
-    // 날씨 정보 레이블
-    let weatherLabel: UILabel = {
-        let label = UILabel()
-        label.text = "날씨 정보"
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
-        return label
-    }()
-    
+   
     // 메인 타임캡슐 그림자
-    let maincontainerView: UIView = {
+    let mainContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
-        view.layer.cornerRadius = 20
+        view.layer.cornerRadius = 10
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOpacity = 0.5
         view.layer.shadowOffset = CGSize(width: 2, height: 4)
@@ -105,226 +55,230 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout {
     
     // 메인 타임캡슐 이미지뷰
     let mainTCImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "duestTC"))
+        let imageView = UIImageView(image: UIImage(named: "location"))
         imageView.contentMode = .scaleToFill
         imageView.isUserInteractionEnabled = true
         return imageView
     }()
     
+    // 장소 레이블
+    let locationNameLabel: UILabel = {
+        let label = UILabel()
+        label.text = "서서울호수공원"
+        label.font = UIFont.boldSystemFont(ofSize: 30)
+        label.textColor = .black
+        return label
+    }()
+    
+    
+    // 위치 레이블
+    let locationAddressLabel: UILabel = {
+        let label = UILabel()
+        label.text = "서울시 양천구 신월동"
+        label.font = UIFont.systemFont(ofSize: 15)
+        label.textColor = .black
+        return label
+    }()
+    
+    
     // D-Day 레이블
     let dDayLabel: UILabel = {
         let label = UILabel()
         label.text = "D-DAY"
-        label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.textColor = .white
-        label.backgroundColor = UIColor.gray.withAlphaComponent(0.5)
-        return label
-    }()
-    
-    // 위치 레이블
-    let locationLabel: UILabel = {
-        let label = UILabel()
-        label.text = "서울시 양천구 신월동"
-        label.font = UIFont.boldSystemFont(ofSize: 24)
-        label.textColor = .white
-        label.backgroundColor = UIColor.gray.withAlphaComponent(0.5)
-        return label
-    }()
-    
-    // 타임캡슐 보러가기 레이블
-    let checkDuestTCLabel: UILabel = {
-        let label = UILabel()
-        label.text = "이 타임캡슐 보러가기 >>"
-        label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.textColor = .white
-        label.backgroundColor = UIColor.gray.withAlphaComponent(0.5)
-        return label
-    }()
-    
-    // 새로운 타임캡슐 만들기 버튼 생성
-    let addNewTCButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("새로운 타임캡슐 만들기", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = UIColor(red: 113/255, green: 183/255, blue: 246/255, alpha: 1.0)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .black)
-        button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(addNewTCButtonTapped), for: .touchUpInside)
-        return button
-    }()
-    
-    // 열어본 타임캡슐 뷰어
-    let openedContainerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(red: 163/255, green: 201/255, blue: 246/255, alpha: 1.0)
-        view.layer.cornerRadius = 20
-        return view
-    }()
-    
-    // 열어본 타임캡슐 라벨
-    let openedTCLabel: UILabel = {
-        let label = UILabel()
-        label.text = "열어본 타임 캡슐"
         label.font = UIFont.boldSystemFont(ofSize: 15)
-        label.textColor = .black
+        label.textColor = .red
         return label
     }()
-    
-    // 추억 회상하기 라벨
-    let memoryLabel: UILabel = {
-        let label = UILabel()
-        label.text = "추억 회상하기"
-        label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.textColor = .white
-        return label
-    }()
-    
-    // 추억 회상2 레이블
-    let memorySecondLabel: UILabel = {
-        let label = UILabel()
-        label.text = "타입 캡슐을 타고 잊혀진 추억을 찾아보세요"
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .white
-        return label
-    }()
-    
-    // Opened Label StackView 생성
-    lazy var openedLabelStackView: UIStackView = {
+
+    // 장소정보 스택뷰
+    lazy var locationInforStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .fill
-        stackView.spacing = 3
-        stackView.addArrangedSubview(self.memoryLabel)
-        stackView.addArrangedSubview(self.memorySecondLabel)
+        stackView.spacing = 0
+        stackView.addArrangedSubview(self.locationNameLabel)
+        stackView.addArrangedSubview(self.locationAddressLabel)
         return stackView
     }()
     
-    // Opened TCStackView 생성
-    lazy var openedTCStackView: UIStackView = {
+    // DuestTC 스택뷰
+    lazy var duestTCInforStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.alignment = .fill
-        stackView.spacing = 8
-        stackView.addArrangedSubview(self.memoryThirdLabel)
-        stackView.addArrangedSubview(self.openedLabelStackView)
-        stackView.addArrangedSubview(self.openedTCButton)
+        stackView.spacing = 10
+        stackView.addArrangedSubview(self.locationInforStackView)
+        stackView.addArrangedSubview(self.dDayLabel)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(duestTCStackViewTapped))
+        stackView.addGestureRecognizer(tapGesture)
+        stackView.isUserInteractionEnabled = true
+        
         return stackView
     }()
     
-    // 추억 회상3 라벨
-    let memoryThirdLabel: UILabel = {
-        let label = UILabel()
-        label.text = "💡"
-        label.font = UIFont.boldSystemFont(ofSize: 28)
-        label.textColor = .white
-        label.backgroundColor = UIColor(red: 113/255, green: 183/255, blue: 246/255, alpha: 1.0)
-        label.layer.cornerRadius = 10
-        label.textAlignment = .center
-        label.clipsToBounds = true
-        return label
-    }()
+    func fetchTimeCapsuleData() {
+        let db = Firestore.firestore()
+        
+        // 로그인한 사용자의 UID를 가져옵니다.
+        //    guard let userId = Auth.auth().currentUser?.uid else { return }
+        
+        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // 테스트를 위한 임시 UID
+        
+        // 사용자의 UID로 필터링하고, openDate 필드로 오름차순 정렬한 후, 최상위 1개 문서만 가져옵니다.
+            db.collection("timeCapsules")
+                .whereField("uid", isEqualTo: userId)
+                .order(by: "openDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
+                .limit(to: 1) // 가장 개봉일이 가까운 타임캡슐 1개만 선택
+                .getDocuments { [weak self] (querySnapshot, err) in
+                    guard let self = self else { return }
+                    
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                    } else if let document = querySnapshot?.documents.first { // 첫 번째 문서만 사용
+                        let userLocation = document.get("userLocation") as? String ?? "Unknown Location"
+                        // let location = document.get("location") as? String ?? "Unknown address"
+                        let photoUrl = document.get("photoUrl") as? String ?? ""
+                        let openDateTimestamp = document.get("openDate") as? Timestamp
+                        let openDate = openDateTimestamp?.dateValue()
+                        
+                        print("Fetched location name: \(userLocation)")
+                      //  print("Fetched location address: \(location)")
+                        print("Fetched photo URL: \(photoUrl)")
+                        print("Fetched open date: \(openDate)")
+                        
+                        // 메인 스레드에서 UI 업데이트를 수행합니다.
+                        DispatchQueue.main.async {
+                            self.locationNameLabel.text = userLocation
+                      //      self.locationAddressLabel.text = location
+                            
+                            // D-Day 계산
+                            if let openDate = openDate {
+                                let dateFormatter = DateFormatter()
+                                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                                dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul") // UTC+9:00
+                                
+                                let today = Date()
+                                let calendar = Calendar.current
+                                let components = calendar.dateComponents([.day], from: today, to: openDate)
+                                
+                                if let daysUntilOpening = components.day {
+                                    self.dDayLabel.text = "D\(daysUntilOpening)"
+                                }
+                            }
+                            
+                            if !photoUrl.isEmpty {
+                                guard let url = URL(string: photoUrl) else {
+                                    print("Invalid photo URL")
+                                    return
+                                }
+                                
+                                URLSession.shared.dataTask(with: url) { (data, response, error) in
+                                    if let error = error {
+                                        print("Error downloading image: \(error)")
+                                        return
+                                    }
+                                    
+                                    guard let data = data else {
+                                        print("No image data")
+                                        return
+                                    }
+                                    
+                                    DispatchQueue.main.async {
+                                        self.mainTCImageView.image = UIImage(data: data)
+                                    }
+                                }.resume()
+                            }
+                        }
+                    }
+                }
+        }
     
     // 열어본 타임캡슐 버튼
     let openedTCButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("〉", for: .normal)
-        button.setTitleColor(. black , for: .normal)
-        button.backgroundColor = .white
-        button.layer.cornerRadius = 20
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .black)
+        let image = UIImage(named: "duestTC")?.withRenderingMode(.alwaysOriginal)
+        button.setBackgroundImage(image, for: .normal)
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 10
         button.addTarget(self, action: #selector(openedTCButtonTapped), for: .touchUpInside)
+        
+        // 버튼 내에 UILabel 추가
+        let titleLabel = UILabel()
+        titleLabel.text = "Saved\nmemories"
+        titleLabel.numberOfLines = 2
+        titleLabel.textAlignment = .center
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        titleLabel.textColor = .white
+        titleLabel.backgroundColor = UIColor.gray.withAlphaComponent(0.5)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        // UILabel을 버튼에 추가
+        button.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
         return button
     }()
-    
-    // 다가오는 타임캡슐 뷰어
-    let upcomingContainerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .clear
-        return view
-    }()
-    
-    // 다가오는 타임캡슐 라벨
-    let upcomingLabel: UILabel = {
-        let label = UILabel()
-        label.text = "다가오는 타임 캡슐"
-        label.font = UIFont.boldSystemFont(ofSize: 15)
-        label.textColor = .black
-        return label
-    }()
-    
-    // 다가오는 타임캡슐 전체 보기 버틈
-    let upcomingOpenbutton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("전체 보기 >", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        button.addTarget(self, action: #selector(upcomingTCButtonTapped), for: .touchUpInside)
-        return button
-    }()
-    
-    // MARK: - Collection View
 
-    // 열어 본 타임캡슐 컬렉션 뷰
-    lazy var openedcollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .clear
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "openedCellIdentifier")
-        return collectionView
+    // 다가오는 타임캡슐 버튼
+    let upcomingTCButton: UIButton = {
+        let button = UIButton(type: .system)
+        let image = UIImage(named: "upcomingTC")?.withRenderingMode(.alwaysOriginal)
+        button.setBackgroundImage(image, for: .normal)
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(upcomingTCButtonTapped), for: .touchUpInside)
+        
+        // 버튼 내에 UILabel 추가
+        let titleLabel = UILabel()
+        titleLabel.text = "Upcoming\nmemories"
+        titleLabel.numberOfLines = 2
+        titleLabel.textAlignment = .center
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        titleLabel.textColor = .white
+        titleLabel.backgroundColor = UIColor.gray.withAlphaComponent(0.5)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        // UILabel을 버튼에 추가
+        button.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        return button
     }()
     
-    // 다가오는 타임캡슐 컬렉션 뷰
-    lazy var upcomingCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .clear
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "upcomingCellIdentifier")
-        return collectionView
+    // 버튼 스택뷰
+    lazy var buttonStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [openedTCButton, upcomingTCButton])
+        stackView.axis = .horizontal
+        stackView.spacing = 20
+        stackView.alignment = .fill
+        stackView.distribution = .fillEqually // 크기를 동일하게 설정
+        return stackView
     }()
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
+        navigationController?.isNavigationBarHidden = true
         configureUI()
-        openedcollectionView.layoutIfNeeded()
-        upcomingCollectionView.layoutIfNeeded()
-    
-        // 열어 본 타임캡슐 컬렉션 뷰 레이아웃 설정
-        let openedLayout = UICollectionViewFlowLayout()
-        openedLayout.scrollDirection = .horizontal
-        openedLayout.itemSize = CGSize(width: openedcollectionView.frame.height, height: openedcollectionView.frame.height)
-        openedLayout.minimumLineSpacing = 10
-        openedcollectionView.collectionViewLayout = openedLayout
-
-        // 다가오는 타임캡슐 컬렉션 뷰 레이아웃 설정
-        let upcomingLayout = UICollectionViewFlowLayout()
-        upcomingLayout.scrollDirection = .horizontal
-        upcomingLayout.itemSize = CGSize(width: upcomingCollectionView.frame.height, height: upcomingCollectionView.frame.height)
-        upcomingLayout.minimumLineSpacing = 10
-        upcomingCollectionView.collectionViewLayout = upcomingLayout
+        fetchTimeCapsuleData()
     }
     
     // MARK: - Helpers
     
     private func configureUI(){
-        view.backgroundColor = .white
-        navigationController?.isNavigationBarHidden = true
-        
-        openedcollectionView.register(OpenedTCCollectionViewCell.self, forCellWithReuseIdentifier: "openedCellIdentifier")
-        upcomingCollectionView.register(UpcomingTCCollectionViewCell.self, forCellWithReuseIdentifier: "upcomingCellIdentifier")
+
         // 커스텀 네비게이션 바 추가
         view.addSubview(customNavBar)
         customNavBar.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
             make.left.right.equalToSuperview()
-            make.height.equalTo(20)
+            make.height.equalTo(40)
         }
                    
         // pagelogo 이미지뷰 추가
@@ -334,156 +288,87 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout {
             make.left.equalTo(customNavBar).offset(20)
             make.width.equalTo(170)
         }
-                
-        // 메뉴 버튼 추가
-        customNavBar.addSubview(menuButton)
-        menuButton.snp.makeConstraints { make in
-            make.centerY.equalTo(customNavBar)
-            make.right.equalTo(customNavBar).offset(-20)
-        }
                    
         // 알림 버튼 추가
         customNavBar.addSubview(notificationButton)
         notificationButton.snp.makeConstraints { make in
             make.centerY.equalTo(customNavBar)
-            make.right.equalTo(menuButton.snp.left).offset(-16)
+            make.right.equalTo(customNavBar).offset(-20)
         }
         
-        // 스택뷰 추가
-        view.addSubview(userStackView)
-        userStackView.snp.makeConstraints { make in
-            make.top.equalTo(customNavBar.snp.bottom).offset(30)
-            make.leading.trailing.equalToSuperview().inset(20)
-        }
-        
-        // 프로필 이미지뷰 추가
-        profileImageView.snp.makeConstraints { make in
-               make.width.height.equalTo(40)
-           }
-           userStackView.addArrangedSubview(profileImageView)
-        
-        // 사용자 ID 레이블 추가
-        userStackView.addArrangedSubview(userIdLabel)
-        
-        // 날씨 정보 레이블 추가
-        userStackView.addArrangedSubview(weatherLabel)
         // 메인 타임캡슐 그림자 추가
-        view.addSubview(maincontainerView)
-        maincontainerView.snp.makeConstraints { make in
-             make.top.equalTo(userStackView.snp.bottom).offset(20)
+        view.addSubview(mainContainerView)
+        mainContainerView.snp.makeConstraints { make in
+             make.top.equalTo(customNavBar.snp.bottom).offset(30)
              make.leading.trailing.equalToSuperview().inset(20)
-             make.height.equalToSuperview().multipliedBy(0.2)
+            make.height.equalToSuperview().multipliedBy(2.0/6.0)
                   }
               
-        // 메인 타임캡슐 이미지뷰 추가
-        mainTCImageView.isUserInteractionEnabled = true
-        view.addSubview(mainTCImageView)
+        // mainTCImageView를 maincontainerView에 추가
+        mainContainerView.addSubview(mainTCImageView)
         mainTCImageView.snp.makeConstraints { make in
-            make.top.equalTo(userStackView.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
-            make.height.equalToSuperview().multipliedBy(0.2)
+            make.edges.equalToSuperview()
         }
-        mainTCImageView.layer.cornerRadius = 20
+        
+        mainTCImageView.layer.cornerRadius = 10
         mainTCImageView.layer.masksToBounds = true
         mainTCImageView.layer.shadowColor = UIColor.black.cgColor
         mainTCImageView.layer.shadowOpacity = 0.5
         mainTCImageView.layer.shadowOffset = CGSize(width: 0, height: 2)
         mainTCImageView.layer.shadowRadius = 4
 
+        // infoAndDdayStackView의 위치 설정
+        view.addSubview(duestTCInforStackView)
+        duestTCInforStackView.snp.makeConstraints { make in
+            make.top.equalTo(mainContainerView.snp.bottom).offset(10)
+            make.leading.trailing.equalToSuperview().inset(30)
+            // 높이는 maincontainerView의 너비의 1/5로 설정
+            make.height.equalToSuperview().multipliedBy(0.5/6.0)
+        }
         
-        // D-Day 레이블 추가
-        mainTCImageView.addSubview(dDayLabel)
+        // locationInforStackView의 위치 설정
+        locationInforStackView.snp.makeConstraints { make in
+            make.top.equalTo(mainContainerView.snp.bottom).offset(10)
+            make.leading.trailing.equalToSuperview().inset(5)
+            make.height.equalTo(mainContainerView.snp.width).multipliedBy(1.0/5.0)
+        }
+
+        // userLocationLabel의 슈퍼뷰 설정
+        locationNameLabel.snp.makeConstraints { make in
+            make.height.equalTo(locationNameLabel.font.pointSize) // 폰트 크기에 맞는 높이로 설정
+        }
+
+        // locationLabel의 슈퍼뷰 설정
+        locationAddressLabel.snp.makeConstraints { make in
+            make.height.equalTo(locationAddressLabel.font.pointSize) // 폰트 크기에 맞는 높이로 설정
+        }
+
+        // dDayLabel의 슈퍼뷰 설정
+        view.addSubview(dDayLabel)
         dDayLabel.snp.makeConstraints { make in
-            make.top.equalTo(mainTCImageView).offset(15)
-            make.left.equalTo(mainTCImageView).offset(15)
+            make.top.equalTo(mainContainerView.snp.bottom).inset(5)
+            make.width.equalTo(mainContainerView.snp.width).multipliedBy(1.0/5.0)
+            make.height.equalTo(mainContainerView.snp.width).multipliedBy(1.0/5.0)
+            make.trailing.equalToSuperview().inset(5)
         }
         
-        // 위치 레이블 추가
-        mainTCImageView.addSubview(locationLabel)
-        locationLabel.snp.makeConstraints { make in
-            make.centerX.centerY.equalTo(mainTCImageView)
-        }
-        
-        // 타임캡슐 보러가기 레이블 추가
-        mainTCImageView.addSubview(checkDuestTCLabel)
-        checkDuestTCLabel.snp.makeConstraints { make in
-            make.bottom.equalTo(mainTCImageView).offset(-10)
-            make.right.equalTo(mainTCImageView).offset(-10)
-        }
         
         // 메인 타임캡슐 이미지뷰에 탭 제스처 추가
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(mainTCImageViewTapped))
         mainTCImageView.addGestureRecognizer(tapGesture)
         
-        // 새로운 타임캡슐 만들기 버튼 추가
-        view.addSubview(addNewTCButton)
-        addNewTCButton.snp.makeConstraints { make in
-            make.top.equalTo(mainTCImageView.snp.bottom).offset(25)
-            make.left.right.equalToSuperview().inset(100)
-            make.height.equalTo(40)
+        // 버튼 스택뷰에 버튼 추가
+        buttonStackView.addArrangedSubview(openedTCButton)
+        buttonStackView.addArrangedSubview(upcomingTCButton)
+        
+        // 버튼 스택뷰를 뷰에 추가
+        view.addSubview(buttonStackView)
+        buttonStackView.snp.makeConstraints { make in
+            make.top.equalTo(duestTCInforStackView.snp.bottom).offset(30)
+            make.leading.trailing.equalToSuperview().inset(20)
+            make.height.equalToSuperview().multipliedBy(1.5/6.0)// 버튼 높이 조정
         }
         
-        // 열어본 타임 캡슐 라벨 추가
-        openedContainerView.addSubview(openedTCLabel)
-        openedTCLabel.snp.makeConstraints { make in
-            make.top.equalTo(openedContainerView).offset(-20)
-            make.left.equalTo(openedContainerView).offset(10)
-        }
-     
-        // 컨테이너 뷰(열어본 타임캡슐)
-        view.addSubview(openedContainerView)
-        openedContainerView.snp.makeConstraints { make in
-            make.top.equalTo(addNewTCButton.snp.bottom).offset(45)
-            make.left.right.equalToSuperview().inset(20)
-            make.height.equalToSuperview().multipliedBy(0.2)
-        }
-        
-        // 컨테이너뷰에 컬렉션 뷰 추가
-        view.addSubview(openedcollectionView)
-        openedcollectionView.snp.makeConstraints { make in
-            make.top.equalTo(openedContainerView.snp.top).offset(10)
-            make.leading.equalTo(openedContainerView.snp.leading).offset(10)
-            make.trailing.equalTo(openedContainerView.snp.trailing).offset(-10)
-            make.height.equalTo(openedContainerView.snp.height).multipliedBy(3.0/5.0)
-        }
-
-        openedContainerView.addSubview(openedTCStackView)
-        openedTCStackView.snp.makeConstraints { make in
-            make.bottom.equalTo(openedContainerView.snp.bottom).offset(-10)
-            make.leading.equalTo(openedContainerView.snp.leading).offset(10)
-            make.trailing.equalTo(openedContainerView.snp.trailing).offset(-10)
-            make.height.equalTo(openedContainerView.snp.height).multipliedBy(1.0/5.0)
-        }
-
-        openedTCButton.snp.makeConstraints { make in
-            make.width.equalTo(openedTCButton.snp.height)
-        }
-
-        memoryThirdLabel.snp.makeConstraints { make in
-            make.width.equalTo(memoryThirdLabel.snp.height)
-        }
-
-        view.addSubview(upcomingCollectionView)
-
-        // 다가오는 타임 캡슐 라벨
-        view.addSubview(upcomingLabel)
-        upcomingLabel.snp.makeConstraints { make in
-            make.top.equalTo(upcomingCollectionView.snp.top).offset(-25)
-            make.leading.equalTo(upcomingCollectionView.snp.leading).offset(10)
-        }
-
-        upcomingCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(openedContainerView.snp.bottom).offset(50)
-            make.left.right.equalToSuperview().inset(20)
-            make.height.equalToSuperview().multipliedBy(0.15)
-        }
-        
-        view.addSubview(upcomingOpenbutton)
-        upcomingOpenbutton.snp .makeConstraints { make in
-            make.top.equalTo(upcomingCollectionView.snp.top).offset(-30)
-            make.trailing.equalTo(upcomingCollectionView.snp.trailing).offset(-10)
-        }
     }
     
     // MARK: - Actions
@@ -499,6 +384,13 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout {
         print("알림 버튼이 클릭되었습니다")
         let notificationVC = NotificationViewController()
         let navController = UINavigationController(rootViewController: notificationVC)
+        present(navController, animated: true, completion: nil)
+    }
+    
+    @objc private func duestTCStackViewTapped() {
+        print("DuestTC 스택뷰가 클릭되었습니다")
+        let mainCapsuleVC = MainCapsuleViewController()
+        let navController = UINavigationController(rootViewController: mainCapsuleVC)
         present(navController, animated: true, completion: nil)
     }
     
@@ -536,63 +428,5 @@ class HomeViewController: UIViewController, UICollectionViewDelegateFlowLayout {
         let serarchUserVC = SearchUserViewController()
         let navController = UINavigationController(rootViewController: serarchUserVC)
         present(navController, animated: true, completion: nil)
-    }
-}
-
-// MARK: - UICollectionViewDataSource
-
-// 첫 번째 컬렉션 뷰 데이터 소스 및 델리게이트
-extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if collectionView == openedcollectionView {
-            return 20
-        } else if collectionView == upcomingCollectionView {
-            return 25
-        } else {
-            return 0
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if collectionView == openedcollectionView {
-            let collectionViewHeight = openedcollectionView.frame.height
-            return CGSize(width: collectionViewHeight*1.1, height: collectionViewHeight)
-        } else if collectionView == upcomingCollectionView {
-            let collectionViewHeight = upcomingCollectionView.frame.height
-            return CGSize(width: collectionViewHeight*1.2, height: collectionViewHeight-25)
-        } else {
-            return CGSize.zero
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if collectionView == openedcollectionView {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "openedCellIdentifier", for: indexPath)
-            cell.backgroundColor = .systemCyan
-            return cell
-        } else if collectionView == upcomingCollectionView {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "upcomingCellIdentifier", for: indexPath)
-            cell.backgroundColor = .systemYellow
-            return cell
-        } else {
-            fatalError("Unexpected collection view")
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        // 첫 번째 컬렉션 뷰(열어 본 타임캡슐)의 각 섹션에 대한 수평 간격 설정
-        if collectionView == openedcollectionView {
-            // 첫 번째 섹션의 수평 간격은 10, 두 번째 섹션의 수평 간격은 20으로 설정
-            return 10
-        }
-        
-        // 두 번째 컬렉션 뷰(다가오는 타임캡슐)의 각 섹션에 대한 수평 간격 설정
-        if collectionView == upcomingCollectionView {
-            // 모든 섹션의 수평 간격을 동일하게 15로 설정
-            return 15
-        }
-        
-        // 기본 수평 간격 반환
-        return 10
     }
 }
