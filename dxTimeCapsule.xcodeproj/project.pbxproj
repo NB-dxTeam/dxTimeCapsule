@@ -20,6 +20,7 @@
 		1F1071B52B95CC41009E201A /* Pretendard-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1F1071B42B95CC41009E201A /* Pretendard-Black.otf */; };
 		1F1071B72B95CC4A009E201A /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1F1071B62B95CC4A009E201A /* Pretendard-Medium.otf */; };
 		1F1071B92B95CC67009E201A /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1F1071B82B95CC67009E201A /* Pretendard-Bold.otf */; };
+		1F1071BC2B95D400009E201A /* LocationConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1071BB2B95D400009E201A /* LocationConfirmationViewController.swift */; };
 		1F367EA62B8F803A00563908 /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F367EA52B8F803A00563908 /* UIColor+Hex.swift */; };
 		1F5786D92B849AF800C40B08 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5786D82B849AF800C40B08 /* AppDelegate.swift */; };
 		1F5786E52B849AFA00C40B08 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F5786E42B849AFA00C40B08 /* Assets.xcassets */; };
@@ -84,6 +85,7 @@
 		1F1071B42B95CC41009E201A /* Pretendard-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Black.otf"; sourceTree = "<group>"; };
 		1F1071B62B95CC4A009E201A /* Pretendard-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Medium.otf"; sourceTree = "<group>"; };
 		1F1071B82B95CC67009E201A /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
+		1F1071BB2B95D400009E201A /* LocationConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationConfirmationViewController.swift; sourceTree = "<group>"; };
 		1F367EA52B8F803A00563908 /* UIColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Hex.swift"; sourceTree = "<group>"; };
 		1F5786D52B849AF800C40B08 /* dxTimeCapsule.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dxTimeCapsule.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F5786D82B849AF800C40B08 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -168,6 +170,14 @@
 			name = TabBar;
 			sourceTree = "<group>";
 		};
+		1F1071BA2B95D3E8009E201A /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				1F1071BB2B95D400009E201A /* LocationConfirmationViewController.swift */,
+			);
+			name = Location;
+			sourceTree = "<group>";
+		};
 		1F5786CC2B849AF800C40B08 = {
 			isa = PBXGroup;
 			children = (
@@ -221,16 +231,16 @@
 		1F5786F02B849C2F00C40B08 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				1FAB4DED2B8C2AEB0054618A /* Main */,
 				27F382802B8FA1350005F733 /* NotificationView */,
-				1F722F0D2B938CB500407850 /* SplashVew */,
 				1FAB4DEC2B8C29D80054618A /* Authentication */,
 				27C81E412B8A39E9001E3623 /* HomeView */,
 				46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */,
 				1FB387362B8862AF00054816 /* MainFeedViewController.swift */,
 				1F0854312B8F254B00711660 /* MainCapsuleViewController.swift */,
-				1FAB4DED2B8C2AEB0054618A /* Main */,
 				1FAB4DEE2B8C2B800054618A /* Capsule */,
 				1F9DA7AD2B8C921900A74D84 /* SearchUser */,
+				1F722F0D2B938CB500407850 /* SplashVew */,
 				27D241B12B8F33A5000F8F16 /* OpenedTCViewController.swift */,
 				27F382812B8FB0400005F733 /* OpendedTCCollectionViewCell.swift */,
 			);
@@ -380,6 +390,7 @@
 		1FC44F0A2B932E9F002A75AF /* CreateCapsule */ = {
 			isa = PBXGroup;
 			children = (
+				1F1071BA2B95D3E8009E201A /* Location */,
 				1F0D3B2B2B89AA2B00A31E82 /* MainCreateCapsuleViewController.swift */,
 				1F0B913C2B908A5F0022EDD9 /* FindTabViewController.swift */,
 				1F0D3B312B89D85500A31E82 /* CapsuleUploadDeatilViewController.swift */,
@@ -621,6 +632,7 @@
 				1F0B91392B9089BB0022EDD9 /* MainTabBarView.swift in Sources */,
 				1F0D3B322B89D85500A31E82 /* CapsuleUploadDeatilViewController.swift in Sources */,
 				1FAB4DF82B8C49590054618A /* User.swift in Sources */,
+				1F1071BC2B95D400009E201A /* LocationConfirmationViewController.swift in Sources */,
 				27F382822B8FB0400005F733 /* OpendedTCCollectionViewCell.swift in Sources */,
 				1FAB4DF62B8C48AF0054618A /* FriendsViewModel.swift in Sources */,
 				1FAACDE12B8FAA520005B993 /* UIImage+RoundImage.swift in Sources */,
@@ -795,6 +807,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = dxTimeCapsule/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "사진을 추가하기 위해 카메라에 접근이 필요합니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자의 현재 위치를 기반으로 정보를 제공하기 위해 필요한 권한입니다.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진을 추가하기 위해 사진 라이브러리에 접근이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -826,6 +839,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = dxTimeCapsule/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "사진을 추가하기 위해 카메라에 접근이 필요합니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자의 현재 위치를 기반으로 정보를 제공하기 위해 필요한 권한입니다.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진을 추가하기 위해 사진 라이브러리에 접근이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;

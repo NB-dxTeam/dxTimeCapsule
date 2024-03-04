@@ -8,21 +8,16 @@
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        let window = UIWindow(windowScene: windowScene)
-        window.overrideUserInterfaceStyle = .light
-        
-        let splashVC = SplashViewController()
-        window.rootViewController = splashVC
-        window.makeKeyAndVisible()
-        
-        self.window = window
-            
+        // MainTabBarView를 루트 뷰 컨트롤러로 설정
+        let mainTabBarView = MainTabBarView()
+        window = UIWindow(windowScene: windowScene)
+        window?.rootViewController = mainTabBarView
+        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
