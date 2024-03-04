@@ -1,9 +1,9 @@
 import UIKit
 import SnapKit
-
-#Preview{
-    OpenedTCViewController()
-}
+//
+//#Preview{
+//    OpenedTCViewController()
+//}
 
 class OpenedTCViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
