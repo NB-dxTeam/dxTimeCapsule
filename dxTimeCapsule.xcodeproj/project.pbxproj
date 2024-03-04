@@ -57,6 +57,7 @@
 		27D241B02B8F32C5000F8F16 /* CreateTimeCapsuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D241AF2B8F32C5000F8F16 /* CreateTimeCapsuleViewController.swift */; };
 		27D241B22B8F33A5000F8F16 /* OpenedTCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D241B12B8F33A5000F8F16 /* OpenedTCViewController.swift */; };
 		460FE7672B8A200D00AF8086 /* LockedCapsuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */; };
+		465764BD2B90C06C00883FA6 /* CustomModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465764BC2B90C06C00883FA6 /* CustomModal.swift */; };
 		46EA9BAE2B89A27E00633EC4 /* CapsuleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */; };
 		4E2A09C82B8F755C00911390 /* OpenInteractionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */; };
 		4E2A09CA2B8F86C600911390 /* FadeInAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */; };
@@ -130,6 +131,7 @@
 		27D241B12B8F33A5000F8F16 /* OpenedTCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenedTCViewController.swift; sourceTree = "<group>"; };
 		4096504136FE62FB0887CFD8 /* Pods-dxTimeCapsule.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.debug.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.debug.xcconfig"; sourceTree = "<group>"; };
 		460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedCapsuleCell.swift; sourceTree = "<group>"; };
+		465764BC2B90C06C00883FA6 /* CustomModal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomModal.swift; sourceTree = "<group>"; };
 		46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleMapViewController.swift; sourceTree = "<group>"; };
 		4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInteractionViewController.swift; sourceTree = "<group>"; };
 		4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeInAnimator.swift; sourceTree = "<group>"; };
@@ -360,6 +362,7 @@
 		1FAB4DEE2B8C2B800054618A /* Capsule */ = {
 			isa = PBXGroup;
 			children = (
+				465764BC2B90C06C00883FA6 /* CustomModal.swift */,
 				460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */,
 			);
 			name = Capsule;
@@ -598,6 +601,7 @@
 				1FA11BF22B8F8C440014002F /* UITextField+Padding.swift in Sources */,
 				27D241B22B8F33A5000F8F16 /* OpenedTCViewController.swift in Sources */,
 				1F0B91392B9089BB0022EDD9 /* MainTabBarView.swift in Sources */,
+				465764BD2B90C06C00883FA6 /* CustomModal.swift in Sources */,
 				1F0D3B322B89D85500A31E82 /* CapsuleUploadDeatilViewController.swift in Sources */,
 				1FAB4DF82B8C49590054618A /* User.swift in Sources */,
 				1FAB4DF62B8C48AF0054618A /* FriendsViewModel.swift in Sources */,
@@ -647,6 +651,7 @@
 /* Begin XCBuildConfiguration section */
 		1F5786EA2B849AFA00C40B08 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1F0B91442B90903C0022EDD9 /* APIKey.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -710,6 +715,7 @@
 		};
 		1F5786EB2B849AFA00C40B08 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1F0B91442B90903C0022EDD9 /* APIKey.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
