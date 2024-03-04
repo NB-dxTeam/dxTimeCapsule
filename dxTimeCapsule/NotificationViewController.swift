@@ -24,7 +24,6 @@ class NotificationViewController: UIViewController, UITableViewDataSource, UITab
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title = "알림"
 
         // 테이블 뷰 속성 설정
         tableView.dataSource = self

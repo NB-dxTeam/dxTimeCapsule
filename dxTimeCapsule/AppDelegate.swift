@@ -15,16 +15,16 @@ import GoogleSignIn
          let NMFClientId = Bundle.main.infoDictionary?["NMFClientId"] as! String
          NMFAuthManager.shared().clientId = NMFClientId
          
-         if #available(iOS 13, *) {
-             // iOS 13 이상에서는 SceneDelegate에서 화면 설정을 처리합니다.
-         } else {
-             // iOS 12 이하에서만 UIWindow를 사용하여 화면을 설정합니다.
-             window = UIWindow(frame: UIScreen.main.bounds)
-             let rootViewController = LoginViewController()
-             let navigationController = UINavigationController(rootViewController: rootViewController)
-             window?.rootViewController = navigationController
-             window?.makeKeyAndVisible()
-         }
+//         if #available(iOS 13, *) {
+//             // iOS 13 이상에서는 SceneDelegate에서 화면 설정을 처리합니다.
+//         } else {
+//             // iOS 12 이하에서만 UIWindow를 사용하여 화면을 설정합니다.
+//             window = UIWindow(frame: UIScreen.main.bounds)
+//             let rootViewController = LoginViewController()
+//             let navigationController = UINavigationController(rootViewController: rootViewController)
+//             window?.rootViewController = rootViewController
+//             window?.makeKeyAndVisible()
+//         }
 
          return true
      }
@@ -35,7 +35,7 @@ import GoogleSignIn
          
          let rootViewController = LoginViewController()
          let navigationController = UINavigationController(rootViewController: rootViewController)
-         window.rootViewController = navigationController
+         window.rootViewController = rootViewController
          
          self.window = window
          window.makeKeyAndVisible()
