@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class LockedCapsuleCell: UICollectionViewCell {
     static let identifier = "LockedCapsuleCell"
@@ -74,7 +75,7 @@ class LockedCapsuleCell: UICollectionViewCell {
             make.top.equalTo(registerImage.snp.bottom).offset(5)
             make.leading.equalTo(dayBadge.snp.trailing).offset(10)
             make.height.equalTo(70)
-            make.width.equalTo(195)
+            make.width.equalTo(190)
         }
         
         registerDay.snp.makeConstraints { make in

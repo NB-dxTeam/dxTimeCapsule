@@ -35,11 +35,11 @@ class CustomModal: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpUI()
+        setupUI()
         configCV()
     }
-    
-    private func setUpUI() {
+    // addsubView, autolayout
+    private func setupUI() {
         view.addSubview(capsuleCollection)
         capsuleCollection.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -53,7 +53,7 @@ class CustomModal: UIViewController{
         capsuleCollection.register(LockedCapsuleCell.self, forCellWithReuseIdentifier: LockedCapsuleCell.identifier)
         capsuleCollection.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderView")
         capsuleCollection.isPagingEnabled = true
-        capsuleCollection.showsHorizontalScrollIndicator = false
+        capsuleCollection.showsHorizontalScrollIndicator = true
         capsuleCollection.decelerationRate = .fast
         if let layout = capsuleCollection.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .vertical // 스크롤 방향(가로)
@@ -104,7 +104,7 @@ extension CustomModal: UICollectionViewDelegate, UICollectionViewDataSource {
         //}
         
         //collectionView.reloadData()
-        headerView.headerLabel.text = "임시"
+        headerView.headerLabel.text = "여기에 정렬 옵션 추가"
         return headerView
     }
 }
@@ -123,7 +123,7 @@ extension CustomModal {
     }
 }
 
-
+// MARK: - CollectionView Header
 class HeaderView: UICollectionReusableView {
     static let reuseIdentifier = "HeaderView"
     

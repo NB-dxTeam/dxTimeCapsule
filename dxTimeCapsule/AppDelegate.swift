@@ -9,8 +9,6 @@ import NMapsMap
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
-        let NMFClientId = Bundle.main.infoDictionary?["NMFClientId"] as! String
-        NMFAuthManager.shared().clientId = NMFClientId
         
         // 윈도우 초기화 및 루트 뷰 컨트롤러 설정
         window = UIWindow(frame: UIScreen.main.bounds)

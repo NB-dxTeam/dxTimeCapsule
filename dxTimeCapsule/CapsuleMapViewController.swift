@@ -10,51 +10,82 @@ import MapKit
 import CoreLocation
 import SnapKit
 
-class CapsuleMapViewController: UIViewController {
+class CapsuleMapViewController: UIViewController, CLLocationManagerDelegate {
     
     private let capsuleMaps = MKMapView()
-    
+    var locationManager = CLLocationManager()
+    private var tapDidModal: UIButton = {
+        let button = UIButton()
+        button.setTitle("타임캡슐보기", for: .normal)
+        button.backgroundColor = .white
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 24)
+        button.setTitleColor(.systemBlue, for: .normal)
+        return button
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         addSubViews()
         autoLayouts()
+        locationSetting()
         showModalVC()
+        setupMapView()
+        tapDidModal.addTarget(self, action: #selector(modalButton(_:)), for: .touchUpInside)
     }
-    
-}
-
-extension CapsuleMapViewController {
     
 }
 
 extension CapsuleMapViewController {
     private func addSubViews() {
         self.view.addSubview(capsuleMaps)
+        self.view.addSubview(tapDidModal)
     }
     
     private func autoLayouts() {
         capsuleMaps.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.trailing.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.bottom.equalTo(tapDidModal.snp.top)
+        }
+        tapDidModal.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
     }
 }
 
+// MARK: - CLLocationManagerDelegate
+extension CapsuleMapViewController {
+    func locationSetting() {
+        locationManager.delegate = self
+        // 배터리에 맞게 권장되는 정확도
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        // 사용자 위치 권한 요청
+        locationManager.requestWhenInUseAuthorization()
+        // 위치 업데이트
+        locationManager.startUpdatingLocation()
+    }
+    
+    
+}
 extension CapsuleMapViewController {
     func showModalVC() {
         let vc = CustomModal()
         
         if let sheet = vc.sheetPresentationController {
             sheet.detents = [.medium(), .large()]
-
             sheet.prefersGrabberVisible = true
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
             sheet.largestUndimmedDetentIdentifier = .medium
         }
         
         self.present(vc, animated: true)
+    }
+    
+    
+    @objc func modalButton(_ sender: UIButton) {
+        showModalVC()
+        
     }
 }
 
@@ -71,11 +102,11 @@ extension CapsuleMapViewController: MKMapViewDelegate {
         // 현재 위치를 보여줌
         capsuleMaps.userTrackingMode = .follow
         // 핸드폰 방향에 따라 지도를 회전(앞에 레이더 포함)
-        capsuleMaps.userTrackingMode = .followWithHeading
+        //capsuleMaps.userTrackingMode = .followWithHeading
         
         // 애니메이션 효과가 추가 되어 부드럽게 화면 확대 및 이동
-        capsuleMaps.setUserTrackingMode(.follow, animated: true)
-        capsuleMaps.setUserTrackingMode(.followWithHeading, animated: true)
+        //capsuleMaps.setUserTrackingMode(.follow, animated: true)
+        //capsuleMaps.setUserTrackingMode(.followWithHeading, animated: true)
     }
     
     // 지도를 스크롤 및 확대할 때, 호출 됨. 즉, 지도 영역이 변경될 때 호출
