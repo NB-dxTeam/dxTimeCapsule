@@ -22,6 +22,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     private let labelsContainerView = UIView()
     private let profileImageView = UIImageView()
     private let nicknameLabel = UILabel()
+    private let editUsernameButton = UIButton()
     private let emailLabel = UILabel()
 //    private let selectImageLabel = UILabel()
     private let logoutButton = UIButton()
@@ -56,6 +57,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         view.backgroundColor = .white
         view.addSubview(profileImageView)
         view.addSubview(nicknameLabel)
+        view.addSubview(editUsernameButton)
         view.addSubview(logoutButton)
         view.addSubview(dividerView)
         view.addSubview(emailLabel)
@@ -98,6 +100,12 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         nicknameLabel.font = .pretendardSemiBold(ofSize: 24)
         nicknameLabel.textAlignment = .center
         
+        // Edit Nickname Button Setup
+        editUsernameButton.setTitle("Edit", for: .normal)
+        editUsernameButton.titleLabel?.font = .pretendardSemiBold(ofSize: 15)
+        editUsernameButton.setTitleColor(.darkGray, for: .normal)
+        editUsernameButton.addTarget(self, action: #selector(editUsernameTapped), for: .touchUpInside)
+
         // Email Label Setup
         logoutButton.titleLabel?.font = .pretendardSemiBold(ofSize: 24)
         emailLabel.textAlignment = .center
@@ -147,6 +155,11 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
             make.left.right.equalToSuperview().inset(20)
         }
 
+        editUsernameButton.snp.makeConstraints { make in
+            make.centerY.equalTo(nicknameLabel)
+            make.leading.equalTo(nicknameLabel.snp.trailing).offset(-30)
+            make.width.height.equalTo(20) // Adjust the size as needed
+        }
         
         // Email Label Constraints
         emailLabel.snp.makeConstraints { make in
@@ -260,6 +273,57 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     }
     
     // MARK: - Actions
+    
+    @objc private func editUsernameTapped() {
+        let alertController = UIAlertController(title: "닉네임 수정", message: "새로운 닉네임을 입력하세요.", preferredStyle: .alert)
+        
+        alertController.addTextField { textField in
+            textField.placeholder = "새로운 닉네임"
+        }
+        
+        let saveAction = UIAlertAction(title: "저장", style: .default) { [weak self] _ in
+            if let newNickname = alertController.textFields?.first?.text, !newNickname.isEmpty {
+                self?.updateUsername(newNickname)
+            } else {
+                // Show an error message if the new username is empty
+                self?.showErrorMessage("닉네임을 입력하세요.")
+            }
+        }
+        alertController.addAction(saveAction)
+        
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+
+    private func updateUsername(_ newUsername: String) {
+        // Update locally
+        nicknameLabel.text = newUsername
+        
+        // Update on server (Firestore)
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        let userRef = Firestore.firestore().collection("users").document(userId)
+        userRef.setData(["username": newUsername], merge: true) { error in
+            if let error = error {
+                print("Error updating username in Firestore: \(error.localizedDescription)")
+                // If update fails, revert back the username locally
+                self.nicknameLabel.text = self.userProfileViewModel.nickname
+            } else {
+                print("Username updated successfully")
+            }
+        }
+    }
+
+
+    private func showErrorMessage(_ message: String) {
+        let alertController = UIAlertController(title: "오류", message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
+    }
+
+    
     @objc private func logoutTapped() {
         let alertController = UIAlertController(title: "로그아웃", message: "로그아웃 하시겠습니까?", preferredStyle: .alert)
         
