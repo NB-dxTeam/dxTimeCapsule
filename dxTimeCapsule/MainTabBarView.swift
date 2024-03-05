@@ -14,14 +14,14 @@ class MainTabBarView: UITabBarController {
         let homeTabViewController = HomeViewController()
         homeTabViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Home_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Home_Select", targetSize: CGSize(width: 24, height: 24)))
         
-        let searchModalTableViewController = SearchModalTableViewController() // 이 부분에서 SearchViewController는 실제로 존재하는 UIViewController 클래스여야 합니다.
+        let searchModalTableViewController = SearchUserTableViewController() // 이 부분에서 SearchViewController는 실제로 존재하는 UIViewController 클래스여야 합니다.
         searchModalTableViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Search_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Search_Select", targetSize: CGSize(width: 24, height: 24)))
 
         
         let createCapsuleViewController = MainCreateCapsuleViewController()
         createCapsuleViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Write_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Write_Select", targetSize: CGSize(width: 24, height: 24)))
         
-        let notificationViewController = NotificationViewController()
+        let notificationViewController = FriendRequestsViewController()
         notificationViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Activity_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Activity_Select", targetSize: CGSize(width: 24, height: 24)))
         
         let profileViewController = UserProfileViewController()
