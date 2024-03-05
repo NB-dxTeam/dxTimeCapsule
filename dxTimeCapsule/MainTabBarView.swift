@@ -20,7 +20,7 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         let homeViewController = UINavigationController(rootViewController: HomeViewController())
         homeViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Home_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Home_Select", targetSize: CGSize(width: 24, height: 24)))
         
-        let searchModalTableViewController = UINavigationController(rootViewController: SearchModalTableViewController())
+        let searchModalTableViewController = UINavigationController(rootViewController: SearchUserTableViewController())
 
         searchModalTableViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Search_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Search_Select", targetSize: CGSize(width: 24, height: 24)))
         
