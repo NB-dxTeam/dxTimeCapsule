@@ -40,7 +40,7 @@ class MainCapsuleViewController: UIViewController {
     //캡슐이미지
     private lazy var capsuleImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "MainCapsule3")
+        imageView.image = UIImage(named: "TimeCapsule")
         imageView.contentMode = .scaleAspectFit
         imageView.isUserInteractionEnabled = true // 이미지 뷰가 사용자 인터랙션을 받을 수 있도록 설정
         return imageView
@@ -76,6 +76,7 @@ class MainCapsuleViewController: UIViewController {
         // 사용자의 UID로 필터링하고, openDate 필드로 오름차순 정렬한 후, 최상위 1개 문서만 가져옵니다.
            db.collection("timeCapsules")
              .whereField("uid", isEqualTo: userId)
+             .whereField("isOpened", isEqualTo: false) // 아직 열리지 않은 타임캡슐만 선택
              .order(by: "openDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
              .limit(to: 1) // 가장 개봉일이 가까운 타임캡슐 1개만 선택
              .getDocuments { (querySnapshot, err) in
@@ -140,8 +141,8 @@ class MainCapsuleViewController: UIViewController {
         capsuleImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview().offset(10)
-            make.width.equalTo(380)
-            make.height.equalTo(380)
+            make.width.equalTo(400)
+            make.height.equalTo(400)
         }
         
         // "타임캡슐을 오픈하세요!"
@@ -150,19 +151,19 @@ class MainCapsuleViewController: UIViewController {
             make.top.equalTo(capsuleImageView.snp.bottom).offset(5) // 이미지 아래에 위치
         }
         
-        // 장소명 레이블 레이아웃 설정
+        // 장소명
         locationName.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(80)
             make.centerX.equalToSuperview()
         }
         
-        // D-day 레이블 레이아웃 설정
+        // D-day
         daysLabel.snp.makeConstraints { make in
-            make.top.equalTo(locationName.snp.bottom).offset(450)
+            make.top.equalTo(locationName.snp.bottom).offset(460)
             make.centerX.equalToSuperview()
         }
         
-        // 생성 날짜 레이블 레이아웃 설정
+        // 생성 날짜
         creationDateLabel.snp.makeConstraints { make in
             make.top.equalTo(daysLabel.snp.bottom).offset(5) // D-day 레이블 아래에 위치
             make.centerX.equalToSuperview()
