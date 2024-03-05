@@ -10,7 +10,7 @@ import SnapKit
 
 class LockedCapsuleCell: UICollectionViewCell {
     static let identifier = "LockedCapsuleCell"
-    lazy var registerImage: UIImageView = {
+    lazy var registerImage: UIImageView = { // photoUrl
         let image = UIImageView()
         image.contentMode = .scaleToFill
         image.clipsToBounds = true
@@ -18,7 +18,7 @@ class LockedCapsuleCell: UICollectionViewCell {
         image.layer.masksToBounds = true
         return image
     }()
-    lazy var dayBadge: UILabel = {
+    lazy var dDay: UILabel = { // openDate - creationDate = D-Day
         let label = UILabel()
         label.backgroundColor = .systemBlue
         label.font = UIFont.boldSystemFont(ofSize: 16)
@@ -28,14 +28,14 @@ class LockedCapsuleCell: UICollectionViewCell {
         label.layer.masksToBounds = true
         return label
     }()
-    lazy var registerPlace: UILabel = {
+    lazy var userLocation: UILabel = { // userLocation
         let label = UILabel()
         label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 18)
         label.numberOfLines = 2
         return label
     }()
-    lazy var registerDay: UILabel = {
+    lazy var creationDate: UILabel = { // creationDate
         let label = UILabel()
         label.textColor = .gray
         label.font = UIFont.systemFont(ofSize: 16)
@@ -52,11 +52,35 @@ class LockedCapsuleCell: UICollectionViewCell {
 
     }
     
+    func configure(with timeCapsule: TimeCapsules) {
+        if let imageUrl = URL(string: timeCapsule.photoUrl), let imageData = try? Data(contentsOf: imageUrl) {
+                self.registerImage.image = UIImage(data: imageData)
+            } else {
+                self.registerImage.image = UIImage(named: "placeholder")
+            }
+
+        // Directly use openDate and creationDate since they are non-optional
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.day], from: timeCapsule.creationDate, to: timeCapsule.openDate)
+        if let days = components.day {
+            self.dDay.text = "D-\(days)"
+        }
+        
+        // Since userLocation is non-optional
+        self.userLocation.text = timeCapsule.userLocation
+        
+        // Format creationDate directly
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd" // Use your desired date format
+        let dateStr = dateFormatter.string(from: timeCapsule.creationDate)
+        self.creationDate.text = dateStr
+    }
+    
     private func setupViews() {
         contentView.addSubview(registerImage)
-        contentView.addSubview(dayBadge)
-        contentView.addSubview(registerPlace)
-        contentView.addSubview(registerDay)
+        contentView.addSubview(dDay)
+        contentView.addSubview(userLocation)
+        contentView.addSubview(creationDate)
         
         registerImage.snp.makeConstraints { make in
             make.top.leading.equalToSuperview().offset(10)
@@ -64,21 +88,21 @@ class LockedCapsuleCell: UICollectionViewCell {
             make.height.equalTo(registerImage.snp.width).multipliedBy(1.0/2.0)
         }
         
-        dayBadge.snp.makeConstraints { make in
+        dDay.snp.makeConstraints { make in
             make.top.equalTo(registerImage.snp.bottom).offset(5)
             make.leading.equalTo(registerImage.snp.leading)
             make.width.equalTo(60)
             make.height.equalTo(25)
         }
         
-        registerPlace.snp.makeConstraints { make in
+        userLocation.snp.makeConstraints { make in
             make.top.equalTo(registerImage.snp.bottom).offset(5)
-            make.leading.equalTo(dayBadge.snp.trailing).offset(10)
+            make.leading.equalTo(dDay.snp.trailing).offset(10)
             make.height.equalTo(70)
             make.width.equalTo(190)
         }
         
-        registerDay.snp.makeConstraints { make in
+        creationDate.snp.makeConstraints { make in
             make.trailing.equalTo(registerImage.snp.trailing)
             make.bottom.lessThanOrEqualToSuperview().inset(15)
         }

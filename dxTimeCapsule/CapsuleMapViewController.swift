@@ -12,7 +12,7 @@ import SnapKit
 
 class CapsuleMapViewController: UIViewController, CLLocationManagerDelegate {
     
-    private let capsuleMaps = MKMapView()
+    private let capsuleMaps = MKMapView() // 지도 뷰
     var locationManager = CLLocationManager()
     private lazy var tapDidModal: UIButton = {
         let button = UIButton()
@@ -23,7 +23,7 @@ class CapsuleMapViewController: UIViewController, CLLocationManagerDelegate {
         button.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         button.addTarget(self, action: #selector(modalButton(_:)), for: .touchUpInside)
         return button
-    }()
+    }() // 모달 버튼
     private lazy var currentLocationBotton: UIButton = {
         let button = UIButton()
         button.setTitle("현재위치로", for: .normal)
@@ -32,7 +32,7 @@ class CapsuleMapViewController: UIViewController, CLLocationManagerDelegate {
         button.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         button.addTarget(self, action: #selector(locationButton(_:)), for: .touchUpInside)
         return button
-    }()
+    }()// 현재 위치로
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -90,13 +90,16 @@ extension CapsuleMapViewController {
     
 }
 extension CapsuleMapViewController {
+    // CustomModal 뷰를 모달로 화면에 표시하는 함수
     func showModalVC() {
         let vc = CustomModal()
         
         if let sheet = vc.sheetPresentationController {
-            sheet.detents = [.small ,.medium(), .large()]
-            sheet.prefersGrabberVisible = true
+            sheet.detents = [.small ,.medium(), .large()] // 크기 옵션
+            sheet.prefersGrabberVisible = true // 모달의 상단 그랩 핸들러 표시 여부
+            // 스크롤 가능한 내영이 모달 끝에 도달했을 때 스크롤 확장 여부
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+            // 어둡지 않게 표시되는 최대 크기의 상태 설정
             sheet.largestUndimmedDetentIdentifier = .medium
         }
         

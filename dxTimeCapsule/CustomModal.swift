@@ -4,20 +4,23 @@
 //
 //  Created by YeongHo Ha on 2/28/24.
 //
-
-import NMapsMap
+import UIKit
 import SnapKit
+import FirebaseFirestore
+import FirebaseAuth
 
+struct TimeCapsules {
+    var creationDate: Date
+    var openDate: Date
+    var userLocation: String
+    var photoUrl: String
+    var comment: String
+}
 
-class CustomModal: UIViewController{
+class CustomModal: UIViewController {
     
-    var timeCapsule = [TimeCapsule]()
-    let dummyTimeCapsules = [
-        TimeCapsule(timeCapsuleId: "1", uid: "user123", mood: "Happy", photoUrl: "a-1", location: "#제주  #제주도 #김녕해수욕장", userLocation: "Namsan Tower", comment: "Great day!", tags: ["tag1", "tag2"], openDate: Date(), creationDate: Date()),
-        TimeCapsule(timeCapsuleId: "2", uid: "user124", mood: "Happy", photoUrl: "a-2", location: "#부산  #해운대 #바다", userLocation: "Namsan Tower", comment: "Great day!", tags: ["tag3", "tag4"], openDate: Date(), creationDate: Date()),
-        TimeCapsule(timeCapsuleId: "3", uid: "user125", mood: "Happy", photoUrl: "a-3", location: "#익산  #아가페정원 #메타세쿼이아", userLocation: "Namsan Tower", comment: "Great day!", tags: ["tag5", "tag6"], openDate: Date(), creationDate: Date()),
-        TimeCapsule(timeCapsuleId: "4", uid: "user126", mood: "Happy", photoUrl: "a-4", location: "#대천  #대천해수욕장 #여름휴가지", userLocation: "Namsan Tower", comment: "Great day!", tags: ["tag7", "tag8"], openDate: Date(), creationDate: Date()),
-    ]
+    var timeCapsule = [TimeCapsules]()
+    
     private var capsuleCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -36,7 +39,8 @@ class CustomModal: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        configCV()
+        configCollection()
+        fetchTimeCapsulesInfo()
     }
     // addsubView, autolayout
     private func setupUI() {
@@ -45,39 +49,75 @@ class CustomModal: UIViewController{
             make.edges.equalToSuperview()
         }
     }
-    
-    private func configCV() {
-        capsuleCollection.translatesAutoresizingMaskIntoConstraints = false
+    // 콜렉션 뷰 옵션
+    private func configCollection() {
         capsuleCollection.delegate = self
         capsuleCollection.dataSource = self
+        // 셀 등록
         capsuleCollection.register(LockedCapsuleCell.self, forCellWithReuseIdentifier: LockedCapsuleCell.identifier)
+        // 헤더 등록
         capsuleCollection.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderView")
-        capsuleCollection.isPagingEnabled = true
-        capsuleCollection.showsHorizontalScrollIndicator = true
-        capsuleCollection.decelerationRate = .fast
+        capsuleCollection.isPagingEnabled = true // 페이징 활성화
+        capsuleCollection.showsVerticalScrollIndicator = true // 수직 스크롤 인디케이터 표시 여부 설정.
+        capsuleCollection.decelerationRate = .normal // 콜렉션 뷰의 감속 속도 설정
         capsuleCollection.alpha = 0.8
         if let layout = capsuleCollection.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.scrollDirection = .vertical // 스크롤 방향(가로)
+            layout.scrollDirection = .vertical // 스크롤 방향(수직)
             let screenWidth = UIScreen.main.bounds.width
             let itemWidth = screenWidth * 0.9 // 화면 너비의 90%를 아이템 너비로 설정
             let itemHeight: CGFloat = 250 // 아이템 높이는 고정 값으로 설정
             layout.itemSize = CGSize(width: itemWidth, height: itemHeight)
-            
+            // 섹션 여백 설정
             let sectionInsetHorizontal = screenWidth * 0.05 // 좌우 여백을 화면 너비의 5%로 설정
             layout.sectionInset = UIEdgeInsets(top: 24, left: sectionInsetHorizontal, bottom: 24, right: sectionInsetHorizontal)
+            // 최소 줄 간격 설정
             let minimumLineSpacing = screenWidth * 0.1 // 최소 줄 간격을 화면 너비의 10%로 설정
             layout.minimumLineSpacing = minimumLineSpacing
             
         }
     }
-    
+    // 데이터 정보 가져오기.
+    private func fetchTimeCapsulesInfo() {
+        let db = Firestore.firestore()
+        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // Example UID, replace with dynamic UID
+        
+        db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
+            .getDocuments { [weak self] (querySnapshot, err) in
+                if let documents = querySnapshot?.documents {
+                    print("documents 개수: \(documents.count)")
+                    self?.timeCapsule = documents.compactMap { doc in
+                        let data = doc.data()
+                        let capsule = TimeCapsules(
+                            creationDate: data["creationDate"] as? Date ?? Date(),
+                            openDate: data["openDate"] as? Date ?? Date(),
+                            userLocation: data["userLocation"] as? String ?? "",
+                            photoUrl: data["photoUrl"] as? String ?? "",
+                            comment: data["comment"] as? String ?? ""
+                        )
+                        print("매핑된 캡슐: \(capsule)")
+                        return capsule
+                    }
+                    print("Fetching time capsules for userID: \(userId)")
+                    print("Fetched \(self?.timeCapsule.count ?? 0) timecapsules")
+                    
+                    DispatchQueue.main.async {
+                        print("콜렉션 뷰 리로드.")
+                        self?.capsuleCollection.reloadData()
+                    }
+                } else if let err = err {
+                    print("Error getting documents: \(err)")
+                } else {
+                    print("문서 성공적으로 가져옴.")
+                }
+            }
+    }
 }
 
 extension CustomModal: UICollectionViewDelegate, UICollectionViewDataSource {
     // MARK: - UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return dummyTimeCapsules.count
+        return timeCapsule.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -85,12 +125,8 @@ extension CustomModal: UICollectionViewDelegate, UICollectionViewDataSource {
             fatalError("Unable to dequeue LockedCapsuleCell")
         }
         
-        let timeCapsule = dummyTimeCapsules[indexPath.item]
-        cell.registerImage.image = UIImage(named: timeCapsule.photoUrl ?? "placeholder")
-        cell.dayBadge.text = "D-\(daysUntilOpenDate(timeCapsule.openDate))"
-        cell.registerPlace.text = timeCapsule.location ?? ""
-        cell.registerDay.text = dateFormatter.string(from: timeCapsule.creationDate)
-        print("위치: \(timeCapsule.location ?? ""), 개봉일: \(timeCapsule.openDate), 등록일: \(timeCapsule.creationDate), 사용자 위치: \(timeCapsule.userLocation ?? "") ")
+        let timeCapsule = timeCapsule[indexPath.row]
+        cell.configure(with: timeCapsule)
         return cell
     }
     
