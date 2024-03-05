@@ -6,7 +6,8 @@ extension UIButton {
     
     // BlurryBeach 테마
     func setBlurryBeach() {
-        setGradient(colors: [#colorLiteral(red: 0.8352941176, green: 0.2, blue: 0.4117647059, alpha: 1), #colorLiteral(red: 0.7960784314, green: 0.6784313725, blue: 0.4274509804, alpha: 1)])
+        setGradient(colors: [#colorLiteral(red: 0.831372549, green: 0.2, blue: 0.4117647059, alpha: 1), #colorLiteral(red: 0.7960784314, green: 0.6784313725, blue: 0.4274509804, alpha: 1)])
+        setTitleColor(.white, for: .normal)
     }
 
     // AzurLane 테마
