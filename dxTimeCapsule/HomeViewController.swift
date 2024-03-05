@@ -10,9 +10,6 @@ import SnapKit
 import FirebaseFirestore
 import FirebaseAuth
 
-#Preview{
-    HomeViewController()
-}
 
 class HomeViewController: UIViewController {
 

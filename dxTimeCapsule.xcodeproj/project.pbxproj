@@ -54,9 +54,6 @@
 		1FD2B79C2B96BD7300896F9C /* LocationMapkitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B79B2B96BD7300896F9C /* LocationMapkitViewController.swift */; };
 		1FD2B7A42B96BEFE00896F9C /* NotificationName+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7A12B96BEFE00896F9C /* NotificationName+Extension.swift */; };
 		1FD2B7A52B96BEFE00896F9C /* UIStackView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7A22B96BEFE00896F9C /* UIStackView+Extensions.swift */; };
-		1FD2B7B02B96BF5C00896F9C /* SearchBarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7AA2B96BF5C00896F9C /* SearchBarCell.swift */; };
-		1FD2B7B22B96BF5C00896F9C /* HorizontalSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7AC2B96BF5C00896F9C /* HorizontalSearchCell.swift */; };
-		1FD2B7B32B96BF5C00896F9C /* ListStyleCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7AD2B96BF5C00896F9C /* ListStyleCollectionViewHeader.swift */; };
 		1FD2B7B42B96BF5C00896F9C /* BottomSheetControllerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7AE2B96BF5C00896F9C /* BottomSheetControllerViewModel.swift */; };
 		1FD2B7BA2B96C04B00896F9C /* HorizontalSearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7B62B96C04B00896F9C /* HorizontalSearchModel.swift */; };
 		1FD2B7BB2B96C04B00896F9C /* CarouselButtonModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7B72B96C04B00896F9C /* CarouselButtonModel.swift */; };
@@ -78,6 +75,7 @@
 		D20CDCCF2B96D86100B93788 /* FriendRequestTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20CDCCE2B96D86100B93788 /* FriendRequestTableViewCell.swift */; };
 		D22B171C2B971599006CAEA6 /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D22B171B2B971599006CAEA6 /* FriendRequest.swift */; };
 		D22B171E2B97163C006CAEA6 /* Friendship.swift in Sources */ = {isa = PBXBuildFile; fileRef = D22B171D2B97163C006CAEA6 /* Friendship.swift */; };
+		D22B171F2B973416006CAEA6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467D1DE22B972499005249B1 /* SceneDelegate.swift */; };
 		D25B20EB2B89CD02006CEED8 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25B20EA2B89CD02006CEED8 /* SplashViewController.swift */; };
 		FFC457642B8F0F36000761E9 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC457632B8F0F36000761E9 /* UserProfileViewModel.swift */; };
 		FFC457662B8F0F74000761E9 /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC457652B8F0F74000761E9 /* UserProfileViewController.swift */; };
@@ -132,10 +130,6 @@
 		1FD2B79B2B96BD7300896F9C /* LocationMapkitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMapkitViewController.swift; sourceTree = "<group>"; };
 		1FD2B7A12B96BEFE00896F9C /* NotificationName+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NotificationName+Extension.swift"; sourceTree = "<group>"; };
 		1FD2B7A22B96BEFE00896F9C /* UIStackView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extensions.swift"; sourceTree = "<group>"; };
-		1FD2B7AA2B96BF5C00896F9C /* SearchBarCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchBarCell.swift; sourceTree = "<group>"; };
-		1FD2B7AB2B96BF5C00896F9C /* CarouselButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarouselButtonCell.swift; sourceTree = "<group>"; };
-		1FD2B7AC2B96BF5C00896F9C /* HorizontalSearchCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HorizontalSearchCell.swift; sourceTree = "<group>"; };
-		1FD2B7AD2B96BF5C00896F9C /* ListStyleCollectionViewHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListStyleCollectionViewHeader.swift; sourceTree = "<group>"; };
 		1FD2B7AE2B96BF5C00896F9C /* BottomSheetControllerViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomSheetControllerViewModel.swift; sourceTree = "<group>"; };
 		1FD2B7B62B96C04B00896F9C /* HorizontalSearchModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HorizontalSearchModel.swift; sourceTree = "<group>"; };
 		1FD2B7B72B96C04B00896F9C /* CarouselButtonModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarouselButtonModel.swift; sourceTree = "<group>"; };
@@ -385,20 +379,8 @@
 			children = (
 				1FD2B7AE2B96BF5C00896F9C /* BottomSheetControllerViewModel.swift */,
 				1FD2B7BE2B96E55900896F9C /* BottomSheetViewController.swift */,
-				1FD2B7A92B96BF5C00896F9C /* Cells */,
 			);
 			name = BottomSheet;
-			sourceTree = "<group>";
-		};
-		1FD2B7A92B96BF5C00896F9C /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-				1FD2B7AA2B96BF5C00896F9C /* SearchBarCell.swift */,
-				1FD2B7AB2B96BF5C00896F9C /* CarouselButtonCell.swift */,
-				1FD2B7AC2B96BF5C00896F9C /* HorizontalSearchCell.swift */,
-				1FD2B7AD2B96BF5C00896F9C /* ListStyleCollectionViewHeader.swift */,
-			);
-			path = Cells;
 			sourceTree = "<group>";
 		};
 		1FD2B7B52B96C04B00896F9C /* Model */ = {
@@ -631,7 +613,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FD2B7B32B96BF5C00896F9C /* ListStyleCollectionViewHeader.swift in Sources */,
 				FFC457642B8F0F36000761E9 /* UserProfileViewModel.swift in Sources */,
 				D22B171E2B97163C006CAEA6 /* Friendship.swift in Sources */,
 				FFC457662B8F0F74000761E9 /* UserProfileViewController.swift in Sources */,
@@ -645,9 +626,7 @@
 				1F8EA39E2B9538DD004856B7 /* UIFont+CustomFont.swift in Sources */,
 				1FB387352B87A0B300054816 /* SignUpViewController.swift in Sources */,
 				1F367EA62B8F803A00563908 /* UIColor+Hex.swift in Sources */,
-				1FD2B7B02B96BF5C00896F9C /* SearchBarCell.swift in Sources */,
 				4EC308DE2B8A200300EEE54C /* MainCapsuleViewModel.swift in Sources */,
-				1FD2B7B22B96BF5C00896F9C /* HorizontalSearchCell.swift in Sources */,
 				1F8EA39A2B944054004856B7 /* UIViewController+Debugging.swift in Sources */,
 				1FA11BF22B8F8C440014002F /* UITextField+Padding.swift in Sources */,
 				27D241B22B8F33A5000F8F16 /* OpenedTCViewController.swift in Sources */,
@@ -667,6 +646,7 @@
 				1FB387402B8881DB00054816 /* TimeCapsule.swift in Sources */,
 				1FB387392B8863DE00054816 /* HomeViewController.swift in Sources */,
 				1F0B913D2B908A5F0022EDD9 /* FindTabViewController.swift in Sources */,
+				D22B171F2B973416006CAEA6 /* SceneDelegate.swift in Sources */,
 				1F0B91082B9026020022EDD9 /* UIImageView+RoundImage.swift in Sources */,
 				1FF8691B2B8F4D81007B5112 /* UIButton+Gradient.swift in Sources */,
 				D20CDCCD2B959DFE00B93788 /* FriendsRequestViewController.swift in Sources */,
@@ -842,7 +822,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -874,7 +854,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
