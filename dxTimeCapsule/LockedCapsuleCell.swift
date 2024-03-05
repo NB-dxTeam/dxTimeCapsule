@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 
+
 class LockedCapsuleCell: UICollectionViewCell {
     static let identifier = "LockedCapsuleCell"
     lazy var registerImage: UIImageView = { // photoUrl
@@ -115,7 +116,7 @@ class LockedCapsuleCell: UICollectionViewCell {
         self.layer.borderColor = UIColor.gray.cgColor// 테두리 색상
         self.layer.cornerRadius = 30.0 // 모서리 설정
     }
-
 }
+
 
 

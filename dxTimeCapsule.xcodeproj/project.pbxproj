@@ -54,7 +54,6 @@
 		1FD2B79C2B96BD7300896F9C /* LocationMapkitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B79B2B96BD7300896F9C /* LocationMapkitViewController.swift */; };
 		1FD2B7A42B96BEFE00896F9C /* NotificationName+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7A12B96BEFE00896F9C /* NotificationName+Extension.swift */; };
 		1FD2B7A52B96BEFE00896F9C /* UIStackView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7A22B96BEFE00896F9C /* UIStackView+Extensions.swift */; };
-		1FD2B7A62B96BEFE00896F9C /* UICollectionViewReusableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7A32B96BEFE00896F9C /* UICollectionViewReusableView+Extension.swift */; };
 		1FD2B7B02B96BF5C00896F9C /* SearchBarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7AA2B96BF5C00896F9C /* SearchBarCell.swift */; };
 		1FD2B7B22B96BF5C00896F9C /* HorizontalSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7AC2B96BF5C00896F9C /* HorizontalSearchCell.swift */; };
 		1FD2B7B32B96BF5C00896F9C /* ListStyleCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7AD2B96BF5C00896F9C /* ListStyleCollectionViewHeader.swift */; };
@@ -133,7 +132,6 @@
 		1FD2B79B2B96BD7300896F9C /* LocationMapkitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMapkitViewController.swift; sourceTree = "<group>"; };
 		1FD2B7A12B96BEFE00896F9C /* NotificationName+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NotificationName+Extension.swift"; sourceTree = "<group>"; };
 		1FD2B7A22B96BEFE00896F9C /* UIStackView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extensions.swift"; sourceTree = "<group>"; };
-		1FD2B7A32B96BEFE00896F9C /* UICollectionViewReusableView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionViewReusableView+Extension.swift"; sourceTree = "<group>"; };
 		1FD2B7AA2B96BF5C00896F9C /* SearchBarCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchBarCell.swift; sourceTree = "<group>"; };
 		1FD2B7AB2B96BF5C00896F9C /* CarouselButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarouselButtonCell.swift; sourceTree = "<group>"; };
 		1FD2B7AC2B96BF5C00896F9C /* HorizontalSearchCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HorizontalSearchCell.swift; sourceTree = "<group>"; };
@@ -146,7 +144,6 @@
 		1FD2B7BE2B96E55900896F9C /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
 		1FF8691A2B8F4D81007B5112 /* UIButton+Gradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Gradient.swift"; sourceTree = "<group>"; };
 		24940157E90C825F0AF8F6E7 /* Pods-dxTimeCapsule.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.release.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.release.xcconfig"; sourceTree = "<group>"; };
-		2754754C2B95C1E800614ED5 /* APIKey.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = APIKey.xcconfig; sourceTree = "<group>"; };
 		27865AD32B8DFCA900DB8DB6 /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		27D241B12B8F33A5000F8F16 /* OpenedTCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenedTCViewController.swift; sourceTree = "<group>"; };
 		27F3827E2B8FA1240005F733 /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
@@ -157,7 +154,6 @@
 		46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleMapViewController.swift; sourceTree = "<group>"; };
 		4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInteractionViewController.swift; sourceTree = "<group>"; };
 		4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeInAnimator.swift; sourceTree = "<group>"; };
-		4E2A09CC2B907D1D00911390 /* APIKey.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = APIKey.xcconfig; sourceTree = "<group>"; };
 		4EC308DD2B8A200300EEE54C /* MainCapsuleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCapsuleViewModel.swift; sourceTree = "<group>"; };
 		9E53E63672B22459B20786B7 /* Pods_dxTimeCapsule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dxTimeCapsule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D20CDCC92B957D5D00B93788 /* SearchUserTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserTableViewController.swift; sourceTree = "<group>"; };
@@ -206,7 +202,6 @@
 		1F5786CC2B849AF800C40B08 = {
 			isa = PBXGroup;
 			children = (
-				4E2A09CC2B907D1D00911390 /* APIKey.xcconfig */,
 				1F5786D72B849AF800C40B08 /* dxTimeCapsule */,
 				25AD7CDE47BA0E85739F3959 /* Pods */,
 				3CC1A9291EBAFDCA26B0042E /* Frameworks */,
@@ -225,7 +220,6 @@
 		1F5786D72B849AF800C40B08 /* dxTimeCapsule */ = {
 			isa = PBXGroup;
 			children = (
-				2754754C2B95C1E800614ED5 /* APIKey.xcconfig */,
 				1F5786F52B849D0D00C40B08 /* Model */,
 				1F5786EF2B849C2200C40B08 /* ViewModel */,
 				1FF869182B8F4D3E007B5112 /* Utilities */,
@@ -449,7 +443,6 @@
 			isa = PBXGroup;
 			children = (
 				1FD2B7A12B96BEFE00896F9C /* NotificationName+Extension.swift */,
-				1FD2B7A32B96BEFE00896F9C /* UICollectionViewReusableView+Extension.swift */,
 				1FD2B7A22B96BEFE00896F9C /* UIStackView+Extensions.swift */,
 				1F8EA39D2B9538DD004856B7 /* UIFont+CustomFont.swift */,
 				1FF8691A2B8F4D81007B5112 /* UIButton+Gradient.swift */,
@@ -681,7 +674,6 @@
 				1F52DE1D2B972C9000EE2E1E /* CustomModal.swift in Sources */,
 				1F5786F22B849CA900C40B08 /* AuthenticationViewModel.swift in Sources */,
 				1FB387372B8862AF00054816 /* MainFeedViewController.swift in Sources */,
-				1FD2B7A62B96BEFE00896F9C /* UICollectionViewReusableView+Extension.swift in Sources */,
 				1F9DA7B12B8C93BD00A74D84 /* SearchUserTableViewCell.swift in Sources */,
 				1F0854152B8EF4F400711660 /* TestLoginViewController.swift in Sources */,
 				4E2A09C82B8F755C00911390 /* OpenInteractionViewController.swift in Sources */,

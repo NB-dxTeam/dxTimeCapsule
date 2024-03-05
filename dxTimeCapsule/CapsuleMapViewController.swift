@@ -12,7 +12,6 @@ import SnapKit
 
 class CapsuleMapViewController: UIViewController, CLLocationManagerDelegate {
     
-
     private let capsuleMaps = MKMapView() // 지도 뷰
     var locationManager = CLLocationManager()
     private lazy var tapDidModal: UIButton = {
@@ -34,40 +33,15 @@ class CapsuleMapViewController: UIViewController, CLLocationManagerDelegate {
         button.addTarget(self, action: #selector(locationButton(_:)), for: .touchUpInside)
         return button
     }()// 현재 위치로
-
-    var timeCapsule = [TimeCapsule]()
-//    let dummyTimeCapsules = [
-//        TimeCapsule(timeCapsuleId: "1", uid: "user123", mood: "Happy", photoUrl: "SkyImage", location: "서울특별시 양천구 신월동", userLocation: "Namsan Tower", comment: "Great day!", tags: ["tag1", "tag2"], openDate: Date(), creationDate: Date()),
-//        TimeCapsule(timeCapsuleId: "2", uid: "user124", mood: "Happy", photoUrl: "snow", location: "서울특별시 양천구 신월동", userLocation: "Namsan Tower", comment: "Great day!", tags: ["tag1", "tag2"], openDate: Date(), creationDate: Date()),
-//        TimeCapsule(timeCapsuleId: "3", uid: "user124", mood: "Happy", photoUrl: "rain", location: "경기도 의정부시 의정부동", userLocation: "Namsan Tower", comment: "Great day!", tags: ["tag1", "tag2"], openDate: Date(), creationDate: Date()),
-//    ]
-    private lazy var capsuleMaps: NMFMapView = {
-        let map = NMFMapView(frame: view.frame)
-        return map
-    }()
-    private lazy var capsuleCollection: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collection.backgroundColor = .white
-        //collection.backgroundColor = UIColor(red: 92/255, green: 177/255, blue: 255/255, alpha: 1.0)
-        collection.layer.cornerRadius = 30
-        collection.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        collection.layer.masksToBounds = true
-        return collection
-    }()
-    
-    private lazy var dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yy.MM.dd"
-        return formatter
-    }()
-
- feat-MapPage
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        addSubViews()
+        autoLayouts()
         locationSetting()
         showModalVC()
         setupMapView()
         buttons()
-
     }
     
 }
@@ -140,28 +114,8 @@ extension CapsuleMapViewController {
     @objc func locationButton(_ sender: UIButton) {
         capsuleMaps.setUserTrackingMode(.followWithHeading, animated: true)
     }
-//
-//extension CapsuleMapViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-    // MARK: - UICollectionViewDataSource
-    /*func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {*/
-//        return dummyTimeCapsules.count
-//}
-
     
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LockedCapsuleCell.identifier, for: indexPath) as? LockedCapsuleCell else {
-//            fatalError("Unable to dequeue LockedCapsuleCell")
-//        }
-//        let timeCapsule = dummyTimeCapsules[indexPath.item]
-//        cell.registerImage.image = UIImage(named: timeCapsule.photoUrl ?? "placeholder")
-//        cell.dayBadge.text = "D-\(daysUntilOpenDate(timeCapsule.openDate))"
-//        cell.registerPlace.text = timeCapsule.location ?? ""
-//        cell.registerDay.text = dateFormatter.string(from: timeCapsule.creationDate)
-//        print("위치: \(timeCapsule.location ?? ""), 개봉일: \(timeCapsule.openDate), 등록일: \(timeCapsule.creationDate), 사용자 위치: \(timeCapsule.userLocation ?? "") ")
-//        return cell
-//    }
-//    
-
+}
 
 // MARK: -MKMapViewDalegate
 extension CapsuleMapViewController: MKMapViewDelegate {
