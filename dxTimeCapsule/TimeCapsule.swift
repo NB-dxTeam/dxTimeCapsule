@@ -12,5 +12,6 @@ struct TimeCapsule {
     var userMood: String // 선택된 기분
     var tagFriend: [String]? // 친구 태그 배열
     var createTimeCapsuleDate: Date // 생성일
-    var openTimeCapsuleDate: Date // 개봉일
+    var TimeCapsuleDate: Date // 생성일
+    var timeCapsuleIsOpen: Bool = false
 }

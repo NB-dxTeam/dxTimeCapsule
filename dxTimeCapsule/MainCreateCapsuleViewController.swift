@@ -60,6 +60,7 @@ class MainCreateCapsuleViewController: UIViewController, UIImagePickerController
         // 필요한 경우 위치 정보를 사용하는 로직 추가
     }
     
+    
     // 업로드 영역 뷰 설정
     private func setupUploadAreaView() {
         uploadAreaView.backgroundColor = .systemGray6 // 더 밝은 회색으로 설정
@@ -242,3 +243,5 @@ class MainCreateCapsuleViewController: UIViewController, UIImagePickerController
           }
       }
   }
+
+

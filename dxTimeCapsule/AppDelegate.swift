@@ -1,5 +1,4 @@
 import UIKit
-import NMapsMap
 import FirebaseCore
 import FirebaseAuth
 import GoogleSignIn
@@ -10,33 +9,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
         // Firebase 설정
         FirebaseApp.configure()
-        
-        // 네비게이션 바 스타일 설정
-        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
-        UINavigationBar.appearance().shadowImage = UIImage()
-        UINavigationBar.appearance().isTranslucent = true
         
         // 메인 윈도우 설정
         window = UIWindow(frame: UIScreen.main.bounds)
         
         // MainTabBarView를 루트 뷰 컨트롤러로 설정
         let mainTabBarView = MainTabBarView()
-        window?.rootViewController = mainTabBarView
+        
+        // 네비게이션 컨트롤러로 래핑하여 네비게이션 바 사용
+        let navigationController = UINavigationController(rootViewController: mainTabBarView)
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
-        
-        // NMFClientId 설정
-        let NMFClientId = Bundle.main.infoDictionary?["NMFClientId"] as! String
-        NMFAuthManager.shared().clientId = NMFClientId
-        
+
+
         return true
-    }
-    
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard let windowScene = (scene as? UIWindowScene) else { return }
-        
     }
     
     // MARK: UISceneSession Lifecycle

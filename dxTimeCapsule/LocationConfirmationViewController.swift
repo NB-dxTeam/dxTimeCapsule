@@ -16,8 +16,8 @@ class LocationConfirmationViewController: UIViewController, CLLocationManagerDel
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "여기서 타임캡슐을 생성하시나요?"
-        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.text = "타임캡슐 생성 위치를 확인해주세요"
+        label.font = UIFont.pretendardSemiBold(ofSize: 24)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -25,7 +25,7 @@ class LocationConfirmationViewController: UIViewController, CLLocationManagerDel
     
     private let createCapsuleButton: UIButton = {
         let button = UIButton()
-        button.setTitle("타임캡슐 생성하기", for: .normal)
+        button.setTitle("여기에 타임캡슐 생성하기", for: .normal)
         button.backgroundColor = UIColor(hex: "#D53369")
         button.layer.cornerRadius = 8
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -35,12 +35,23 @@ class LocationConfirmationViewController: UIViewController, CLLocationManagerDel
     
     private let continueButton: UIButton = {
         let button = UIButton()
-        button.setTitle("타임캡슐 마저 만들러 가기", for: .normal)
+        button.setTitle("위치를 수정 하시겠습니까?", for: .normal)
         button.setTitleColor(UIColor(hex: "#D53369"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(LocationConfirmationViewController.self, action: #selector(continueButtonTapped), for: .touchUpInside)
         return button
     }()
+    
+    // 현재 위치로 돌아가는 버튼 추가
+      private let currentLocationButton: UIButton = {
+          let button = UIButton(type: .system)
+          button.setImage(UIImage(systemName: "location.circle.fill"), for: .normal)
+          button.tintColor = .systemBlue
+          button.translatesAutoresizingMaskIntoConstraints = false
+          button.addTarget(LocationConfirmationViewController.self, action: #selector(currentLocationButtonTapped), for: .touchUpInside)
+          return button
+      }()
+      
     
     // MARK: - Lifecycle
     
@@ -92,6 +103,16 @@ class LocationConfirmationViewController: UIViewController, CLLocationManagerDel
         ])
     }
     
+    private func setupCurrentLocationButton() {
+            view.addSubview(currentLocationButton)
+            NSLayoutConstraint.activate([
+                currentLocationButton.bottomAnchor.constraint(equalTo: mapView.bottomAnchor, constant: -20),
+                currentLocationButton.leadingAnchor.constraint(equalTo: mapView.leadingAnchor, constant: 20),
+                currentLocationButton.widthAnchor.constraint(equalToConstant: 50),
+                currentLocationButton.heightAnchor.constraint(equalToConstant: 50)
+            ])
+        }
+    
     // 위치 서비스 권한 요청
      private func requestLocationAccess() {
          let status = CLLocationManager.authorizationStatus() // iOS 14 이전 버전을 위한 처리
@@ -107,16 +128,42 @@ class LocationConfirmationViewController: UIViewController, CLLocationManagerDel
           locationManager.startUpdatingLocation() // 위치 업데이트 시작
       }
     
-    // MARK: - Actions
+    private func addLongPressGesture() {
+         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(gesture:)))
+         mapView.addGestureRecognizer(longPressGesture)
+     }
+
     
-    @objc private func createCapsuleButtonTapped() {
-        // Implement action when "타임캡슐 생성하기" button is tapped
-    }
+    // MARK: - Actions
     
     @objc private func continueButtonTapped() {
         // Implement action when "타임캡슐 마저 만들러 가기" button is tapped
         dismiss(animated: true, completion: nil)
     }
+    
+    @objc func currentLocationButtonTapped() {
+        locationManager.startUpdatingLocation()
+    }
+    
+    // action when "타임캡슐 생성하기" button is tapped
+    @objc func createCapsuleButtonTapped() {
+        if let currentLocation = locationManager.location?.coordinate {
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = currentLocation
+            mapView.addAnnotation(annotation)
+        }
+    }
+    
+    @objc func handleLongPress(gesture: UILongPressGestureRecognizer) {
+          if gesture.state == .began {
+              let locationInView = gesture.location(in: mapView)
+              let coordinate = mapView.convert(locationInView, toCoordinateFrom: mapView)
+              let annotation = MKPointAnnotation()
+              annotation.coordinate = coordinate
+              mapView.addAnnotation(annotation)
+          }
+      }
+
     
     // MARK: - CLLocationManagerDelegate methods
     
@@ -134,5 +181,14 @@ class LocationConfirmationViewController: UIViewController, CLLocationManagerDel
             let region = MKCoordinateRegion(center: location.coordinate, span: span)
             mapView.setRegion(region, animated: true)
         }
+    }
+}
+
+// MARK: - Preview
+import SwiftUI
+
+struct PreView1 : PreviewProvider {
+    static var previews: some View {
+    LocationConfirmationViewController().toPreview()
     }
 }

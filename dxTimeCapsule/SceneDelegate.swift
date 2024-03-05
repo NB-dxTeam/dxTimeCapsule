@@ -13,11 +13,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        // MainTabBarView를 루트 뷰 컨트롤러로 설정
-        let mainTabBarView = MainTabBarView()
-        window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = mainTabBarView
-        window?.makeKeyAndVisible()
+        let window = UIWindow(windowScene: windowScene)
+        window.overrideUserInterfaceStyle = .light
+        
+        let spalshVC = SplashViewController()
+        window.rootViewController = spalshVC
+        window.makeKeyAndVisible()
+        
+        self.window = window
+        
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
