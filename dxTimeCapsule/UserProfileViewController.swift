@@ -23,7 +23,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     private let profileImageView = UIImageView()
     private let nicknameLabel = UILabel()
     private let emailLabel = UILabel()
-    private let selectImageLabel = UILabel()
+//    private let selectImageLabel = UILabel()
     private let logoutButton = UIButton()
     private let areYouSerious = UILabel()
     private let deleteAccountLabel = UILabel()
@@ -55,13 +55,13 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     private func setupViews() {
         view.backgroundColor = .white
         view.addSubview(profileImageView)
-        view.addSubview(selectImageLabel)
         view.addSubview(nicknameLabel)
         view.addSubview(logoutButton)
         view.addSubview(dividerView)
         view.addSubview(emailLabel)
         view.addSubview(labelsContainerView)
         view.addSubview(loadingIndicator)
+        
         
         // 로딩 인디케이터 설정
         loadingIndicator.center = view.center
@@ -71,19 +71,29 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         profileImageView.clipsToBounds = true
         profileImageView.layer.cornerRadius = 50
         
-        // Select Image Label
-        selectImageLabel.text = "Edit"
-        selectImageLabel.font = .systemFont(ofSize: 14, weight: .regular)
-        selectImageLabel.textColor = UIColor(hex: "#D28488")
-        selectImageLabel.textAlignment = .center
+        // 프로필 이미지 뷰 설정
+        profileImageView.isUserInteractionEnabled = true
         
-        let labelTapGesture = UITapGestureRecognizer(target: self, action: #selector(changePhotoTapped))
-        selectImageLabel.isUserInteractionEnabled = true
-        selectImageLabel.addGestureRecognizer(labelTapGesture)
+        // 프로필 이미지 탭 제스처 추가
+        let imageTapGesture = UITapGestureRecognizer(target: self, action: #selector(changePhotoTapped))
+        profileImageView.addGestureRecognizer(imageTapGesture)
         
         let imageSize: CGFloat = 220 // 원하는 이미지 크기로 설정
         profileImageView.layer.cornerRadius = imageSize / 2 // 이미지 뷰를 둥글게 처리하기 위해 반지름을 이미지 크기의 절반으로 설정
-    
+        
+        // "Edit" 레이블 추가
+        let editLabel = UILabel()
+        editLabel.text = "Edit"
+        editLabel.font = UIFont.pretendardBold(ofSize: 15)
+        editLabel.textColor =  .white
+        
+        profileImageView.addSubview(editLabel)
+        
+        editLabel.snp.makeConstraints { make in
+          make.bottom.equalTo(profileImageView.snp.bottom).offset(-10)
+          make.centerX.equalTo(profileImageView.snp.centerX)
+        }
+        
         // Nickname Label Setup
         nicknameLabel.font = .pretendardSemiBold(ofSize: 24)
         nicknameLabel.textAlignment = .center
@@ -120,6 +130,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         deleteAccountLabel.addGestureRecognizer(tapGesture)
     }
 
+
     private func setupConstraints() {
         // Profile Image View Constraints
         profileImageView.snp.makeConstraints { make in
@@ -129,18 +140,13 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
             profileImageView.setRoundedImage()
         }
         
-        // Select Image Label Constraints
-        selectImageLabel.snp.makeConstraints { make in
-            make.top.equalTo(profileImageView.snp.bottom).offset(5)
-            make.left.right.equalToSuperview().inset(20)
-        }
-        
         // Nickname Label Constraints
         nicknameLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(selectImageLabel.snp.bottom).offset(20)
+            make.top.equalTo(profileImageView.snp.bottom).offset(20) // 수정된 부분
             make.left.right.equalToSuperview().inset(20)
         }
+
         
         // Email Label Constraints
         emailLabel.snp.makeConstraints { make in
@@ -236,15 +242,24 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         }
     }
 
-    // MARK: - Actions
-    @objc private func changePhotoTapped() {
+// MARK: - Fuctions
+    func openCamera() {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            let imagePickerController = UIImagePickerController()
+            imagePickerController.delegate = self
+            imagePickerController.sourceType = .camera
+            present(imagePickerController, animated: true)
+        }
+    }
+
+    func openPhotoLibrary() {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
-        imagePickerController.allowsEditing = true
         imagePickerController.sourceType = .photoLibrary
-        present(imagePickerController, animated: true, completion: nil)
+        present(imagePickerController, animated: true)
     }
     
+    // MARK: - Actions
     @objc private func logoutTapped() {
         do {
             try Auth.auth().signOut()
@@ -317,6 +332,35 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         }
     }
     
+    @objc private func changePhotoTapped() {
+        let alertController = UIAlertController(title: "프로필 사진 변경", message: "사진을 선택해주세요.", preferredStyle: .actionSheet)
+
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            let cameraAction = UIAlertAction(title: "카메라로 촬영하기", style: .default) { [weak self] _ in
+                self?.presentImagePicker(sourceType: .camera)
+            }
+            alertController.addAction(cameraAction)
+        }
+
+        let photoLibraryAction = UIAlertAction(title: "앨범에서 선택하기", style: .default) { [weak self] _ in
+            self?.presentImagePicker(sourceType: .photoLibrary)
+        }
+        alertController.addAction(photoLibraryAction)
+
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        alertController.addAction(cancelAction)
+
+        present(alertController, animated: true)
+    }
+
+    private func presentImagePicker(sourceType: UIImagePickerController.SourceType) {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = sourceType
+        imagePickerController.allowsEditing = true
+        present(imagePickerController, animated: true)
+    }
+
     
     // MARK: - Image Picker Delegate
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -376,8 +420,6 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     }
     
 }
-
-
 
 func configureButton(_ button: UIButton, title: String) {
     button.setTitle(title, for: .normal)

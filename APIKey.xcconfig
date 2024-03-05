@@ -1,0 +1,13 @@
+//
+//  APIKey.xcconfig
+//  dxTimeCapsule
+//
+//  Created by YeongHo Ha on 2/24/24.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+X_NCP_APIGW_API_KEY = CMlW1bsH38CA61HFNfbhBtpBWvXY40jQA2EeqYXA
+X_NCP_APIGW_API_KEY_ID = oj6slyx71a
+NMFClientId = oj6slyx71a

@@ -19,7 +19,7 @@ class TimeCapsuleCreationViewModel {
             "user_location": timeCapsule.userLocation ?? "", // 사용자 위치
             "comment": timeCapsule.userLocation ?? "", // 코멘트
             "tags": timeCapsule.tagFriend ?? [], // 태그
-            "openDate": timeCapsule.openTimeCapsuleDate, // 개봉일
+            "openDate": timeCapsule.createTimeCapsuleDate, // 개봉일
             "creationDate": timeCapsule.createTimeCapsuleDate // 생성일
         ]
         
