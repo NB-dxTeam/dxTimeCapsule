@@ -13,7 +13,7 @@ import FirebaseFirestore
 import FirebaseStorage
 
 
-class UserProfileViewController: UIViewController {
+class UserProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     // MARK: - Properties
     private let userProfileViewModel = UserProfileViewModel()
@@ -23,26 +23,32 @@ class UserProfileViewController: UIViewController {
     private let profileImageView = UIImageView()
     private let nicknameLabel = UILabel()
     private let emailLabel = UILabel()
+//    private let selectImageLabel = UILabel()
     private let logoutButton = UIButton()
-    
     private let areYouSerious = UILabel()
     private let deleteAccountLabel = UILabel()
     private let dividerView = UIView()
+    private var loadingIndicator = UIActivityIndicatorView(style: .medium) // 로딩 인디케이터 추가
+
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
         setupConstraints()
+        showLoadingIndicator() // 데이터 로딩 전 로딩 인디케이터 표시
         userProfileViewModel.fetchUserData { [weak self] in
+            self?.hideLoadingIndicator() // 데이터 로딩 완료 후 로딩 인디케이터 숨김
             self?.bindViewModel()
         }
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        logoutButton.applyGradient(colors: [#colorLiteral(red: 0.831372549, green: 0.2, blue: 0.4117647059, alpha: 1), #colorLiteral(red: 0.7960784314, green: 0.6784313725, blue: 0.4274509804, alpha: 1)])
-        
+
+        // 이미지 뷰의 크기에 따라 cornerRadius를 동적으로 설정합니다.
+        let imageSize: CGFloat = profileImageView.frame.width
+        profileImageView.layer.cornerRadius = imageSize / 2
+        logoutButton.setGradient(colors: [#colorLiteral(red: 0.831372549, green: 0.2, blue: 0.4117647059, alpha: 1), #colorLiteral(red: 0.7960784314, green: 0.6784313725, blue: 0.4274509804, alpha: 1)])
     }
     
     // MARK: - Setup
@@ -54,34 +60,65 @@ class UserProfileViewController: UIViewController {
         view.addSubview(dividerView)
         view.addSubview(emailLabel)
         view.addSubview(labelsContainerView)
+        view.addSubview(loadingIndicator)
+        
+        
+        // 로딩 인디케이터 설정
+        loadingIndicator.center = view.center
         
         // Profile Image View Setup
         profileImageView.contentMode = .scaleAspectFill
         profileImageView.clipsToBounds = true
         profileImageView.layer.cornerRadius = 50
         
+        // 프로필 이미지 뷰 설정
+        profileImageView.isUserInteractionEnabled = true
+        
+        // 프로필 이미지 탭 제스처 추가
+        let imageTapGesture = UITapGestureRecognizer(target: self, action: #selector(changePhotoTapped))
+        profileImageView.addGestureRecognizer(imageTapGesture)
+        
+        let imageSize: CGFloat = 220 // 원하는 이미지 크기로 설정
+        profileImageView.layer.cornerRadius = imageSize / 2 // 이미지 뷰를 둥글게 처리하기 위해 반지름을 이미지 크기의 절반으로 설정
+        
+        // "Edit" 레이블 추가
+        let editLabel = UILabel()
+        editLabel.text = "Edit"
+        editLabel.font = UIFont.pretendardBold(ofSize: 15)
+        editLabel.textColor =  .white
+        
+        profileImageView.addSubview(editLabel)
+        
+        editLabel.snp.makeConstraints { make in
+          make.bottom.equalTo(profileImageView.snp.bottom).offset(-10)
+          make.centerX.equalTo(profileImageView.snp.centerX)
+        }
+        
         // Nickname Label Setup
-        nicknameLabel.font = .systemFont(ofSize: 24, weight: .bold)
+        nicknameLabel.font = .pretendardSemiBold(ofSize: 24)
         nicknameLabel.textAlignment = .center
         
         // Email Label Setup
-        emailLabel.font = .systemFont(ofSize: 18, weight: .regular)
+        logoutButton.titleLabel?.font = .pretendardSemiBold(ofSize: 24)
         emailLabel.textAlignment = .center
-               
+        
         // Logout Button Setup
-        logoutButton.setTitle("로그아웃", for: .normal)
-        logoutButton.backgroundColor = .systemMint
-        logoutButton.layer.cornerRadius = 5
+        logoutButton.setTitle("Logout", for: .normal)
+        logoutButton.titleLabel?.font = .pretendardSemiBold(ofSize: 14)
         logoutButton.addTarget(self, action: #selector(logoutTapped), for: .touchUpInside)
+        logoutButton.layer.cornerRadius = 12
+        
+        // Divider View Setup
+        dividerView.backgroundColor = .lightGray
         
         // "계정이 없으신가요?" 라벨 설정
-        areYouSerious.text = "정말 탈퇴하실 건가요..?"
-        areYouSerious.font = .systemFont(ofSize: 14)
+        areYouSerious.text = "Are you really going to leave?"
+        areYouSerious.font = .pretendardSemiBold(ofSize: 14)
         areYouSerious.textColor = .black
         
         // Delete Account Label Setup
-        deleteAccountLabel.text = "탈퇴하기"
-        deleteAccountLabel.font = .systemFont(ofSize: 14, weight: .bold)
+        deleteAccountLabel.text = "Leave Account"
+        deleteAccountLabel.font = .pretendardSemiBold(ofSize: 14)
         deleteAccountLabel.textColor = UIColor(hex: "#D28488")
         deleteAccountLabel.textAlignment = .center
         
@@ -92,29 +129,35 @@ class UserProfileViewController: UIViewController {
         deleteAccountLabel.isUserInteractionEnabled = true // 사용자 인터랙션 활성화
         deleteAccountLabel.addGestureRecognizer(tapGesture)
     }
-    
+
+
     private func setupConstraints() {
         // Profile Image View Constraints
         profileImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(100)
             make.centerX.equalToSuperview()
-            make.width.height.equalTo(100)
+            make.centerY.equalToSuperview().offset(-130)
+            make.width.height.equalTo(220)
+            profileImageView.setRoundedImage()
         }
         
         // Nickname Label Constraints
         nicknameLabel.snp.makeConstraints { make in
-            make.top.equalTo(profileImageView.snp.bottom).offset(20)
+            make.centerX.equalToSuperview()
+            make.top.equalTo(profileImageView.snp.bottom).offset(20) // 수정된 부분
             make.left.right.equalToSuperview().inset(20)
         }
+
         
         // Email Label Constraints
         emailLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
             make.top.equalTo(nicknameLabel.snp.bottom).offset(10)
             make.left.right.equalToSuperview().inset(20)
         }
         
         // Logout Button Constraints
         logoutButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
             make.top.equalTo(emailLabel.snp.bottom).offset(20)
             make.left.right.equalToSuperview().inset(50)
             make.height.equalTo(50)
@@ -122,6 +165,7 @@ class UserProfileViewController: UIViewController {
         
         // Ensure dividerView is added to the view before setting constraints
         dividerView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-70)
             make.left.right.equalToSuperview().inset(20)
             make.height.equalTo(1)
@@ -129,8 +173,8 @@ class UserProfileViewController: UIViewController {
         
         // labelsContainerView에 대한 높이 제약 조건 추가
         labelsContainerView.snp.makeConstraints { make in
-            make.top.equalTo(dividerView.snp.bottom).offset(15)
             make.centerX.equalToSuperview()
+            make.top.equalTo(dividerView.snp.bottom).offset(15)
             // 높이를 명시적으로 설정
             make.height.equalTo(20)
         }
@@ -140,13 +184,34 @@ class UserProfileViewController: UIViewController {
             make.left.equalTo(labelsContainerView.snp.left)
             make.centerY.equalTo(labelsContainerView.snp.centerY)
         }
-
+        
         deleteAccountLabel.snp.makeConstraints { make in
             make.right.equalTo(labelsContainerView.snp.right)
             make.centerY.equalTo(labelsContainerView.snp.centerY)
             make.left.equalTo(areYouSerious.snp.right).offset(5)
         }
+        
+        // 로딩 인디케이터 제약 조건 추가
+         loadingIndicator.snp.makeConstraints { make in
+             make.center.equalToSuperview()
+         }
     }
+
+    // MARK: - Loading Indicator
+      private func showLoadingIndicator() {
+          loadingIndicator.startAnimating()
+          profileImageView.isHidden = true // 로딩 중에는 프로필 이미지 숨김
+          nicknameLabel.isHidden = true // 로딩 중에는 닉네임 레이블 숨김
+          emailLabel.isHidden = true // 로딩 중에는 이메일 레이블 숨김
+      }
+      
+      private func hideLoadingIndicator() {
+          loadingIndicator.stopAnimating()
+          loadingIndicator.isHidden = true
+          profileImageView.isHidden = false // 로딩 완료 후 프로필 이미지 표시
+          nicknameLabel.isHidden = false // 로딩 완료 후 닉네임 레이블 표시
+          emailLabel.isHidden = false // 로딩 완료 후 이메일 레이블 표시
+      }
     
     // MARK: - Binding
     private func bindViewModel() {
@@ -157,16 +222,44 @@ class UserProfileViewController: UIViewController {
             // 기본 이미지를 사용하거나 이미지가 없는 경우를 처리할 수 있습니다.
             profileImageView.image = UIImage(named: "LoginLogo")
         }
-
+        
         // 닉네임 설정
         nicknameLabel.text = userProfileViewModel.nickname
         
         // 이메일 설정
         emailLabel.text = userProfileViewModel.email
+        
+        // 프로필 이미지 설정
+        if let profileImageUrl = userProfileViewModel.profileImageUrl, !profileImageUrl.isEmpty {
+            profileImageView.sd_setImage(with: URL(string: profileImageUrl), placeholderImage: UIImage(named: "defaultProfileImage")) { [weak self] _, _, _, _ in
+                // 이미지가 로드된 후에 실행되는 클로저
+                self?.profileImageView.setNeedsLayout() // 이미지뷰를 레이아웃 갱신 요청
+                self?.profileImageView.layoutIfNeeded() // 이미지뷰의 레이아웃 갱신
+            }
+        } else {
+            // 기본 이미지를 사용하거나 이미지가 없는 경우를 처리할 수 있습니다.
+            profileImageView.image = UIImage(named: "LoginLogo")
+        }
+    }
+
+// MARK: - Fuctions
+    func openCamera() {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            let imagePickerController = UIImagePickerController()
+            imagePickerController.delegate = self
+            imagePickerController.sourceType = .camera
+            present(imagePickerController, animated: true)
+        }
+    }
+
+    func openPhotoLibrary() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = .photoLibrary
+        present(imagePickerController, animated: true)
     }
     
     // MARK: - Actions
-    
     @objc private func logoutTapped() {
         do {
             try Auth.auth().signOut()
@@ -178,11 +271,14 @@ class UserProfileViewController: UIViewController {
             let loginViewController = LoginViewController()
             sceneDelegate.window?.rootViewController = loginViewController
             sceneDelegate.window?.makeKeyAndVisible()
+            
+            print("로그아웃 성공")
+
+            
         } catch let signOutError as NSError {
             print("로그아웃 실패: \(signOutError.localizedDescription)")
         }
     }
-    
     
     @objc private func deleteProfileTapped() {
         // 사용자 ID를 가져옵니다.
@@ -198,7 +294,7 @@ class UserProfileViewController: UIViewController {
             }
             
             // Firebase Storage에서 사용자 이미지 삭제
-            let storageRef = Storage.storage().reference().child("userProfileImages/\(userId)/profileImage.jpg")
+            let storageRef = Storage.storage().reference().child("userProfileImages/\(userId)")
             storageRef.delete { error in
                 if let error = error as NSError? {
                     // Storage 오류 코드 확인
@@ -235,7 +331,101 @@ class UserProfileViewController: UIViewController {
             }
         }
     }
+    
+    @objc private func changePhotoTapped() {
+        let alertController = UIAlertController(title: "프로필 사진 변경", message: "사진을 선택해주세요.", preferredStyle: .actionSheet)
+
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            let cameraAction = UIAlertAction(title: "카메라로 촬영하기", style: .default) { [weak self] _ in
+                self?.presentImagePicker(sourceType: .camera)
+            }
+            alertController.addAction(cameraAction)
+        }
+
+        let photoLibraryAction = UIAlertAction(title: "앨범에서 선택하기", style: .default) { [weak self] _ in
+            self?.presentImagePicker(sourceType: .photoLibrary)
+        }
+        alertController.addAction(photoLibraryAction)
+
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        alertController.addAction(cancelAction)
+
+        present(alertController, animated: true)
+    }
+
+    private func presentImagePicker(sourceType: UIImagePickerController.SourceType) {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = sourceType
+        imagePickerController.allowsEditing = true
+        present(imagePickerController, animated: true)
+    }
+
+    
+    // MARK: - Image Picker Delegate
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        guard let image = info[.editedImage] as? UIImage ?? info[.originalImage] as? UIImage else {
+            dismiss(animated: true)
+            return
+        }
+        // Update profile image view
+        profileImageView.image = image
+        dismiss(animated: true)
+        
+        // Upload image to server (Firebase Storage) and update Firestore if needed
+        uploadImageToServer(image)
+    }
+    
+    @objc func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true)
+    }
+    
+    // MARK: - Image Upload
+    private func uploadImageToServer(_ image: UIImage) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            // User not authenticated
+            return
+        }
+        
+        guard let imageData = image.jpegData(compressionQuality: 0.75) else {
+            // Error converting image to data
+            return
+        }
+        
+        let storageRef = Storage.storage().reference().child("userProfileImages/\(uid)/profileImage.jpg")
+        storageRef.putData(imageData, metadata: nil) { metadata, error in
+            if let error = error {
+                print("Error uploading image: \(error.localizedDescription)")
+                return
+            }
+            
+            // Image uploaded successfully
+            storageRef.downloadURL { url, error in
+                guard let downloadURL = url else {
+                    print("Error retrieving download URL: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+                
+                // Update user profile image URL in Firestore
+                let userRef = Firestore.firestore().collection("users").document(uid)
+                userRef.setData(["profileImageUrl": downloadURL.absoluteString], merge: true) { error in
+                    if let error = error {
+                        print("Error updating profile image URL in Firestore: \(error.localizedDescription)")
+                        return
+                    }
+                    print("Profile image URL updated successfully")
+                }
+            }
+        }
+    }
+    
 }
 
-
-
+func configureButton(_ button: UIButton, title: String) {
+    button.setTitle(title, for: .normal)
+    button.setTitleColor(.white, for: .normal)
+    button.layer.cornerRadius = 12
+    button.snp.makeConstraints { make in
+        make.height.equalTo(44)
+    }
+}

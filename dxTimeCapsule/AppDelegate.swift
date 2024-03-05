@@ -1,27 +1,32 @@
 import UIKit
 import FirebaseCore
-import NMapsMap
+import FirebaseAuth
+import GoogleSignIn
+
 
 @UIApplicationMain
- class AppDelegate: UIResponder, UIApplicationDelegate {
-
-  var window: UIWindow?
-
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    
+    var window: UIWindow?
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // Firebase 설정
         FirebaseApp.configure()
-        let NMFClientId = Bundle.main.infoDictionary?["NMFClientId"] as! String
-        NMFAuthManager.shared().clientId = NMFClientId
         
-        // 윈도우 초기화 및 루트 뷰 컨트롤러 설정
+        // 메인 윈도우 설정
         window = UIWindow(frame: UIScreen.main.bounds)
-        let rootViewController = LoginViewController()
-        let navigationController = UINavigationController(rootViewController: rootViewController)
+        
+        // MainTabBarView를 루트 뷰 컨트롤러로 설정
+        let mainTabBarView = MainTabBarView()
+        
+        // 네비게이션 컨트롤러로 래핑하여 네비게이션 바 사용
+        let navigationController = UINavigationController(rootViewController: mainTabBarView)
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
-        
+
         return true
     }
-    
+
     
     // MARK: UISceneSession Lifecycle
     
