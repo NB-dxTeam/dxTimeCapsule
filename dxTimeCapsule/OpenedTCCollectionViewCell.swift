@@ -30,7 +30,7 @@ class OpenedTCCollectionViewCell: UICollectionViewCell {
                 imageView.bottomAnchor.constraint(equalTo: bottomAnchor)
             ])
            // 모서리를 둥글게 처리
-           layer.cornerRadius = 20
+           layer.cornerRadius = 10
            layer.masksToBounds = true
         }
         

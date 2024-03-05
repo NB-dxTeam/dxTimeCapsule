@@ -2,9 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NMFClientId</key>
+	<string>$(NMFClientId)</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>proximanova_bold</string>
+		<string>ProximaNova-Regular.ttf</string>
+		<string>ProximaNova-Bold.ttf</string>
+		<string>ProximaNova-Black.ttf</string>
+		<string>Pretendard-Regular.otf</string>
+		<string>Pretendard-SemiBold.otf</string>
+		<string>Pretendard-Bold.otf</string>
+		<string>Pretendard-Black.otf</string>
+		<string>Pretendard-Medium.otf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
@@ -23,5 +32,9 @@
 			</array>
 		</dict>
 	</dict>
+	<key>X-NCP-APIGW-API-KEY</key>
+	<string>$(X-NCP-APIGW-API-KEY)</string>
+	<key>X-NCP-APIGW-API-KEY-ID</key>
+	<string>$(X-NCP-APIGW-API-KEY-ID)</string>
 </dict>
 </plist>

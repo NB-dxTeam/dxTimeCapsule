@@ -32,3 +32,18 @@ import Foundation
 //        break
 //    }
 //}
+
+
+
+//// MARK: - HalfSizePresentationController
+//class HalfSizePresentationController: UIPresentationController {
+//    override var frameOfPresentedViewInContainerView: CGRect {
+//        guard let containerView = containerView else { return CGRect.zero }
+//        let originY = containerView.bounds.height / 3 // 화면의 1/3 위치에서 모달이 시작되도록 설정 // 시작 위치
+//        return CGRect(x: 0, y: originY, width: containerView.bounds.width, height: containerView.bounds.height * 2 / 3) // 화면의 2/3 만큼의 높이로 모달 크기 설정 /// 사이즈
+//    }
+//    
+//    override func containerViewWillLayoutSubviews() {
+//        presentedView?.frame = frameOfPresentedViewInContainerView
+//    }
+//}
