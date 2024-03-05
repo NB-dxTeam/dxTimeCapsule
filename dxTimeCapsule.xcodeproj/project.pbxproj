@@ -12,8 +12,6 @@
 		1F0854172B8F091500711660 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F0854162B8F091500711660 /* GoogleService-Info.plist */; };
 		1F0854322B8F254B00711660 /* MainCapsuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0854312B8F254B00711660 /* MainCapsuleViewController.swift */; };
 		1F0854342B8F25A200711660 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0854332B8F25A200711660 /* SceneDelegate.swift */; };
-		1F0D3B2C2B89AA2B00A31E82 /* UploadPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0D3B2B2B89AA2B00A31E82 /* UploadPhotoViewController.swift */; };
-		1F0D3B322B89D85500A31E82 /* UploadDeatilViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0D3B312B89D85500A31E82 /* UploadDeatilViewController.swift */; };
 		1F0854362B8F27D100711660 /* APIKey.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1F0854352B8F27D100711660 /* APIKey.xcconfig */; };
 		1F0B91062B901D170022EDD9 /* Etc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0B91052B901D170022EDD9 /* Etc.swift */; };
 		1F0B91082B9026020022EDD9 /* UIImageView+RoundImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0B91072B9026020022EDD9 /* UIImageView+RoundImage.swift */; };
@@ -57,6 +55,7 @@
 		46EA9BAE2B89A27E00633EC4 /* CapsuleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */; };
 		4E2A09C82B8F755C00911390 /* OpenInteractionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */; };
 		4E2A09CA2B8F86C600911390 /* FadeInAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */; };
+		4E2A09CD2B907D1D00911390 /* APIKey.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 4E2A09CC2B907D1D00911390 /* APIKey.xcconfig */; };
 		4EC308DE2B8A200300EEE54C /* MainCapsuleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC308DD2B8A200300EEE54C /* MainCapsuleViewModel.swift */; };
 		D25B20EB2B89CD02006CEED8 /* LaunchScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25B20EA2B89CD02006CEED8 /* LaunchScreenViewController.swift */; };
 		FFC457642B8F0F36000761E9 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC457632B8F0F36000761E9 /* UserProfileViewModel.swift */; };
@@ -77,8 +76,6 @@
 		1F0854222B8F0F7300711660 /* proximanova_black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = proximanova_black.otf; sourceTree = "<group>"; };
 		1F0854312B8F254B00711660 /* MainCapsuleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCapsuleViewController.swift; sourceTree = "<group>"; };
 		1F0854332B8F25A200711660 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		1F0D3B2B2B89AA2B00A31E82 /* UploadPhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPhotoViewController.swift; sourceTree = "<group>"; };
-		1F0D3B312B89D85500A31E82 /* UploadDeatilViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadDeatilViewController.swift; sourceTree = "<group>"; };
 		1F0854352B8F27D100711660 /* APIKey.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = APIKey.xcconfig; sourceTree = "<group>"; };
 		1F0B91052B901D170022EDD9 /* Etc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Etc.swift; sourceTree = "<group>"; };
 		1F0B91072B9026020022EDD9 /* UIImageView+RoundImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+RoundImage.swift"; sourceTree = "<group>"; };
@@ -126,6 +123,7 @@
 		46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleMapViewController.swift; sourceTree = "<group>"; };
 		4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInteractionViewController.swift; sourceTree = "<group>"; };
 		4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeInAnimator.swift; sourceTree = "<group>"; };
+		4E2A09CC2B907D1D00911390 /* APIKey.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = APIKey.xcconfig; sourceTree = "<group>"; };
 		4EC308DD2B8A200300EEE54C /* MainCapsuleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCapsuleViewModel.swift; sourceTree = "<group>"; };
 		9E53E63672B22459B20786B7 /* Pods_dxTimeCapsule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dxTimeCapsule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D25B20EA2B89CD02006CEED8 /* LaunchScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewController.swift; sourceTree = "<group>"; };
@@ -180,9 +178,11 @@
 		1F5786CC2B849AF800C40B08 = {
 			isa = PBXGroup;
 			children = (
+				4E2A09CC2B907D1D00911390 /* APIKey.xcconfig */,
 				1F5786D72B849AF800C40B08 /* dxTimeCapsule */,
 				25AD7CDE47BA0E85739F3959 /* Pods */,
 				3CC1A9291EBAFDCA26B0042E /* Frameworks */,
+				4E2A09CB2B907C0A00911390 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -432,6 +432,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		4E2A09CB2B907C0A00911390 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				1F0854352B8F27D100711660 /* APIKey.xcconfig */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -497,13 +505,8 @@
 				1F5786E82B849AFA00C40B08 /* LaunchScreen.storyboard in Resources */,
 				1FF869242B8F503D007B5112 /* proximanova_black.otf in Resources */,
 				1FF869222B8F503D007B5112 /* proximanova_extrabold.otf in Resources */,
+				4E2A09CD2B907D1D00911390 /* APIKey.xcconfig in Resources */,
 				1F0854172B8F091500711660 /* GoogleService-Info.plist in Resources */,
-				1F0854232B8F0F7300711660 /* proximanova_light.otf in Resources */,
-				1F0854272B8F0F7300711660 /* proximanova_extrabold.otf in Resources */,
-				1F0854242B8F0F7300711660 /* proximanova_blackit.otf in Resources */,
-				1F08542A2B8F0F7300711660 /* proximanova_bold.otf in Resources */,
-				1F0854282B8F0F7300711660 /* proximanova_regular.ttf in Resources */,
-				1F0854262B8F0F7300711660 /* proximanova_boldit.otf in Resources */,
 				1FF8691D2B8F503D007B5112 /* proximanova_boldit.otf in Resources */,
 				1FF8691C2B8F503D007B5112 /* proximanova_light.otf in Resources */,
 				1FF869232B8F503D007B5112 /* proximanova_bold.otf in Resources */,
