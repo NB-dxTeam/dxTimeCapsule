@@ -1,105 +1,62 @@
 import UIKit
 import MapKit
 import CoreLocation
-import Combine
 import SnapKit
 
 class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate {
+    
     // MARK: - Properties
-    
-    private let mapView: MKMapView = {
-        let mapView = MKMapView()
-        mapView.translatesAutoresizingMaskIntoConstraints = false
-        return mapView
-    }()
-    
-    
-    private var subscriptions = Set<AnyCancellable>()
-    
-    private lazy var bottomSheetController = BottomSheetViewController()
-    
-    private let locationManager = CLLocationManager()
-    
-    private let currentLocationButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "location.circle.fill"), for: .normal)
-        button.tintColor = .systemBlue
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(currentLocationButtonTapped), for: .touchUpInside) // 대상을 self로 변경
-        return button
-    }()
-    
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "타임캡슐 생성 위치를 확인해주세요"
-        label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-
-    private let createCapsuleButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("여기에 타임캡슐 생성하기", for: .normal)
-        button.backgroundColor = UIColor.systemBlue
-        button.layer.cornerRadius = 8
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(handleCreateCapsuleTap), for: .touchUpInside)
-        return button
-    }()
-
-    private let modifyLocationButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("위치를 수정 하시겠습니까?", for: .normal)
-        button.setTitleColor(UIColor.systemBlue, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(handleModifyLocationTap), for: .touchUpInside)
-        return button
-    }()
+    private var mapView: MKMapView!
+    private var locationManager: CLLocationManager!
+    private var currentLocationButton: UIButton!
+    private var titleLabel: UILabel!
+    private var createCapsuleButton: UIButton!
+    private var modifyLocationButton: UIButton!
+    private var centerView: UIView!
+    private var bottomSheetController: BottomSheetViewController!
 
     // MARK: - Initialization
-    
-    init(viewModel: MainViewModel) {
-        self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
-        bindViewModel()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    // MARK: - View Lifecycle
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupViews()
-
-        locationManager.delegate = self // Set CLLocationManagerDelegate
-        requestLocationAccess()
+        initializeComponents()
+        setupLayout()
+        configureLocationServices()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        // 바텀시트 표시 로직 추가
-        presentBottomSheetController()
-        addTapGestureToBackground()
-        addLongPressGesture()
+           super.viewWillAppear(animated)
+           presentBottomSheetController()
+       }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
 
+        createCapsuleButton.setBlurryBeach()
+        createCapsuleButton.tintColor = UIColor(hex: "#D53369")
+        createCapsuleButton.backgroundColor = UIColor.clear.withAlphaComponent(0.5)
     }
-    
-    // MARK: - UI Setup
-    
-    private func setupViews() {
-        view.backgroundColor = .white
+
+    private func initializeComponents() {
+        mapView = MKMapView()
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        currentLocationButton = UIButton(type: .system)
+        titleLabel = UILabel()
+        createCapsuleButton = UIButton()
+        modifyLocationButton = UIButton()
+        bottomSheetController = BottomSheetViewController()
+        centerView = UIView()
+    }
+
+    // MARK: - Setup Layout
+    private func setupLayout() {
         setupMapView()
         setupCurrentLocationButton()
         setupTitleLabelAndButtons()
-        setupDismissButton() // 뷰 닫기 버튼 설정
+        setupCenterView()
+
     }
-    
-    // MARK: - Layout
+
     private func setupMapView() {
         view.addSubview(mapView)
         mapView.snp.makeConstraints { make in
@@ -108,6 +65,9 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate 
     }
 
     private func setupCurrentLocationButton() {
+        currentLocationButton.setImage(UIImage(systemName: "location.circle.fill"), for: .normal)
+        currentLocationButton.tintColor = .systemBlue
+        currentLocationButton.addTarget(self, action: #selector(currentLocationButtonTapped), for: .touchUpInside)
         view.addSubview(currentLocationButton)
         currentLocationButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
@@ -116,179 +76,120 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate 
         }
     }
     
+// MARK: - Setup UI & Layout
+    
     private func setupTitleLabelAndButtons() {
-        view.addSubview(titleLabel)
-        view.addSubview(createCapsuleButton)
-        view.addSubview(modifyLocationButton)
-        
+        // 타이틀 레이블 설정
+        titleLabel.text = "타임캡슐 생성 위치를 확인해주세요"
+        titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        titleLabel.textAlignment = .center
+        centerView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(mapView.snp.bottom).offset(10)
-            make.centerX.equalToSuperview()
+            make.top.equalTo(centerView.snp.top).offset(20) // centerView의 상단으로부터 20pt 떨어진 위치에 배치
+            make.left.equalTo(centerView.snp.left).offset(20)
+            make.right.equalTo(centerView.snp.right).inset(20)
         }
-        
+
+        // 타임캡슐 생성 버튼 설정
+        createCapsuleButton.setTitle("여기에 타임캡슐 생성하기", for: .normal)
+        createCapsuleButton.layer.cornerRadius = 8
+        createCapsuleButton.addTarget(self, action: #selector(handleCreateCapsuleTap), for: .touchUpInside)
+
+        centerView.addSubview(createCapsuleButton)
         createCapsuleButton.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(10)
-            make.centerX.equalToSuperview()
-            make.width.equalToSuperview().multipliedBy(0.8)
-            make.height.equalTo(50)
+            make.top.equalTo(titleLabel.snp.bottom).offset(10) // 타이틀 레이블 아래로 10pt 떨어진 위치에 배치
+            make.left.equalTo(centerView.snp.left).offset(20)
+            make.right.equalTo(centerView.snp.right).inset(20)
+            make.height.equalTo(50) // 버튼의 높이를 50pt로 설정
         }
         
+
+
+        // 위치 수정 버튼 설정
+        modifyLocationButton.setTitle("위치를 수정 하시겠습니까?", for: .normal)
+        modifyLocationButton.setTitleColor(UIColor.systemBlue, for: .normal)
+        modifyLocationButton.addTarget(self, action: #selector(handleModifyLocationTap), for: .touchUpInside)
+        centerView.addSubview(modifyLocationButton)
         modifyLocationButton.snp.makeConstraints { make in
-            make.top.equalTo(createCapsuleButton.snp.bottom).offset(10)
-            make.centerX.equalToSuperview()
-            make.width.equalToSuperview().multipliedBy(0.8)
-            make.height.equalTo(50)
+            make.top.equalTo(createCapsuleButton.snp.bottom).offset(10) // 생성 버튼 아래로 10pt 떨어진 위치에 배치
+            make.left.equalTo(centerView.snp.left).offset(20)
+            make.right.equalTo(centerView.snp.right).inset(20)
+            make.height.equalTo(50) // 버튼의 높이를 50pt로 설정
+            make.bottom.equalTo(centerView.snp.bottom).inset(20) // 이를 통해 centerView의 크기가 자동으로 조절될 수 있도록 설정
         }
     }
-    
+
+    private func setupCenterView() {
+        // 배경색에 투명도를 적용하여 설정합니다. 여기서 0.95는 예시 값이며, 필요에 따라 조절 가능합니다.
+        centerView.backgroundColor = UIColor.white.withAlphaComponent(0.8)
+        centerView.layer.cornerRadius = 16  // 모서리 둥글게
+        centerView.layer.shadowOpacity = 0.2  // 그림자 투명도
+        centerView.layer.shadowRadius = 4.0  // 그림자 블러 반경
+        centerView.layer.shadowOffset = CGSize(width: 0, height: 2)  // 그림자 위치 조정
+        centerView.layer.shadowColor = UIColor.black.cgColor  // 그림자 색상
+        
+        view.addSubview(centerView)
+        centerView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalToSuperview().multipliedBy(0.9)
+            make.height.equalTo(200)  // 필요에 따라 높이 조절
+        }
+    }
+
+
+   
     private func presentBottomSheetController() {
         let bottomSheetVC = BottomSheetViewController()
         bottomSheetVC.modalPresentationStyle = .automatic
         present(bottomSheetVC, animated: true, completion: nil)
     }
 
-    
-    // MARK: - Actions
-    
-    @objc private func didTapLocationButton(_ sender: UIButton) {
-        navigationController?.popViewController(animated: true)
-        bottomSheetController.dismiss(animated: true)
+    // MARK: - Location Services
+    private func configureLocationServices() {
+        requestLocationAccess()
     }
-    
-    @objc private func currentLocationButtonTapped() {
+
+    private func requestLocationAccess() {
+        locationManager.requestWhenInUseAuthorization()
+    }
+
+    @objc func currentLocationButtonTapped() {
+        mapView.showsUserLocation = true
         locationManager.startUpdatingLocation()
     }
     
-    @objc private func handleLongPress(gesture: UILongPressGestureRecognizer) {
-        if gesture.state == .began {
-            let locationInView = gesture.location(in: mapView)
-            let coordinate = mapView.convert(locationInView, toCoordinateFrom: mapView)
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = coordinate
-            mapView.addAnnotation(annotation)
-        }
-    }
-    
-    @objc private func handleLocationButtonTap() {
-        // Handle the button tap action here
-        let alert = UIAlertController(title: "이 위치로 설정하시겠습니까?", message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { _ in
-            // Perform action when user confirms the location
-        }))
-        alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
-        present(alert, animated: true, completion: nil)
-    }
-
     @objc private func handleCreateCapsuleTap() {
         // 타임캡슐 생성 로직 구현
-        let alert = UIAlertController(title: "타임캡슐 생성", message: "이 위치에 타임캡슐을 생성하시겠습니까?", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { _ in
-            // 타임캡슐 생성 확인
-        }))
-        alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
-        present(alert, animated: true)
+        showAlert(title: "타임캡슐 생성", message: "이 위치에 타임캡슐을 생성하시겠습니까?")
     }
 
     @objc private func handleModifyLocationTap() {
         // 위치 수정 로직 구현
-        // 예: 지도에서 다른 위치를 선택하도록 안내
+        showAlert(title: "위치 수정", message: "지도에서 새로운 위치를 선택해주세요.")
     }
 
-    
-    // MARK: - Location Services
-    
-    private func requestLocationAccess() {
-        let status = CLLocationManager.authorizationStatus() // iOS 14 이전 버전을 위한 처리
-        if status == .notDetermined {
-            locationManager.requestWhenInUseAuthorization() // 앱 사용 중 권한 요청
-        }
-        getCurrentLocation()
-    }
-    
-    private func addLongPressGesture() {
-        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(gesture:)))
-        mapView.addGestureRecognizer(longPressGesture)
-    }
-    
-    // 사용자의 현재 위치를 지도에 표시
-      private func getCurrentLocation() {
-          mapView.showsUserLocation = true // 사용자 위치 표시 활성화
-          locationManager.startUpdatingLocation() // 위치 업데이트 시작
-      }
-    
-    private let dismissButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
-        button.tintColor = .black
-        button.addTarget(self, action: #selector(dismissButtonTapped), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-
-    private func setupDismissButton() {
-        view.addSubview(dismissButton)
-        dismissButton.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(16)
-            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-16)
-            make.width.height.equalTo(32)
-        }
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 
-    @objc private func dismissButtonTapped() {
-        dismiss(animated: true, completion: nil)
-    }
-
-    
-    private func addSwipeGesture() {
-        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(dismissModal))
-        swipeGesture.direction = .down
-        view.addGestureRecognizer(swipeGesture)
-    }
-
-    @objc private func dismissModal() {
-        dismiss(animated: true, completion: nil)
-    }
-
-
-
-    private func addTapGestureToBackground() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissModalByTap))
-        tapGesture.numberOfTapsRequired = 1
-        view.addGestureRecognizer(tapGesture)
-    }
-
-    @objc private func dismissModalByTap() {
-        if let presentedVC = presentedViewController {
-            presentedVC.dismiss(animated: true, completion: nil)
-        }
-    }
-
-    // MARK: - ViewModel Binding
-    
-    private func bindViewModel() {
-        viewModel.$region
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] region in
-                self?.mapView.setRegion(region, animated: true)
-            }.store(in: &subscriptions)
-    }
     
     // MARK: - CLLocationManagerDelegate
-    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.first else { return }
+        let region = MKCoordinateRegion(center: location.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
+        mapView.setRegion(region, animated: true)
+        locationManager.stopUpdatingLocation()
+    }
+
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if status == .authorizedWhenInUse || status == .authorizedAlways {
             locationManager.startUpdatingLocation()
         }
     }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.first {
-            let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
-            let region = MKCoordinateRegion(center: location.coordinate, span: span)
-            mapView.setRegion(region, animated: true)
-            locationManager.stopUpdatingLocation()
-        }
-    }
+
 }
 
 // MARK: - Preview

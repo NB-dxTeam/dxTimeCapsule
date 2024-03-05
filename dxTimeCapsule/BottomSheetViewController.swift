@@ -4,12 +4,10 @@ import SnapKit
 class BottomSheetViewController: UIViewController {
     
     // MARK: - Properties
-//    private let viewModel: BottomSheetControllerViewModel
     
     // MARK: - Initialization
     init() {
         super.init(nibName: nil, bundle: nil)
-        // 여기에 초기화 코드 추가
     }
     
     required init?(coder: NSCoder) {
@@ -20,19 +18,35 @@ class BottomSheetViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        // 기본 설정을 여기에 추가
-        // 예: 버튼, 레이블 등의 UI 요소 추가
+        setupSheetPresentation()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        showAlert()
+    }
+    
+    
     // MARK: - UI Configuration
-    // 여기에 UI 구성을 위한 메서드를 추가할 수 있습니다.
+    private func setupSheetPresentation() {
+        if let sheetController = self.presentationController as? UISheetPresentationController {
+            sheetController.detents = [.small,.medium(), .large()]
+            sheetController.prefersEdgeAttachedInCompactHeight = true
+            sheetController.largestUndimmedDetentIdentifier = .medium
+        }
+    }
+    
+    // MARK: - Functions
+    private func showAlert() {
+        let alert = UIAlertController(title: "알림", message: "타임캡슐 생성 위치를 확인해주세요!", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
     
     // MARK: - Actions
     // 여기에 사용자 인터랙션을 처리하기 위한 액션을 추가할 수 있습니다.
     
-    // MARK: - Additional Helpers
-    // 여기에 추가적인 도우미 메서드를 작성할 수 있습니다.
-    
+
     // MARK: - Deinitialization
     deinit {
         // 여기에 정리 코드를 추가할 수 있습니다.
@@ -45,5 +59,13 @@ import SwiftUI
 struct MainTabBarViewPreview1 : PreviewProvider {
     static var previews: some View {
         MainTabBarView().toPreview()
+    }
+}
+
+extension UISheetPresentationController.Detent {
+    static var small: UISheetPresentationController.Detent {
+        Self.custom { context in
+            return context.maximumDetentValue * 0.25
+        }
     }
 }
