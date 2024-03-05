@@ -55,6 +55,7 @@ class CustomModal: UIViewController{
         capsuleCollection.isPagingEnabled = true
         capsuleCollection.showsHorizontalScrollIndicator = true
         capsuleCollection.decelerationRate = .fast
+        capsuleCollection.alpha = 0.8
         if let layout = capsuleCollection.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .vertical // 스크롤 방향(가로)
             let screenWidth = UIScreen.main.bounds.width
@@ -162,4 +163,13 @@ class HeaderView: UICollectionReusableView {
 //    @objc func didTapSortButton() {
 //        sortButtonAction?()
 //    }
+}
+
+// MARK: Custom Sheet Size
+extension UISheetPresentationController.Detent {
+    static var small: UISheetPresentationController.Detent {
+        Self.custom { context in
+            return context.maximumDetentValue * 0.25
+        }
+    }
 }

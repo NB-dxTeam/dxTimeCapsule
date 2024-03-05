@@ -14,19 +14,23 @@ class CapsuleMapViewController: UIViewController, CLLocationManagerDelegate {
     
     private let capsuleMaps = MKMapView()
     var locationManager = CLLocationManager()
-    private var tapDidModal: UIButton = {
+    private lazy var tapDidModal: UIButton = {
         let button = UIButton()
         button.setTitle("타임캡슐보기", for: .normal)
         button.backgroundColor = .white
         button.titleLabel?.font = UIFont.systemFont(ofSize: 24)
         button.setTitleColor(.systemBlue, for: .normal)
+        button.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        button.addTarget(self, action: #selector(modalButton(_:)), for: .touchUpInside)
         return button
     }()
-    private var currentLocationBotton: UIButton = {
+    private lazy var currentLocationBotton: UIButton = {
         let button = UIButton()
         button.setTitle("현재위치로", for: .normal)
         button.backgroundColor = .gray
         button.setTitleColor(.black, for: .normal)
+        button.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        button.addTarget(self, action: #selector(locationButton(_:)), for: .touchUpInside)
         return button
     }()
     override func viewDidLoad() {
@@ -56,9 +60,9 @@ extension CapsuleMapViewController {
             make.bottom.equalTo(tapDidModal.snp.top)
         }
         currentLocationBotton.snp.makeConstraints { make in
-            make.bottom.equalTo(capsuleMaps.snp.bottom).offset(-20) // 하단에서 20포인트 여백
-            make.trailing.equalTo(capsuleMaps.snp.trailing).offset(-20) // 오른쪽에서 20포인트 여백
-            make.size.equalTo(CGSize(width: 100, height: 30)) // 버튼의 크기를 50x50으로 설정
+            make.bottom.equalTo(capsuleMaps.snp.bottom).offset(-20)
+            make.trailing.equalTo(capsuleMaps.snp.trailing).offset(-20)
+            make.size.equalTo(CGSize(width: 100, height: 30))
         }
         tapDidModal.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
@@ -90,7 +94,7 @@ extension CapsuleMapViewController {
         let vc = CustomModal()
         
         if let sheet = vc.sheetPresentationController {
-            sheet.detents = [.medium(), .large()]
+            sheet.detents = [.small ,.medium(), .large()]
             sheet.prefersGrabberVisible = true
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
             sheet.largestUndimmedDetentIdentifier = .medium
@@ -136,6 +140,7 @@ extension CapsuleMapViewController: MKMapViewDelegate {
     
     
 }
+
 // MARK: - Preview
 import SwiftUI
 
@@ -144,23 +149,18 @@ struct PreView: PreviewProvider {
         CapsuleMapViewController().toPreview()
     }
 }
-
 #if DEBUG
 extension UIViewController {
     private struct Preview: UIViewControllerRepresentable {
-        let viewController: UIViewController
-        
-        func makeUIViewController(context: Context) -> UIViewController {
-            return viewController
+            let viewController: UIViewController
+            func makeUIViewController(context: Context) -> UIViewController {
+                return viewController
+            }
+            func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+            }
         }
-        
-        func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+        func toPreview() -> some View {
+            Preview(viewController: self)
         }
-    }
-    
-    func toPreview() -> some View {
-        Preview(viewController: self)
-    }
 }
 #endif
-
