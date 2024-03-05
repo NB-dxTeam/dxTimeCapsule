@@ -1,13 +1,12 @@
 //
-//  SceneDelegate.swift
-//  dxTimeCapsule
+// SceneDelegate.swift
+// dxTimeCapsule
 //
-//  Created by t2023-m0031 on 2/20/24.
+// Created by t2023-m0031 on 2/20/24.
 //
-
 import UIKit
-
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {

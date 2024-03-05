@@ -1,6 +1,7 @@
 import UIKit
 
 class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
+
     
     // MARK: - Properties
     
@@ -80,4 +81,13 @@ struct TabBarPreView : PreviewProvider {
     static var previews: some View {
         MainTabBarView().toPreview()
     }
+    return resizedImage
+  }
+}
+// MARK: - Preview
+import SwiftUI
+struct TabBarPreView : PreviewProvider {
+  static var previews: some View {
+    MainTabBarView().toPreview()
+  }
 }
