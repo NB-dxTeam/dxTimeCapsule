@@ -261,9 +261,22 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     
     // MARK: - Actions
     @objc private func logoutTapped() {
+        let alertController = UIAlertController(title: "로그아웃", message: "로그아웃 하시겠습니까?", preferredStyle: .alert)
+        
+        let yesAction = UIAlertAction(title: "예", style: .default) { [weak self] _ in
+            self?.performLogout()
+        }
+        alertController.addAction(yesAction)
+        
+        let noAction = UIAlertAction(title: "아니오", style: .cancel, handler: nil)
+        alertController.addAction(noAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+
+    private func performLogout() {
         do {
             try Auth.auth().signOut()
-            
             
             guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
             guard let sceneDelegate = windowScene.delegate as? SceneDelegate else { return }
@@ -273,7 +286,6 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
             sceneDelegate.window?.makeKeyAndVisible()
             
             print("로그아웃 성공")
-
             
         } catch let signOutError as NSError {
             print("로그아웃 실패: \(signOutError.localizedDescription)")
