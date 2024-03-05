@@ -17,7 +17,7 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate 
     
     private var subscriptions = Set<AnyCancellable>()
     
-    private lazy var bottomSheetController = BottomSheetViewController(viewModel: .init()) // Assuming BottomSheetViewController exists
+    private lazy var bottomSheetController = BottomSheetViewController()
     
     private let locationManager = CLLocationManager()
     
@@ -143,7 +143,7 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate 
     }
     
     private func presentBottomSheetController() {
-        let bottomSheetVC = BottomSheetViewController(viewModel: .init())
+        let bottomSheetVC = BottomSheetViewController()
         bottomSheetVC.modalPresentationStyle = .automatic
         present(bottomSheetVC, animated: true, completion: nil)
     }
