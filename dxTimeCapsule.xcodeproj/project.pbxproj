@@ -21,6 +21,7 @@
 		1F1071B92B95CC67009E201A /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1F1071B82B95CC67009E201A /* Pretendard-Bold.otf */; };
 		1F1071BC2B95D400009E201A /* LocationConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1071BB2B95D400009E201A /* LocationConfirmationViewController.swift */; };
 		1F367EA62B8F803A00563908 /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F367EA52B8F803A00563908 /* UIColor+Hex.swift */; };
+		1F52DE1D2B972C9000EE2E1E /* CustomModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F52DE1C2B972C9000EE2E1E /* CustomModal.swift */; };
 		1F5786D92B849AF800C40B08 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5786D82B849AF800C40B08 /* AppDelegate.swift */; };
 		1F5786E52B849AFA00C40B08 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F5786E42B849AFA00C40B08 /* Assets.xcassets */; };
 		1F5786E82B849AFA00C40B08 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F5786E62B849AFA00C40B08 /* LaunchScreen.storyboard */; };
@@ -55,7 +56,6 @@
 		1FD2B7A52B96BEFE00896F9C /* UIStackView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7A22B96BEFE00896F9C /* UIStackView+Extensions.swift */; };
 		1FD2B7A62B96BEFE00896F9C /* UICollectionViewReusableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7A32B96BEFE00896F9C /* UICollectionViewReusableView+Extension.swift */; };
 		1FD2B7B02B96BF5C00896F9C /* SearchBarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7AA2B96BF5C00896F9C /* SearchBarCell.swift */; };
-		1FD2B7B12B96BF5C00896F9C /* CarouselButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7AB2B96BF5C00896F9C /* CarouselButtonCell.swift */; };
 		1FD2B7B22B96BF5C00896F9C /* HorizontalSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7AC2B96BF5C00896F9C /* HorizontalSearchCell.swift */; };
 		1FD2B7B32B96BF5C00896F9C /* ListStyleCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7AD2B96BF5C00896F9C /* ListStyleCollectionViewHeader.swift */; };
 		1FD2B7B42B96BF5C00896F9C /* BottomSheetControllerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7AE2B96BF5C00896F9C /* BottomSheetControllerViewModel.swift */; };
@@ -65,18 +65,14 @@
 		1FD2B7BD2B96C04B00896F9C /* HorizontalSearchType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7B92B96C04B00896F9C /* HorizontalSearchType.swift */; };
 		1FD2B7BF2B96E55900896F9C /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7BE2B96E55900896F9C /* BottomSheetViewController.swift */; };
 		1FF8691B2B8F4D81007B5112 /* UIButton+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF8691A2B8F4D81007B5112 /* UIButton+Gradient.swift */; };
-		2754754D2B95C1E800614ED5 /* APIKey.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 2754754C2B95C1E800614ED5 /* APIKey.xcconfig */; };
 		27865AD42B8DFCA900DB8DB6 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27865AD32B8DFCA900DB8DB6 /* NotificationViewController.swift */; };
 		27D241B22B8F33A5000F8F16 /* OpenedTCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D241B12B8F33A5000F8F16 /* OpenedTCViewController.swift */; };
 		27F3827F2B8FA1240005F733 /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F3827E2B8FA1240005F733 /* NotificationTableViewCell.swift */; };
 		27F382822B8FB0400005F733 /* OpendedTCCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F382812B8FB0400005F733 /* OpendedTCCollectionViewCell.swift */; };
 		460FE7672B8A200D00AF8086 /* LockedCapsuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */; };
-		465764BD2B90C06C00883FA6 /* CustomModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465764BC2B90C06C00883FA6 /* CustomModal.swift */; };
-		467D1DE32B972499005249B1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467D1DE22B972499005249B1 /* SceneDelegate.swift */; };
 		46EA9BAE2B89A27E00633EC4 /* CapsuleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */; };
 		4E2A09C82B8F755C00911390 /* OpenInteractionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */; };
 		4E2A09CA2B8F86C600911390 /* FadeInAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */; };
-		4E2A09CD2B907D1D00911390 /* APIKey.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 4E2A09CC2B907D1D00911390 /* APIKey.xcconfig */; };
 		4EC308DE2B8A200300EEE54C /* MainCapsuleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC308DD2B8A200300EEE54C /* MainCapsuleViewModel.swift */; };
 		D20CDCCA2B957D5D00B93788 /* SearchUserTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20CDCC92B957D5D00B93788 /* SearchUserTableViewController.swift */; };
 		D20CDCCD2B959DFE00B93788 /* FriendsRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20CDCCC2B959DFE00B93788 /* FriendsRequestViewController.swift */; };
@@ -103,6 +99,7 @@
 		1F1071B82B95CC67009E201A /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
 		1F1071BB2B95D400009E201A /* LocationConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationConfirmationViewController.swift; sourceTree = "<group>"; };
 		1F367EA52B8F803A00563908 /* UIColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Hex.swift"; sourceTree = "<group>"; };
+		1F52DE1C2B972C9000EE2E1E /* CustomModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModal.swift; sourceTree = "<group>"; };
 		1F5786D52B849AF800C40B08 /* dxTimeCapsule.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dxTimeCapsule.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F5786D82B849AF800C40B08 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1F5786E42B849AFA00C40B08 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -156,7 +153,6 @@
 		27F382812B8FB0400005F733 /* OpendedTCCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpendedTCCollectionViewCell.swift; sourceTree = "<group>"; };
 		4096504136FE62FB0887CFD8 /* Pods-dxTimeCapsule.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.debug.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.debug.xcconfig"; sourceTree = "<group>"; };
 		460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedCapsuleCell.swift; sourceTree = "<group>"; };
-		465764BC2B90C06C00883FA6 /* CustomModal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomModal.swift; sourceTree = "<group>"; };
 		467D1DE22B972499005249B1 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleMapViewController.swift; sourceTree = "<group>"; };
 		4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInteractionViewController.swift; sourceTree = "<group>"; };
@@ -214,7 +210,6 @@
 				1F5786D72B849AF800C40B08 /* dxTimeCapsule */,
 				25AD7CDE47BA0E85739F3959 /* Pods */,
 				3CC1A9291EBAFDCA26B0042E /* Frameworks */,
-				4E2A09CB2B907C0A00911390 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -341,6 +336,7 @@
 				4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */,
 				460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */,
 				4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */,
+				1F52DE1C2B972C9000EE2E1E /* CustomModal.swift */,
 			);
 			name = Capsule;
 			sourceTree = "<group>";
@@ -393,12 +389,9 @@
 		1FD2B7A72B96BF4A00896F9C /* BottomSheet */ = {
 			isa = PBXGroup;
 			children = (
-				465764BC2B90C06C00883FA6 /* CustomModal.swift */,
-				460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */,
 				1FD2B7AE2B96BF5C00896F9C /* BottomSheetControllerViewModel.swift */,
 				1FD2B7BE2B96E55900896F9C /* BottomSheetViewController.swift */,
 				1FD2B7A92B96BF5C00896F9C /* Cells */,
-
 			);
 			name = BottomSheet;
 			sourceTree = "<group>";
@@ -482,8 +475,6 @@
 			isa = PBXGroup;
 			children = (
 				1FB387382B8863DE00054816 /* HomeViewController.swift */,
-				27C81E442B8A3A39001E3623 /* OpenedTCCollectionViewCell.swift */,
-				27C81E462B8A3A4C001E3623 /* UpcomingTCCollectionViewCell.swift */,
 			);
 			name = HomeView;
 			sourceTree = "<group>";
@@ -505,7 +496,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-
 		D20CDCCB2B95979900B93788 /* Alarm */ = {
 			isa = PBXGroup;
 			children = (
@@ -582,11 +572,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FC44EF62B90C491002A75AF /* ProximaNova-Light.ttf in Resources */,
-
 				1F1071B92B95CC67009E201A /* Pretendard-Bold.otf in Resources */,
 				1FC44EF52B90C491002A75AF /* ProximaNova-Semibold.ttf in Resources */,
 				1F5786E82B849AFA00C40B08 /* LaunchScreen.storyboard in Resources */,
-
 				1FC44F052B90C87F002A75AF /* Pretendard-SemiBold.otf in Resources */,
 				1FC44EFB2B90C491002A75AF /* ProximaNova-Extrabld.ttf in Resources */,
 				1F1071B52B95CC41009E201A /* Pretendard-Black.otf in Resources */,
@@ -671,7 +659,6 @@
 				1FA11BF22B8F8C440014002F /* UITextField+Padding.swift in Sources */,
 				27D241B22B8F33A5000F8F16 /* OpenedTCViewController.swift in Sources */,
 				1F0B91392B9089BB0022EDD9 /* MainTabBarView.swift in Sources */,
-				465764BD2B90C06C00883FA6 /* CustomModal.swift in Sources */,
 				1F0D3B322B89D85500A31E82 /* CapsuleUploadDeatilViewController.swift in Sources */,
 				1FAB4DF82B8C49590054618A /* User.swift in Sources */,
 				1FD2B7BA2B96C04B00896F9C /* HorizontalSearchModel.swift in Sources */,
@@ -684,19 +671,14 @@
 				1FAB4DF62B8C48AF0054618A /* FriendsViewModel.swift in Sources */,
 				1FAACDE12B8FAA520005B993 /* UIImage+RoundImage.swift in Sources */,
 				1F5787132B86DBF900C40B08 /* LoginViewController.swift in Sources */,
-
 				1FB387402B8881DB00054816 /* TimeCapsule.swift in Sources */,
 				1FB387392B8863DE00054816 /* HomeViewController.swift in Sources */,
 				1F0B913D2B908A5F0022EDD9 /* FindTabViewController.swift in Sources */,
 				1F0B91082B9026020022EDD9 /* UIImageView+RoundImage.swift in Sources */,
-F8691B2B8F4D81007B5112 /* UIButton+Gradient.swift in Sources */,
-
-				27C81E452B8A3A39001E3623 /* OpenedTCCollectionViewCell.swift in Sources */,
-
 				1FF8691B2B8F4D81007B5112 /* UIButton+Gradient.swift in Sources */,
 				D20CDCCD2B959DFE00B93788 /* FriendsRequestViewController.swift in Sources */,
 				D20CDCCF2B96D86100B93788 /* FriendRequestTableViewCell.swift in Sources */,
-				27C81E472B8A3A4C001E3623 /* UpcomingTCCollectionViewCell.swift in Sources */,
+				1F52DE1D2B972C9000EE2E1E /* CustomModal.swift in Sources */,
 				1F5786F22B849CA900C40B08 /* AuthenticationViewModel.swift in Sources */,
 				1FB387372B8862AF00054816 /* MainFeedViewController.swift in Sources */,
 				1FD2B7A62B96BEFE00896F9C /* UICollectionViewReusableView+Extension.swift in Sources */,
@@ -711,7 +693,6 @@ F8691B2B8F4D81007B5112 /* UIButton+Gradient.swift in Sources */,
 				1F9DA7AF2B8C922800A74D84 /* SearchUserViewController.swift in Sources */,
 				1F0B91062B901D170022EDD9 /* Etc.swift in Sources */,
 				D25B20EB2B89CD02006CEED8 /* SplashViewController.swift in Sources */,
-
 				1F0D3B2C2B89AA2B00A31E82 /* MainCreateCapsuleViewController.swift in Sources */,
 				1FD2B7BC2B96C04B00896F9C /* CustomPresentationDetents.swift in Sources */,
 				27F3827F2B8FA1240005F733 /* NotificationTableViewCell.swift in Sources */,
@@ -734,7 +715,6 @@ F8691B2B8F4D81007B5112 /* UIButton+Gradient.swift in Sources */,
 /* Begin XCBuildConfiguration section */
 		1F5786EA2B849AFA00C40B08 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1F0B91442B90903C0022EDD9 /* APIKey.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -798,7 +778,6 @@ F8691B2B8F4D81007B5112 /* UIButton+Gradient.swift in Sources */,
 		};
 		1F5786EB2B849AFA00C40B08 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1F0B91442B90903C0022EDD9 /* APIKey.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
