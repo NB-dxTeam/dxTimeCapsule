@@ -32,7 +32,6 @@
 		1F8EA3A12B954643004856B7 /* SwiftfulLoadingIndicators in Frameworks */ = {isa = PBXBuildFile; productRef = 1F8EA3A02B954643004856B7 /* SwiftfulLoadingIndicators */; };
 		1F9DA7AF2B8C922800A74D84 /* SearchUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9DA7AE2B8C922700A74D84 /* SearchUserViewController.swift */; };
 		1F9DA7B12B8C93BD00A74D84 /* SearchUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9DA7B02B8C93BD00A74D84 /* SearchUserTableViewCell.swift */; };
-		1F9DA7B52B8CA75900A74D84 /* SearchModalTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9DA7B42B8CA75900A74D84 /* SearchModalTableViewController.swift */; };
 		1FA11BF22B8F8C440014002F /* UITextField+Padding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA11BF12B8F8C440014002F /* UITextField+Padding.swift */; };
 		1FAACDE12B8FAA520005B993 /* UIImage+RoundImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAACDE02B8FAA520005B993 /* UIImage+RoundImage.swift */; };
 		1FAB4DF62B8C48AF0054618A /* FriendsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAB4DF52B8C48AF0054618A /* FriendsViewModel.swift */; };
@@ -53,7 +52,6 @@
 		1FC44F042B90C87F002A75AF /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1FC44EFE2B90C87E002A75AF /* Pretendard-Regular.otf */; };
 		1FC44F052B90C87F002A75AF /* Pretendard-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1FC44F002B90C87E002A75AF /* Pretendard-SemiBold.otf */; };
 		1FD2B79C2B96BD7300896F9C /* LocationMapkitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B79B2B96BD7300896F9C /* LocationMapkitViewController.swift */; };
-		1FD2B7A02B96BE7A00896F9C /* MainViewControllerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B79F2B96BE7A00896F9C /* MainViewControllerViewModel.swift */; };
 		1FD2B7A42B96BEFE00896F9C /* NotificationName+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7A12B96BEFE00896F9C /* NotificationName+Extension.swift */; };
 		1FD2B7A52B96BEFE00896F9C /* UIStackView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7A22B96BEFE00896F9C /* UIStackView+Extensions.swift */; };
 		1FD2B7A62B96BEFE00896F9C /* UICollectionViewReusableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7A32B96BEFE00896F9C /* UICollectionViewReusableView+Extension.swift */; };
@@ -115,7 +113,6 @@
 		1F8EA39D2B9538DD004856B7 /* UIFont+CustomFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIFont+CustomFont.swift"; path = "UIFont/UIFont+CustomFont.swift"; sourceTree = "<group>"; };
 		1F9DA7AE2B8C922700A74D84 /* SearchUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserViewController.swift; sourceTree = "<group>"; };
 		1F9DA7B02B8C93BD00A74D84 /* SearchUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserTableViewCell.swift; sourceTree = "<group>"; };
-		1F9DA7B42B8CA75900A74D84 /* SearchModalTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModalTableViewController.swift; sourceTree = "<group>"; };
 		1FA11BF12B8F8C440014002F /* UITextField+Padding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Padding.swift"; sourceTree = "<group>"; };
 		1FAACDE02B8FAA520005B993 /* UIImage+RoundImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+RoundImage.swift"; sourceTree = "<group>"; };
 		1FAB4DF52B8C48AF0054618A /* FriendsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewModel.swift; sourceTree = "<group>"; };
@@ -136,7 +133,6 @@
 		1FC44F002B90C87E002A75AF /* Pretendard-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-SemiBold.otf"; sourceTree = "<group>"; };
 		1FC44F0C2B933568002A75AF /* Firebase-ErrorMessages.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Firebase-ErrorMessages.json"; sourceTree = "<group>"; };
 		1FD2B79B2B96BD7300896F9C /* LocationMapkitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMapkitViewController.swift; sourceTree = "<group>"; };
-		1FD2B79F2B96BE7A00896F9C /* MainViewControllerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewControllerViewModel.swift; sourceTree = "<group>"; };
 		1FD2B7A12B96BEFE00896F9C /* NotificationName+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NotificationName+Extension.swift"; sourceTree = "<group>"; };
 		1FD2B7A22B96BEFE00896F9C /* UIStackView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extensions.swift"; sourceTree = "<group>"; };
 		1FD2B7A32B96BEFE00896F9C /* UICollectionViewReusableView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionViewReusableView+Extension.swift"; sourceTree = "<group>"; };
@@ -202,7 +198,6 @@
 				1FD2B7B52B96C04B00896F9C /* Model */,
 				1FD2B7A72B96BF4A00896F9C /* BottomSheet */,
 				1FD2B79B2B96BD7300896F9C /* LocationMapkitViewController.swift */,
-				1FD2B79F2B96BE7A00896F9C /* MainViewControllerViewModel.swift */,
 				1F1071BB2B95D400009E201A /* LocationConfirmationViewController.swift */,
 			);
 			name = Location;
@@ -263,7 +258,6 @@
 			children = (
 				1FAB4DED2B8C2AEB0054618A /* Main */,
 				27F382802B8FA1350005F733 /* NotificationView */,
-
 				D20CDCCB2B95979900B93788 /* Alarm */,
 				1F722F0D2B938CB500407850 /* SplashVew */,
 				1FAB4DEC2B8C29D80054618A /* Authentication */,
@@ -309,7 +303,6 @@
 		1F9DA7AD2B8C921900A74D84 /* SearchUser */ = {
 			isa = PBXGroup;
 			children = (
-				1F9DA7B42B8CA75900A74D84 /* SearchModalTableViewController.swift */,
 				D20CDCC92B957D5D00B93788 /* SearchUserTableViewController.swift */,
 				1F9DA7B02B8C93BD00A74D84 /* SearchUserTableViewCell.swift */,
 			);
@@ -642,7 +635,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FD2B7A02B96BE7A00896F9C /* MainViewControllerViewModel.swift in Sources */,
 				1FD2B7B32B96BF5C00896F9C /* ListStyleCollectionViewHeader.swift in Sources */,
 				FFC457642B8F0F36000761E9 /* UserProfileViewModel.swift in Sources */,
 				FFC457662B8F0F74000761E9 /* UserProfileViewController.swift in Sources */,
@@ -699,7 +691,6 @@
 				1F9DA7AF2B8C922800A74D84 /* SearchUserViewController.swift in Sources */,
 				1F0B91062B901D170022EDD9 /* Etc.swift in Sources */,
 				D25B20EB2B89CD02006CEED8 /* SplashViewController.swift in Sources */,
-				1F9DA7B52B8CA75900A74D84 /* SearchModalTableViewController.swift in Sources */,
 				1F0D3B2C2B89AA2B00A31E82 /* MainCreateCapsuleViewController.swift in Sources */,
 				1FD2B7BC2B96C04B00896F9C /* CustomPresentationDetents.swift in Sources */,
 				27F3827F2B8FA1240005F733 /* NotificationTableViewCell.swift in Sources */,

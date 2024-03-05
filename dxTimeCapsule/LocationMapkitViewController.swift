@@ -13,7 +13,6 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate 
         return mapView
     }()
     
-    private var viewModel: MainViewModel! // Assuming MainViewModel exists
     
     private var subscriptions = Set<AnyCancellable>()
     
