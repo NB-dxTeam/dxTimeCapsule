@@ -82,6 +82,8 @@
 		D20CDCCA2B957D5D00B93788 /* SearchUserTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20CDCC92B957D5D00B93788 /* SearchUserTableViewController.swift */; };
 		D20CDCCD2B959DFE00B93788 /* FriendsRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20CDCCC2B959DFE00B93788 /* FriendsRequestViewController.swift */; };
 		D20CDCCF2B96D86100B93788 /* FriendRequestTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20CDCCE2B96D86100B93788 /* FriendRequestTableViewCell.swift */; };
+		D22B171C2B971599006CAEA6 /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D22B171B2B971599006CAEA6 /* FriendRequest.swift */; };
+		D22B171E2B97163C006CAEA6 /* Friendship.swift in Sources */ = {isa = PBXBuildFile; fileRef = D22B171D2B97163C006CAEA6 /* Friendship.swift */; };
 		D25B20EB2B89CD02006CEED8 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25B20EA2B89CD02006CEED8 /* SplashViewController.swift */; };
 		FFC457642B8F0F36000761E9 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC457632B8F0F36000761E9 /* UserProfileViewModel.swift */; };
 		FFC457662B8F0F74000761E9 /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC457652B8F0F74000761E9 /* UserProfileViewController.swift */; };
@@ -168,6 +170,8 @@
 		D20CDCC92B957D5D00B93788 /* SearchUserTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserTableViewController.swift; sourceTree = "<group>"; };
 		D20CDCCC2B959DFE00B93788 /* FriendsRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsRequestViewController.swift; sourceTree = "<group>"; };
 		D20CDCCE2B96D86100B93788 /* FriendRequestTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestTableViewCell.swift; sourceTree = "<group>"; };
+		D22B171B2B971599006CAEA6 /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
+		D22B171D2B97163C006CAEA6 /* Friendship.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Friendship.swift; sourceTree = "<group>"; };
 		D25B20EA2B89CD02006CEED8 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		FFC457632B8F0F36000761E9 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
 		FFC457652B8F0F74000761E9 /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
@@ -263,7 +267,6 @@
 			children = (
 				1FAB4DED2B8C2AEB0054618A /* Main */,
 				27F382802B8FA1350005F733 /* NotificationView */,
-
 				D20CDCCB2B95979900B93788 /* Alarm */,
 				1F722F0D2B938CB500407850 /* SplashVew */,
 				1FAB4DEC2B8C29D80054618A /* Authentication */,
@@ -284,6 +287,8 @@
 			children = (
 				1FAB4DF72B8C49590054618A /* User.swift */,
 				1FB3873F2B8881DB00054816 /* TimeCapsule.swift */,
+				D22B171B2B971599006CAEA6 /* FriendRequest.swift */,
+				D22B171D2B97163C006CAEA6 /* Friendship.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -645,6 +650,7 @@
 				1FD2B7A02B96BE7A00896F9C /* MainViewControllerViewModel.swift in Sources */,
 				1FD2B7B32B96BF5C00896F9C /* ListStyleCollectionViewHeader.swift in Sources */,
 				FFC457642B8F0F36000761E9 /* UserProfileViewModel.swift in Sources */,
+				D22B171E2B97163C006CAEA6 /* Friendship.swift in Sources */,
 				FFC457662B8F0F74000761E9 /* UserProfileViewController.swift in Sources */,
 				D20CDCCA2B957D5D00B93788 /* SearchUserTableViewController.swift in Sources */,
 				1FD2B7A52B96BEFE00896F9C /* UIStackView+Extensions.swift in Sources */,
@@ -669,6 +675,7 @@
 				1FD2B7BD2B96C04B00896F9C /* HorizontalSearchType.swift in Sources */,
 				1F1071BC2B95D400009E201A /* LocationConfirmationViewController.swift in Sources */,
 				1FD2B7BB2B96C04B00896F9C /* CarouselButtonModel.swift in Sources */,
+				D22B171C2B971599006CAEA6 /* FriendRequest.swift in Sources */,
 				1FD2B79C2B96BD7300896F9C /* LocationMapkitViewController.swift in Sources */,
 				27F382822B8FB0400005F733 /* OpendedTCCollectionViewCell.swift in Sources */,
 				1FAB4DF62B8C48AF0054618A /* FriendsViewModel.swift in Sources */,
