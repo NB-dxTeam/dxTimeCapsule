@@ -36,8 +36,8 @@ struct CarouselButtonModel: Hashable {
     }
     
     static let sampleData: [CarouselButtonModel] = [
-        CarouselButtonModel(title: "Home", subtitle: "Add", type: .home),
-        CarouselButtonModel(title: "Work", subtitle: "Add", type: .work),
+        CarouselButtonModel(title: "집", subtitle: "", type: .home),
+        CarouselButtonModel(title: "직장", subtitle: "", type: .work),
         CarouselButtonModel(title: "Add", subtitle: "", type: .add)
         ]
         

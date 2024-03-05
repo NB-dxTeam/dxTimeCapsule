@@ -39,14 +39,23 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         self.tabBar.tintColor = UIColor(hex: "#D53369")
     }
     
-    // MARK: - UITabBarControllerDelegate
-    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-        if viewController.tabBarItem.tag == 2 { // 세 번째 탭이 선택된 경우
+    // UITabBarControllerDelegate 메서드
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        // 세 번째 탭이 선택되었는지 확인
+        if viewController.tabBarItem.tag == 2 {
+            // 세 번째 탭의 뷰 컨트롤러를 모달로 표시
             let locationConfirmationVC = LocationMapkitViewController(viewModel: .init())
-            locationConfirmationVC.modalPresentationStyle = .pageSheet // 모달 시트 페이지로 표시
-            self.present(locationConfirmationVC, animated: true, completion: nil) // 모달을 현재 뷰 컨트롤러에서 표시
+            locationConfirmationVC.modalPresentationStyle = .pageSheet
+            self.present(locationConfirmationVC, animated: true, completion: nil)
+            
+            // 실제 탭 전환은 방지
+            return false
         }
+        
+        // 다른 탭은 정상적으로 전환 허용
+        return true
     }
+    
     
     // 이미지 리사이즈 함수
     func resizeImage(imageName: String, targetSize: CGSize) -> UIImage? {

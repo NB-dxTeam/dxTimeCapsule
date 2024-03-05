@@ -3,15 +3,30 @@ import SnapKit
 
 class BottomSheetViewController: UIViewController {
     
+    private let searchBarContainerView: UIView = {
+         let view = UIView()
+         view.backgroundColor = .secondarySystemBackground // 이 배경색은 검색창 배경색에 맞춰 조정하세요.
+         return view
+     }()
+    
+    private let searchBar: UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.placeholder = "검색" // Placeholder 텍스트
+        return searchBar
+    }()
+    
     // MARK: - Components
     private lazy var collectionView: UICollectionView = {
         let collection = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
         collection.translatesAutoresizingMaskIntoConstraints = false
-        collection.backgroundColor = .clear
+        collection.backgroundColor = .white
         collection.allowsMultipleSelection = true
         collection.delegate = self
         collection.dataSource = self
+        
+
         return collection
+        
     }()
     
     // MARK: - Stored Properties
@@ -21,20 +36,25 @@ class BottomSheetViewController: UIViewController {
     private var observer: NSKeyValueObservation?
     
     // MARK: - Life Cycle
+  
     
-    init(viewModel: BottomSheetControllerViewModel) {
-        self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+       init(viewModel: BottomSheetControllerViewModel) {
+           self.viewModel = viewModel
+           super.init(nibName: nil, bundle: nil)
+       }
+       
+       required init?(coder: NSCoder) {
+           fatalError("init(coder:) has not been implemented")
+       }
+       
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupStyle()
+        setupSearchBar()
+
         configureCollectionViewWithSnapKit()
+        
         
         if let sheetController = self.presentationController as? UISheetPresentationController {
             sheetController.detents = [.small, .medium(), .large()]
@@ -47,16 +67,47 @@ class BottomSheetViewController: UIViewController {
         configureCollectionView()
         registerCells()
         setObservers()
+ 
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        showAlert()
+    }
+    
+
+    
+    private func showAlert() {
+        let alert = UIAlertController(title: "알림", message: "타임캡슐 생성 위치를 확인해주세요!", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    private func setupSearchBar() {
+         // 검색창을 담고 있는 컨테이너 뷰 설정
+         view.addSubview(searchBarContainerView)
+         searchBarContainerView.addSubview(searchBar)
+         
+         searchBarContainerView.snp.makeConstraints { make in
+             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+             make.leading.trailing.equalToSuperview()
+             make.height.equalTo(56) // 검색창 높이 조정 필요
+         }
+         
+         searchBar.snp.makeConstraints { make in
+             make.leading.equalToSuperview().offset(8) // 여백 조정 필요
+             make.trailing.equalToSuperview().offset(-8) // 여백 조정 필요
+             make.top.bottom.equalToSuperview()
+         }
+     }
     
     private func configureCollectionViewWithSnapKit() {
         view.addSubview(collectionView)
         collectionView.snp.makeConstraints { make in
-            make.left.right.equalToSuperview()
-            // 여기를 수정합니다. 하단 여백을 뷰의 safeArea의 하단과 연결합니다.
-            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-50) // 예시로 -50을 사용했지만, 필요에 따라 조정하세요.
+            make.left.right.bottom.equalToSuperview()
         }
     }
+    
     deinit {
         observer?.invalidate()
     }
@@ -65,6 +116,8 @@ class BottomSheetViewController: UIViewController {
 // MARK: - UI
 
 extension BottomSheetViewController {
+    
+    
     
     private func setupStyle() {
         view.backgroundColor = .secondarySystemBackground
@@ -81,9 +134,6 @@ extension BottomSheetViewController {
         }
     }
 
-    
-
-    
     private func createLayout() -> UICollectionViewCompositionalLayout {
         let layout = UICollectionViewCompositionalLayout {[weak self] (section, _) -> NSCollectionLayoutSection? in
             guard let self = self else { return nil }
@@ -110,7 +160,7 @@ extension BottomSheetViewController {
         
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .estimated(80)
+            heightDimension: .estimated(100)
         )
         
         let group = NSCollectionLayoutGroup.vertical(
@@ -120,7 +170,10 @@ extension BottomSheetViewController {
         
         let section = NSCollectionLayoutSection(group: group)
         
-        section.contentInsets = .init(top: 10, leading: 0, bottom: 10, trailing: 0)
+//        section.contentInsets = .init(top: 10, leading: 0, bottom: 10, trailing: 0)
+        
+        section.contentInsets = .init(top: 20, leading: 0, bottom: 10, trailing: 0) // 상단 간격을 더 크게 조정
+
         
         return section
     }
@@ -247,9 +300,9 @@ extension BottomSheetViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         switch viewModel.sections[indexPath.section] {
         case .favorites(_):
-            return ListStyleCollectionViewHeader.dequeueReusableCell(collectionView: collectionView, for: indexPath, viewModel: .init(title: "Favorites"), kind: UICollectionView.elementKindSectionHeader)
+            return ListStyleCollectionViewHeader.dequeueReusableCell(collectionView: collectionView, for: indexPath, viewModel: .init(title: "즐겨찾기"), kind: UICollectionView.elementKindSectionHeader)
         case .recents(_):
-            return ListStyleCollectionViewHeader.dequeueReusableCell(collectionView: collectionView, for: indexPath, viewModel: .init(title: "Recents"), kind: UICollectionView.elementKindSectionHeader)
+            return ListStyleCollectionViewHeader.dequeueReusableCell(collectionView: collectionView, for: indexPath, viewModel: .init(title: "최근검색"), kind: UICollectionView.elementKindSectionHeader)
         case .search:
             return UICollectionReusableView()
         }

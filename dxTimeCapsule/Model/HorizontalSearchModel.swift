@@ -17,19 +17,14 @@ struct HorizontalSearchModel: Identifiable, Equatable, Hashable {
     // Sample Data
     static var sampleData: [HorizontalSearchModel] = [
         HorizontalSearchModel(
-            name: "Apple Park",
+            name: "애플 파크",
             subtitle: "One Apple Park Way Cupertino",
             type: .special
         ),
         HorizontalSearchModel(
-            name: "Microsoft Sillicon Valley Campus",
-            subtitle: "1065 La Avenida St, Mountain View",
+            name: "Microsoft 실리콘 밸리 캠퍼스",
+            subtitle: "1065 라 아베니다 St, 마운틴 뷰",
             type: .building
-        ),
-        HorizontalSearchModel(
-            name: "Apple Park",
-            subtitle: "One Apple Park Way Cupertino",
-            type: .special
         )
     ]
 }

@@ -75,18 +75,19 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        
+
         locationManager.delegate = self // Set CLLocationManagerDelegate
         requestLocationAccess()
-        addLongPressGesture()
-        
-        // 바텀시트 표시 로직 추가
-        presentBottomSheetController()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        // 바텀시트 표시 로직 추가
+        presentBottomSheetController()
         addTapGestureToBackground()
+        addLongPressGesture()
+
     }
     
     // MARK: - UI Setup
@@ -96,35 +97,8 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate 
         setupMapView()
         setupCurrentLocationButton()
         setupTitleLabelAndButtons()
+        setupDismissButton() // 뷰 닫기 버튼 설정
     }
-
-    private func setupTitleLabelAndButtons() {
-        view.addSubview(titleLabel)
-        view.addSubview(createCapsuleButton)
-        view.addSubview(modifyLocationButton)
-        
-        titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(mapView.snp.bottom).offset(20)
-            make.centerX.equalToSuperview()
-        }
-
-        createCapsuleButton.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(20)
-            make.centerX.equalToSuperview()
-            make.width.equalToSuperview().multipliedBy(0.8)
-            make.height.equalTo(50)
-        }
-
-        modifyLocationButton.snp.makeConstraints { make in
-            make.top.equalTo(createCapsuleButton.snp.bottom).offset(10)
-            make.centerX.equalToSuperview()
-            make.width.equalToSuperview().multipliedBy(0.8)
-            make.height.equalTo(50)
-        }
-    }
-    
-    
-
     
     // MARK: - Layout
     private func setupMapView() {
@@ -133,35 +107,45 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate 
             make.edges.equalToSuperview()
         }
     }
+
+    private func setupCurrentLocationButton() {
+        view.addSubview(currentLocationButton)
+        currentLocationButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
+            make.right.equalTo(view.safeAreaLayoutGuide).offset(-20)
+            make.width.height.equalTo(50)
+        }
+    }
+    
+    private func setupTitleLabelAndButtons() {
+        view.addSubview(titleLabel)
+        view.addSubview(createCapsuleButton)
+        view.addSubview(modifyLocationButton)
+        
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalTo(mapView.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
+        }
+        
+        createCapsuleButton.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
+            make.width.equalToSuperview().multipliedBy(0.8)
+            make.height.equalTo(50)
+        }
+        
+        modifyLocationButton.snp.makeConstraints { make in
+            make.top.equalTo(createCapsuleButton.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
+            make.width.equalToSuperview().multipliedBy(0.8)
+            make.height.equalTo(50)
+        }
+    }
     
     private func presentBottomSheetController() {
         let bottomSheetVC = BottomSheetViewController(viewModel: .init())
         bottomSheetVC.modalPresentationStyle = .automatic
-        
-        // 현재 활성화된 뷰 컨트롤러를 찾습니다.
-        let activeViewController = findActiveViewController()
-
-        // 바텀시트를 현재 활성화된 뷰 컨트롤러에 표시합니다.
-        activeViewController?.present(bottomSheetVC, animated: true, completion: nil)
-    }
-
-    private func findActiveViewController() -> UIViewController? {
-        if let tabBarController = self.tabBarController {
-            return tabBarController.selectedViewController
-        } else if let navigationController = self.navigationController {
-            return navigationController.visibleViewController
-        } else {
-            return self
-        }
-    }
-
-    private func setupCurrentLocationButton() {
-        view.addSubview(currentLocationButton)
-            currentLocationButton.snp.makeConstraints { make in
-                make.bottom.equalToSuperview().offset(-200)
-                make.width.height.equalTo(48)
-            
-        }
+        present(bottomSheetVC, animated: true, completion: nil)
     }
 
     
