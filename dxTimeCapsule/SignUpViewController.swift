@@ -35,8 +35,8 @@ class SignUpViewController: UIViewController  {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        signUpButton.setGradient(colors: [#colorLiteral(red: 0.831372549, green: 0.2, blue: 0.4117647059, alpha: 1), #colorLiteral(red: 0.7960784314, green: 0.6784313725, blue: 0.4274509804, alpha: 1)])
-        selectImageButton.setGradient(colors: [#colorLiteral(red: 0.831372549, green: 0.2, blue: 0.4117647059, alpha: 1), #colorLiteral(red: 0.7960784314, green: 0.6784313725, blue: 0.4274509804, alpha: 1)])
+        signUpButton.setBlurryBeach()
+        selectImageButton.setBlurryBeach()
         
     }
     
@@ -77,15 +77,15 @@ class SignUpViewController: UIViewController  {
         
         // Configure the Label
         alreadyHaveAccountLabel.text = "Already have an account?"
-        alreadyHaveAccountLabel.font = .systemFont(ofSize: 14)
+        alreadyHaveAccountLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
         alreadyHaveAccountLabel.textAlignment = .center
         alreadyHaveAccountLabel.isUserInteractionEnabled = true
         
-        signInActionLabel.text = "Sign In"
-        signInActionLabel.font = .systemFont(ofSize: 14, weight: .semibold)
+        signInActionLabel.text = "Sign in !"
+        signInActionLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
         signInActionLabel.textAlignment = .center
         signInActionLabel.isUserInteractionEnabled = true
-        signInActionLabel.textColor = UIColor(hex: "#D28488")
+        signInActionLabel.textColor = UIColor(hex: "#D53369")
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(alreadyHaveAccountTapped))
         signInActionLabel.addGestureRecognizer(tapGesture)
@@ -107,7 +107,7 @@ class SignUpViewController: UIViewController  {
         
         emailTextField.snp.makeConstraints { make in
             make.top.equalTo(selectImageButton.snp.bottom).offset(20)
-            make.left.right.equalToSuperview().inset(40)
+            make.left.right.equalToSuperview().inset(50)
             make.height.equalTo(44)
         }
         
@@ -166,13 +166,15 @@ class SignUpViewController: UIViewController  {
         textField.layer.cornerRadius = 10
         textField.layer.masksToBounds = true
         textField.layer.backgroundColor = UIColor.systemGray6.cgColor
+        textField.font = UIFont.pretendardRegular(ofSize: 14)
+
         view.addSubview(textField)
     }
     
     private func configureButton(_ button: UIButton, title: String) {
         button.setTitle(title, for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 14) // 텍스트 크기 및 폰트 설정
+        button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 14) // 텍스트 크기 및 폰트 설정
         button.layer.cornerRadius = 10
         
         button.snp.makeConstraints { make in
@@ -324,6 +326,7 @@ class SignUpViewController: UIViewController  {
         }
     }
 }
+
 // MARK: - Image Picker Delegate
 extension SignUpViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -346,16 +349,3 @@ extension SignUpViewController: UIImagePickerControllerDelegate, UINavigationCon
     }
 }
 
-
-//private extension LoginViewController {
-//    func configureButton(_ button: UIButton, title: String) {
-//        button.setTitle(title, for: .normal)
-//        button.setTitleColor(.white, for: .normal)
-//        button.layer.cornerRadius = 8
-//        
-//        // Set a consistent height constraint for the button
-//        button.snp.makeConstraints { make in
-//            make.height.equalTo(44)
-//        }
-//    }
-//}

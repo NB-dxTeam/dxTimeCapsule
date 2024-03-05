@@ -1,7 +1,13 @@
 import UIKit
 import SnapKit
+import CoreLocation
 
-class MainCreateCapsuleViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+protocol LocationSelectionDelegate: AnyObject {
+    func didConfirmLocation(_ location: CLLocation)
+}
+
+class MainCreateCapsuleViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LocationSelectionDelegate {
+
     
     // MARK: - Properties
     
@@ -11,24 +17,49 @@ class MainCreateCapsuleViewController: UIViewController, UIImagePickerController
     private let startUploadButton = UIButton()
     private let testPageButton = UIButton()
     
+    // Gesture Recognizer
+    private var panGesture: UIPanGestureRecognizer!
+    private var initialTouchPoint: CGPoint = CGPoint(x: 0,y: 0)
+    
+    // 현재 위치를 저장할 변수
+    var currentLocation: CLLocation?
+    
     // MARK: - Life Cycles
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        setupPanGesture()
+        presentLocationConfirmationModal()
+
     }
     
     // MARK: - UI Setup
     
     private func setupUI() {
-        view.backgroundColor = .systemBackground // 시스템 배경색 사용
+        view.backgroundColor = .clear
         setupUploadAreaView()
         setupInstructionLabel()
         setupStartUploadButton()
         setupTestPageButton()
     }
     
+
     // MARK: - Functions
+
+    func presentLocationConfirmationModal() {
+        let locationVC = LocationConfirmationViewController()
+//        locationVC.delegate = self // delegate 설정
+        locationVC.modalPresentationStyle = .overFullScreen
+        present(locationVC, animated: true, completion: nil)
+    }
+
+    // LocationSelectionDelegate 메서드 구현
+    func didConfirmLocation(_ location: CLLocation) {
+        self.currentLocation = location
+        // 필요한 경우 위치 정보를 사용하는 로직 추가
+    }
+    
     
     // 업로드 영역 뷰 설정
     private func setupUploadAreaView() {
@@ -43,8 +74,9 @@ class MainCreateCapsuleViewController: UIViewController, UIImagePickerController
         // SnapKit을 사용한 레이아웃 제약 조건 설정
         uploadAreaView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20) // 상단 여백 감소
-            make.width.height.equalTo(view.frame.width * 0.8) // 뷰 너비의 80% 크기로 조정
+            make.centerY.equalToSuperview() // 중앙 정렬
+            make.width.equalTo(view.frame.width * 0.9) // 뷰 너비의 90% 크기로 조정
+            make.height.equalTo(view.frame.height * 0.9) // 뷰 높이의 90% 크기로 조정
         }
         
         imageView.snp.makeConstraints { make in
@@ -97,6 +129,12 @@ class MainCreateCapsuleViewController: UIViewController, UIImagePickerController
             make.height.equalTo(44) // 버튼 높이 표준화
         }
     }
+    
+    // Gesture Recognizer Setup
+     private func setupPanGesture() {
+         panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+         view.addGestureRecognizer(panGesture)
+     }
     
     // UIImagePickerController를 표시하는 메소드
     private func presentImagePicker(sourceType: UIImagePickerController.SourceType) {
@@ -182,4 +220,28 @@ class MainCreateCapsuleViewController: UIViewController, UIImagePickerController
         // 액션 시트 표시
         present(actionSheet, animated: true)
     }
-}
+    
+    // MARK: - Gesture Recognizer Action
+    
+      @objc private func handlePanGesture(_ recognizer: UIPanGestureRecognizer) {
+          let touchPoint = recognizer.location(in: self.view.window)
+          
+          if recognizer.state == .began {
+              initialTouchPoint = touchPoint
+          } else if recognizer.state == .changed {
+              if touchPoint.y - initialTouchPoint.y > 0 {
+                  self.view.frame = CGRect(x: 0, y: touchPoint.y - initialTouchPoint.y, width: self.view.frame.size.width, height: self.view.frame.size.height)
+              }
+          } else if recognizer.state == .ended || recognizer.state == .cancelled {
+              if touchPoint.y - initialTouchPoint.y > 100 {
+                  self.dismiss(animated: true, completion: nil)
+              } else {
+                  UIView.animate(withDuration: 0.3, animations: {
+                      self.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
+                  })
+              }
+          }
+      }
+  }
+
+

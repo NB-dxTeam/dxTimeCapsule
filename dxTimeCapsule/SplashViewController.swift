@@ -17,7 +17,6 @@ class SplashViewController: UIViewController {
         closedBoxImageView.snp.makeConstraints { make in
             make.center.equalToSuperview()
             make.height.equalTo(80)
-            
         }
         
         // 이미지 뷰를 투명한 상태로 초기화
@@ -31,13 +30,13 @@ class SplashViewController: UIViewController {
                 UIView.animate(withDuration: 2.0, delay: 1.0, options: .curveEaseInOut, animations: {
                     closedBoxImageView.alpha = 0.0 // 이미지 뷰를 서서히 투명하게 만들어 사라지도록 투명도를 0으로 변경
                 }) { _ in
-                    // 로그인 뷰 컨트롤러로 전환하는 코드
+                    // 로그인 뷰 컨트롤러 대신 메인 탭바를 표시하도록 변경
                     guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                           let sceneDelegate = windowScene.delegate as? SceneDelegate else { return }
                     
-                    UIView.transition(with: sceneDelegate.window!, duration: 1, options: .transitionCrossDissolve, animations: {
-                        sceneDelegate.window?.rootViewController = LoginViewController()
-                    }, completion: nil)
+                    let mainTabBarController = MainTabBarView()
+                    let navigationController = UINavigationController(rootViewController: mainTabBarController)
+                    sceneDelegate.window?.rootViewController = navigationController
                 }
             }
         }

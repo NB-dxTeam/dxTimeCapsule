@@ -66,7 +66,7 @@ class SearchModalTableViewController: UIViewController, UITableViewDelegate, UIT
         searchContainerView.backgroundColor = .white
         
         searchLabel = UILabel()
-        searchLabel.text = "Search"
+        searchLabel.text = "Search Friends"
         searchLabel.font = UIFont.systemFont(ofSize: 26, weight: .bold)
         searchLabel.textAlignment = .left
         

@@ -32,6 +32,9 @@ class LoginViewController: UIViewController {
         setupViews()
         setupLayouts()
         
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        
         // Test 자동기입
         emailTextField.text =  "bebe@google.com"
         passwordTextField.text = "123456"
@@ -98,13 +101,13 @@ class LoginViewController: UIViewController {
 
         // "계정이 없으신가요?" 라벨 설정
         noAccountLabel.text = "Do not have an account?"
-        noAccountLabel.font = .systemFont(ofSize: 14)
+        noAccountLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
         noAccountLabel.textColor = .black
         
         // "회원가입" 라벨 &설정
-        signUpActionLabel.text = "Sign Up!"
-        signUpActionLabel.font = .systemFont(ofSize: 14, weight: .bold)
-        signUpActionLabel.textColor = UIColor(hex: "#D28488")
+        signUpActionLabel.text = "Sign up !"
+        signUpActionLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
+        signUpActionLabel.textColor = UIColor(hex: "#D53369")
         signUpActionLabel.isUserInteractionEnabled = true
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSignUpLabel))
@@ -115,6 +118,7 @@ class LoginViewController: UIViewController {
         
     }
     
+    // MARK: - Setup Layouts
     private func setupLayouts() {
         logoImageView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(80)
@@ -129,7 +133,7 @@ class LoginViewController: UIViewController {
         
         emailTextField.snp.makeConstraints { make in
             make.top.equalTo(appNameLabel.snp.bottom).offset(40)
-            make.left.right.equalToSuperview().inset(30)
+            make.left.right.equalToSuperview().inset(50)
             make.height.equalTo(44)
         }
         
@@ -141,7 +145,7 @@ class LoginViewController: UIViewController {
         passwordTextField.isSecureTextEntry = true
         
         
-        // Add the loginButton constraints
+        // loginButton
         loginButton.snp.makeConstraints { make in
             make.top.equalTo(passwordTextField.snp.bottom).offset(20)
             make.left.right.equalTo(passwordTextField)
@@ -253,6 +257,7 @@ private extension LoginViewController {
         textField.layer.cornerRadius = 10
         textField.layer.masksToBounds = true
         textField.layer.backgroundColor = UIColor.systemGray6.cgColor
+        textField.font = UIFont.pretendardRegular(ofSize: 14)
         textField.snp.makeConstraints { make in
             make.height.equalTo(44)
         }
@@ -262,17 +267,29 @@ private extension LoginViewController {
         button.setTitle(title, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 8
+        button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 14)
         button.snp.makeConstraints { make in
             make.height.equalTo(44)
         }
     }
-    
+
     func configureSignUpLabel() {
         signUpLabel.text = "Do not have an account? Sign Up"
-        signUpLabel.font = .systemFont(ofSize: 14, weight: .semibold)
+        signUpLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
         signUpLabel.textAlignment = .center
     }
 }
 
-
-
+extension LoginViewController: UITextFieldDelegate {
+    // UITextFieldDelegate 프로토콜의 textFieldShouldReturn 메서드 구현
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // 키보드의 리턴(엔터) 키를 눌렀을 때 로그인 버튼의 동작 실행
+        if textField == emailTextField {
+            passwordTextField.becomeFirstResponder() // 비밀번호 텍스트 필드로 포커스 이동
+        } else if textField == passwordTextField {
+            textField.resignFirstResponder() // 키보드 감추기
+            didTapLoginButton() // 로그인 버튼의 액션 실행
+        }
+        return true
+    }
+}

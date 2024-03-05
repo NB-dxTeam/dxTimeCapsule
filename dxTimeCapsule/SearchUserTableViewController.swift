@@ -16,7 +16,7 @@ class SearchUserTableViewController: UIViewController, UITableViewDelegate, UITa
     
     private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
-        searchBar.placeholder = "Search UserName"
+        searchBar.placeholder = "Search Username"
         searchBar.autocorrectionType = .no
         searchBar.spellCheckingType = .no
         searchBar.backgroundImage = UIImage() // 선 제거

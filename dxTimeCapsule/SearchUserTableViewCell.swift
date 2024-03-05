@@ -117,9 +117,10 @@ class SearchUserTableViewCell: UITableViewCell {
                     
                 case "요청 받음":
                     self.friendActionButton.isHidden = false
-                    self.friendActionButton.setThemeBrokenHeart()
+                    self.friendActionButton.layer.borderColor = UIColor(hex: "#D53369").cgColor
+                    self.friendActionButton.layer.borderWidth = 1
                     self.friendActionButton.setTitle("Accept", for: .normal)
-                    self.friendActionButton.setTitleColor(.white, for: .normal)
+                    self.friendActionButton.setTitleColor(UIColor(hex: "#D53369"), for: .normal)
                     self.friendActionButton.titleLabel?.font = UIFont.pretendardRegular(ofSize: 14)
                     self.statusLabel.isHidden = true
                     

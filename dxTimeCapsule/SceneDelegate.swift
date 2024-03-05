@@ -8,7 +8,6 @@
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -17,16 +16,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         window.overrideUserInterfaceStyle = .light
         
-        let splashVC = SplashViewController()
-        window.rootViewController = splashVC
+        let spalshVC = SplashViewController()
+        window.rootViewController = spalshVC
         window.makeKeyAndVisible()
         
         self.window = window
-            
+        
     }
-
-
-
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
