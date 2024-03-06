@@ -17,7 +17,6 @@ struct TimeCapsule {
     var isOpened: Bool //개봉여부
     var timeCapsuleIsOpen: Bool = false // 타임캠슐 오픈 여부
 
-
 }
 
 

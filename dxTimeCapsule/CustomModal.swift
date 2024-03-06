@@ -10,17 +10,11 @@ import SnapKit
 import FirebaseFirestore
 import FirebaseAuth
 
-struct TimeCapsules {
-    var creationDate: Date
-    var openDate: Date
-    var userLocation: String
-    var photoUrl: String
-    var comment: String
-}
+
 
 class CustomModal: UIViewController {
     
-    var timeCapsule = [TimeCapsules]()
+    var timeCapsule = [TimeCapsule]()
     
     private var capsuleCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -30,11 +24,6 @@ class CustomModal: UIViewController {
         collection.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         collection.layer.masksToBounds = true
         return collection
-    }()
-    private var dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yy.MM.dd"
-        return formatter
     }()
     
     override func viewDidLoad() {
@@ -61,7 +50,7 @@ class CustomModal: UIViewController {
         capsuleCollection.isPagingEnabled = true // 페이징 활성화
         capsuleCollection.showsVerticalScrollIndicator = true // 수직 스크롤 인디케이터 표시 여부 설정.
         capsuleCollection.decelerationRate = .normal // 콜렉션 뷰의 감속 속도 설정
-        capsuleCollection.alpha = 0.8
+        capsuleCollection.alpha = 1 // 투명도
         if let layout = capsuleCollection.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .vertical // 스크롤 방향(수직)
             let screenWidth = UIScreen.main.bounds.width
@@ -81,19 +70,29 @@ class CustomModal: UIViewController {
     private func fetchTimeCapsulesInfo() {
         let db = Firestore.firestore()
         let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // Example UID, replace with dynamic UID
-        
         db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
+            .whereField("isOpened", isEqualTo: true) // 아직 열리지 않은 타임캡슐만 선택
+            .order(by: "openDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
             .getDocuments { [weak self] (querySnapshot, err) in
                 if let documents = querySnapshot?.documents {
                     print("documents 개수: \(documents.count)")
                     self?.timeCapsule = documents.compactMap { doc in
                         let data = doc.data()
-                        let capsule = TimeCapsules(
-                            creationDate: data["creationDate"] as? Date ?? Date(),
-                            openDate: data["openDate"] as? Date ?? Date(),
-                            userLocation: data["userLocation"] as? String ?? "",
-                            photoUrl: data["photoUrl"] as? String ?? "",
-                            comment: data["comment"] as? String ?? ""
+                        let capsule = TimeCapsule(
+                            TimeCapsuleId: doc.documentID,
+                            uid: data["uid"] as? String ?? "",
+                            userName: data["userName"] as? String ?? "",
+                            tcBoxImageURL: data["tcBoxImageURL"] as? String,
+                            timeCapsuleImageURL: data["timeCapsuleImageURL"] as? String,
+                            gpslocation: data["gpslocation"] as? GeoPoint ?? GeoPoint(latitude: 0, longitude: 0),
+                            userLocation: data["userLocation"] as? String,
+                            userComment: data["userComment"] as? String,
+                            userMood: data["userMood"] as? String ?? "",
+                            tagFriend: data["tagFriend"] as? [String],
+                            createTimeCapsuleDate: (data["createTimeCapsuleDate"] as? Timestamp)?.dateValue() ?? Date(),
+                            openTimeCapsuleDate: (data["openTimeCapsuleDate"] as? Timestamp)?.dateValue() ?? Date(),
+                            isOpened: data["isOpened"] as? Bool ?? false,
+                            timeCapsuleIsOpen: data["timeCapsuleIsOpen"] as? Bool ?? false
                         )
                         print("매핑된 캡슐: \(capsule)")
                         return capsule
@@ -102,13 +101,11 @@ class CustomModal: UIViewController {
                     print("Fetched \(self?.timeCapsule.count ?? 0) timecapsules")
                     
                     DispatchQueue.main.async {
-                        print("콜렉션 뷰 리로드.")
+                        print("collectionView reload.")
                         self?.capsuleCollection.reloadData()
                     }
                 } else if let err = err {
                     print("Error getting documents: \(err)")
-                } else {
-                    print("문서 성공적으로 가져옴.")
                 }
             }
     }
