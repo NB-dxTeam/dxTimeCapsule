@@ -2,7 +2,7 @@ import UIKit
 import SnapKit
 import MapKit
 
-class UploadDetailViewController: UIViewController {
+class PhotoUploadViewController: UIViewController {
     
     // UI 컴포넌트 선언
     private let selectedImageView = UIImageView()
