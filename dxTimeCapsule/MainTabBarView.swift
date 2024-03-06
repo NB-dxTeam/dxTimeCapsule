@@ -30,7 +30,8 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         locationConfirmationViewController.tabBarItem.tag = 2 // 세 번째 탭을 나타내는 태그를 설정
         
 
-        let notificationViewController = UINavigationController(rootViewController: FriendRequestsViewController())
+        let notificationViewController = UINavigationController(rootViewController:NotificationViewController())
+        //FriendRequestsViewController())
 
         notificationViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Activity_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Activity_Select", targetSize: CGSize(width: 24, height: 24)))
         

@@ -192,11 +192,11 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate 
 
 }
 
-// MARK: - Preview
-import SwiftUI
-
-struct MainTabBarViewPreview : PreviewProvider {
-    static var previews: some View {
-        MainTabBarView().toPreview()
-    }
-}
+//// MARK: - Preview
+//import SwiftUI
+//
+//struct MainTabBarViewPreview : PreviewProvider {
+//    static var previews: some View {
+//        MainTabBarView().toPreview()
+//    }
+//}
