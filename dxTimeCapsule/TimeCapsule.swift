@@ -16,10 +16,19 @@ struct TimeCapsule {
     var openTimeCapsuleDate: Date // 개봉일
     var isOpened: Bool //개봉여부
     var timeCapsuleIsOpen: Bool = false // 타임캠슐 오픈 여부
-
 }
 
-
+struct CapsuleInfo {
+    var TimeCapsuleId: String
+    var tcBoxImageURL: String?
+    var latitude: Double // 위도
+    var longitude: Double // 경도
+    var userLocation: String?
+    var userComment: String?
+    var createTimeCapsuleDate: Date // 생성일
+    var openTimeCapsuleDate: Date // 개봉일
+    var isOpened: Bool //개봉여부
+}
 /*
  func fetchTimeCapsuleData() {
          let db = Firestore.firestore()

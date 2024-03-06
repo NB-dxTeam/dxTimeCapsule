@@ -14,7 +14,7 @@ import FirebaseAuth
 
 class CustomModal: UIViewController {
     
-    var timeCapsule = [TimeCapsule]()
+    var capsuleInfo = [CapsuleInfo]()
     
     private var capsuleCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -71,34 +71,29 @@ class CustomModal: UIViewController {
         let db = Firestore.firestore()
         let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // Example UID, replace with dynamic UID
         db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
-            .whereField("isOpened", isEqualTo: true) // 아직 열리지 않은 타임캡슐만 선택
+            .whereField("isOpened", isEqualTo: false) // 아직 열리지 않은 타임캡슐만 선택
             .order(by: "openDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
             .getDocuments { [weak self] (querySnapshot, err) in
                 if let documents = querySnapshot?.documents {
                     print("documents 개수: \(documents.count)")
-                    self?.timeCapsule = documents.compactMap { doc in
+                    self?.capsuleInfo = documents.compactMap { doc in
                         let data = doc.data()
-                        let capsule = TimeCapsule(
+                        let capsule = CapsuleInfo(
                             TimeCapsuleId: doc.documentID,
-                            uid: data["uid"] as? String ?? "",
-                            userName: data["userName"] as? String ?? "",
                             tcBoxImageURL: data["tcBoxImageURL"] as? String,
-                            timeCapsuleImageURL: data["timeCapsuleImageURL"] as? String,
-                            gpslocation: data["gpslocation"] as? GeoPoint ?? GeoPoint(latitude: 0, longitude: 0),
+                            latitude: data["latitude"] as? Double ?? 37.5115,
+                            longitude: data["longitude"] as? Double ?? 127.0986,
                             userLocation: data["userLocation"] as? String,
                             userComment: data["userComment"] as? String,
-                            userMood: data["userMood"] as? String ?? "",
-                            tagFriend: data["tagFriend"] as? [String],
-                            createTimeCapsuleDate: (data["createTimeCapsuleDate"] as? Timestamp)?.dateValue() ?? Date(),
-                            openTimeCapsuleDate: (data["openTimeCapsuleDate"] as? Timestamp)?.dateValue() ?? Date(),
-                            isOpened: data["isOpened"] as? Bool ?? false,
-                            timeCapsuleIsOpen: data["timeCapsuleIsOpen"] as? Bool ?? false
+                            createTimeCapsuleDate: (data["creationDate"] as? Timestamp)?.dateValue() ?? Date(),
+                            openTimeCapsuleDate: (data["openDate"] as? Timestamp)?.dateValue() ?? Date(),
+                            isOpened: data["isOpened"] as? Bool ?? false
                         )
                         print("매핑된 캡슐: \(capsule)")
                         return capsule
                     }
                     print("Fetching time capsules for userID: \(userId)")
-                    print("Fetched \(self?.timeCapsule.count ?? 0) timecapsules")
+                    print("Fetched \(self?.capsuleInfo.count ?? 0) timecapsules")
                     
                     DispatchQueue.main.async {
                         print("collectionView reload.")
@@ -115,7 +110,7 @@ extension CustomModal: UICollectionViewDelegate, UICollectionViewDataSource {
     // MARK: - UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return timeCapsule.count
+        return capsuleInfo.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -123,8 +118,8 @@ extension CustomModal: UICollectionViewDelegate, UICollectionViewDataSource {
             fatalError("Unable to dequeue LockedCapsuleCell")
         }
         
-        let timeCapsule = timeCapsule[indexPath.row]
-        cell.configure(with: timeCapsule)
+        let capsuleInfo = capsuleInfo[indexPath.row]
+        cell.configure(with: capsuleInfo)
         return cell
     }
     
@@ -151,12 +146,12 @@ extension CustomModal: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension CustomModal {
-    // D-Day 남은 일수 계산
-    func daysUntilOpenDate(_ date: Date) -> Int {
-        return Calendar.current.dateComponents([.day], from: Date(), to: date).day ?? 0
-    }
-}
+//extension CustomModal {
+//    // D-Day 남은 일수 계산
+//    func daysUntilOpenDate(_ date: Date) -> Int {
+//        return Calendar.current.dateComponents([.day], from: Date(), to: date).day ?? 0
+//    }
+//}
 
 // MARK: - CollectionView Header
 class HeaderView: UICollectionReusableView {

@@ -42,6 +42,7 @@ class CapsuleMapViewController: UIViewController, CLLocationManagerDelegate {
         showModalVC()
         setupMapView()
         buttons()
+        loadCapsuleInfos()
     }
     
 }
@@ -87,7 +88,39 @@ extension CapsuleMapViewController {
         locationManager.startUpdatingLocation()
     }
     
+    func loadCapsuleInfos() {
+        Firestore.firestore().collection("capsules").getDocuments { snapshot, error in
+            guard let documents = snapshot?.documents else {
+                print("Error fetching documents: \(error!)")
+                return
+            }
+            
+            let capsules = documents.map { doc -> CapsuleInfo in
+                let data = doc.data()
+                return CapsuleInfo(
+                    TimeCapsuleId: doc.documentID,
+                    tcBoxImageURL: data["tcBoxImageURL"] as? String,
+                    latitude: data["latitude"] as? Double ?? 0,
+                    longitude: data["longitude"] as? Double ?? 0,
+                    userLocation: data["userLocation"] as? String,
+                    userComment: data["userComment"] as? String,
+                    createTimeCapsuleDate: (data["createTimeCapsuleDate"] as? Timestamp)?.dateValue() ?? Date(),
+                    openTimeCapsuleDate: (data["openTimeCapsuleDate"] as? Timestamp)?.dateValue() ?? Date(),
+                    isOpened: data["isOpened"] as? Bool ?? false
+                )
+            }
+            self.addAnnotations(from: capsules)
+        }
+    }
     
+    // 타임캡슐 정보를 기반으로 어노테이션 추가
+    func addAnnotations(from capsules: [CapsuleInfo]) {
+        for capsule in capsules {
+            let coordinate = CLLocationCoordinate2D(latitude: capsule.latitude, longitude: capsule.longitude)
+            let annotation = CapsuleAnnotation(coordinate: coordinate, title: capsule.userLocation, subtitle: "개봉일: \(capsule.openTimeCapsuleDate)", info: capsule)
+            self.capsuleMaps.addAnnotation(annotation)
+        }
+    }
 }
 extension CapsuleMapViewController {
     // CustomModal 뷰를 모달로 화면에 표시하는 함수
@@ -137,15 +170,44 @@ extension CapsuleMapViewController: MKMapViewDelegate {
     
     // 사용자 위치가 업데이트 될 때, 호출 ( 캡슐 셀 텝 동작시 해당지역 확대 로직 여기에 추가)
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-        let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+        let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
         capsuleMaps.setRegion(region, animated: true)
     }
     
+    
+    // 어노테이션 설정
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        // 사용자의 현재 위치 어노테이션은 기본 뷰를 사용
+        if annotation is MKUserLocation {
+            return nil
+        }
+
+        let identifier = "CapsuleAnnotation"
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView
+
+        if annotationView == nil {
+            annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true // 호출 아웃 사용 설정
+            annotationView?.markerTintColor = .purple // 마커 색상 변경
+            annotationView?.glyphText = "🕰" // 마커 중앙에 표시될 텍스트 (예: 시계 이모지)
+            annotationView?.titleVisibility = .adaptive // 제목 가시성 설정
+            annotationView?.subtitleVisibility = .adaptive // 부제목 가시성 설정
+        } else {
+            annotationView?.annotation = annotation
+        }
+
+        // 추가적인 커스터마이징이 필요한 경우 여기에 코드를 추가합니다.
+        // 예를 들어, 커스텀 이미지를 설정하려면:
+        annotationView?.glyphImage = UIImage(named: "TimeCapsule")
+
+        return annotationView
+    }
     
 }
 
 // MARK: - Preview
 import SwiftUI
+import FirebaseFirestoreInternal
 
 struct PreView: PreviewProvider {
     static var previews: some View {
