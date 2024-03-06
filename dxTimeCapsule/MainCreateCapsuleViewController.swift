@@ -169,7 +169,7 @@ class MainCreateCapsuleViewController: UIViewController, UIImagePickerController
         
         // "이 사진으로 선택하기" 액션
         let confirmAction = UIAlertAction(title: "이 사진으로 선택하기", style: .default) { [weak self] _ in
-            let optionVC = UploadDetailViewController()
+            let optionVC = PhotoUploadViewController()
             self?.navigationController?.pushViewController(optionVC, animated: true)
         }
         

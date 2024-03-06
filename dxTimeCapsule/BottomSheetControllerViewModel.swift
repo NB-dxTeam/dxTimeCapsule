@@ -1,25 +1,17 @@
 import UIKit
 import Combine
 
-class BottomSheetControllerViewModel {
+class BottomSheetControllerViewModel: UIViewController {
     
-    enum Sections: CaseIterable {
-        static var allCases: [Sections] = [.search ,.favorites([]), .recents([])]
-        case search
-        case favorites([CarouselButtonModel])
-        case recents([HorizontalSearchModel])
+    private var viewModel = LocationHistoryViewModel()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        }
+        // UI 업데이트
     }
     
-    private(set) var sections: [Sections] = []
-    
-    init() {
-        generateSections(favorites: CarouselButtonModel.sampleData, recents: HorizontalSearchModel.sampleData)
-    }
-    
-    private func generateSections(favorites: [CarouselButtonModel], recents: [HorizontalSearchModel]) {
-        sections = []
-        sections.append(.search)
-        sections.append(.favorites(favorites))
-        sections.append(.recents(recents))
-    }
-}
+    // 사용자 인터랙션 처리 메서드 구현
+
+ 

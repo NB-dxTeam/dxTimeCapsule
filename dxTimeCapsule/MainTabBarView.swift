@@ -11,7 +11,6 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupTabs()
-        tabBar.barTintColor = .white
         self.delegate = self
     }
     
@@ -41,6 +40,7 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         
         self.viewControllers = viewControllers
         self.tabBar.tintColor = UIColor(hex: "#D53369")
+        self.tabBar.backgroundColor = .white
     }
     
     // UITabBarControllerDelegate 메서드
