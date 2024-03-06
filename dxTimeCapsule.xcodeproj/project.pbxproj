@@ -65,6 +65,7 @@
 		27F3827F2B8FA1240005F733 /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F3827E2B8FA1240005F733 /* NotificationTableViewCell.swift */; };
 		27F382822B8FB0400005F733 /* OpendedTCCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F382812B8FB0400005F733 /* OpendedTCCollectionViewCell.swift */; };
 		460FE7672B8A200D00AF8086 /* LockedCapsuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */; };
+		46B6557A2B9891FE001EFF23 /* CapsuleAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B655792B9891FE001EFF23 /* CapsuleAnnotation.swift */; };
 		46EA9BAE2B89A27E00633EC4 /* CapsuleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */; };
 		48EE8D76938506F10A425234 /* Pods_dxTimeCapsule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 267B4DC3DC733F68AF7B17D0 /* Pods_dxTimeCapsule.framework */; };
 		4E2A09C82B8F755C00911390 /* OpenInteractionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */; };
@@ -146,6 +147,7 @@
 		27F382812B8FB0400005F733 /* OpendedTCCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpendedTCCollectionViewCell.swift; sourceTree = "<group>"; };
 		460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedCapsuleCell.swift; sourceTree = "<group>"; };
 		467D1DE22B972499005249B1 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		46B655792B9891FE001EFF23 /* CapsuleAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapsuleAnnotation.swift; sourceTree = "<group>"; };
 		46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleMapViewController.swift; sourceTree = "<group>"; };
 		4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInteractionViewController.swift; sourceTree = "<group>"; };
 		4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeInAnimator.swift; sourceTree = "<group>"; };
@@ -323,6 +325,7 @@
 		1FAB4DEE2B8C2B800054618A /* Capsule */ = {
 			isa = PBXGroup;
 			children = (
+				46B655792B9891FE001EFF23 /* CapsuleAnnotation.swift */,
 				4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */,
 				460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */,
 				4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */,
@@ -668,6 +671,7 @@
 				D25B20EB2B89CD02006CEED8 /* SplashViewController.swift in Sources */,
 				1F0D3B2C2B89AA2B00A31E82 /* MainCreateCapsuleViewController.swift in Sources */,
 				1FD2B7BC2B96C04B00896F9C /* CustomPresentationDetents.swift in Sources */,
+				46B6557A2B9891FE001EFF23 /* CapsuleAnnotation.swift in Sources */,
 				27F3827F2B8FA1240005F733 /* NotificationTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -738,7 +742,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -795,7 +799,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
