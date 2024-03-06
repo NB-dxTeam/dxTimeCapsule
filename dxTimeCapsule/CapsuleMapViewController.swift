@@ -133,10 +133,17 @@ extension CapsuleMapViewController {
         print("지도에 \(capsules.count)개의 어노테이션이 추가되었습니다.")
     }
 }
+
 extension CapsuleMapViewController {
     // CustomModal 뷰를 모달로 화면에 표시하는 함수
     func showModalVC() {
         let vc = CustomModal()
+        
+        // CustomModal에서 타임캡슐 선택 시 실행할 클로저 구현
+        vc.onCapsuleSelected = { [weak self] latitude, longitude in
+            // 지도의 위치를 업데이트하는 메소드 호출
+            self?.moveToLocation(latitude: latitude, longitude: longitude)
+        }
         
         if let sheet = vc.sheetPresentationController {
             sheet.detents = [.small ,.medium(), .large()] // 크기 옵션
@@ -150,6 +157,11 @@ extension CapsuleMapViewController {
         self.present(vc, animated: true)
     }
     
+    func moveToLocation(latitude: Double, longitude: Double) {
+        let location = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        let region = MKCoordinateRegion(center: location, latitudinalMeters: 500, longitudinalMeters: 500)
+        capsuleMaps.setRegion(region, animated: true)
+    }
     // 하프 모달 버튼 동작
     @objc func modalButton(_ sender: UIButton) {
         showModalVC()
