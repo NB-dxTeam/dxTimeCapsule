@@ -89,6 +89,7 @@ extension CapsuleMapViewController {
         locationManager.startUpdatingLocation()
     }
     
+    // 데이터 정보 불러오기
     func loadCapsuleInfos() {
         let db =  Firestore.firestore()
         let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2"
@@ -199,7 +200,7 @@ extension CapsuleMapViewController: MKMapViewDelegate {
             annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             annotationView?.canShowCallout = true // 호출 아웃 사용 설정
             annotationView?.markerTintColor = .purple // 마커 색상 변경
-            annotationView?.glyphText = "🕰" // 마커 중앙에 표시될 텍스트 (예: 시계 이모지)
+            annotationView?.glyphImage = UIImage(named: "TimeCapsule") // 마커에 표시 될 이미지
             annotationView?.titleVisibility = .adaptive // 제목 가시성 설정
             annotationView?.subtitleVisibility = .adaptive // 부제목 가시성 설정
         } else {
@@ -208,7 +209,8 @@ extension CapsuleMapViewController: MKMapViewDelegate {
 
         // 추가적인 커스터마이징이 필요한 경우 여기에 코드를 추가
         annotationView?.glyphImage = UIImage(named: "TimeCapsule")
-
+        annotationView?.canShowCallout = true
+        annotationView?.animatesWhenAdded = true
         return annotationView
     }
     
