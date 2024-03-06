@@ -10,10 +10,6 @@ import SnapKit
 import FirebaseFirestore
 import FirebaseAuth
 
-#Preview{
-    HomeViewController()
-}
-
 class HomeViewController: UIViewController {
 
     // MARK: - Properties
@@ -209,7 +205,7 @@ class HomeViewController: UIViewController {
         // 사용자의 UID로 필터링하고, openDate 필드로 오름차순 정렬한 후, 최상위 1개 문서만 가져옵니다.
         db.collection("timeCapsules")
             .whereField("uid", isEqualTo: userId)
-            .whereField("isOpened", isEqualTo: true) // isOpened가 false인 경우 필터링
+            .whereField("isOpened", isEqualTo: false) // isOpened가 false인 경우 필터링
             .order(by: "openDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
             .limit(to: 1) // 가장 개봉일이 가까운 타임캡슐 1개만 선택
             .getDocuments { [weak self] (querySnapshot, err) in
