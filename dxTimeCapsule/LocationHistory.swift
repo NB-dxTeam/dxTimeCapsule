@@ -1,7 +1,7 @@
 import UIKit
 import FirebaseFirestore
 
-struct Location {
+struct LocationHistory {
     var id: String
     var uid: String
     var name: String

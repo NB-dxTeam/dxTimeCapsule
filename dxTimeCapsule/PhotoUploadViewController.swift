@@ -97,3 +97,12 @@ class PhotoUploadViewController: UIViewController {
         // 사진 세부사항 저장 로직
     }
 }
+
+// MARK: - Preview
+import SwiftUI
+
+struct PreView2 : PreviewProvider {
+    static var previews: some View {
+    PhotoUploadViewController().toPreview()
+    }
+}
