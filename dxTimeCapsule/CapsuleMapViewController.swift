@@ -43,6 +43,7 @@ class CapsuleMapViewController: UIViewController, CLLocationManagerDelegate {
         setupMapView()
         buttons()
         loadCapsuleInfos()
+        
     }
     
 }
@@ -89,7 +90,13 @@ extension CapsuleMapViewController {
     }
     
     func loadCapsuleInfos() {
-        Firestore.firestore().collection("capsules").getDocuments { snapshot, error in
+        let db =  Firestore.firestore()
+        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2"
+        
+        db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
+            .whereField("isOpened", isEqualTo: false) // 아직 열리지 않은 타임캡슐만 선택
+            .order(by: "openDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
+            .getDocuments { [weak self] (snapshot, error) in
             guard let documents = snapshot?.documents else {
                 print("Error fetching documents: \(error!)")
                 return
@@ -97,19 +104,21 @@ extension CapsuleMapViewController {
             
             let capsules = documents.map { doc -> CapsuleInfo in
                 let data = doc.data()
-                return CapsuleInfo(
+                let capsule = CapsuleInfo(
                     TimeCapsuleId: doc.documentID,
                     tcBoxImageURL: data["tcBoxImageURL"] as? String,
                     latitude: data["latitude"] as? Double ?? 0,
                     longitude: data["longitude"] as? Double ?? 0,
                     userLocation: data["userLocation"] as? String,
                     userComment: data["userComment"] as? String,
-                    createTimeCapsuleDate: (data["createTimeCapsuleDate"] as? Timestamp)?.dateValue() ?? Date(),
-                    openTimeCapsuleDate: (data["openTimeCapsuleDate"] as? Timestamp)?.dateValue() ?? Date(),
+                    createTimeCapsuleDate: (data["creationDate"] as? Timestamp)?.dateValue() ?? Date(),
+                    openTimeCapsuleDate: (data["openDate"] as? Timestamp)?.dateValue() ?? Date(),
                     isOpened: data["isOpened"] as? Bool ?? false
                 )
+                print("Loaded capsule: \(capsule.TimeCapsuleId) at [Lat: \(capsule.latitude), Long: \(capsule.longitude)]")
+                return capsule
             }
-            self.addAnnotations(from: capsules)
+                self?.addAnnotations(from: capsules)
         }
     }
     
@@ -120,6 +129,7 @@ extension CapsuleMapViewController {
             let annotation = CapsuleAnnotation(coordinate: coordinate, title: capsule.userLocation, subtitle: "개봉일: \(capsule.openTimeCapsuleDate)", info: capsule)
             self.capsuleMaps.addAnnotation(annotation)
         }
+        print("지도에 \(capsules.count)개의 어노테이션이 추가되었습니다.")
     }
 }
 extension CapsuleMapViewController {
@@ -196,8 +206,7 @@ extension CapsuleMapViewController: MKMapViewDelegate {
             annotationView?.annotation = annotation
         }
 
-        // 추가적인 커스터마이징이 필요한 경우 여기에 코드를 추가합니다.
-        // 예를 들어, 커스텀 이미지를 설정하려면:
+        // 추가적인 커스터마이징이 필요한 경우 여기에 코드를 추가
         annotationView?.glyphImage = UIImage(named: "TimeCapsule")
 
         return annotationView
