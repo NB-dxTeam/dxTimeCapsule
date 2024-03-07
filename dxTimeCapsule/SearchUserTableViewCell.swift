@@ -110,7 +110,7 @@ class SearchUserTableViewCell: UITableViewCell {
                     
                 case "요청 보냄":
                     self.friendActionButton.isHidden = true
-                    self.statusLabel.text = "Requested"
+                    self.statusLabel.text = "요청 보냄"
                     self.statusLabel.textColor = .systemGray
                     self.statusLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
                     self.statusLabel.isHidden = false
@@ -119,17 +119,17 @@ class SearchUserTableViewCell: UITableViewCell {
                     self.friendActionButton.isHidden = false
                     self.friendActionButton.layer.borderColor = UIColor(hex: "#D53369").cgColor
                     self.friendActionButton.layer.borderWidth = 1
-                    self.friendActionButton.setTitle("Accept", for: .normal)
+                    self.friendActionButton.setTitle("친구 수락", for: .normal)
                     self.friendActionButton.setTitleColor(UIColor(hex: "#D53369"), for: .normal)
-                    self.friendActionButton.titleLabel?.font = UIFont.pretendardRegular(ofSize: 14)
+                    self.friendActionButton.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 14)
                     self.statusLabel.isHidden = true
                     
                 default:
                     self.friendActionButton.isHidden = false
                     self.friendActionButton.setBlurryBeach()
-                    self.friendActionButton.setTitle("Friend Request", for: .normal)
+                    self.friendActionButton.setTitle("친구 신청", for: .normal)
                     self.friendActionButton.setTitleColor(.white, for: .normal)
-                    self.friendActionButton.titleLabel?.font = UIFont.pretendardRegular(ofSize: 14)
+                    self.friendActionButton.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 14)
                     self.statusLabel.isHidden = true
                 }
             }
@@ -139,7 +139,7 @@ class SearchUserTableViewCell: UITableViewCell {
     private func updateUIAsAlreadyFriends() {
         DispatchQueue.main.async {
             self.friendActionButton.isHidden = true
-            self.statusLabel.text = "Already friend"
+            self.statusLabel.text = "이미 친구입니다!"
             self.statusLabel.textColor = UIColor(hex: "D15E6B")
             self.statusLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
             self.statusLabel.isHidden = false
