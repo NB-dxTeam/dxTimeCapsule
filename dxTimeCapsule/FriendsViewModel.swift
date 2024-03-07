@@ -41,7 +41,7 @@ class FriendsViewModel {
         }
     }
     
-    // 친구 상태를 확인하는 메서드
+    // 친구 상태 확인
     func checkFriendshipStatus(forUser userId: String, completion: @escaping (String) -> Void) {
         guard let currentUser = Auth.auth().currentUser else {
             completion("사용자 인증 실패")
@@ -49,91 +49,45 @@ class FriendsViewModel {
         }
         let currentUserID = currentUser.uid
         
-        // 현재 사용자의 친구 목록, 보낸 친구 요청 목록, 받은 친구 요청 목록을 가져옴
-        db.collection("users").document(currentUserID).getDocument { (document, error) in
-            if let document = document, document.exists {
-                let data = document.data()
-                let friends = data?["friends"] as? [String] ?? []
-                let sentRequests = data?["friendRequestsSent"] as? [String] ?? []
-                let receivedRequests = data?["friendRequestsReceived"] as? [String] ?? []
-                
-                if friends.contains(userId) {
-                    completion("이미 친구입니다")
-                } else if sentRequests.contains(userId) {
-                    completion("요청 보냄")
-                } else if receivedRequests.contains(userId) {
+        // 친구 요청 상태 확인
+        db.collection("friendRequests").whereField("senderUid", isEqualTo: currentUserID).whereField("receiverUid", isEqualTo: userId).getDocuments { (snapshot, error) in
+            if let documents = snapshot?.documents, !documents.isEmpty {
+                completion("요청 보냄")
+                return
+            }
+            
+            // 친구 요청 받음 상태 확인
+            self.db.collection("friendRequests").whereField("senderUid", isEqualTo: userId).whereField("receiverUid", isEqualTo: currentUserID).getDocuments { (snapshot, error) in
+                if let documents = snapshot?.documents, !documents.isEmpty {
                     completion("요청 받음")
-                } else {
+                    return
+                }
+                
+                // 이미 친구인지 확인
+                self.db.collection("friendships").whereField("userUids", arrayContains: currentUserID).getDocuments { (snapshot, error) in
+                    if let documents = snapshot?.documents {
+                        for document in documents {
+                            let userUids = document.get("userUids") as? [String] ?? []
+                            if userUids.contains(userId) {
+                                completion("이미 친구입니다")
+                                return
+                            }
+                        }
+                    }
                     completion("친구 추가")
                 }
-            } else {
-                print("Document does not exist")
-                completion("친구 추가")
             }
         }
     }
     
     // 친구 요청 보내기
     func sendFriendRequest(toUser targetUserId: String, fromUser currentUserId: String, completion: @escaping (Bool, Error?) -> Void) {
-        // 먼저 친구 상태를 확인
-        checkFriendshipStatus(forUser: targetUserId) { status in
-            if status == "친구 추가" {
-                // 요청 보내기 로직 실행
-                self.updateFriendRequestArrays(targetUserId: targetUserId, currentUserId: currentUserId, completion: completion)
-            } else {
-                // 이미 친구이거나 요청을 보냈거나 받은 경우
-                completion(false, NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "이미 처리된 요청입니다."]))
-            }
-        }
-    }
-    
-    // 친구 요청 배열 업데이트
-    private func updateFriendRequestArrays(targetUserId: String, currentUserId: String, completion: @escaping (Bool, Error?) -> Void) {
-        let fromUserRef = db.collection("users").document(currentUserId)
-        fromUserRef.updateData([
-            "friendRequestsSent": FieldValue.arrayUnion([targetUserId])
+        let friendRequestRef = db.collection("friendRequests").document()
+        friendRequestRef.setData([
+            "senderUid": currentUserId,
+            "receiverUid": targetUserId,
+            "requestDate": Timestamp(date: Date())
         ]) { error in
-            if let error = error {
-                completion(false, error)
-                return
-            }
-            
-            // 요청 받는 사용자의 friendRequestsReceived 배열 업데이트
-            let toUserRef = self.db.collection("users").document(targetUserId)
-            toUserRef.updateData([
-                "friendRequestsReceived": FieldValue.arrayUnion([currentUserId])
-            ]) { error in
-                if let error = error {
-                    completion(false, error)
-                } else {
-                    completion(true, nil)
-                }
-            }
-        }
-    }
-    
-    // 친구 요청 수락하기
-    func acceptFriendRequest(fromUser targetUserId: String, forUser currentUserId: String, completion: @escaping (Bool, Error?) -> Void) {
-        // 동시에 여러 Firestore 업데이트를 처리하기 위해 batch 사용
-        let batch = db.batch()
-        
-        let currentUserRef = db.collection("users").document(currentUserId)
-        let targetUserRef = db.collection("users").document(targetUserId)
-        
-        // 현재 사용자의 친구 목록에 targetUserId 추가
-        batch.updateData(["friends": FieldValue.arrayUnion([targetUserId])], forDocument: currentUserRef)
-        
-        // 타겟 사용자의 친구 목록에 currentUserId 추가
-        batch.updateData(["friends": FieldValue.arrayUnion([currentUserId])], forDocument: targetUserRef)
-        
-        // 현재 사용자의 받은 친구 요청 목록에서 targetUserId 제거
-        batch.updateData(["friendRequestsReceived": FieldValue.arrayRemove([targetUserId])], forDocument: currentUserRef)
-        
-        // 타겟 사용자의 보낸 친구 요청 목록에서 currentUserId 제거
-        batch.updateData(["friendRequestsSent": FieldValue.arrayRemove([currentUserId])], forDocument: targetUserRef)
-        
-        // batch 작업 커밋
-        batch.commit { error in
             if let error = error {
                 completion(false, error)
             } else {
@@ -142,9 +96,96 @@ class FriendsViewModel {
         }
     }
     
-    // 특정 사용자의 User 객체를 가져오는 함수
-    func fetchUser(with uid: String, completion: @escaping (User?) -> Void) {
-        db.collection("users").document(uid).getDocument { documentSnapshot, error in
+    // 친구 요청 수락하기
+    func acceptFriendRequest(fromUser targetUserId: String, forUser currentUserId: String, completion: @escaping (Bool, Error?) -> Void) {
+        let batch = db.batch()
+        
+        // 친구 관계 생성
+        let friendshipRef = db.collection("friendships").document()
+        batch.setData([
+            "userUids": [currentUserId, targetUserId],
+            "acceptedDate": Timestamp(date: Date())
+        ], forDocument: friendshipRef)
+        
+        // 친구 요청 삭제
+        db.collection("friendRequests").whereField("senderUid", isEqualTo: targetUserId).whereField("receiverUid", isEqualTo: currentUserId).getDocuments { (snapshot, error) in
+            if let documents = snapshot?.documents {
+                for document in documents {
+                    let friendRequestRef = self.db.collection("friendRequests").document(document.documentID)
+                    batch.deleteDocument(friendRequestRef)
+                }
+                
+                // batch 작업 커밋
+                batch.commit { error in
+                    if let error = error {
+                        completion(false, error)
+                    } else {
+                        completion(true, nil)
+                    }
+                }
+            }
+        }
+    }
+    
+    // 친구 목록 가져오기 및 정렬
+    func fetchFriendRequests(forUser userId: String, completion: @escaping ([User]?, Error?) -> Void) {
+        db.collection("friendRequests")
+            .whereField("receiverUid", isEqualTo: userId)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    completion(nil, error)
+                    return
+                }
+                
+                var requests: [User] = []
+                if let documents = snapshot?.documents {
+                    for document in documents {
+                        let requestUserId = document.get("senderUid") as? String ?? ""
+                        self.fetchUser(with: requestUserId) { user in
+                            if let user = user {
+                                requests.append(user)
+                            }
+                            if requests.count == documents.count {
+                                completion(requests, nil)
+                            }
+                        }
+                    }
+                }
+            }
+    }
+    
+    func fetchFriends(forUser userId: String, completion: @escaping ([User]?, Error?) -> Void) {
+        db.collection("friendships")
+            .whereField("userUids", arrayContains: userId)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    completion(nil, error)
+                    return
+                }
+                
+                var friends: [User] = []
+                if let documents = snapshot?.documents {
+                    for document in documents {
+                        let userUids = document.get("userUids") as? [String] ?? []
+                        let friendUserId = userUids.first(where: { $0 != userId })
+                        
+                        if let friendUserId = friendUserId {
+                            self.fetchUser(with: friendUserId) { user in
+                                if let user = user {
+                                    friends.append(user)
+                                }
+                                if friends.count == documents.count {
+                                    completion(friends, nil)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+    }
+    
+    func fetchUser(with userId: String, completion: @escaping (User?) -> Void) {
+        db.collection("users").document(userId).getDocument { documentSnapshot, error in
             guard let document = documentSnapshot, document.exists, error == nil else {
                 completion(nil)
                 return
@@ -152,21 +193,14 @@ class FriendsViewModel {
             
             let data = document.data()
             let user = User(
-                uid: uid,
+                uid: userId,
                 email: data?["email"] as? String ?? "",
                 username: data?["username"] as? String ?? "",
-                friends: data?["friends"] as? [String],
-                profileImageUrl: data?["profileImageUrl"] as? String,
-                friendRequestsSent: data?["friendRequestsSent"] as? [String],
-                friendRequestsReceived: data?["friendRequestsReceived"] as? [String]
+                profileImageUrl: data?["profileImageUrl"] as? String
             )
             completion(user)
         }
     }
+    
 }
-
-
-
-
-
 
