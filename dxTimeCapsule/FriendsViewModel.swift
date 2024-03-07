@@ -126,6 +126,81 @@ class FriendsViewModel {
             }
         }
     }
+    
+    // 친구 목록 가져오기 및 정렬
+    func fetchFriendRequests(forUser userId: String, completion: @escaping ([User]?, Error?) -> Void) {
+        db.collection("friendRequests")
+            .whereField("receiverUid", isEqualTo: userId)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    completion(nil, error)
+                    return
+                }
+                
+                var requests: [User] = []
+                if let documents = snapshot?.documents {
+                    for document in documents {
+                        let requestUserId = document.get("senderUid") as? String ?? ""
+                        self.fetchUser(with: requestUserId) { user in
+                            if let user = user {
+                                requests.append(user)
+                            }
+                            if requests.count == documents.count {
+                                completion(requests, nil)
+                            }
+                        }
+                    }
+                }
+            }
+    }
+    
+    func fetchFriends(forUser userId: String, completion: @escaping ([User]?, Error?) -> Void) {
+        db.collection("friendships")
+            .whereField("userUids", arrayContains: userId)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    completion(nil, error)
+                    return
+                }
+                
+                var friends: [User] = []
+                if let documents = snapshot?.documents {
+                    for document in documents {
+                        let userUids = document.get("userUids") as? [String] ?? []
+                        let friendUserId = userUids.first(where: { $0 != userId })
+                        
+                        if let friendUserId = friendUserId {
+                            self.fetchUser(with: friendUserId) { user in
+                                if let user = user {
+                                    friends.append(user)
+                                }
+                                if friends.count == documents.count {
+                                    completion(friends, nil)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+    }
+    
+    func fetchUser(with userId: String, completion: @escaping (User?) -> Void) {
+        db.collection("users").document(userId).getDocument { documentSnapshot, error in
+            guard let document = documentSnapshot, document.exists, error == nil else {
+                completion(nil)
+                return
+            }
+            
+            let data = document.data()
+            let user = User(
+                uid: userId,
+                email: data?["email"] as? String ?? "",
+                username: data?["username"] as? String ?? "",
+                profileImageUrl: data?["profileImageUrl"] as? String
+            )
+            completion(user)
+        }
+    }
+    
 }
-
 
