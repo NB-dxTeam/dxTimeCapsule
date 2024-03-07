@@ -69,6 +69,7 @@
 		46EA9BAE2B89A27E00633EC4 /* CapsuleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */; };
 		4E2A09C82B8F755C00911390 /* OpenInteractionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */; };
 		4E2A09CA2B8F86C600911390 /* FadeInAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */; };
+		4E4F6CDB2B99C2B500154ED1 /* OpenCapsuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4F6CDA2B99C2B500154ED1 /* OpenCapsuleViewController.swift */; };
 		4EC308DE2B8A200300EEE54C /* MainCapsuleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC308DD2B8A200300EEE54C /* MainCapsuleViewModel.swift */; };
 		D20CDCCA2B957D5D00B93788 /* SearchUserTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20CDCC92B957D5D00B93788 /* SearchUserTableViewController.swift */; };
 		D20CDCCD2B959DFE00B93788 /* FriendsRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20CDCCC2B959DFE00B93788 /* FriendsRequestViewController.swift */; };
@@ -148,6 +149,7 @@
 		46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleMapViewController.swift; sourceTree = "<group>"; };
 		4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInteractionViewController.swift; sourceTree = "<group>"; };
 		4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeInAnimator.swift; sourceTree = "<group>"; };
+		4E4F6CDA2B99C2B500154ED1 /* OpenCapsuleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenCapsuleViewController.swift; sourceTree = "<group>"; };
 		4EC308DD2B8A200300EEE54C /* MainCapsuleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCapsuleViewModel.swift; sourceTree = "<group>"; };
 		9E53E63672B22459B20786B7 /* Pods_dxTimeCapsule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dxTimeCapsule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D20CDCC92B957D5D00B93788 /* SearchUserTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserTableViewController.swift; sourceTree = "<group>"; };
@@ -321,6 +323,7 @@
 		1FAB4DEE2B8C2B800054618A /* Capsule */ = {
 			isa = PBXGroup;
 			children = (
+				4E4F6CDA2B99C2B500154ED1 /* OpenCapsuleViewController.swift */,
 				4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */,
 				460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */,
 				4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */,
@@ -621,6 +624,7 @@
 				46EA9BAE2B89A27E00633EC4 /* CapsuleMapViewController.swift in Sources */,
 				1F0854322B8F254B00711660 /* MainCapsuleViewController.swift in Sources */,
 				460FE7672B8A200D00AF8086 /* LockedCapsuleCell.swift in Sources */,
+				4E4F6CDB2B99C2B500154ED1 /* OpenCapsuleViewController.swift in Sources */,
 				4E2A09CA2B8F86C600911390 /* FadeInAnimator.swift in Sources */,
 				1F5786D92B849AF800C40B08 /* AppDelegate.swift in Sources */,
 				1F8EA39E2B9538DD004856B7 /* UIFont+CustomFont.swift in Sources */,
