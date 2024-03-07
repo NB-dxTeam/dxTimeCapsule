@@ -1,6 +1,6 @@
 {
   "name": "FirebaseFirestore",
-  "version": "10.22.0",
+  "version": "10.23.0",
   "summary": "Google Cloud Firestore",
   "description": "Google Cloud Firestore is a NoSQL document database built for automatic scaling, high performance, and ease of application development.",
   "homepage": "https://developers.google.com/",
@@ -11,7 +11,7 @@
   "authors": "Google, Inc.",
   "source": {
     "git": "https://github.com/firebase/firebase-ios-sdk.git",
-    "tag": "CocoaPods-10.22.0"
+    "tag": "CocoaPods-10.23.0"
   },
   "platforms": {
     "ios": "11.0",
