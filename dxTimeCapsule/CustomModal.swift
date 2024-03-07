@@ -15,7 +15,7 @@ import FirebaseAuth
 class CustomModal: UIViewController {
     
     var capsuleInfo = [CapsuleInfo]()
-    
+    var onCapsuleSelected: ((Double, Double) -> Void)? //선택된 위치 정보를 받아 처리하는 클로저
     private var capsuleCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -106,7 +106,7 @@ class CustomModal: UIViewController {
     }
 }
 
-extension CustomModal: UICollectionViewDelegate, UICollectionViewDataSource {
+extension CustomModal: UICollectionViewDataSource, UICollectionViewDelegate {
     // MARK: - UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -136,6 +136,12 @@ extension CustomModal: UICollectionViewDelegate, UICollectionViewDataSource {
         //collectionView.reloadData()
         headerView.headerLabel.text = "여기에 정렬 옵션 추가"
         return headerView
+    }
+    
+    // MARK: - UICollectionViewDelegate
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedCapsule = capsuleInfo[indexPath.row]
+        onCapsuleSelected?(selectedCapsule.latitude, selectedCapsule.longitude)
     }
 }
 
