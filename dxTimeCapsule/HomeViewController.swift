@@ -320,16 +320,36 @@ class HomeViewController: UIViewController {
         configureUI()
         fetchTimeCapsuleData()
         
+        // 네비게이션 바에 로고 이미지 추가
+         addLogoToNavigationBar()
+        
     }
     
     // MARK: - Helpers
     
+    private func addLogoToNavigationBar() {
+        // 로고 이미지 설정
+        let logoImage = UIImage(named: "App_Logo")
+        let imageView = UIImageView(image: logoImage)
+        imageView.contentMode = .scaleAspectFit
+        
+        // 이미지 뷰의 크기 설정
+        let imageSize = CGSize(width: 150, height: 50) // 원하는 크기로 조절
+        imageView.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: imageSize) // x값을 0으로 변경하여 왼쪽 상단에 위치하도록 설정
+        
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height))
+        containerView.addSubview(imageView)
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: containerView)
+    }
+
+
     private func configureUI(){
         
         // 메인 타임캡슐 그림자 추가
         view.addSubview(mainContainerView)
         mainContainerView.snp.makeConstraints { make in
-             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(30)
+             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(15)
              make.leading.trailing.equalToSuperview().inset(20)
             make.height.equalToSuperview().multipliedBy(2.0/6.0)
                   }

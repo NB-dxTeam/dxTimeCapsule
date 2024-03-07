@@ -33,10 +33,21 @@ class SearchUserTableViewController: UIViewController, UITableViewDelegate, UITa
         super.viewDidLoad()
         setupSearchComponents()
         setupTableView()
-        
+        addLogoToNavigationBar()
         searchBar.delegate = self
     }
     
+    private func addLogoToNavigationBar() {
+        // 로고 이미지 설정
+        let logoImage = UIImage(named: "App_Logo")
+        let imageView = UIImageView(image: logoImage)
+        imageView.contentMode = .scaleAspectFit
+        
+        // 네비게이션 아이템에 로고 이미지 추가
+        let logoItem = UIBarButtonItem(customView: imageView)
+        navigationItem.leftBarButtonItem = logoItem
+    }
+
     func setupSearchComponents() {
         searchContainerView = UIView()
         searchContainerView.backgroundColor = .white

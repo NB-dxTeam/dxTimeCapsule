@@ -1,7 +1,5 @@
 import UIKit
 
-import UIKit
-
 class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
 
     override func viewDidLoad() {
@@ -13,19 +11,16 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
     
     private func setupTabs() {
         let homeViewController = UINavigationController(rootViewController: HomeViewController())
-        homeViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Home_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Home_Select", targetSize: CGSize(width: 24, height: 24)))
-        
         let searchModalTableViewController = UINavigationController(rootViewController: CapsuleMapViewController())
-        searchModalTableViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Search_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Search_Select", targetSize: CGSize(width: 24, height: 24)))
-        
         let locationConfirmationViewController = UINavigationController(rootViewController: LocationMapkitViewController())
+        let notificationViewController = UINavigationController(rootViewController: FriendRequestsViewController())
+        let profileViewController = UINavigationController(rootViewController: UserProfileViewController())
+        
+        homeViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Home_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Home_Select", targetSize: CGSize(width: 24, height: 24)))
+        searchModalTableViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Search_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Search_Select", targetSize: CGSize(width: 24, height: 24)))
         locationConfirmationViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Write_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Write_Select", targetSize: CGSize(width: 24, height: 24)))
         locationConfirmationViewController.tabBarItem.tag = 2
-        
-        let notificationViewController = UINavigationController(rootViewController: FriendRequestsViewController())
         notificationViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Activity_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Activity_Select", targetSize: CGSize(width: 24, height: 24)))
-        
-        let profileViewController = UINavigationController(rootViewController: UserProfileViewController())
         profileViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Profile_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Profile_Select", targetSize: CGSize(width: 24, height: 24)))
         
         let viewControllers = [homeViewController, searchModalTableViewController, locationConfirmationViewController, notificationViewController, profileViewController]
@@ -33,6 +28,8 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         self.viewControllers = viewControllers
         self.tabBar.tintColor = UIColor(hex: "#D53369")
         self.tabBar.backgroundColor = .white
+        
+
     }
 
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
@@ -53,15 +50,9 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         }
         return resizedImage
     }
+    
+ 
+
 }
 
 
-
-
-// MARK: - Preview
-import SwiftUI
-struct TabBarPreView : PreviewProvider {
-  static var previews: some View {
-    MainTabBarView().toPreview()
-  }
-}
