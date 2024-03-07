@@ -14,6 +14,7 @@ class CapsuleMapViewController: UIViewController, CLLocationManagerDelegate {
     
     private let capsuleMaps = MKMapView() // 지도 뷰
     var locationManager = CLLocationManager()
+    var currentDetent: String? = nil
     // 원래 지도의 중심 위치를 저장할 변수
     private var originalCenterCoordinate: CLLocationCoordinate2D?
     
@@ -47,6 +48,12 @@ class CapsuleMapViewController: UIViewController, CLLocationManagerDelegate {
         buttons()
         loadCapsuleInfos()
         
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tapDidModal.setBlurryBeach()
+        currentLocationBotton.setBlurryBeach()
     }
     
 }
@@ -160,8 +167,18 @@ extension CapsuleMapViewController {
         self.present(vc, animated: true)
     }
     
-    func moveToLocation(latitude: Double, longitude: Double) {
-        let location = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    func moveToLocation(latitude: Double, longitude: Double, adjustForModal: Bool = true) {
+        var adjustedLatitude = latitude
+        var adjustedLongitude = longitude
+        
+        // 모달 상태가 .medium일 때만 위치 조정
+        if adjustForModal && currentDetent == "medium" {
+            // 지도의 중심을 적절히 조정하는 로직
+            // 예: 위도를 조금 더 높여서(북쪽으로) 지도 중심을 올립니다.
+            adjustedLatitude -= 0.002 // 조정 값은 상황에 맞게 변경해야 합니다.
+        }
+        
+        let location = CLLocationCoordinate2D(latitude: adjustedLatitude, longitude: adjustedLongitude)
         let region = MKCoordinateRegion(center: location, latitudinalMeters: 500, longitudinalMeters: 500)
         capsuleMaps.setRegion(region, animated: true)
     }
@@ -238,12 +255,13 @@ extension CapsuleMapViewController: UISheetPresentationControllerDelegate {
             return
         }
         let centerCoordinate = capsuleMaps.centerCoordinate
+        
         switch detentIdentifier {
         case .medium:
-            // .medium 상태로 변경될 때 원래 위치 저장 및 중심 조정
-            if originalCenterCoordinate == nil {
-                originalCenterCoordinate = capsuleMaps.centerCoordinate // 원래 위치 저장
+            if originalCenterCoordinate == nil { // 원래 위치가 저장되지 않았다면 현재 보고 있는 지도의 중심을 저장
+                originalCenterCoordinate = capsuleMaps.centerCoordinate
             }
+            // 중심 조정 로직
             let adjustedCenter = CLLocationCoordinate2D(latitude: centerCoordinate.latitude - 0.002, longitude: centerCoordinate.longitude)
             let adjustedRegion = MKCoordinateRegion(center: adjustedCenter, latitudinalMeters: 500, longitudinalMeters: 500)
             capsuleMaps.setRegion(adjustedRegion, animated: true)
@@ -252,10 +270,8 @@ extension CapsuleMapViewController: UISheetPresentationControllerDelegate {
             if let originalCenter = originalCenterCoordinate {
                 let originalRegion = MKCoordinateRegion(center: originalCenter, latitudinalMeters: 500, longitudinalMeters: 500)
                 capsuleMaps.setRegion(originalRegion, animated: true)
-                originalCenterCoordinate = nil // 원래 위치를 사용한 후에는 리셋
+                originalCenterCoordinate = nil // 사용 후 리셋
             }
-
-            break
         }
     }
 }
