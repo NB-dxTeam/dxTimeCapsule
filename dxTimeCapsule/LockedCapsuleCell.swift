@@ -65,7 +65,7 @@ class LockedCapsuleCell: UICollectionViewCell {
 
         // 오늘 날짜와 openDate 사이의 일수를 계산하여 D-Day를 결정합니다.
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatter.dateFormat = "yyyy-MM-dd"
         dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul") // UTC+9:00
 
         let today = Date()
