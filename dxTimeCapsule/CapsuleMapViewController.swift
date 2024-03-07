@@ -138,7 +138,7 @@ extension CapsuleMapViewController {
     // CustomModal 뷰를 모달로 화면에 표시하는 함수
     func showModalVC() {
         let vc = CustomModal()
-        
+        vc.sheetPresentationController?.delegate = self
         // CustomModal에서 타임캡슐 선택 시 실행할 클로저 구현
         vc.onCapsuleSelected = { [weak self] latitude, longitude in
             // 지도의 위치를 업데이트하는 메소드 호출
@@ -228,6 +228,23 @@ extension CapsuleMapViewController: MKMapViewDelegate {
     
 }
 
+// MARK: - UISheetPresentationControllerDelegate
+extension CapsuleMapViewController: UISheetPresentationControllerDelegate {
+    func sheetPresentationControllerDidChangeSelectedDetentIdentifier(_ sheetPresentationController: UISheetPresentationController) {
+        guard let detentIdentifier = sheetPresentationController.selectedDetentIdentifier else {
+            return
+        }
+        let centerCoordinate = capsuleMaps.centerCoordinate
+        switch detentIdentifier {
+        case .medium:
+            let adjustedCenter = CLLocationCoordinate2D(latitude: centerCoordinate.latitude - 0.002, longitude: centerCoordinate.longitude)
+            let adjustedRegion = MKCoordinateRegion(center: adjustedCenter, latitudinalMeters: 500, longitudinalMeters: 500)
+            capsuleMaps.setRegion(adjustedRegion, animated: true)
+        default:
+            break
+        }
+    }
+}
 // MARK: - Preview
 import SwiftUI
 import FirebaseFirestoreInternal
