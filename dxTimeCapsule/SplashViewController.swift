@@ -35,7 +35,7 @@ class SplashViewController: UIViewController {
                           let sceneDelegate = windowScene.delegate as? SceneDelegate else { return }
                     
                     let mainTabBarController = MainTabBarView()
-                    let navigationController = UINavigationController(rootViewController: mainTabBarController)
+                    let navigationController = mainTabBarController
                     sceneDelegate.window?.rootViewController = navigationController
                 }
             }
