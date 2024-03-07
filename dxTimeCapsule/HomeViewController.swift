@@ -10,9 +10,9 @@ import SnapKit
 import FirebaseFirestore
 import FirebaseAuth
 
-#Preview{
-    MainTabBarView()
-}
+//#Preview{
+//    MainTabBarView()
+//}
 
 class HomeViewController: UIViewController {
 
@@ -62,16 +62,6 @@ class HomeViewController: UIViewController {
     // 메인 타임캡슐 이미지뷰
     let mainTCImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "location"))
-        imageView.contentMode = .scaleToFill
-        imageView.isUserInteractionEnabled = true
-        imageView.layer.cornerRadius = 10
-        imageView.clipsToBounds = true
-        return imageView
-    }()
-    
-    // 메인 타임캡슐 없을 경우 이미지뷰
-    let noMainTCImageView: UIImageView = {
-        let imageView = UIImageView()
         imageView.contentMode = .scaleToFill
         imageView.isUserInteractionEnabled = true
         imageView.layer.cornerRadius = 10
@@ -250,7 +240,7 @@ class HomeViewController: UIViewController {
         // 사용자의 UID로 필터링하고, openDate 필드로 오름차순 정렬한 후, 최상위 1개 문서만 가져옵니다.
         db.collection("timeCapsules")
             .whereField("uid", isEqualTo: userId)
-            .whereField("isOpened", isEqualTo: true) // isOpened가 false인 경우 필터링
+            .whereField("isOpened", isEqualTo: false) // isOpened가 false인 경우 필터링
             .order(by: "openDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
             .limit(to: 1) // 가장 개봉일이 가까운 타임캡슐 1개만 선택
             .getDocuments { [weak self] (querySnapshot, err) in
@@ -262,7 +252,6 @@ class HomeViewController: UIViewController {
                     if querySnapshot?.documents.isEmpty ?? true {
                         print("No upcoming memories found")
                             DispatchQueue.main.async {
-                                self.mainTCImageView.removeFromSuperview()
                                 self.duestTCInforStackView.removeFromSuperview()
                                 self.upcomingTCButton.isEnabled = false
                                 self.upcomingTCButton.setBackgroundImage(UIImage(named: "empty"), for: .normal)
@@ -288,7 +277,6 @@ class HomeViewController: UIViewController {
                         
                         // 메인 스레드에서 UI 업데이트를 수행합니다.
                         DispatchQueue.main.async {
-                            self.noMainTCImageView.removeFromSuperview()
                             self.locationNameLabel.text = userLocation
                             self.locationAddressLabel.text = location
                             self.noMainTCStackView.removeFromSuperview()
@@ -410,15 +398,6 @@ class HomeViewController: UIViewController {
         }
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(mainTCImageViewTapped))
         mainTCImageView.addGestureRecognizer(tapGesture)
-        
-        // mainTCImageView를 maincontainerView에 추가
-        mainContainerView.addSubview(noMainTCImageView)
-        noMainTCImageView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        let tappingGesture = UITapGestureRecognizer(target: self, action: #selector(addNewTC))
-        noMainTCImageView.addGestureRecognizer(tappingGesture)
-
 
         // infoAndDdayStackView의 위치 설정
         view.addSubview(duestTCInforStackView)
@@ -477,8 +456,8 @@ class HomeViewController: UIViewController {
     
     func animateMainTCImageChange() {
         // 현재 표시 중인 이미지 페이드 아웃
-        UIView.transition(with: noMainTCImageView,duration: 3.0, options: .transitionCrossDissolve, animations: {
-                        self.noMainTCImageView.image = self.mainTCImages[self.currentImageIndex]
+        UIView.transition(with: mainTCImageView,duration: 3.0, options: .transitionCrossDissolve, animations: {
+                        self.mainTCImageView.image = self.mainTCImages[self.currentImageIndex]
                          },
                          completion: { _ in
                         self.moveToNextImage()
