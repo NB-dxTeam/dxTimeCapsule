@@ -29,6 +29,15 @@ struct CapsuleInfo {
     var openTimeCapsuleDate: Date // 개봉일
     var isOpened: Bool //개봉여부
 }
+
+struct TCInfo {
+    var tcBoxImageURL: String?
+    var userLocation: String?
+    var createTimeCapsuleDate: Date // 생성일
+    var openTimeCapsuleDate: Date // 개봉일
+    var photoUrl: String? // 업로드된 사진의 URL
+}
+
 /*
  func fetchTimeCapsuleData() {
          let db = Firestore.firestore()

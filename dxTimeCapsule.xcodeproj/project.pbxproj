@@ -63,7 +63,9 @@
 		27865AD42B8DFCA900DB8DB6 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27865AD32B8DFCA900DB8DB6 /* NotificationViewController.swift */; };
 		27D241B22B8F33A5000F8F16 /* OpenedTCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D241B12B8F33A5000F8F16 /* OpenedTCViewController.swift */; };
 		27F3827F2B8FA1240005F733 /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F3827E2B8FA1240005F733 /* NotificationTableViewCell.swift */; };
-		27F382822B8FB0400005F733 /* OpendedTCCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F382812B8FB0400005F733 /* OpendedTCCollectionViewCell.swift */; };
+		27F382822B8FB0400005F733 /* OpendedTCCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F382812B8FB0400005F733 /* OpendedTCCell.swift */; };
+		27FC12892B9A64B1008CBEB8 /* UpcomingTCCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FC12882B9A64B1008CBEB8 /* UpcomingTCCell.swift */; };
+		27FC128B2B9A64E5008CBEB8 /* UpcomingTCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FC128A2B9A64E5008CBEB8 /* UpcomingTCViewController.swift */; };
 		460FE7672B8A200D00AF8086 /* LockedCapsuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */; };
 		46B6557A2B9891FE001EFF23 /* CapsuleAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B655792B9891FE001EFF23 /* CapsuleAnnotation.swift */; };
 		46EA9BAE2B89A27E00633EC4 /* CapsuleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */; };
@@ -144,7 +146,9 @@
 		27865AD32B8DFCA900DB8DB6 /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		27D241B12B8F33A5000F8F16 /* OpenedTCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenedTCViewController.swift; sourceTree = "<group>"; };
 		27F3827E2B8FA1240005F733 /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
-		27F382812B8FB0400005F733 /* OpendedTCCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpendedTCCollectionViewCell.swift; sourceTree = "<group>"; };
+		27F382812B8FB0400005F733 /* OpendedTCCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpendedTCCell.swift; sourceTree = "<group>"; };
+		27FC12882B9A64B1008CBEB8 /* UpcomingTCCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingTCCell.swift; sourceTree = "<group>"; };
+		27FC128A2B9A64E5008CBEB8 /* UpcomingTCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingTCViewController.swift; sourceTree = "<group>"; };
 		460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedCapsuleCell.swift; sourceTree = "<group>"; };
 		467D1DE22B972499005249B1 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		46B655792B9891FE001EFF23 /* CapsuleAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapsuleAnnotation.swift; sourceTree = "<group>"; };
@@ -259,8 +263,6 @@
 				1F0854312B8F254B00711660 /* MainCapsuleViewController.swift */,
 				1FAB4DEE2B8C2B800054618A /* Capsule */,
 				1F9DA7AD2B8C921900A74D84 /* SearchUser */,
-				27D241B12B8F33A5000F8F16 /* OpenedTCViewController.swift */,
-				27F382812B8FB0400005F733 /* OpendedTCCollectionViewCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -453,7 +455,11 @@
 		27C81E412B8A39E9001E3623 /* HomeView */ = {
 			isa = PBXGroup;
 			children = (
+				27D241B12B8F33A5000F8F16 /* OpenedTCViewController.swift */,
+				27F382812B8FB0400005F733 /* OpendedTCCell.swift */,
 				1FB387382B8863DE00054816 /* HomeViewController.swift */,
+				27FC12882B9A64B1008CBEB8 /* UpcomingTCCell.swift */,
+				27FC128A2B9A64E5008CBEB8 /* UpcomingTCViewController.swift */,
 			);
 			name = HomeView;
 			sourceTree = "<group>";
@@ -640,9 +646,10 @@
 				1FD2B7BD2B96C04B00896F9C /* HorizontalSearchType.swift in Sources */,
 				1F1071BC2B95D400009E201A /* LocationConfirmationViewController.swift in Sources */,
 				1FD2B7BB2B96C04B00896F9C /* CarouselButtonModel.swift in Sources */,
+				27FC12892B9A64B1008CBEB8 /* UpcomingTCCell.swift in Sources */,
 				D22B171C2B971599006CAEA6 /* FriendRequest.swift in Sources */,
 				1FD2B79C2B96BD7300896F9C /* LocationMapkitViewController.swift in Sources */,
-				27F382822B8FB0400005F733 /* OpendedTCCollectionViewCell.swift in Sources */,
+				27F382822B8FB0400005F733 /* OpendedTCCell.swift in Sources */,
 				1FAB4DF62B8C48AF0054618A /* FriendsViewModel.swift in Sources */,
 				1FAACDE12B8FAA520005B993 /* UIImage+RoundImage.swift in Sources */,
 				1F5787132B86DBF900C40B08 /* LoginViewController.swift in Sources */,
@@ -658,6 +665,7 @@
 				1F5786F22B849CA900C40B08 /* AuthenticationViewModel.swift in Sources */,
 				1FB387372B8862AF00054816 /* MainFeedViewController.swift in Sources */,
 				1F9DA7B12B8C93BD00A74D84 /* SearchUserTableViewCell.swift in Sources */,
+				27FC128B2B9A64E5008CBEB8 /* UpcomingTCViewController.swift in Sources */,
 				1F0854152B8EF4F400711660 /* TestLoginViewController.swift in Sources */,
 				4E2A09C82B8F755C00911390 /* OpenInteractionViewController.swift in Sources */,
 				1FD2B7A42B96BEFE00896F9C /* NotificationName+Extension.swift in Sources */,

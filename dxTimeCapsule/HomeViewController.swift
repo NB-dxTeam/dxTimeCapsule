@@ -252,6 +252,7 @@ class HomeViewController: UIViewController {
                     if querySnapshot?.documents.isEmpty ?? true {
                         print("No upcoming memories found")
                             DispatchQueue.main.async {
+                                self.animateMainTCImageChange()
                                 self.duestTCInforStackView.removeFromSuperview()
                                 self.upcomingTCButton.isEnabled = false
                                 self.upcomingTCButton.setBackgroundImage(UIImage(named: "empty"), for: .normal)
@@ -260,7 +261,6 @@ class HomeViewController: UIViewController {
                                     titleLabel.textColor = .black
                                     titleLabel.backgroundColor = UIColor.gray.withAlphaComponent(0)
                                     titleLabel.font = UIFont.boldSystemFont(ofSize: 100)
-                                 self.animateMainTCImageChange()
                                 }
                             }
                     } else if let document = querySnapshot?.documents.first {
@@ -352,8 +352,8 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         navigationController?.isNavigationBarHidden = true
-        configureUI()
         fetchTimeCapsuleData()
+        configureUI()
     }
     
     // MARK: - Helpers
@@ -513,7 +513,7 @@ class HomeViewController: UIViewController {
     
     @objc func upcomingTCButtonTapped(){
         print("다가오는 타임캡슐 열기 버튼이 클릭되었습니다")
-        let upcomingVC = CapsuleMapViewController()
+        let upcomingVC = UpcomingTCViewController()
         let navController = UINavigationController(rootViewController: upcomingVC)
         present(navController, animated: true, completion: nil)
     }
