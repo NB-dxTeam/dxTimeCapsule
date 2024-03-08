@@ -8,9 +8,6 @@ class PhotoUploadViewController: UIViewController, PHPickerViewControllerDelegat
         
     }
     
-
-    
-    
     var selectedImage: UIImage? {
         didSet {
             imageView.image = selectedImage
@@ -28,8 +25,13 @@ class PhotoUploadViewController: UIViewController, PHPickerViewControllerDelegat
     private let nextButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Next", for: .normal)
+        button.setImage(UIImage(systemName: "chevron.right"), for: .normal)
+        button.semanticContentAttribute = .forceRightToLeft
         button.isEnabled = false
-        button.addTarget(PhotoUploadViewController.self, action: #selector(handleNext), for: .touchUpInside)
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = .clear
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        button.addTarget(self, action: #selector(handleNext), for: .touchUpInside)
         return button
     }()
     
@@ -51,7 +53,7 @@ class PhotoUploadViewController: UIViewController, PHPickerViewControllerDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        fetchPhotos()
+        requestPhotoLibraryPermission()
     }
     
     private func setupViews() {
@@ -73,6 +75,8 @@ class PhotoUploadViewController: UIViewController, PHPickerViewControllerDelegat
         nextButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
+            make.height.equalTo(50)
+            make.width.equalTo(100)
         }
     }
     
@@ -91,6 +95,22 @@ class PhotoUploadViewController: UIViewController, PHPickerViewControllerDelegat
         }
     }
     
+    private func requestPhotoLibraryPermission() {
+        PHPhotoLibrary.requestAuthorization { status in
+            switch status {
+            case .authorized:
+                DispatchQueue.main.async {
+                    self.fetchPhotos()
+                }
+            case .denied, .restricted, .notDetermined:
+                // Handle denied or restricted
+                break
+            @unknown default:
+                break
+            }
+        }
+    }
+    
     // UICollectionViewDataSource Methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return assets.count
@@ -104,7 +124,7 @@ class PhotoUploadViewController: UIViewController, PHPickerViewControllerDelegat
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (collectionView.frame.width - 2) / 3 // assuming 3 items per row with 1pt spacing
+        let width = (collectionView.frame.width - 2) / 3
         return CGSize(width: width, height: width)
     }
     
@@ -118,8 +138,7 @@ class PhotoUploadViewController: UIViewController, PHPickerViewControllerDelegat
     }
     
     @objc private func handleNext() {
-        // Implement navigation to the next view controller
+        // Handle navigation to the next view controller
     }
-    
-    // Implement PHPickerViewControllerDelegate methods as needed...
 }
+
