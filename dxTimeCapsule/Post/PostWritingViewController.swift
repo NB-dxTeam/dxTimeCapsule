@@ -8,6 +8,15 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
     // MARK: - Properties
     var selectedImage: UIImage?
     
+    private let dateLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 16)
+        label.textColor = .darkGray
+        label.text = "Select Open Date"
+        label.isUserInteractionEnabled = true
+        return label
+    }()
+    
     private let descriptionTextView: UITextView = {
         let textView = UITextView()
         textView.font = .systemFont(ofSize: 16)
@@ -31,46 +40,110 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         button.setTitle("타임박스 만들기", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 8
+        button.layer.shadowOpacity = 0.3
+        button.layer.shadowRadius = 5
+        button.layer.shadowOffset = CGSize(width: 0, height: 5)
         return button
     }()
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white.withAlphaComponent(0.8)
         setupViews()
+        setupGestures()
+
         createButton.addTarget(self, action: #selector(createTimeCapsule), for: .touchUpInside)
         descriptionTextView.delegate = self
         updateCreateButtonState() // 초기 상태 설정
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        createButton.backgroundColor = UIColor(hex: "#D53369").withAlphaComponent(0.85)
+    }
     // MARK: - Setup
     private func setupViews() {
-      view.backgroundColor = .white
-      navigationItem.title = "타임캡슐 만들기"
+        navigationItem.title = "타임캡슐 만들기"
 
-      view.addSubview(descriptionTextView)
-      view.addSubview(timeCapsuleDatePicker)
-      view.addSubview(createButton)
+        view.addSubview(descriptionTextView)
+        view.addSubview(dateLabel)
+        view.addSubview(createButton)
 
-      descriptionTextView.snp.makeConstraints { make in
-        make.top.equalToSuperview().offset(20)
-        make.leading.equalToSuperview().offset(20)
-        make.trailing.equalToSuperview().offset(-20)
-        make.height.equalTo(100)
-      }
+        descriptionTextView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(20)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.height.equalTo(100)
+        }
 
-      timeCapsuleDatePicker.snp.makeConstraints { make in
-        make.top.equalTo(descriptionTextView.snp.bottom).offset(20)
-        make.leading.trailing.equalTo(descriptionTextView)
-      }
+        dateLabel.snp.makeConstraints { make in
+            make.top.equalTo(descriptionTextView.snp.bottom).offset(30)
+            make.centerX.centerY.equalToSuperview()
+            make.leading.trailing.equalTo(descriptionTextView)
+        }
 
-      createButton.snp.makeConstraints { make in
-        make.top.equalTo(timeCapsuleDatePicker.snp.bottom).offset(20)
-        make.centerX.equalToSuperview()
-        make.width.equalTo(200)
-        make.height.equalTo(50)
-      }
+        createButton.snp.makeConstraints { make in
+            make.top.equalTo(dateLabel.snp.bottom).offset(30)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(200)
+            make.height.equalTo(50)
+        }
     }
+
+
+    
+    // MARK: - Functions
+    
+    private func setupGestures() {
+          let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showDatePicker))
+          dateLabel.addGestureRecognizer(tapGesture)
+      }
+    
+    private func showAlert(message: String) {
+        let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    func uploadImage(_ image: UIImage, completion: @escaping (Result<String, Error>) -> Void) {
+        // Use FirebaseStorage to upload the image and return the URL in the completion handler
+    }
+    
+    @objc private func showDatePicker() {
+        let alertController = UIAlertController(title: "\n\n\n\n\n\n\n\n", message: nil, preferredStyle: .actionSheet)
+        let datePicker = UIDatePicker()
+        datePicker.preferredDatePickerStyle = .wheels
+        datePicker.datePickerMode = .date
+        
+        alertController.view.addSubview(datePicker)
+        datePicker.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().offset(8)
+            make.left.equalToSuperview().offset(8)
+            make.right.equalToSuperview().offset(-8)
+        }
+        
+        let selectAction = UIAlertAction(title: "Select", style: .default) { [weak self] _ in
+            // Format and update dateLabel with the selected date
+            let formatter = DateFormatter()
+            formatter.dateStyle = .medium
+            self?.dateLabel.text = formatter.string(from: datePicker.date)
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        alertController.addAction(selectAction)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true)
+    }
+    
+    func saveTimeCapsule(_ capsule: TimeCapsule) {
+        // Use FirebaseFirestore to save the `capsule` object's data to your Firestore database
+    }
+    
     // descriptionTextView 또는 openDatePicker의 값을 확인하여 버튼을 활성화/비활성화하는 메서드
     private func updateCreateButtonState() {
         let isDescriptionEmpty = descriptionTextView.text?.isEmpty ?? true
@@ -98,22 +171,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         }
     }
 
-    // MARK: - Helpers
-    private func showAlert(message: String) {
-        let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(okAction)
-        present(alertController, animated: true, completion: nil)
-    }
-    
-    func uploadImage(_ image: UIImage, completion: @escaping (Result<String, Error>) -> Void) {
-        // Use FirebaseStorage to upload the image and return the URL in the completion handler
-    }
-    
-    func saveTimeCapsule(_ capsule: TimeCapsule) {
-        // Use FirebaseFirestore to save the `capsule` object's data to your Firestore database
-    }
-    
+
     // MARK: - Actions
     @objc private func createTimeCapsule() {
         guard let descriptionText = descriptionTextView.text,
@@ -150,6 +208,20 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
                 print("Image upload failed: \(error.localizedDescription)")
             }
         }
+    }
+    
+    @objc private func datePickerChanged(picker: UIDatePicker) {
+        // Handle the date change
+    }
+}
+
+// Extend UIViewController to add a method for presenting a view controller as a half-modal
+extension UIViewController {
+    func presentHalfModal(_ viewControllerToPresent: UIViewController, animated: Bool) {
+        if let presentationController = viewControllerToPresent.presentationController as? UISheetPresentationController {
+            presentationController.detents = [.medium()] // Adjust size as needed
+        }
+        self.present(viewControllerToPresent, animated: animated)
     }
 }
 

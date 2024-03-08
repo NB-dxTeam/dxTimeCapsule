@@ -464,8 +464,8 @@
 		1FF869182B8F4D3E007B5112 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				1FF869192B8F4D59007B5112 /* Extensions */,
 				1F2450202B9B82DD002C68BB /* Modal */,
+				1FF869192B8F4D59007B5112 /* Extensions */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
