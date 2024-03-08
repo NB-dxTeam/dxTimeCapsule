@@ -1,14 +1,6 @@
-//
-//  CapsuleAnnotation.swift
-//  dxTimeCapsule
-//
-//  Created by YeongHo Ha on 3/6/24.
-//
-//
-
 import MapKit
 
-class CapsuleAnnotation: NSObject, MKAnnotation {
+class CapsuleAnnotationModel: NSObject, MKAnnotation {
     dynamic var coordinate: CLLocationCoordinate2D
     var title: String?
     var subtitle: String?

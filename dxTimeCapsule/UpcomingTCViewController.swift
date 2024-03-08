@@ -10,9 +10,9 @@ import SnapKit
 import FirebaseFirestore
 import FirebaseAuth
 
-#Preview{
-    MainTabBarView()
-}
+//#Preview{
+//    MainTabBarView()
+//}
 
 class UpcomingTCViewController: UIViewController {
     

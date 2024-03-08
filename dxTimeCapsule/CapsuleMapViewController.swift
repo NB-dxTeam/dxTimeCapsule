@@ -187,7 +187,7 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
     func addAnnotations(from capsules: [CapsuleInfo]) {
         for capsule in capsules {
             let coordinate = CLLocationCoordinate2D(latitude: capsule.latitude, longitude: capsule.longitude)
-            let annotation = CapsuleAnnotation(coordinate: coordinate, title: capsule.userLocation, subtitle: "개봉일: \(capsule.openTimeCapsuleDate)", info: capsule)
+            let annotation = CapsuleAnnotationModel(coordinate: coordinate, title: capsule.userLocation, subtitle: "개봉일: \(capsule.openTimeCapsuleDate)", info: capsule)
             self.capsuleMaps.addAnnotation(annotation)
         }
         print("지도에 \(capsules.count)개의 어노테이션이 추가되었습니다.")

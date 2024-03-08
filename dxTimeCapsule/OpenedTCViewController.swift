@@ -3,9 +3,9 @@ import SnapKit
 import FirebaseFirestore
 import FirebaseAuth
 
-#Preview{
-    OpenedTCViewController()
-}
+//#Preview{
+//    OpenedTCViewController()
+//}
 
 class OpenedTCViewController: UIViewController {
     

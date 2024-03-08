@@ -103,7 +103,7 @@ class FriendRequestsViewController: UIViewController, UITableViewDelegate, UITab
         setupTableView()
         fetchFriendRequests()
         fetchFriends()
-        startMonitoringFriendRequests()
+//        startMonitoringFriendRequests()
         addLogoToNavigationBar()
 
     }
