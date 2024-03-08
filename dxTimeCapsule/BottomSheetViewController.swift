@@ -186,12 +186,18 @@ class BottomSheetViewController: UIViewController, UITableViewDataSource, UITabl
 
 extension UISheetPresentationController.Detent.Identifier {
     static let small = Self(rawValue: "small")
+    static let half = Self(rawValue: "half")
 }
 
 extension UISheetPresentationController.Detent {
     static var small: UISheetPresentationController.Detent {
         Self.custom { context in
             return context.maximumDetentValue * 0.25
+        }
+    }
+    static var half: UISheetPresentationController.Detent {
+        Self.custom { context in
+            return context.maximumDetentValue * 0.4
         }
     }
 }

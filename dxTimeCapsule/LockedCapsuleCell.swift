@@ -33,7 +33,7 @@ class LockedCapsuleCell: UICollectionViewCell {
     lazy var userLocation: UILabel = { // userLocation
         let label = UILabel()
         label.textColor = .black
-        label.font = UIFont.systemFont(ofSize: 18)
+        label.font = UIFont.pretendardBold(ofSize: 24)
         label.numberOfLines = 2
         return label
     }()
