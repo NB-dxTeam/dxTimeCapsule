@@ -351,7 +351,7 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        navigationController?.isNavigationBarHidden = true
+//        navigationController?.isNavigationBarHidden = true
         fetchTimeCapsuleData()
         configureUI()
         
@@ -368,14 +368,21 @@ class HomeViewController: UIViewController {
         let imageView = UIImageView(image: logoImage)
         imageView.contentMode = .scaleAspectFit
         
-        // 이미지 뷰의 크기 설정
+        
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "person.fill.badge.plus"), for: .normal)
+        
+        let friendAddImage = button
+        
         let imageSize = CGSize(width: 150, height: 50) // 원하는 크기로 조절
         imageView.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: imageSize) // x값을 0으로 변경하여 왼쪽 상단에 위치하도록 설정
         
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height))
+        
         containerView.addSubview(imageView)
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: containerView)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: friendAddImage)
     }
 
 
@@ -389,7 +396,7 @@ class HomeViewController: UIViewController {
             make.height.equalTo(40)
         }
         
-       // pagelogo 이미지뷰 추가
+//        pagelogo 이미지뷰 추가
         customNavBar.addSubview(logoImageView)
          logoImageView.snp.makeConstraints { make in
             make.centerY.equalTo(customNavBar)
@@ -541,4 +548,11 @@ class HomeViewController: UIViewController {
         present(navController, animated: true, completion: nil)
     }
 
+}
+
+import SwiftUI
+struct PreVie11w: PreviewProvider {
+    static var previews: some View {
+        MainTabBarView().toPreview()
+    }
 }
