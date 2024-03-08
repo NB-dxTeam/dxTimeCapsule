@@ -16,7 +16,6 @@
 		1F1071B52B95CC41009E201A /* Pretendard-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1F1071B42B95CC41009E201A /* Pretendard-Black.otf */; };
 		1F1071B72B95CC4A009E201A /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1F1071B62B95CC4A009E201A /* Pretendard-Medium.otf */; };
 		1F1071B92B95CC67009E201A /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1F1071B82B95CC67009E201A /* Pretendard-Bold.otf */; };
-		1F1071BC2B95D400009E201A /* LocationConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1071BB2B95D400009E201A /* LocationConfirmationViewController.swift */; };
 		1F2450162B9B4CB2002C68BB /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2450152B9B4CB2002C68BB /* FirestoreService.swift */; };
 		1F2450182B9B4D74002C68BB /* PostWritingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2450172B9B4D74002C68BB /* PostWritingViewController.swift */; };
 		1F24501B2B9B4F85002C68BB /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24501A2B9B4F85002C68BB /* PhotoCollectionViewCell.swift */; };
@@ -98,7 +97,6 @@
 		1F1071B42B95CC41009E201A /* Pretendard-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Black.otf"; sourceTree = "<group>"; };
 		1F1071B62B95CC4A009E201A /* Pretendard-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Medium.otf"; sourceTree = "<group>"; };
 		1F1071B82B95CC67009E201A /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
-		1F1071BB2B95D400009E201A /* LocationConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationConfirmationViewController.swift; sourceTree = "<group>"; };
 		1F2450152B9B4CB2002C68BB /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		1F2450172B9B4D74002C68BB /* PostWritingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostWritingViewController.swift; sourceTree = "<group>"; };
 		1F24501A2B9B4F85002C68BB /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -190,7 +188,6 @@
 			isa = PBXGroup;
 			children = (
 				1F0B91382B9089BB0022EDD9 /* MainTabBarView.swift */,
-				1FC44F0A2B932E9F002A75AF /* Upload */,
 			);
 			name = TabBar;
 			sourceTree = "<group>";
@@ -201,19 +198,26 @@
 				1FD2B7B52B96C04B00896F9C /* Model */,
 				1FD2B7A72B96BF4A00896F9C /* BottomSheet */,
 				1FD2B79B2B96BD7300896F9C /* LocationMapkitViewController.swift */,
-				1F1071BB2B95D400009E201A /* LocationConfirmationViewController.swift */,
 			);
 			name = Location;
 			sourceTree = "<group>";
 		};
-		1F2450192B9B4F7B002C68BB /* Photo */ = {
+		1F2450192B9B4F7B002C68BB /* Post */ = {
 			isa = PBXGroup;
 			children = (
 				1F0D3B2B2B89AA2B00A31E82 /* PhotoUploadViewController.swift */,
-				1F24501A2B9B4F85002C68BB /* PhotoCollectionViewCell.swift */,
 				1F2450172B9B4D74002C68BB /* PostWritingViewController.swift */,
+				1F24501C2B9B5942002C68BB /* Cell */,
 			);
-			path = Photo;
+			path = Post;
+			sourceTree = "<group>";
+		};
+		1F24501C2B9B5942002C68BB /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				1F24501A2B9B4F85002C68BB /* PhotoCollectionViewCell.swift */,
+			);
+			path = Cell;
 			sourceTree = "<group>";
 		};
 		1F43396E2B9ADCEB006D39F5 /* Recovered References */ = {
@@ -287,11 +291,12 @@
 		1F5786F02B849C2F00C40B08 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				1FAB4DEC2B8C29D80054618A /* Authentication */,
 				1F0B91372B9089A50022EDD9 /* TabBar */,
+				1FC44F0A2B932E9F002A75AF /* Upload */,
 				27F382802B8FA1350005F733 /* NotificationView */,
 				D20CDCCB2B95979900B93788 /* Alarm */,
 				1F722F0D2B938CB500407850 /* SplashVew */,
-				1FAB4DEC2B8C29D80054618A /* Authentication */,
 				27C81E412B8A39E9001E3623 /* HomeView */,
 				46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */,
 				1FB387362B8862AF00054816 /* MainFeedViewController.swift */,
@@ -394,7 +399,7 @@
 			isa = PBXGroup;
 			children = (
 				1F1071BA2B95D3E8009E201A /* Location */,
-				1F2450192B9B4F7B002C68BB /* Photo */,
+				1F2450192B9B4F7B002C68BB /* Post */,
 			);
 			name = Upload;
 			sourceTree = "<group>";
@@ -672,7 +677,6 @@
 				1FAB4DF82B8C49590054618A /* User.swift in Sources */,
 				1FD2B7BA2B96C04B00896F9C /* HorizontalSearchModel.swift in Sources */,
 				1FD2B7BD2B96C04B00896F9C /* HorizontalSearchType.swift in Sources */,
-				1F1071BC2B95D400009E201A /* LocationConfirmationViewController.swift in Sources */,
 				1FD2B7BB2B96C04B00896F9C /* CarouselButtonModel.swift in Sources */,
 				27FC12892B9A64B1008CBEB8 /* UpcomingTCCell.swift in Sources */,
 				D22B171C2B971599006CAEA6 /* FriendRequest.swift in Sources */,
