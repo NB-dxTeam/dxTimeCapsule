@@ -16,6 +16,7 @@ class FriendRequestsViewController: UIViewController, UITableViewDelegate, UITab
         setUI()
         setupTableView()
         startMonitoringFriendRequests()
+        addLogoToNavigationBar()
     }
 
     func setUI() {
@@ -31,7 +32,23 @@ class FriendRequestsViewController: UIViewController, UITableViewDelegate, UITab
             make.trailing.equalToSuperview().offset(-16)
         }
     }
-
+    
+    private func addLogoToNavigationBar() {
+        // 로고 이미지 설정
+        let logoImage = UIImage(named: "App_Logo")
+        let imageView = UIImageView(image: logoImage)
+        imageView.contentMode = .scaleAspectFit
+        
+        // 이미지 뷰의 크기 설정
+        let imageSize = CGSize(width: 150, height: 45) // 원하는 크기로 조절
+        imageView.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: imageSize) // x값을 0으로 변경하여 왼쪽 상단에 위치하도록 설정
+        
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height))
+        containerView.addSubview(imageView)
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: containerView)
+    }
+    
     private func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
