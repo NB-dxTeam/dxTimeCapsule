@@ -1,7 +1,6 @@
 //
 //  FadeInAnimator.swift
 //  dxTimeCapsule
-//
 //  Created by 김우경 on 2/29/24.
 //
 

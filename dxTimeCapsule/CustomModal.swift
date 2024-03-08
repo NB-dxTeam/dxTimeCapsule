@@ -61,9 +61,9 @@ class CustomModal: UIViewController {
             let sectionInsetHorizontal = screenWidth * 0.05 // 좌우 여백을 화면 너비의 5%로 설정
             layout.sectionInset = UIEdgeInsets(top: 24, left: sectionInsetHorizontal, bottom: 24, right: sectionInsetHorizontal)
             // 최소 줄 간격 설정
-            let minimumLineSpacing = screenWidth * 0.1 // 최소 줄 간격을 화면 너비의 10%로 설정
+            let minimumLineSpacing = screenWidth * 0.2 // 최소 줄 간격을 화면 너비의 10%로 설정
             layout.minimumLineSpacing = minimumLineSpacing
-            
+            layout.sectionHeadersPinToVisibleBounds = true
         }
     }
     // 데이터 정보 가져오기.
@@ -151,13 +151,6 @@ extension CustomModal: UICollectionViewDelegateFlowLayout {
         return CGSize(width: collectionView.frame.width, height: 48)
     }
 }
-
-//extension CustomModal {
-//    // D-Day 남은 일수 계산
-//    func daysUntilOpenDate(_ date: Date) -> Int {
-//        return Calendar.current.dateComponents([.day], from: Date(), to: date).day ?? 0
-//    }
-//}
 
 // MARK: - CollectionView Header
 class HeaderView: UICollectionReusableView {

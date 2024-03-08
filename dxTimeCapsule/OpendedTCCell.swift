@@ -1,18 +1,23 @@
 //
-//  LockedCapsuleCell.swift
+//  OpendedCapsuleCell.swift
 //  dxTimeCapsule
 //
-//  Created by YeongHo Ha on 2/24/24.
+//  Created by t2023-m0028 on 3/8/24.
 //
 
 import UIKit
 import SnapKit
 import FirebaseFirestoreInternal
 
-
-class LockedCapsuleCell: UICollectionViewCell {
-    static let identifier = "LockedCapsuleCell"
-    lazy var registerImage: UIImageView = { // photoUrl
+class OpendedTCCell: UICollectionViewCell {
+    
+    // MARK: - Properties
+    
+    // 셀 식별자
+    static let identifier = "OpendedTCCell"
+    
+    // 캡슐 이미지를 표시하는 이미지 뷰
+    lazy var registerImage: UIImageView = {
         let image = UIImageView()
         image.contentMode = .scaleToFill
         image.clipsToBounds = true
@@ -20,7 +25,9 @@ class LockedCapsuleCell: UICollectionViewCell {
         image.layer.masksToBounds = true
         return image
     }()
-    lazy var dDay: UILabel = { // openDate - creationDate = D-Day
+    
+    // D-Day 정보를 표시하는 레이블
+    lazy var dDay: UILabel = {
         let label = UILabel()
         label.backgroundColor = .systemBlue
         label.font = UIFont.boldSystemFont(ofSize: 16)
@@ -30,63 +37,74 @@ class LockedCapsuleCell: UICollectionViewCell {
         label.layer.masksToBounds = true
         return label
     }()
-    lazy var userLocation: UILabel = { // userLocation
+    
+    // 사용자 위치를 표시하는 레이블
+    lazy var userLocation: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = UIFont.pretendardBold(ofSize: 24)
+        label.font = UIFont.systemFont(ofSize: 18)
         label.numberOfLines = 2
         return label
     }()
-    lazy var creationDate: UILabel = { // creationDate
+    
+    // 생성 날짜를 표시하는 레이블
+    lazy var creationDate: UILabel = {
         let label = UILabel()
         label.textColor = .gray
         label.font = UIFont.systemFont(ofSize: 16)
         return label
     }()
+    
+    // MARK: - Initialization
+    
+    // 초기화 메서드
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupViews()
+        setupViews() // 서브뷰들을 설정합니다.
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        setupViews()
-
+        setupViews() // 서브뷰들을 설정합니다.
     }
     
-    func configure(with capsuleInfo: CapsuleInfo) {
-        // 이미지 URL을 사용하여 이미지를 로드하고 설정합니다.
+    // MARK: - Configuration
+    
+    // 셀을 구성하는 메서드
+    func configure(with capsuleInfo: TCInfo) {
+        // 이미지 설정
         if let imageUrl = capsuleInfo.tcBoxImageURL, let url = URL(string: imageUrl) {
-            // 이미지 로딩 라이브러리를 사용한 비동기 이미지 로딩
             self.registerImage.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder"))
         } else {
             self.registerImage.image = UIImage(named: "placeholder")
         }
-
-        // 오늘 날짜와 openDate 사이의 일수를 계산하여 D-Day를 결정합니다.
+        
+        // D-Day 설정
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul") // UTC+9:00
-
+        dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul") // 한국 시간대 설정
+        
         let today = Date()
         let calendar = Calendar.current
         let components = calendar.dateComponents([.day], from: today, to: capsuleInfo.openTimeCapsuleDate)
-
+        
         if let daysUntilOpening = components.day {
-            // 날짜 차이에 따라 D-Day 표시를 조정합니다.
-            let dDayPrefix = daysUntilOpening < 0 ? "D+" : "D-"
+            let dDayPrefix = daysUntilOpening < 0 ? "D+" : "D-" // D-Day 표시
             self.dDay.text = "\(dDayPrefix)\(abs(daysUntilOpening))"
         }
-
-        // 사용자 위치를 설정합니다.
+        
+        // 사용자 위치 설정
         self.userLocation.text = capsuleInfo.userLocation ?? "Unknown location"
-
-        // 생성 날짜를 포맷에 맞게 설정합니다.
-        dateFormatter.dateFormat = "yyyy-MM-dd" // 시간 부분은 제외하고 날짜만 표시합니다.
+        
+        // 생성 날짜 설정
+        dateFormatter.dateFormat = "yyyy-MM-dd"
         let dateStr = dateFormatter.string(from: capsuleInfo.createTimeCapsuleDate)
         self.creationDate.text = dateStr
     }
     
+    // MARK: - Setup
+    
+    // 서브뷰들을 추가하고 Auto Layout을 설정하는 메서드
     private func setupViews() {
         contentView.addSubview(registerImage)
         contentView.addSubview(dDay)
@@ -95,8 +113,9 @@ class LockedCapsuleCell: UICollectionViewCell {
         
         registerImage.snp.makeConstraints { make in
             make.top.leading.equalToSuperview().offset(10)
-            make.width.equalTo(330) //
-            make.height.equalTo(registerImage.snp.width).multipliedBy(1.0/2.0)
+            make.leading.equalToSuperview().offset(10)
+            make.trailing.equalToSuperview().offset(-10)
+            make.height.equalTo(registerImage.snp.width).multipliedBy(1.0/2.0) // 이미지 높이 설정
         }
         
         dDay.snp.makeConstraints { make in
@@ -117,16 +136,5 @@ class LockedCapsuleCell: UICollectionViewCell {
             make.trailing.equalTo(registerImage.snp.trailing)
             make.bottom.lessThanOrEqualToSuperview().inset(15)
         }
-        
-        contentView.backgroundColor = .white
-        //layer.cornerRadius = 30
-        layer.masksToBounds = true
-        
-        //self.layer.borderWidth =  // 테두리 두께
-        self.layer.borderColor = UIColor.gray.cgColor// 테두리 색상
-        self.layer.cornerRadius = 30.0 // 모서리 설정
     }
 }
-
-
-

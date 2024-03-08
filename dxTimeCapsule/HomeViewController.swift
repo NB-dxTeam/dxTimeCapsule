@@ -10,9 +10,36 @@ import SnapKit
 import FirebaseFirestore
 import FirebaseAuth
 
+//#Preview{
+//    MainTabBarView()
+//}
+
 class HomeViewController: UIViewController {
 
     // MARK: - Properties
+    
+    // 커스텀 네비게이션 바
+    let customNavBar: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
+    }()
+    
+    // pagelogo 이미지뷰 생성
+    let logoImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "pagelogo"))
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    //알림 버튼 생성
+    let addFriendsButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "person.fill.badge.plus"), for: .normal)
+        button.addTarget(self, action: #selector(addFriendsButtonTapped), for: .touchUpInside)
+        button.isUserInteractionEnabled = true
+        return button
+    }()
     
     // 메인 타임캡슐 이미지 배열
     let mainTCImages = [UIImage(named: "IMG1"), UIImage(named: "IMG2"), UIImage(named: "IMG3"), UIImage(named: "IMG4")]
@@ -37,6 +64,8 @@ class HomeViewController: UIViewController {
         let imageView = UIImageView(image: UIImage(named: "location"))
         imageView.contentMode = .scaleToFill
         imageView.isUserInteractionEnabled = true
+        imageView.layer.cornerRadius = 10
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -66,6 +95,8 @@ class HomeViewController: UIViewController {
         label.text = "D-DAY"
         label.font = UIFont.boldSystemFont(ofSize: 15)
         label.textColor = .red
+        label.textAlignment = .right
+        label.contentMode = .top
         return label
     }()
 
@@ -95,34 +126,38 @@ class HomeViewController: UIViewController {
         return stackView
     }()
     
-    // 장소 레이블
+    // noMainTC 라벨
     let noMainTCLabel: UILabel = {
+        let attributedString = NSMutableAttributedString(string: "더이상 열어볼 캡슐이 없어요😭\n", attributes: [
+            .font: UIFont.boldSystemFont(ofSize: 23)
+        ])
+        attributedString.append(NSAttributedString(string: "+를 눌러 계속해서 시간여행을 떠나보세요!", attributes: [
+            .font: UIFont.systemFont(ofSize: 16)
+        ]))
         let label = UILabel()
-        label.text = "더이상 열어볼 캡슐이 없어요😭"
-        label.font = UIFont.boldSystemFont(ofSize: 25)
+        label.numberOfLines = 2
         label.textColor = .black
+        label.attributedText = attributedString
         return label
     }()
     
-    
-    // 위치 레이블
-    let noMainTCsecLabel: UILabel = {
-        let label = UILabel()
-        label.text = "캡슐을 만들어 계속해서 시간여행을 떠나보세요!"
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
-        return label
+    // noMainTC 버튼
+    let addTCButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "plus.app"), for: .normal)
+        button.isUserInteractionEnabled = false
+        return button
     }()
-    
-    // 장소정보 스택뷰
+ 
+    // noMainTC 스택뷰
     lazy var noMainTCStackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.spacing = 0
+        stackView.axis = .horizontal
+        stackView.alignment = .fill
+        stackView.spacing = 10
         stackView.addArrangedSubview(self.noMainTCLabel)
-        stackView.addArrangedSubview(self.noMainTCsecLabel)
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(noMainTCStackViewTapped))
+        stackView.addArrangedSubview(self.addTCButton)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(addNewTC))
         stackView.addGestureRecognizer(tapGesture)
         stackView.isUserInteractionEnabled = true
         return stackView
@@ -218,7 +253,6 @@ class HomeViewController: UIViewController {
                         print("No upcoming memories found")
                             DispatchQueue.main.async {
                                 self.animateMainTCImageChange()
-                                self.mainTCImageView.isUserInteractionEnabled = false
                                 self.duestTCInforStackView.removeFromSuperview()
                                 self.upcomingTCButton.isEnabled = false
                                 self.upcomingTCButton.setBackgroundImage(UIImage(named: "empty"), for: .normal)
@@ -291,7 +325,7 @@ class HomeViewController: UIViewController {
             }
         db.collection("timeCapsules")
             .whereField("uid", isEqualTo: userId)
-            .whereField("isOpened", isEqualTo: true)
+            .whereField("isOpened", isEqualTo: false)
             .getDocuments { [weak self] (querySnapshot, err) in
                 guard let self = self else { return }
                 if let err = err {
@@ -318,19 +352,64 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         navigationController?.isNavigationBarHidden = true
-        configureUI()
         fetchTimeCapsuleData()
+        configureUI()
         
+        // 네비게이션 바에 로고 이미지 추가
+         addLogoToNavigationBar()
+
     }
     
     // MARK: - Helpers
     
+    private func addLogoToNavigationBar() {
+        // 로고 이미지 설정
+        let logoImage = UIImage(named: "App_Logo")
+        let imageView = UIImageView(image: logoImage)
+        imageView.contentMode = .scaleAspectFit
+        
+        // 이미지 뷰의 크기 설정
+        let imageSize = CGSize(width: 150, height: 50) // 원하는 크기로 조절
+        imageView.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: imageSize) // x값을 0으로 변경하여 왼쪽 상단에 위치하도록 설정
+        
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height))
+        containerView.addSubview(imageView)
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: containerView)
+    }
+
+
     private func configureUI(){
         
+        // 커스텀 네비게이션 바 추가
+        view.addSubview(customNavBar)
+        customNavBar.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
+            make.left.right.equalToSuperview()
+            make.height.equalTo(40)
+        }
+        
+       // pagelogo 이미지뷰 추가
+        customNavBar.addSubview(logoImageView)
+         logoImageView.snp.makeConstraints { make in
+            make.centerY.equalTo(customNavBar)
+            make.left.equalTo(customNavBar).offset(20)
+            make.width.equalTo(170)
+           }
+        
+           // 알림 버튼 추가
+        customNavBar.addSubview(addFriendsButton)
+        addFriendsButton.snp.makeConstraints { make in
+            make.centerY.equalTo(customNavBar)
+            make.right.equalTo(customNavBar).offset(-20)
+           }
+
         // 메인 타임캡슐 그림자 추가
         view.addSubview(mainContainerView)
         mainContainerView.snp.makeConstraints { make in
-             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(30)
+
+             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(15)
+
              make.leading.trailing.equalToSuperview().inset(20)
             make.height.equalToSuperview().multipliedBy(2.0/6.0)
                   }
@@ -340,13 +419,8 @@ class HomeViewController: UIViewController {
         mainTCImageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        
-        mainTCImageView.layer.cornerRadius = 10
-        mainTCImageView.layer.masksToBounds = true
-        mainTCImageView.layer.shadowColor = UIColor.black.cgColor
-        mainTCImageView.layer.shadowOpacity = 0.5
-        mainTCImageView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        mainTCImageView.layer.shadowRadius = 4
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(mainTCImageViewTapped))
+        mainTCImageView.addGestureRecognizer(tapGesture)
 
         // infoAndDdayStackView의 위치 설정
         view.addSubview(duestTCInforStackView)
@@ -387,13 +461,7 @@ class HomeViewController: UIViewController {
             make.top.equalTo(mainContainerView.snp.bottom).inset(5)
             make.width.equalTo(mainContainerView.snp.width).multipliedBy(1.0/5.0)
             make.height.equalTo(mainContainerView.snp.width).multipliedBy(1.0/5.0)
-            make.trailing.equalToSuperview().inset(5)
         }
-        
-        
-        // 메인 타임캡슐 이미지뷰에 탭 제스처 추가
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(mainTCImageViewTapped))
-        mainTCImageView.addGestureRecognizer(tapGesture)
         
         // 버튼 스택뷰에 버튼 추가
         buttonStackView.addArrangedSubview(openedTCButton)
@@ -407,7 +475,6 @@ class HomeViewController: UIViewController {
             make.leading.trailing.equalToSuperview().inset(20)
             make.height.equalToSuperview().multipliedBy(1.5/6.0)// 버튼 높이 조정
         }
-        
     }
     
     func animateMainTCImageChange() {
@@ -431,6 +498,13 @@ class HomeViewController: UIViewController {
     
     // MARK: - Actions
     
+    @objc private func addFriendsButtonTapped() {
+        print("친구추가가 클릭되었습니다")
+        let addFriendsVC = SearchUserTableViewController()
+        let navController = UINavigationController(rootViewController: addFriendsVC)
+        present(navController, animated: true, completion: nil)
+    }
+    
     @objc private func duestTCStackViewTapped() {
         print("DuestTC 스택뷰가 클릭되었습니다")
         let mainCapsuleVC = MainCapsuleViewController()
@@ -438,7 +512,7 @@ class HomeViewController: UIViewController {
         present(navController, animated: true, completion: nil)
     }
     
-    @objc private func noMainTCStackViewTapped() {
+    @objc private func addNewTC() {
         print("새 타임머신 만들기 클릭되었습니다")
         let mainCapsuleVC = MainCreateCapsuleViewController()
         let navController = UINavigationController(rootViewController: mainCapsuleVC)
@@ -462,7 +536,7 @@ class HomeViewController: UIViewController {
     
     @objc func upcomingTCButtonTapped(){
         print("다가오는 타임캡슐 열기 버튼이 클릭되었습니다")
-        let upcomingVC = CapsuleMapViewController()
+        let upcomingVC = UpcomingTCViewController()
         let navController = UINavigationController(rootViewController: upcomingVC)
         present(navController, animated: true, completion: nil)
     }
