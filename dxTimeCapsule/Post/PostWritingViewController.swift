@@ -43,11 +43,6 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         updateCreateButtonState() // 초기 상태 설정
     }
     
-//    override func viewDidLayoutSubviews() {
-//        super.viewDidLayoutSubviews()
-//        createButton.setBlurryBeach()
-//    }
-//    
     // MARK: - Setup
     private func setupViews() {
       view.backgroundColor = .white

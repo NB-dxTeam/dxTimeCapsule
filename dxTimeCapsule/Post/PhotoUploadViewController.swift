@@ -3,7 +3,7 @@ import SnapKit
 import PhotosUI
 import Photos
 
-class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate {
 
     // MARK: - Properties
     
@@ -38,7 +38,7 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        nextButton.backgroundColor = UIColor(hex: "#D53369").withAlphaComponent(0.8)
+        nextButton.backgroundColor = UIColor(hex: "#D53369").withAlphaComponent(0.85)
     }
     
     private func setupProperties() {
@@ -106,16 +106,17 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         let allPhotosOptions = PHFetchOptions()
         allPhotosOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         let allPhotos = PHAsset.fetchAssets(with: .image, options: allPhotosOptions)
-        
+
         assets = []
         allPhotos.enumerateObjects { (asset, _, _) in
             self.assets.append(asset)
         }
-        
+
         DispatchQueue.main.async {
             self.collectionView.reloadData()
-            // Automatically select and display the first photo in the assets array
+            // 뷰 로드 시 첫 번째 사진을 이미지 뷰에 자동으로 표시
             if let firstAsset = self.assets.first {
+                self.selectedAssets.append(firstAsset) // 첫 번째 사진을 선택된 상태로 추가
                 self.selectAndDisplayImage(for: firstAsset)
             }
         }
@@ -134,9 +135,14 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     
     @objc private func didTapNextButton() {
         let postWritingVC = PostWritingViewController()
-        postWritingVC.modalPresentationStyle = .pageSheet
+        postWritingVC.modalPresentationStyle = .custom
+        postWritingVC.transitioningDelegate = self
         present(postWritingVC, animated: true, completion: nil)
     }
+    
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+          return HalfModalPresentationController(presentedViewController: presented, presenting: presenting)
+      }
     
     // MARK: - UICollectionViewDataSource Methods
     
@@ -145,16 +151,18 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.identifier, for: indexPath) as! PhotoCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.identifier, for: indexPath) as? PhotoCell else {
+            fatalError("Unable to dequeue PhotoCell")
+        }
         let asset = assets[indexPath.item]
         cell.configure(with: asset, imageManager: imageManager)
-        
-        // Update cell's visual state based on selection
-        cell.isSelected = selectedAssets.contains(asset)
-        // Optionally, customize the cell further to reflect selection state visually
-        
+
+        // 선택된 아이템에 대해 시각적으로 표시 (예: 체크 마크 추가)
+        cell.updateSelectionState(isSelected: selectedAssets.contains(asset))
+
         return cell
     }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let itemsPerRow: CGFloat = 3
         let padding: CGFloat = 5 // 여백 값 설정
@@ -170,22 +178,21 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = assets[indexPath.item]
-        
-        // Toggle selection
+
         if let index = selectedAssets.firstIndex(of: asset) {
-            selectedAssets.remove(at: index)
+            selectedAssets.remove(at: index) // 선택 해제
         } else {
-            selectedAssets.append(asset)
+            selectedAssets.append(asset) // 선택
         }
-        
-        // Update UI based on the first selected asset
+
+        // 첫 번째 선택된 사진을 이미지 뷰에 표시
         if let firstAsset = selectedAssets.first {
             selectAndDisplayImage(for: firstAsset)
         } else {
-            imageView.image = nil // Clear the image view if no assets are selected
+            imageView.image = nil // 선택된 사진이 없으면 이미지 뷰 클리어
         }
-        
-        collectionView.reloadItems(at: [indexPath]) // Refresh the cell to show selection state
+
+        collectionView.reloadItems(at: [indexPath]) // 선택 상태 변경으로 인한 셀 업데이트
     }
 
 

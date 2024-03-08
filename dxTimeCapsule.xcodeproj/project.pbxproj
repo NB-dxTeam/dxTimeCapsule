@@ -19,6 +19,7 @@
 		1F2450162B9B4CB2002C68BB /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2450152B9B4CB2002C68BB /* FirestoreService.swift */; };
 		1F2450182B9B4D74002C68BB /* PostWritingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2450172B9B4D74002C68BB /* PostWritingViewController.swift */; };
 		1F24501B2B9B4F85002C68BB /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24501A2B9B4F85002C68BB /* PhotoCollectionViewCell.swift */; };
+		1F24501F2B9B82D3002C68BB /* HalfModalPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24501E2B9B82D3002C68BB /* HalfModalPresentationController.swift */; };
 		1F367EA62B8F803A00563908 /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F367EA52B8F803A00563908 /* UIColor+Hex.swift */; };
 		1F4339722B9ADEB0006D39F5 /* CapsuleAnnotationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4339712B9ADEB0006D39F5 /* CapsuleAnnotationModel.swift */; };
 		1F52DE1D2B972C9000EE2E1E /* CustomModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F52DE1C2B972C9000EE2E1E /* CustomModal.swift */; };
@@ -100,6 +101,7 @@
 		1F2450152B9B4CB2002C68BB /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		1F2450172B9B4D74002C68BB /* PostWritingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostWritingViewController.swift; sourceTree = "<group>"; };
 		1F24501A2B9B4F85002C68BB /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
+		1F24501E2B9B82D3002C68BB /* HalfModalPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HalfModalPresentationController.swift; sourceTree = "<group>"; };
 		1F367EA52B8F803A00563908 /* UIColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Hex.swift"; sourceTree = "<group>"; };
 		1F4339712B9ADEB0006D39F5 /* CapsuleAnnotationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleAnnotationModel.swift; sourceTree = "<group>"; };
 		1F52DE1C2B972C9000EE2E1E /* CustomModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModal.swift; sourceTree = "<group>"; };
@@ -218,6 +220,14 @@
 				1F24501A2B9B4F85002C68BB /* PhotoCollectionViewCell.swift */,
 			);
 			path = Cell;
+			sourceTree = "<group>";
+		};
+		1F2450202B9B82DD002C68BB /* Modal */ = {
+			isa = PBXGroup;
+			children = (
+				1F24501E2B9B82D3002C68BB /* HalfModalPresentationController.swift */,
+			);
+			path = Modal;
 			sourceTree = "<group>";
 		};
 		1F43396E2B9ADCEB006D39F5 /* Recovered References */ = {
@@ -455,6 +465,7 @@
 			isa = PBXGroup;
 			children = (
 				1FF869192B8F4D59007B5112 /* Extensions */,
+				1F2450202B9B82DD002C68BB /* Modal */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -694,6 +705,7 @@
 				D20CDCCD2B959DFE00B93788 /* FriendsRequestViewController.swift in Sources */,
 				D20CDCCF2B96D86100B93788 /* FriendRequestTableViewCell.swift in Sources */,
 				1F52DE1D2B972C9000EE2E1E /* CustomModal.swift in Sources */,
+				1F24501F2B9B82D3002C68BB /* HalfModalPresentationController.swift in Sources */,
 				1F5786F22B849CA900C40B08 /* AuthenticationViewModel.swift in Sources */,
 				1FB387372B8862AF00054816 /* MainFeedViewController.swift in Sources */,
 				1F9DA7B12B8C93BD00A74D84 /* SearchUserTableViewCell.swift in Sources */,
