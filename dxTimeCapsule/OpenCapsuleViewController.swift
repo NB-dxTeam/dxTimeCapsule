@@ -138,8 +138,9 @@ class OpenCapsuleViewController: UIViewController {
         // 메모리 텍스트 뷰 설정
         memoryTextView = UITextView()
         memoryTextView.text =  """
-                                2022년 10월 6일은 빈지노님과 함께 보내셨군요!
-                                굉장히 행복했던 날이에요🥳.
+                                지난 2022년 10월 6일은
+                                빈지노님과 함께 보내셨군요!
+                                굉장히 즐거웠던 날이에요.😋
                                 """
         memoryTextView.isEditable = false
         memoryTextView.isScrollEnabled = false
@@ -155,7 +156,7 @@ class OpenCapsuleViewController: UIViewController {
         // 메시지 확인하기 버튼 설정
         messageButton = UIButton(type: .system)
         messageButton.setTitle("그날의 메시지", for: .normal)
-        messageButton.backgroundColor = .systemBlue // 색상 설정
+        messageButton.backgroundColor = .systemOrange // 색상 설정
         messageButton.setTitleColor(.white, for: .normal)
         messageButton.layer.cornerRadius = 10
         view.addSubview(messageButton)

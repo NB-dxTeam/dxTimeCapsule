@@ -4,46 +4,43 @@
 //  Created by 김우경 on 2/28/24.
 //
 
-// UIKit, SnapKit, CoreMotion 프레임워크를 가져옵니다. UIKit은 UI 구성요소, SnapKit은 AutoLayout을 간편하게, CoreMotion은 디바이스 모션 감지를 위해 사용됩니다.
+
 import UIKit
 import SnapKit
 import CoreMotion
 
-// UIViewController를 상속받는 OpenInteractionViewController 클래스를 정의합니다. UIViewController는 iOS에서 화면을 구성하는 기본 단위입니다.
 class OpenInteractionViewController: UIViewController {
-    var documentId: String? // documentId 선언
+    var documentId: String?
 
     // 중앙에 표시될 이미지 뷰를 정의합니다. Lazy loading을 사용하여 필요할 때 생성되도록 합니다.
     private let openImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit // 이미지의 비율을 유지하면서 적절히 맞춥니다.
-        imageView.image = UIImage(named: "OpenTimeCapsule") // 이미지를 설정합니다. Assets에 추가한 이미지 이름을 정확히 입력해야 합니다.
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "OpenTimeCapsule")
         return imageView
     }()
     
-    // 인터랙션을 위한 게이지 뷰를 정의합니다. 이 뷰 위에 게이지가 그려집니다.
+    // 인터랙션 게이지 뷰 이 뷰 위에 게이지가 그려집니다.
     private let interactionGaugeView: UIView = UIView()
     
-    // 사용자에게 안내를 위한 텍스트 레이블을 정의합니다.
+    // 사용자 안내 텍스트
     private let instructionLabel: UILabel = {
         let label = UILabel()
         label.text = "화면이 차오를 때까지 스마트폰을 흔들어주세요!"
-        label.textAlignment = .center // 텍스트를 가운데 정렬합니다.
+        label.textAlignment = .center
         label.numberOfLines = 0 // 여러 줄로 표시할 수 있도록 합니다.
-        label.font = UIFont.systemFont(ofSize: 16) // 폰트 크기를 설정합니다.
-        label.textColor = .darkGray // 텍스트 색상을 설정합니다.
+        label.font = UIFont.systemFont(ofSize: 16) //
+        label.textColor = .darkGray
         return label
     }()
-    // 스킵 버튼을 위한 UIButton 변수 선언
+  
     private var skipButton: UIButton!
-    
-    // 진행 상황을 나타내는 게이지의 값을 저장하고, 변경될 때마다 게이지를 업데이트하는 프로퍼티입니다.
     private var progressLayer: CAShapeLayer!
     private var motionManager: CMMotionManager!
     private var progress: CGFloat = 0 {
         didSet {
-            progressLayer.strokeEnd = progress // 게이지의 진행 상황을 업데이트합니다.
-            // 여기에 게이지가 꽉 찼을 때 새 뷰 컨트롤러로 전환하는 로직을 추가합니다.
+            progressLayer.strokeEnd = progress // 게이지의 진행 상황 업데이트
+            //게이지가 꽉 찼을 때 새 뷰 컨트롤러로 전환
              if progress >= 1 {
                  DispatchQueue.main.async { [weak self] in
                      self?.navigateToOpenCapsuleViewController()
@@ -52,22 +49,21 @@ class OpenInteractionViewController: UIViewController {
          }
      }
     
-    // OpenCapsuleViewController로 네비게이션하는 메소드를 정의합니다.
+    // OpenCapsuleViewController로 네비게이션하는 메소드
     private func navigateToOpenCapsuleViewController() {
-        let openCapsuleVC = OpenCapsuleViewController() // 새 뷰 컨트롤러 인스턴스를 생성합니다.
+        let openCapsuleVC = OpenCapsuleViewController()
         openCapsuleVC.documentId = documentId // documentId 전달
-        openCapsuleVC.modalPresentationStyle = .fullScreen // 전체 화면으로 설정합니다.
-        present(openCapsuleVC, animated: true, completion: nil) // 새 뷰 컨트롤러를 모달로 표시합니다.
+        openCapsuleVC.modalPresentationStyle = .fullScreen // 전체 화면
+        present(openCapsuleVC, animated: true, completion: nil) // 모달
     }
     
-    // 화면이 로드될 때 호출되는 메소드입니다. 기본 설정을 수행합니다.
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white // 배경색을 흰색으로 설정합니다.
-        setupLayout() // 레이아웃 설정 메소드를 호출합니다.
-        setupGaugeView() // 게이지 뷰 설정 메소드를 호출합니다.
-        setupMotionManager() // 모션 매니저 설정 메소드를 호출합니다.
-        setupSkipButton() // 여기에 스킵 버튼 설정 함수 호출을 추가합니다.
+        view.backgroundColor = .white
+        setupLayout()
+        setupGaugeView()
+        setupMotionManager()
+        setupSkipButton()
     }
     
     // 뷰의 레이아웃이 변경될 때마다 호출됩니다. 여기서 게이지 뷰를 다시 설정할 수 있습니다.
@@ -78,27 +74,26 @@ class OpenInteractionViewController: UIViewController {
         }
     }
     
-    // 화면 레이아웃을 설정하는 메소드입니다.
     private func setupLayout() {
-        // 이미지 뷰를 화면에 추가하고 위치와 크기를 설정합니다.
+        // 이미지 뷰
         view.addSubview(openImageView)
         openImageView.snp.makeConstraints { make in
-            make.center.equalToSuperview() // 화면 중앙에 위치하도록 합니다.
-            make.width.height.equalTo(200) // 너비와 높이를 200으로 설정합니다.
+            make.center.equalToSuperview() // 화면 중앙
+            make.width.height.equalTo(200) // 너비와 높이 200
         }
         
-        // 게이지 뷰를 화면에 추가하고 위치와 크기를 설정합니다.
+        // 게이지 뷰
         view.addSubview(interactionGaugeView)
         interactionGaugeView.snp.makeConstraints { make in
-            make.center.equalTo(openImageView.snp.center) // 이미지 뷰의 중앙과 일치하도록 합니다.
-            make.width.height.equalTo(220) // 이미지 뷰보다 약간 큰 크기로 설정합니다.
+            make.center.equalTo(openImageView.snp.center) // 이미지 뷰의 중앙
+            make.width.height.equalTo(220) // 이미지 뷰보다 약간 큰 크기
         }
         
-        // 안내 텍스트 레이블을 화면에 추가하고 위치를 설정합니다.
+        // 안내 텍스트 레이블
         view.addSubview(instructionLabel)
         instructionLabel.snp.makeConstraints { make in
-            make.top.equalTo(openImageView.snp.bottom).offset(20) // 이미지 뷰 아래에 위치하도록 합니다.
-            make.left.right.equalToSuperview().inset(20) // 좌우 여백을 20으로 설정합니다.
+            make.top.equalTo(openImageView.snp.bottom).offset(20) // 이미지 뷰 아래
+            make.left.right.equalToSuperview().inset(20) // 좌우 여백을 20
         }
     }
     
@@ -115,25 +110,25 @@ class OpenInteractionViewController: UIViewController {
         }
     }
 
-    // 스킵 버튼 탭 이벤트 핸들러
+    // 스킵 버튼 탭
     @objc private func skipButtonTapped() {
         navigateToOpenCapsuleViewController()
     }
     
-    // 게이지 뷰를 설정하는 메소드입니다.
+    // 게이지 뷰 설정
     private func setupGaugeView() {
-        view.layoutIfNeeded() // 뷰의 레이아웃을 즉시 업데이트합니다.
-        // 게이지를 그릴 위치와 크기를 계산합니다.
+        view.layoutIfNeeded()
+        // 게이지를 그릴 위치와 크기를 계산
         let centerPoint = CGPoint(x: interactionGaugeView.bounds.midX, y: interactionGaugeView.bounds.midY)
-        let radius = interactionGaugeView.bounds.width / 2 - 10 // 여백을 고려한 반지름을 계산합니다.
-        // 게이지를 그리기 위한 경로를 생성합니다.
+        let radius = interactionGaugeView.bounds.width / 2 - 10 // 여백을 고려한 반지름을 계산
+        // 게이지를 그리기 위한 경로 생성
         let circlePath = UIBezierPath(arcCenter: centerPoint, radius: radius, startAngle: -CGFloat.pi / 2, endAngle: 2 * CGFloat.pi - CGFloat.pi / 2, clockwise: true)
         
-        // 배경 게이지를 설정합니다. 이는 항상 전체를 그립니다.
+        // 배경 게이지를 설정
         let backgroundLayer = CAShapeLayer()
         backgroundLayer.path = circlePath.cgPath
-        backgroundLayer.strokeColor = UIColor.lightGray.cgColor // 색상을 설정합니다.
-        backgroundLayer.lineWidth = 5 // 선의 굵기를 설정합니다.
+        backgroundLayer.strokeColor = UIColor.lightGray.cgColor // 색상
+        backgroundLayer.lineWidth = 5 // 선의 굵기
         backgroundLayer.fillColor = UIColor.clear.cgColor // 내부를 채우지 않습니다.
         backgroundLayer.strokeEnd = 1 // 전체를 그립니다.
         interactionGaugeView.layer.addSublayer(backgroundLayer) // 레이어를 추가합니다.
@@ -141,10 +136,10 @@ class OpenInteractionViewController: UIViewController {
         // 진행 게이지를 설정합니다.
         progressLayer = CAShapeLayer()
         progressLayer.path = circlePath.cgPath
-        progressLayer.strokeColor = UIColor.blue.cgColor // 색상을 설정합니다.
-        progressLayer.lineWidth = 7 // 선의 굵기를 설정합니다.
+        progressLayer.strokeColor = UIColor.blue.cgColor // 색상
+        progressLayer.lineWidth = 7 // 선의 굵기
         progressLayer.fillColor = UIColor.clear.cgColor // 내부를 채우지 않습니다.
-        progressLayer.strokeEnd = 0 // 초기값은 0으로 설정합니다.
+        progressLayer.strokeEnd = 0 // 초기값
         interactionGaugeView.layer.addSublayer(progressLayer) // 레이어를 추가합니다.
     }
     
