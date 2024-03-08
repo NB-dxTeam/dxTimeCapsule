@@ -2,6 +2,7 @@ import UIKit
 import MapKit
 import CoreLocation
 
+
 class LocationConfirmationViewController: UIViewController, CLLocationManagerDelegate {
     
     // MARK: - Properties

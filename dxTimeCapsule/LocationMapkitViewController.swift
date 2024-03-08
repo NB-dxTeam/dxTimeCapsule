@@ -28,7 +28,8 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         initializeComponents()
         setupLayout()
         configureLocationServices()
-        presentBottomSheetModally()
+        
+//        presentBottomSheetModally() // 검색 , 즐겨찾기, 최근검색 기록
         hideCenterView()
         isCenterViewPresented = false
 
@@ -81,16 +82,18 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     }
     
     private func setupCurrentLocationButton() {
-        currentLocationButton.setImage(UIImage(systemName: "location.circle.fill"), for: .normal)
-        currentLocationButton.tintColor = .systemBlue
+        let configuration = UIImage.SymbolConfiguration(pointSize: 50, weight: .medium, scale: .medium)
+        let image = UIImage(systemName: "location.circle", withConfiguration: configuration)?.withTintColor(.black.withAlphaComponent(0.85) , renderingMode: .alwaysOriginal)
+        currentLocationButton.setImage(image, for: .normal)
         currentLocationButton.addTarget(self, action: #selector(currentLocationButtonTapped), for: .touchUpInside)
         view.addSubview(currentLocationButton)
         currentLocationButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
             make.right.equalTo(view.safeAreaLayoutGuide.snp.right).offset(-20)
-            make.width.height.equalTo(50)
+            make.width.height.equalTo(40) // 버튼의 크기를 유지하면서 내부 이미지의 크기를 조정했습니다.
         }
     }
+
     
     // MARK: - Action
     
@@ -125,7 +128,7 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     private func setupTitleLabelAndButtons() {
         titleLabel = UILabel()
         createCapsuleButton = UIButton()
-        modifyLocationButton = UIButton() // 추가
+        modifyLocationButton = UIButton()
         
         titleLabel.text = "타임캡슐 생성 위치를 확인해주세요!"
         titleLabel.font = UIFont.pretendardBold(ofSize: 22)
@@ -139,7 +142,7 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
             make.centerY.equalTo(centerView).offset(-60)
         }
         
-        createCapsuleButton.setTitle("여기에 타임캡슐 생성하기", for: .normal)
+        createCapsuleButton.setTitle("여기에 생성하기", for: .normal)
         createCapsuleButton.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 18)
         createCapsuleButton.layer.cornerRadius = 8
         createCapsuleButton.backgroundColor = UIColor(hex: "#D53369")
@@ -196,29 +199,35 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     }
     
     private func showBannerMessage(message: String) {
-            let bannerLabel = UILabel()
-            bannerLabel.text = message
-            bannerLabel.textAlignment = .center
-            bannerLabel.textColor = .white
-            bannerLabel.backgroundColor = .systemBlue
-            view.addSubview(bannerLabel)
-            bannerLabel.snp.makeConstraints { make in
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-                make.left.right.equalToSuperview()
-                make.height.equalTo(40)
-            }
-            UIView.animate(withDuration: 0.5, animations: {
-                bannerLabel.alpha = 1.0
-            }) { _ in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                    UIView.animate(withDuration: 0.5, animations: {
-                        bannerLabel.alpha = 0.0
-                    }) { _ in
-                        bannerLabel.removeFromSuperview()
-                    }
+        let bannerLabel = UILabel()
+        bannerLabel.text = message
+        bannerLabel.font = UIFont.pretendardSemiBold(ofSize: 20)
+        bannerLabel.textAlignment = .center
+        bannerLabel.textColor = .black
+        bannerLabel.layer.cornerRadius = 8
+        bannerLabel.layer.masksToBounds = true
+
+        bannerLabel.backgroundColor = UIColor.white.withAlphaComponent(0.8)
+        view.addSubview(bannerLabel)
+        bannerLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(130)
+            make.width.equalTo(350)
+            make.height.equalTo(40)
+        }
+        UIView.animate(withDuration: 0.5, animations: {
+            bannerLabel.alpha = 1.0
+        }) { _ in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                UIView.animate(withDuration: 0.5, animations: {
+                    bannerLabel.alpha = 0.0
+                }) { _ in
+                    bannerLabel.removeFromSuperview()
                 }
             }
         }
+    }
+
     
     private func presentBottomSheetModally() {
         let bottomSheetController = BottomSheetViewController() // Assign to class property
@@ -232,18 +241,25 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     }
     
     @objc private func handleCreateCapsuleTap() {
-        let createCapsuleVC = MainCreateCapsuleViewController()
-                navigationController?.pushViewController(createCapsuleVC, animated: true)
-                print("Create capsule tap")
+        let createCapsuleVC = PhotoUploadViewController()
+        createCapsuleVC.modalPresentationStyle = .pageSheet
+        
+//        // Set the preferred content size to occupy 3/2 of the screen
+//        let width = UIScreen.main.bounds.width * (2/3)
+//        let height = UIScreen.main.bounds.height * (2/3)
+//        createCapsuleVC.preferredContentSize = CGSize(width: width, height: height)
+        
+        present(createCapsuleVC, animated: true, completion: nil)
+        print("Create capsule tap")
     }
-    // 추가
+
+    
     @objc private func handleModifyLocationTap() {
             toggleCenterView()
-            showBannerMessage(message: "원하는 위치를 꾹 눌러주세요!")
+            showBannerMessage(message: "원하는 위치에 탭을 꾹 눌러주세요!")
             setupLongPressGesture()
 
     }
-    
     
     // MARK: - Gesture
     private func setupLongPressGesture() {
@@ -294,13 +310,9 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     
     // MKMapViewDelegate 프로토콜을 구현하는 부분에 다음 메서드를 추가하세요.
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        // 사용자가 어노테이션을 탭했을 때 호출될 메서드
-        // 여기서 setupTitleLabelAndButtons() 함수를 호출합니다.
-        setupTitleLabelAndButtons()
         
-        // 필요한 경우, 선택한 어노테이션에 대한 추가 정보를 처리할 수 있습니다.
-        // 예: 어노테이션의 위치 정보를 사용하여 센터 뷰의 내용을 업데이트하거나,
-        // 특정 데이터와 연결된 어노테이션인지 확인할 수 있습니다.
+        setupTitleLabelAndButtons()
+    
     }
     
 }
@@ -309,7 +321,16 @@ func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
 }
 
 
-
+extension MKMapView {
+    func showWorldMap() {
+        let coordinateRegion = MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            latitudinalMeters: 22000000, // Approximate distance from equator to pole
+            longitudinalMeters: 22000000  // Approximate distance from prime meridian to antimeridian
+        )
+        setRegion(coordinateRegion, animated: true)
+    }
+}
 
 // MARK: - SwiftUI Preview
 import SwiftUI

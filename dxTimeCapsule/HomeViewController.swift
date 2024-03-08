@@ -521,7 +521,7 @@ class HomeViewController: UIViewController {
     
     @objc private func addNewTC() {
         print("새 타임머신 만들기 클릭되었습니다")
-        let mainCapsuleVC = MainCreateCapsuleViewController()
+        let mainCapsuleVC = PhotoUploadViewController()
         let navController = UINavigationController(rootViewController: mainCapsuleVC)
         present(navController, animated: true, completion: nil)
     }
