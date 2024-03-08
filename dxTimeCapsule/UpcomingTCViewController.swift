@@ -1,13 +1,20 @@
+//
+//  UpcomingTCViewController.swift
+//  dxTimeCapsule
+//
+//  Created by t2023-m0028 on 3/8/24.
+//
+
 import UIKit
 import SnapKit
 import FirebaseFirestore
 import FirebaseAuth
 
 #Preview{
-    OpenedTCViewController()
+    MainTabBarView()
 }
 
-class OpenedTCViewController: UIViewController {
+class UpcomingTCViewController: UIViewController {
     
     // MARK: - Properties
     
@@ -44,7 +51,7 @@ class OpenedTCViewController: UIViewController {
     private func configCollection() {
         capsuleCollection.delegate = self
         capsuleCollection.dataSource = self
-        capsuleCollection.register(OpendedTCCell.self, forCellWithReuseIdentifier: OpendedTCCell.identifier)
+        capsuleCollection.register(UpcomingTCCell.self, forCellWithReuseIdentifier: UpcomingTCCell.identifier)
         capsuleCollection.isPagingEnabled = true
         capsuleCollection.showsVerticalScrollIndicator = true
         capsuleCollection.decelerationRate = .normal
@@ -67,9 +74,9 @@ class OpenedTCViewController: UIViewController {
     
     private func fetchTimeCapsulesInfo() {
         let db = Firestore.firestore()
-        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2"
+        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // Example UID, replace with dynamic UID
         db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
-            .whereField("isOpened", isEqualTo: true)
+            .whereField("isOpened", isEqualTo: false)
             .order(by: "openDate", descending: false)
             .getDocuments { [weak self] (querySnapshot, err) in
                 if let documents = querySnapshot?.documents {
@@ -77,7 +84,7 @@ class OpenedTCViewController: UIViewController {
                     self?.capsuleInfo = documents.compactMap { doc in
                         let data = doc.data()
                         let capsule = TCInfo(
-                            tcBoxImageURL: data["photoUrl"] as? String,
+                            tcBoxImageURL: data["tcBoxImageURL"] as? String,
                             userLocation: data["userLocation"] as? String,
                             createTimeCapsuleDate: (data["creationDate"] as? Timestamp)?.dateValue() ?? Date(),
                             openTimeCapsuleDate: (data["openDate"] as? Timestamp)?.dateValue() ?? Date()
@@ -101,14 +108,14 @@ class OpenedTCViewController: UIViewController {
 
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate
 
-extension OpenedTCViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension UpcomingTCViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return capsuleInfo.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OpendedTCCell.identifier, for: indexPath) as? OpendedTCCell else {
-            fatalError("Unable to dequeue OpendedTCCell")
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UpcomingTCCell.identifier, for: indexPath) as? UpcomingTCCell else {
+            fatalError("Unable to dequeue OpendedCapsuleCell")
         }
         
         let tcInfo = capsuleInfo[indexPath.row]
