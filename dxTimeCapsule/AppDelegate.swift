@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let mainTabBarView = MainTabBarView()
         
         // 네비게이션 컨트롤러로 래핑하여 네비게이션 바 사용
-        let navigationController = UINavigationController(rootViewController: mainTabBarView)
+        let navigationController = mainTabBarView
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
 

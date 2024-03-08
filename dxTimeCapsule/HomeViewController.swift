@@ -10,34 +10,16 @@ import SnapKit
 import FirebaseFirestore
 import FirebaseAuth
 
-
 class HomeViewController: UIViewController {
 
     // MARK: - Properties
     
-    // 커스텀 네비게이션 바
-    let customNavBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        return view
-    }()
+    // 메인 타임캡슐 이미지 배열
+    let mainTCImages = [UIImage(named: "IMG1"), UIImage(named: "IMG2"), UIImage(named: "IMG3"), UIImage(named: "IMG4")]
+
+    // 현재 표시 중인 이미지의 인덱스
+    var currentImageIndex = 0
     
-    // pagelogo 이미지뷰 생성
-    let logoImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "pagelogo"))
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }()
-    
-    //알림 버튼 생성
-    let notificationButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "bell"), for: .normal)
-        button.addTarget(self, action: #selector(notificationButtonTapped), for: .touchUpInside)
-        button.isUserInteractionEnabled = true
-        return button
-    }()
-   
     // 메인 타임캡슐 그림자
     let mainContainerView: UIView = {
         let view = UIView()
@@ -113,85 +95,38 @@ class HomeViewController: UIViewController {
         return stackView
     }()
     
-    func fetchTimeCapsuleData() {
-        let db = Firestore.firestore()
-        
-        // 로그인한 사용자의 UID를 가져옵니다.
-        //    guard let userId = Auth.auth().currentUser?.uid else { return }
-        
-        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // 테스트를 위한 임시 UID
-        
-        // 사용자의 UID로 필터링하고, openDate 필드로 오름차순 정렬한 후, 최상위 1개 문서만 가져옵니다.
-        db.collection("timeCapsules")
-                .whereField("uid", isEqualTo: userId)
-                .whereField("isOpened", isEqualTo: false) // isOpened가 false인 경우 필터링
-                .order(by: "openDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
-                .limit(to: 1) // 가장 개봉일이 가까운 타임캡슐 1개만 선택
-                .getDocuments { [weak self] (querySnapshot, err) in
-                    guard let self = self else { return }
-                    
-                    if let err = err {
-                        print("Error getting documents: \(err)")
-                    } else if let document = querySnapshot?.documents.first { // 첫 번째 문서만 사용
-                        let userLocation = document.get("userLocation") as? String ?? "Unknown Location"
-                        let location = document.get("location") as? String ?? "Unknown address"
-                        let tcBoxImageURL = document.get("tcBoxImageURL") as? String ?? ""
-                        let openDateTimestamp = document.get("openDate") as? Timestamp
-                        let openDate = openDateTimestamp?.dateValue()
-                        
-                        print("Fetched location name: \(userLocation)")
-                        print("Fetched location address: \(location)")
-                        print("Fetched photo URL: \(tcBoxImageURL)")
-                        print("Fetched open date: \(openDate)")
-                        
-                        // 메인 스레드에서 UI 업데이트를 수행합니다.
-                        DispatchQueue.main.async {
-                            self.locationNameLabel.text = userLocation
-                            self.locationAddressLabel.text = location
-                            
-                            // D-Day 계산
-                            if let openDate = openDate {
-                                let dateFormatter = DateFormatter()
-                                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                                dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul") // UTC+9:00
-
-                                let today = Date()
-                                let calendar = Calendar.current
-                                let components = calendar.dateComponents([.day], from: today, to: openDate)
-
-                                if let daysUntilOpening = components.day {
-                                    // 날짜 차이에 따라 표시되는 기호를 변경하여 D-Day 표시
-                                    let dDayPrefix = daysUntilOpening <= 0 ? "D+" : "D-"
-                                    self.dDayLabel.text = "\(dDayPrefix)\(abs(daysUntilOpening))"
-                                }
-                            }
-                            
-                            if !tcBoxImageURL.isEmpty {
-                                guard let url = URL(string: tcBoxImageURL) else {
-                                    print("Invalid photo URL")
-                                    return
-                                }
-                                
-                                URLSession.shared.dataTask(with: url) { (data, response, error) in
-                                    if let error = error {
-                                        print("Error downloading image: \(error)")
-                                        return
-                                    }
-                                    
-                                    guard let data = data else {
-                                        print("No image data")
-                                        return
-                                    }
-                                    
-                                    DispatchQueue.main.async {
-                                        self.mainTCImageView.image = UIImage(data: data)
-                                    }
-                                }.resume()
-                            }
-                        }
-                    }
-                }
-        }
+    // 장소 레이블
+    let noMainTCLabel: UILabel = {
+        let label = UILabel()
+        label.text = "더이상 열어볼 캡슐이 없어요😭"
+        label.font = UIFont.boldSystemFont(ofSize: 25)
+        label.textColor = .black
+        return label
+    }()
+    
+    
+    // 위치 레이블
+    let noMainTCsecLabel: UILabel = {
+        let label = UILabel()
+        label.text = "캡슐을 만들어 계속해서 시간여행을 떠나보세요!"
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = .black
+        return label
+    }()
+    
+    // 장소정보 스택뷰
+    lazy var noMainTCStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = 0
+        stackView.addArrangedSubview(self.noMainTCLabel)
+        stackView.addArrangedSubview(self.noMainTCsecLabel)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(noMainTCStackViewTapped))
+        stackView.addGestureRecognizer(tapGesture)
+        stackView.isUserInteractionEnabled = true
+        return stackView
+    }()
     
     // 열어본 타임캡슐 버튼
     let openedTCButton: UIButton = {
@@ -205,7 +140,7 @@ class HomeViewController: UIViewController {
         // 버튼 내에 UILabel 추가
         let titleLabel = UILabel()
         titleLabel.text = "Saved\nmemories"
-        titleLabel.numberOfLines = 2
+        titleLabel.numberOfLines = 0
         titleLabel.textAlignment = .center
         titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
         titleLabel.textColor = .white
@@ -259,47 +194,162 @@ class HomeViewController: UIViewController {
         return stackView
     }()
     
+    func fetchTimeCapsuleData() {
+        let db = Firestore.firestore()
+        
+        // 로그인한 사용자의 UID를 가져옵니다.
+        //    guard let userId = Auth.auth().currentUser?.uid else { return }
+        
+        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // 테스트를 위한 임시 UID
+        
+        // 사용자의 UID로 필터링하고, openDate 필드로 오름차순 정렬한 후, 최상위 1개 문서만 가져옵니다.
+        db.collection("timeCapsules")
+            .whereField("uid", isEqualTo: userId)
+            .whereField("isOpened", isEqualTo: false) // isOpened가 false인 경우 필터링
+            .order(by: "openDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
+            .limit(to: 1) // 가장 개봉일이 가까운 타임캡슐 1개만 선택
+            .getDocuments { [weak self] (querySnapshot, err) in
+                guard let self = self else { return }
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                } else {
+                    // 데이터가 없는 경우 처리
+                    if querySnapshot?.documents.isEmpty ?? true {
+                        print("No upcoming memories found")
+                            DispatchQueue.main.async {
+                                self.animateMainTCImageChange()
+                                self.mainTCImageView.isUserInteractionEnabled = false
+                                self.duestTCInforStackView.removeFromSuperview()
+                                self.upcomingTCButton.isEnabled = false
+                                self.upcomingTCButton.setBackgroundImage(UIImage(named: "empty"), for: .normal)
+                                if let titleLabel = self.upcomingTCButton.subviews.first(where: { $0 is UILabel }) as? UILabel {
+                                    titleLabel.text = ""
+                                    titleLabel.textColor = .black
+                                    titleLabel.backgroundColor = UIColor.gray.withAlphaComponent(0)
+                                    titleLabel.font = UIFont.boldSystemFont(ofSize: 100)
+                                }
+                            }
+                    } else if let document = querySnapshot?.documents.first {
+                        let userLocation = document.get("userLocation") as? String ?? "Unknown Location"
+                        let location = document.get("location") as? String ?? "Unknown address"
+                        let tcBoxImageURL = document.get("tcBoxImageURL") as? String ?? ""
+                        let openDateTimestamp = document.get("openDate") as? Timestamp
+                        let openDate = openDateTimestamp?.dateValue()
+                        
+                        print("Fetched location name: \(userLocation)")
+                        print("Fetched location address: \(location)")
+                        print("Fetched photo URL: \(tcBoxImageURL)")
+                        print("Fetched open date: \(openDate)")
+                        
+                        // 메인 스레드에서 UI 업데이트를 수행합니다.
+                        DispatchQueue.main.async {
+                            self.locationNameLabel.text = userLocation
+                            self.locationAddressLabel.text = location
+                            self.noMainTCStackView.removeFromSuperview()
+                            // D-Day 계산
+                            if let openDate = openDate {
+                                let dateFormatter = DateFormatter()
+                                dateFormatter.dateFormat = "yyyy-MM-dd"
+                                dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul") // UTC+9:00
+                                
+                                let today = Date()
+                                let calendar = Calendar.current
+                                let components = calendar.dateComponents([.day], from: today, to: openDate)
+                                
+                                if let daysUntilOpening = components.day {
+                                    // 날짜 차이에 따라 표시되는 기호를 변경하여 D-Day 표시
+                                    let dDayPrefix = daysUntilOpening <= 0 ? "D+" : "D-"
+                                    self.dDayLabel.text = "\(dDayPrefix)\(abs(daysUntilOpening))"
+                                }
+                            }
+                            
+                            if !tcBoxImageURL.isEmpty {
+                                guard let url = URL(string: tcBoxImageURL) else {
+                                    print("Invalid photo URL")
+                                    return
+                                }
+                                
+                                URLSession.shared.dataTask(with: url) { (data, response, error) in
+                                    if let error = error {
+                                        print("Error downloading image: \(error)")
+                                        return
+                                    }
+                                    
+                                    guard let data = data else {
+                                        print("No image data")
+                                        return
+                                    }
+                                    
+                                    DispatchQueue.main.async {
+                                        self.mainTCImageView.image = UIImage(data: data)
+                                    }
+                                }.resume()
+                            }
+                        }
+                    }
+                }
+            }
+        db.collection("timeCapsules")
+            .whereField("uid", isEqualTo: userId)
+            .whereField("isOpened", isEqualTo: true)
+            .getDocuments { [weak self] (querySnapshot, err) in
+                guard let self = self else { return }
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                } else {
+                    // 데이터가 없는 경우 처리
+                    if querySnapshot?.documents.isEmpty ?? true {
+                        print("No saved memories found")
+                        DispatchQueue.main.async {
+                            self.openedTCButton.isEnabled = false
+                            self.openedTCButton.setBackgroundImage(UIImage(named: "empty"), for: .normal)
+                            if let titleLabel = self.openedTCButton.subviews.first(where: { $0 is UILabel }) as? UILabel {
+                                        titleLabel.text = "NO\nMemories\nYET😭"
+                            }
+                        }
+                    }
+                }
+            }
+    }
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        navigationController?.isNavigationBarHidden = true
         configureUI()
         fetchTimeCapsuleData()
+        
+        // 네비게이션 바에 로고 이미지 추가
+         addLogoToNavigationBar()
+        
     }
     
     // MARK: - Helpers
     
-    private func configureUI(){
+    private func addLogoToNavigationBar() {
+        // 로고 이미지 설정
+        let logoImage = UIImage(named: "App_Logo")
+        let imageView = UIImageView(image: logoImage)
+        imageView.contentMode = .scaleAspectFit
+        
+        // 이미지 뷰의 크기 설정
+        let imageSize = CGSize(width: 150, height: 50) // 원하는 크기로 조절
+        imageView.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: imageSize) // x값을 0으로 변경하여 왼쪽 상단에 위치하도록 설정
+        
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height))
+        containerView.addSubview(imageView)
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: containerView)
+    }
 
-        // 커스텀 네비게이션 바 추가
-        view.addSubview(customNavBar)
-        customNavBar.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
-            make.left.right.equalToSuperview()
-            make.height.equalTo(40)
-        }
-                   
-        // pagelogo 이미지뷰 추가
-        customNavBar.addSubview(logoImageView)
-        logoImageView.snp.makeConstraints { make in
-            make.centerY.equalTo(customNavBar)
-            make.left.equalTo(customNavBar).offset(20)
-            make.width.equalTo(170)
-        }
-                   
-        // 알림 버튼 추가
-        customNavBar.addSubview(notificationButton)
-        notificationButton.snp.makeConstraints { make in
-            make.centerY.equalTo(customNavBar)
-            make.right.equalTo(customNavBar).offset(-20)
-        }
+
+    private func configureUI(){
         
         // 메인 타임캡슐 그림자 추가
         view.addSubview(mainContainerView)
         mainContainerView.snp.makeConstraints { make in
-             make.top.equalTo(customNavBar.snp.bottom).offset(30)
+             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(15)
              make.leading.trailing.equalToSuperview().inset(20)
             make.height.equalToSuperview().multipliedBy(2.0/6.0)
                   }
@@ -326,6 +376,13 @@ class HomeViewController: UIViewController {
             make.height.equalToSuperview().multipliedBy(0.5/6.0)
         }
         
+        view.addSubview(noMainTCStackView)
+        noMainTCStackView.snp.makeConstraints { make in
+            make.top.equalTo(mainContainerView.snp.bottom).offset(10)
+            make.leading.trailing.equalToSuperview().inset(30)
+            make.height.equalToSuperview().multipliedBy(0.5/6.0)
+        }
+        
         // locationInforStackView의 위치 설정
         locationInforStackView.snp.makeConstraints { make in
             make.top.equalTo(mainContainerView.snp.bottom).offset(10)
@@ -344,7 +401,7 @@ class HomeViewController: UIViewController {
         }
 
         // dDayLabel의 슈퍼뷰 설정
-        view.addSubview(dDayLabel)
+        duestTCInforStackView.addSubview(dDayLabel)
         dDayLabel.snp.makeConstraints { make in
             make.top.equalTo(mainContainerView.snp.bottom).inset(5)
             make.width.equalTo(mainContainerView.snp.width).multipliedBy(1.0/5.0)
@@ -364,28 +421,34 @@ class HomeViewController: UIViewController {
         // 버튼 스택뷰를 뷰에 추가
         view.addSubview(buttonStackView)
         buttonStackView.snp.makeConstraints { make in
-            make.top.equalTo(duestTCInforStackView.snp.bottom).offset(30)
+            let offset = UIScreen.main.bounds.height * (1.0/6.0)
+            make.top.equalTo(mainContainerView.snp.bottom).offset(offset)
             make.leading.trailing.equalToSuperview().inset(20)
             make.height.equalToSuperview().multipliedBy(1.5/6.0)// 버튼 높이 조정
         }
         
     }
     
+    func animateMainTCImageChange() {
+        // 현재 표시 중인 이미지 페이드 아웃
+        UIView.transition(with: mainTCImageView,duration: 3.0, options: .transitionCrossDissolve, animations: {
+                        self.mainTCImageView.image = self.mainTCImages[self.currentImageIndex]
+                         },
+                         completion: { _ in
+                        self.moveToNextImage()
+                         self.animateMainTCImageChange()
+                                 })
+                              }
+                              private func moveToNextImage() {
+                                  currentImageIndex += 1
+                                  if currentImageIndex == mainTCImages.count {
+                                      currentImageIndex = 0
+                                  }
+                              }
+                          
+
+    
     // MARK: - Actions
-    
-    @objc func menuButtonTapped() {
-        print("메뉴 버튼이 클릭되었습니다")
-        let userProfileVC = UserProfileViewController()
-        let navController = UINavigationController(rootViewController: userProfileVC)
-        present(navController, animated: true, completion: nil)
-    }
-    
-    @objc func notificationButtonTapped() {
-        print("알림 버튼이 클릭되었습니다")
-        let notificationVC = NotificationViewController()
-        let navController = UINavigationController(rootViewController: notificationVC)
-        present(navController, animated: true, completion: nil)
-    }
     
     @objc private func duestTCStackViewTapped() {
         print("DuestTC 스택뷰가 클릭되었습니다")
@@ -394,17 +457,17 @@ class HomeViewController: UIViewController {
         present(navController, animated: true, completion: nil)
     }
     
-    @objc private func mainTCImageViewTapped() {
-        print("메인 타임캡슐 보러가기 버튼이 클릭되었습니다")
-        let mainCapsuleVC = MainCapsuleViewController()
+    @objc private func noMainTCStackViewTapped() {
+        print("새 타임머신 만들기 클릭되었습니다")
+        let mainCapsuleVC = MainCreateCapsuleViewController()
         let navController = UINavigationController(rootViewController: mainCapsuleVC)
         present(navController, animated: true, completion: nil)
     }
     
-    @objc func addNewTCButtonTapped() {
-        print("새로운 타임캡슐 만들기 버튼이 클릭되었습니다")
-        let createTCVC = MainCreateCapsuleViewController()
-        let navController = UINavigationController(rootViewController: createTCVC)
+    @objc private func mainTCImageViewTapped() {
+        print("메인 타임캡슐 보러가기 버튼이 클릭되었습니다")
+        let mainCapsuleVC = MainCapsuleViewController()
+        let navController = UINavigationController(rootViewController: mainCapsuleVC)
         present(navController, animated: true, completion: nil)
     }
     
@@ -422,11 +485,5 @@ class HomeViewController: UIViewController {
         let navController = UINavigationController(rootViewController: upcomingVC)
         present(navController, animated: true, completion: nil)
     }
-    
-    @objc func findFriendButtonTapped(){
-        print("다가오는 타임캡슐 열기 버튼이 클릭되었습니다")
-        let serarchUserVC = SearchUserViewController()
-        let navController = UINavigationController(rootViewController: serarchUserVC)
-        present(navController, animated: true, completion: nil)
-    }
+
 }

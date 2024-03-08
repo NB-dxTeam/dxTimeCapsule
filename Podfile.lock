@@ -664,7 +664,7 @@ PODS:
   - FirebaseAuthUI (13.1.0):
     - FirebaseAuth (< 11.0, >= 8.0)
     - FirebaseCore
-  - FirebaseCore (10.22.0):
+  - FirebaseCore (10.23.0):
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.12)
     - GoogleUtilities/Logger (~> 7.12)
@@ -690,7 +690,7 @@ PODS:
     - FirebaseAuth
     - FirebaseAuthUI
     - FirebaseCore
-  - FirebaseFirestore (10.22.0):
+  - FirebaseFirestore (10.23.0):
     - FirebaseCore (~> 10.0)
     - FirebaseCoreExtension (~> 10.0)
     - FirebaseFirestoreInternal (~> 10.17)
@@ -855,9 +855,6 @@ PODS:
     - nanopb/encode (= 2.30909.1)
   - nanopb/decode (2.30909.1)
   - nanopb/encode (2.30909.1)
-  - NMapsGeometry (1.0.1)
-  - NMapsMap (3.17.0):
-    - NMapsGeometry
   - PromisesObjC (2.4.0)
   - RecaptchaInterop (100.0.0)
   - SDWebImage (5.19.0):
@@ -870,7 +867,6 @@ DEPENDENCIES:
   - FirebaseCore (from `https://github.com/firebase/firebase-ios-sdk.git`, branch `main`)
   - FirebaseFirestore (from `https://github.com/firebase/firebase-ios-sdk.git`, branch `main`)
   - FirebaseUI
-  - NMapsMap
   - SDWebImage
   - SnapKit
 
@@ -911,8 +907,6 @@ SPEC REPOS:
     - GTMSessionFetcher
     - leveldb-library
     - nanopb
-    - NMapsGeometry
-    - NMapsMap
     - PromisesObjC
     - RecaptchaInterop
     - SDWebImage
@@ -928,10 +922,10 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   FirebaseCore:
-    :commit: cc45d17b6ae404e54f6ef270ba6aa3e941e60641
+    :commit: 28007226650d76ee191597a3c42e4d1fb08640b6
     :git: https://github.com/firebase/firebase-ios-sdk.git
   FirebaseFirestore:
-    :commit: cc45d17b6ae404e54f6ef270ba6aa3e941e60641
+    :commit: 28007226650d76ee191597a3c42e4d1fb08640b6
     :git: https://github.com/firebase/firebase-ios-sdk.git
 
 SPEC CHECKSUMS:
@@ -947,14 +941,14 @@ SPEC CHECKSUMS:
   FirebaseAuth: 42f07198c4ed6b55643a147ae682d32200f3ff6d
   FirebaseAuthInterop: b4161d3e99b05d2d528d6ee2759bc55a01976eba
   FirebaseAuthUI: 9b4de780078d674019a2bfc560bb812f23b45ff1
-  FirebaseCore: 0326ec9b05fbed8f8716cddbf0e36894a13837f7
+  FirebaseCore: 63efb128decaebb04c4033ed4e05fb0bb1cccef1
   FirebaseCoreExtension: 1c044fd46e95036cccb29134757c499613f3f564
   FirebaseCoreInternal: 43c1788eaeee9d1b97caaa751af567ce11010d00
   FirebaseDatabase: 1edce8e94b7d2c8b549f45d21f2adf80e6e0eaee
   FirebaseDatabaseUI: 13f9d60a13ac9e35a4121e1cb20ba69d4de7ed7e
   FirebaseEmailAuthUI: 548b1b5b557b67b15fd3197d18da29d91a154ef8
   FirebaseFacebookAuthUI: 2f10fb7eb4ca4e507e266dc65b544dbc548e2238
-  FirebaseFirestore: 16cb8a85fc29da272deaed22a101e24703251da9
+  FirebaseFirestore: 3478b0580f6c16d895460611b4fcec93955f4717
   FirebaseFirestoreInternal: 7ac1e0c5b4e75aeb898dfe4b1d6d77abbac9eca3
   FirebaseFirestoreUI: 98ddae8daaea34a3c8bc0a51e4f5c104b997f8b8
   FirebaseGoogleAuthUI: 420e5b1c10f13a47c18579303d93275842f1a8a0
@@ -972,13 +966,11 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
   leveldb-library: e74c27d8fbd22854db7cb467968a0b8aa1db7126
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
-  NMapsGeometry: 53c573ead66466681cf123f99f698dc8071a4b83
-  NMapsMap: a5b909a31b6f3d27a670f6eb2ddc913c38975474
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   SDWebImage: 981fd7e860af070920f249fd092420006014c3eb
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
 
-PODFILE CHECKSUM: 8c5a336852ca3db7021cb3f50e75df38dd96d601
+PODFILE CHECKSUM: 7212467add326d5e19f5e7dd51a9240f6b9fee0e
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.14.3
