@@ -13,7 +13,7 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         let homeViewController = UINavigationController(rootViewController: HomeViewController())
         let searchModalTableViewController = UINavigationController(rootViewController: CapsuleMapViewController())
         let locationConfirmationViewController = UINavigationController(rootViewController: LocationMapkitViewController())
-        let notificationViewController = UINavigationController(rootViewController: FriendRequestsViewController())
+        let notificationViewController = UINavigationController(rootViewController: FriendsRequestViewController())
         let profileViewController = UINavigationController(rootViewController: UserProfileViewController())
         
         homeViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Home_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Home_Select", targetSize: CGSize(width: 24, height: 24)))

@@ -85,6 +85,8 @@
 		D22B171E2B97163C006CAEA6 /* Friendship.swift in Sources */ = {isa = PBXBuildFile; fileRef = D22B171D2B97163C006CAEA6 /* Friendship.swift */; };
 		D22B171F2B973416006CAEA6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467D1DE22B972499005249B1 /* SceneDelegate.swift */; };
 		D25B20EB2B89CD02006CEED8 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25B20EA2B89CD02006CEED8 /* SplashViewController.swift */; };
+		D274E0162B9C243900FAF849 /* FriendListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D274E0152B9C243900FAF849 /* FriendListTableViewCell.swift */; };
+		D274E0182B9C245500FAF849 /* FriendsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D274E0172B9C245500FAF849 /* FriendsListViewController.swift */; };
 		FFC457642B8F0F36000761E9 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC457632B8F0F36000761E9 /* UserProfileViewModel.swift */; };
 		FFC457662B8F0F74000761E9 /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC457652B8F0F74000761E9 /* UserProfileViewController.swift */; };
 /* End PBXBuildFile section */
@@ -174,6 +176,8 @@
 		D22B171B2B971599006CAEA6 /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
 		D22B171D2B97163C006CAEA6 /* Friendship.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Friendship.swift; sourceTree = "<group>"; };
 		D25B20EA2B89CD02006CEED8 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
+		D274E0152B9C243900FAF849 /* FriendListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendListTableViewCell.swift; sourceTree = "<group>"; };
+		D274E0172B9C245500FAF849 /* FriendsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListViewController.swift; sourceTree = "<group>"; };
 		FFC457632B8F0F36000761E9 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
 		FFC457652B8F0F74000761E9 /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -535,6 +539,8 @@
 			children = (
 				D20CDCCC2B959DFE00B93788 /* FriendsRequestViewController.swift */,
 				D20CDCCE2B96D86100B93788 /* FriendRequestTableViewCell.swift */,
+				D274E0152B9C243900FAF849 /* FriendListTableViewCell.swift */,
+				D274E0172B9C245500FAF849 /* FriendsListViewController.swift */,
 			);
 			name = Alarm;
 			sourceTree = "<group>";
@@ -687,6 +693,7 @@
 				1FD2B7A52B96BEFE00896F9C /* UIStackView+Extensions.swift in Sources */,
 				46EA9BAE2B89A27E00633EC4 /* CapsuleMapViewController.swift in Sources */,
 				1F0854322B8F254B00711660 /* MainCapsuleViewController.swift in Sources */,
+				D274E0162B9C243900FAF849 /* FriendListTableViewCell.swift in Sources */,
 				460FE7672B8A200D00AF8086 /* LockedCapsuleCell.swift in Sources */,
 				4E4F6CDB2B99C2B500154ED1 /* OpenCapsuleViewController.swift in Sources */,
 				4E2A09CA2B8F86C600911390 /* FadeInAnimator.swift in Sources */,
@@ -736,6 +743,7 @@
 				27865AD42B8DFCA900DB8DB6 /* NotificationViewController.swift in Sources */,
 				1F24501B2B9B4F85002C68BB /* PhotoCollectionViewCell.swift in Sources */,
 				1F9DA7AF2B8C922800A74D84 /* SearchUserViewController.swift in Sources */,
+				D274E0182B9C245500FAF849 /* FriendsListViewController.swift in Sources */,
 				1FE313AF2B9810CA00E02045 /* LocationHistory.swift in Sources */,
 				1F0B91062B901D170022EDD9 /* Etc.swift in Sources */,
 				D25B20EB2B89CD02006CEED8 /* SplashViewController.swift in Sources */,
