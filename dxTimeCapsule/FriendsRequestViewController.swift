@@ -1,111 +1,30 @@
 import UIKit
-import SnapKit
 import FirebaseAuth
 import FirebaseFirestore
 
-class FriendRequestsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    private let viewModel = FriendsViewModel()
-    private var friendRequests: [User] = []
-    private var friends: [User] = []
     private var alarmLabel: UILabel!
+    private var friendRequests: [User] = []
+    private let friendTableView = UITableView()
+    private let capsuleTableView = UITableView()
+    private let viewModel = FriendsViewModel()
     
-    private let tableView: UITableView = {
-        let tableView = UITableView()
-        tableView.register(FriendRequestTableViewCell.self, forCellReuseIdentifier: "FriendRequestCell")
-        return tableView
+    private let noRequestsLabel: UILabel = {
+        let label = UILabel()
+        label.text = "친구 요청이 없습니다"
+        label.textAlignment = .center
+        label.textColor = .gray
+        label.isHidden = false
+        return label
     }()
     
-    private var friendRequestsListener: ListenerRegistration?
-    private var friendshipsListener: ListenerRegistration?
-    
-    private func startMonitoringFriendRequests(forUser userId: String) {
-        friendRequestsListener = viewModel.db.collection("friendRequests")
-            .whereField("receiverUid", isEqualTo: userId)
-            .addSnapshotListener { [weak self] snapshot, error in
-                guard let strongSelf = self else { return }
-                
-                // 오류 처리
-                if let error = error {
-                    print("친구 요청을 불러오는 중 오류 발생: \(error.localizedDescription)")
-                    return
-                }
-                
-                var updatedFriendRequests: [User] = []
-                let group = DispatchGroup()
-                
-                snapshot?.documents.forEach { document in
-                    group.enter()
-                    let senderId = document.get("senderUid") as? String ?? ""
-                    strongSelf.viewModel.fetchUser(with: senderId) { user in
-                        if let user = user, !updatedFriendRequests.contains(where: { $0.uid == user.uid }) {
-                            updatedFriendRequests.append(user)
-                        }
-                        group.leave()
-                    }
-                }
-                
-                group.notify(queue: .main) {
-                    strongSelf.friendRequests = updatedFriendRequests
-                    strongSelf.tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
-                }
-            }
-        
-    }
-    
-    private func startMonitoringFriendships(forUser userId: String) {
-        friendshipsListener = viewModel.db.collection("friendships")
-            .whereField("userUids", arrayContains: userId)
-            .addSnapshotListener { [weak self] snapshot, error in
-                guard let strongSelf = self else { return }
-                // 오류 처리
-                if let error = error {
-                    print("친구 관계를 불러오는 중 오류 발생: \(error.localizedDescription)")
-                    return
-                }
-                
-                var updatedFriends: [User] = []
-                let group = DispatchGroup()
-                
-                snapshot?.documents.forEach { document in
-                    let userUids = document.get("userUids") as? [String] ?? []
-                    userUids.forEach { friendUserId in
-                        if friendUserId != userId {
-                            group.enter()
-                            strongSelf.viewModel.fetchUser(with: friendUserId) { user in
-                                if let user = user, !updatedFriends.contains(where: { $0.uid == user.uid }) {
-                                    updatedFriends.append(user)
-                                }
-                                group.leave()
-                            }
-                        }
-                    }
-                }
-                
-                group.notify(queue: .main) {
-                    strongSelf.friends = updatedFriends
-                    strongSelf.tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
-                }
-            }
-    }
-    
-    deinit {
-        friendRequestsListener?.remove() // 리스너 제거
-        friendshipsListener?.remove() // 리스너 제거
-    }
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let userId = Auth.auth().currentUser?.uid {
-            startMonitoringFriendRequests(forUser: userId)
-            startMonitoringFriendships(forUser: userId)
-        }
         setUI()
         setupTableView()
         fetchFriendRequests()
-        fetchFriends()
-//        startMonitoringFriendRequests()
-        addLogoToNavigationBar()
-
+        observeFriendRequests()
     }
     
     func setUI() {
@@ -113,129 +32,179 @@ class FriendRequestsViewController: UIViewController, UITableViewDelegate, UITab
         alarmLabel.text = "알람"
         alarmLabel.font = UIFont.systemFont(ofSize: 26, weight: .bold)
         alarmLabel.textAlignment = .left
+        
         view.addSubview(alarmLabel)
         
         alarmLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(-70)
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.leading.trailing.equalToSuperview().offset(16)
         }
-    }
-    
-
-    private func addLogoToNavigationBar() {
-        // 로고 이미지 설정
-        let logoImage = UIImage(named: "App_Logo")
-        let imageView = UIImageView(image: logoImage)
-        imageView.contentMode = .scaleAspectFit
         
-        // 이미지 뷰의 크기 설정
-        let imageSize = CGSize(width: 150, height: 45) // 원하는 크기로 조절
-        imageView.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: imageSize) // x값을 0으로 변경하여 왼쪽 상단에 위치하도록 설정
+        view.addSubview(noRequestsLabel)
+        noRequestsLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 20)
+        noRequestsLabel.center = view.center
         
-        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height))
-        containerView.addSubview(imageView)
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: containerView)
+        noRequestsLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview() // 중앙에 표시되도록
+        }
     }
     
     private func setupTableView() {
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(FriendRequestTableViewCell.self, forCellReuseIdentifier: "FriendRequestCell")
-        tableView.rowHeight = 80
-        view.addSubview(tableView)
+        friendTableView.delegate = self
+        friendTableView.dataSource = self
+        friendTableView.register(FriendRequestTableViewCell.self, forCellReuseIdentifier: "FriendRequestCell")
+        friendTableView.tableFooterView = UIView() // Removes empty cells
         
-        tableView.snp.makeConstraints { make in
-            make.top.equalTo(alarmLabel.snp.bottom)
+        view.addSubview(friendTableView)
+        friendTableView.snp.makeConstraints { make in
+            make.top.equalTo(alarmLabel.snp.bottom) // 라벨 바로 아래 시작
             make.leading.trailing.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+        }
+        
+        capsuleTableView.delegate = self
+        capsuleTableView.dataSource = self
+        capsuleTableView.tableFooterView = UIView() // Removes empty cells
+        
+        view.addSubview(capsuleTableView)
+        capsuleTableView.snp.makeConstraints { make in
+            make.top.equalTo(friendTableView.snp.bottom) // friendTableView 아래 시작
+            make.leading.bottom.trailing.equalToSuperview()
         }
     }
+
     
     private func fetchFriendRequests() {
-        guard let userId = Auth.auth().currentUser?.uid else { return }
-        
-        viewModel.fetchFriendRequests(forUser: userId) { [weak self] users, error in
-            if let users = users {
-                self?.friendRequests = users
-                DispatchQueue.main.async {
-                    self?.tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+        guard let currentUserId = Auth.auth().currentUser?.uid else { return }
+        viewModel.fetchFriendRequests(forUser: currentUserId) { [weak self] users, error in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                if let users = users {
+                    self.friendRequests = users
+                    self.updateUI()
+                    self.friendTableView.reloadData()
+                    print("fetchDataSuccess")
+                } else if let error = error {
+                    print("Error fetching friend requests: \(error.localizedDescription)")
                 }
-            } else if let error = error {
-                // Handle error
             }
         }
     }
     
-    private func fetchFriends() {
+    private func observeFriendRequests() {
         guard let userId = Auth.auth().currentUser?.uid else { return }
-        
-        viewModel.fetchFriends(forUser: userId) { [weak self] users, error in
-            if let users = users {
-                self?.friends = users
-                DispatchQueue.main.async {
-                    self?.tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
+        let db = Firestore.firestore()
+        db.collection("friendRequests").whereField("receiverUid", isEqualTo: userId)
+            .addSnapshotListener { [weak self] querySnapshot, error in
+                guard let self = self else { return }
+                if let error = error {
+                    print("Error observing friend requests: \(error.localizedDescription)")
+                    return
                 }
-            } else if let error = error {
-                // Handle error
+                print("observeSuccess")
+                // 여기서 fetchFriendRequests를 다시 호출하여 데이터를 최신 상태로 유지할 수 있습니다.
+                self.fetchFriendRequests()
             }
+    }
+    
+    private func updateUI() {
+        DispatchQueue.main.async {
+            let hasFriendRequests = !self.friendRequests.isEmpty
+            self.friendTableView.isHidden = !hasFriendRequests
+            if hasFriendRequests {
+                self.friendTableView.reloadData()
+                print("reloadDataSuccess")
+            }
+            print("UI Updated: \(hasFriendRequests ? "Showing friend requests" : "No friend requests")")
         }
     }
+
     
-    // MARK: - TableView DataSource and Delegate
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 2 // 친구 요청 섹션과 친구 목록 섹션
-    }
-    
+    // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return max(friendRequests.count, 1) // 최소한 한 행은 있어야 함
-        } else {
-            return max(friends.count, 1) // 최소한 한 행은 있어야 함
+        if tableView == friendTableView {
+            print(friendRequests.count)
+            return friendRequests.count
+        } else if tableView == capsuleTableView {
+            return 3
         }
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // 친구 요청이 없는 경우
-        if indexPath.section == 0 && friendRequests.isEmpty {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "FriendRequestCell", for: indexPath)
-            cell.textLabel?.text = "현재 추가 요청이 없습니다"
-            cell.selectionStyle = .none
+        if tableView == friendTableView {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "FriendRequestCell", for: indexPath) as? FriendRequestTableViewCell else {
+                return UITableViewCell()
+            }
+            
+            let user = friendRequests[indexPath.row]
+            cell.configure(with: user, viewModel: viewModel)
+            cell.acceptFriendRequestAction = { [weak self] in
+                self?.acceptFriendRequest(forUser: user)
+            }
+            
+            return cell
+        }
+        else if tableView == capsuleTableView {
+            let cell = UITableViewCell(style: .default, reuseIdentifier: "CapsuleCell")
+            cell.textLabel?.text = "다가오는 캡슐 \(indexPath.row + 1)"
             return cell
         }
         
-        // 실제 친구 요청이 있는 경우
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "FriendRequestCell", for: indexPath) as? FriendRequestTableViewCell else {
-            return UITableViewCell()
+        return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if tableView == friendTableView {
+            let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 40))
+            headerView.backgroundColor = UIColor.lightGray // 헤더의 배경색 설정
+            
+            let label = UILabel(frame: CGRect(x: 15, y: 0, width: tableView.frame.width - 30, height: 40))
+            label.text = "친구요청"
+            label.font = UIFont.boldSystemFont(ofSize: 20)
+            label.textColor = UIColor.black // 헤더의 텍스트 설정
+            headerView.addSubview(label)
+            
+            return headerView
+        } else if tableView == capsuleTableView {
+            let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 40))
+            headerView.backgroundColor = UIColor.lightGray // 헤더의 배경색 설정
+            
+            let label = UILabel(frame: CGRect(x: 15, y: 0, width: tableView.frame.width - 30, height: 40))
+            label.text = "다가오는 캡슐"
+            label.font = UIFont.boldSystemFont(ofSize: 20)
+            label.textColor = UIColor.black // 헤더의 텍스트 설정
+            headerView.addSubview(label)
+            
+            return headerView
+        }
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40 // 헤더의 높이 설정
+    }
+    
+    
+    func acceptFriendRequest(forUser user: User) {
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            print("Error: Current user not found.")
+            return
         }
         
-        if indexPath.section == 0, !friendRequests.isEmpty {
-            let friendRequest = friendRequests[indexPath.row]
-            cell.user = friendRequest // 새로 추가된 속성에 친구 요청 데이터 할당
-            cell.configure(with: friendRequest)
-        } else if indexPath.section == 1, !friends.isEmpty {
-            let friend = friends[indexPath.row]
-            cell.user = friend // 이 부분은 필요에 따라 조정
-            cell.configure(with: friend)
-        }
-        
-        cell.acceptRequestButtonTapped = { [weak self] in
-            guard let strongSelf = self else { return }
-            if let fromUserId = cell.user?.uid, let currentUserId = Auth.auth().currentUser?.uid {
-                strongSelf.viewModel.acceptFriendRequest(fromUser: fromUserId, forUser: currentUserId) { success, error in
-                    if success {
-                        print("친구 요청 수락 성공")
-                        // 필요한 UI 업데이트 또는 데이터 변경 처리
-                    } else {
-                        print("친구 요청 수락 실패: \(error?.localizedDescription ?? "알 수 없는 오류")")
-                    }
-                }
+        viewModel.acceptFriendRequest(fromUser: user.uid, forUser: currentUserID) { success, error in
+            if success {
+                // Handle successful request
+                print("Friend request accepted successfully.")
+                // Update UI or perform any other action
+            } else if let error = error {
+                print("Failed to accept friend request: \(error.localizedDescription)")
+                // Handle error if needed
             }
-            
-            
         }
-        return cell
     }
 }
-
