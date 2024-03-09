@@ -6,8 +6,7 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
     
     private var alarmLabel: UILabel!
     private var friendRequests: [User] = []
-    private let friendTableView = UITableView()
-    private let capsuleTableView = UITableView()
+    private let tableView = UITableView()
     private let viewModel = FriendsViewModel()
     
     private let noRequestsLabel: UILabel = {
@@ -51,28 +50,19 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     private func setupTableView() {
-        friendTableView.delegate = self
-        friendTableView.dataSource = self
-        friendTableView.register(FriendRequestTableViewCell.self, forCellReuseIdentifier: "FriendRequestCell")
-        friendTableView.tableFooterView = UIView() // Removes empty cells
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(FriendRequestTableViewCell.self, forCellReuseIdentifier: "FriendRequestCell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "CapsuleCell")
+        tableView.tableFooterView = UIView()
         
-        view.addSubview(friendTableView)
-        friendTableView.snp.makeConstraints { make in
-            make.top.equalTo(alarmLabel.snp.bottom) // 라벨 바로 아래 시작
-            make.leading.trailing.equalToSuperview()
-        }
-        
-        capsuleTableView.delegate = self
-        capsuleTableView.dataSource = self
-        capsuleTableView.tableFooterView = UIView() // Removes empty cells
-        
-        view.addSubview(capsuleTableView)
-        capsuleTableView.snp.makeConstraints { make in
-            make.top.equalTo(friendTableView.snp.bottom) // friendTableView 아래 시작
+        view.addSubview(tableView)
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(alarmLabel.snp.bottom)
             make.leading.bottom.trailing.equalToSuperview()
         }
     }
-
+    
     
     private func fetchFriendRequests() {
         guard let currentUserId = Auth.auth().currentUser?.uid else { return }
@@ -82,7 +72,7 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
                 if let users = users {
                     self.friendRequests = users
                     self.updateUI()
-                    self.friendTableView.reloadData()
+                    self.tableView.reloadData()
                     print("fetchDataSuccess")
                 } else if let error = error {
                     print("Error fetching friend requests: \(error.localizedDescription)")
@@ -110,9 +100,9 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
     private func updateUI() {
         DispatchQueue.main.async {
             let hasFriendRequests = !self.friendRequests.isEmpty
-            self.friendTableView.isHidden = !hasFriendRequests
+            self.tableView.isHidden = !hasFriendRequests
             if hasFriendRequests {
-                self.friendTableView.reloadData()
+                self.tableView.reloadData()
                 print("reloadDataSuccess")
             }
             print("UI Updated: \(hasFriendRequests ? "Showing friend requests" : "No friend requests")")
@@ -121,14 +111,20 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
 
     
     // MARK: - UITableViewDataSource
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2 // 친구 요청과 다가오는 캡슐 섹션
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if tableView == friendTableView {
-            print(friendRequests.count)
+        switch section {
+        case 0:
             return friendRequests.count
-        } else if tableView == capsuleTableView {
-            return 3
+        case 1:
+            return 3 // 다가오는 캡슐의 갯수는 예시로 3을 사용
+        default:
+            return 0
         }
-        return 0
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -136,53 +132,42 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if tableView == friendTableView {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "FriendRequestCell", for: indexPath) as? FriendRequestTableViewCell else {
-                return UITableViewCell()
-            }
-            
-            let user = friendRequests[indexPath.row]
-            cell.configure(with: user, viewModel: viewModel)
-            cell.acceptFriendRequestAction = { [weak self] in
-                self?.acceptFriendRequest(forUser: user)
-            }
-            
-            return cell
-        }
-        else if tableView == capsuleTableView {
-            let cell = UITableViewCell(style: .default, reuseIdentifier: "CapsuleCell")
-            cell.textLabel?.text = "다가오는 캡슐 \(indexPath.row + 1)"
-            return cell
-        }
-        
-        return UITableViewCell()
-    }
+         switch indexPath.section {
+         case 0:
+             guard let cell = tableView.dequeueReusableCell(withIdentifier: "FriendRequestCell", for: indexPath) as? FriendRequestTableViewCell else {
+                 return UITableViewCell()
+             }
+             let user = friendRequests[indexPath.row]
+             cell.configure(with: user, viewModel: viewModel)
+             cell.acceptFriendRequestAction = { [weak self] in
+                 self?.acceptFriendRequest(forUser: user)
+             }
+             return cell
+         case 1:
+             let cell = tableView.dequeueReusableCell(withIdentifier: "CapsuleCell", for: indexPath)
+             cell.textLabel?.text = "다가오는 캡슐 \(indexPath.row + 1)"
+             return cell
+         default:
+             return UITableViewCell()
+         }
+     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if tableView == friendTableView {
-            let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 40))
-            headerView.backgroundColor = UIColor.lightGray // 헤더의 배경색 설정
-            
-            let label = UILabel(frame: CGRect(x: 15, y: 0, width: tableView.frame.width - 30, height: 40))
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 40))
+        headerView.backgroundColor = UIColor.lightGray
+        
+        let label = UILabel(frame: CGRect(x: 15, y: 0, width: tableView.frame.width - 30, height: 40))
+        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.textColor = UIColor.black
+        
+        if section == 0 {
             label.text = "친구요청"
-            label.font = UIFont.boldSystemFont(ofSize: 20)
-            label.textColor = UIColor.black // 헤더의 텍스트 설정
-            headerView.addSubview(label)
-            
-            return headerView
-        } else if tableView == capsuleTableView {
-            let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 40))
-            headerView.backgroundColor = UIColor.lightGray // 헤더의 배경색 설정
-            
-            let label = UILabel(frame: CGRect(x: 15, y: 0, width: tableView.frame.width - 30, height: 40))
+        } else if section == 1 {
             label.text = "다가오는 캡슐"
-            label.font = UIFont.boldSystemFont(ofSize: 20)
-            label.textColor = UIColor.black // 헤더의 텍스트 설정
-            headerView.addSubview(label)
-            
-            return headerView
         }
-        return nil
+        
+        headerView.addSubview(label)
+        return headerView
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
