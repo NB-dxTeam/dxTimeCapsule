@@ -20,7 +20,7 @@ class CustomModal: UIViewController {
         let layout = UICollectionViewFlowLayout()
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.backgroundColor = .white
-        collection.layer.cornerRadius = 30
+        collection.layer.cornerRadius = 20
         collection.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         collection.layer.masksToBounds = true
         return collection

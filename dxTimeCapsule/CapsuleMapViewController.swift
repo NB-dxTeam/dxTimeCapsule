@@ -203,6 +203,15 @@ extension CapsuleMapViewController {
         vc.onCapsuleSelected = { [weak self] latitude, longitude in
             // 지도의 위치를 업데이트하는 메소드 호출
             self?.moveToLocation(latitude: latitude, longitude: longitude)
+            
+            if let sheet = vc.sheetPresentationController {
+                DispatchQueue.main.async {
+                    sheet.animateChanges {
+                        sheet.detents = [.half] // Switch to .half detent
+                    }
+                }
+            }
+            
         }
         
         if let sheet = vc.sheetPresentationController {
@@ -212,9 +221,6 @@ extension CapsuleMapViewController {
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
             // 어둡지 않게 표시되는 최대 크기의 상태 설정
             sheet.largestUndimmedDetentIdentifier = .large
-            
-            sheet.prefersEdgeAttachedInCompactHeight = true
-            sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
         }
         
         self.present(vc, animated: true)
