@@ -241,19 +241,11 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     }
     
     @objc private func handleCreateCapsuleTap() {
-        let createCapsuleVC = PhotoUploadViewController()
-        createCapsuleVC.modalPresentationStyle = .pageSheet
-        
-//        // Set the preferred content size to occupy 3/2 of the screen
-//        let width = UIScreen.main.bounds.width * (2/3)
-//        let height = UIScreen.main.bounds.height * (2/3)
-//        createCapsuleVC.preferredContentSize = CGSize(width: width, height: height)
-        
-        present(createCapsuleVC, animated: true, completion: nil)
-        print("Create capsule tap")
+        let photoUploadVC = PhotoUploadViewController()
+        photoUploadVC.modalPresentationStyle = .fullScreen // 또는 .overFullScreen
+        present(photoUploadVC, animated: true, completion: nil)
     }
 
-    
     @objc private func handleModifyLocationTap() {
             toggleCenterView()
             showBannerMessage(message: "원하는 위치에 탭을 꾹 눌러주세요!")

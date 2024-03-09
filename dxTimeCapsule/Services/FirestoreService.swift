@@ -19,57 +19,63 @@ class FirestoreService {
     private let db = Firestore.firestore()
     private let storageRef = Storage.storage().reference()
     
-    /// Uploads an image to Firebase Storage and returns the URL.
+    
+    // MARK: - Upload Image
     func uploadImage(_ image: UIImage, completion: @escaping (Result<String, Error>) -> Void) {
+        let storageRef = Storage.storage().reference().child("timecapsule_images/\(UUID().uuidString).jpg")
+        
         guard let imageData = image.jpegData(compressionQuality: 0.75) else {
-            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Image data conversion failed"])))
+            completion(.failure(UploadError.invalidImageData))
             return
         }
         
-        let imageName = UUID().uuidString
-        let imageRef = storageRef.child("time_capsule_images/\(imageName).jpg")
-        
-        imageRef.putData(imageData, metadata: nil) { metadata, error in
-            if let error = error {
-                completion(.failure(error))
+        storageRef.putData(imageData, metadata: nil) { metadata, error in
+            guard metadata != nil else {
+                completion(.failure(error ?? UploadError.uploadFailed))
                 return
             }
             
-            imageRef.downloadURL { url, error in
-                if let error = error {
-                    completion(.failure(error))
-                } else if let url = url {
-                    completion(.success(url.absoluteString))
-                } else {
-                    completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to retrieve image URL"])))
+            storageRef.downloadURL { url, error in
+                guard let downloadURL = url else {
+                    completion(.failure(error ?? UploadError.urlGenerationFailed))
+                    return
                 }
+                completion(.success(downloadURL.absoluteString))
             }
         }
     }
     
-    /// Creates a new time capsule document in Firestore.
-    func createTimeCapsule(imageURL: String, userLocation: GeoPoint, locationName: String?, description: String, userComment: String, userMood: String, tagFriends: [String], createTimeCapsuleDate: Date, openTimeCapsuleDate: Date, completion: @escaping (Result<Void, Error>) -> Void) {
+    enum UploadError: Error {
+        case invalidImageData
+        case uploadFailed
+        case urlGenerationFailed
+    }
+    
+    
+    // MARK: - Create Time Capsule
+    func createTimeCapsule(_ capsule: TimeCapsule) {
+        let db = Firestore.firestore()
         let capsuleData: [String: Any] = [
-            "uid": Auth.auth().currentUser?.uid ?? "",
-            "userName": Auth.auth().currentUser?.displayName ?? "",
-            "imageURL": imageURL,
-            "userLocation": userLocation,
-            "locationName": locationName ?? "",
-            "description": description,
-            "userComment": userComment,
-            "userMood": userMood,
-            "tagFriends": tagFriends,
-            "createTimeCapsuleDate": Timestamp(date: createTimeCapsuleDate),
-            "openTimeCapsuleDate": Timestamp(date: openTimeCapsuleDate),
-            "isOpened": false
+            "id": capsule.id,
+            "uid": capsule.uid,
+            "userName": capsule.userName,
+            "imageURL": capsule.imageURL!,
+            "userLocation": capsule.userLocation ?? NSNull(),
+            "description": capsule.description!,
+            "tagFriends": capsule.tagFriends!,
+            "createTimeCapsuleDate": Timestamp(date: capsule.createTimeCapsuleDate),
+            "openTimeCapsuleDate": Timestamp(date: capsule.openTimeCapsuleDate),
+            "isOpened": capsule.isOpened
         ]
         
-        db.collection("time_capsules").addDocument(data: capsuleData) { error in
+        db.collection("timecapsules").document(capsule.id).setData(capsuleData) { error in
             if let error = error {
-                completion(.failure(error))
+                print("Error saving time capsule: \(error.localizedDescription)")
             } else {
-                completion(.success(()))
+                print("Time capsule successfully saved.")
+                // Optionally, navigate back or present a success message to the user
             }
         }
     }
+    
 }
