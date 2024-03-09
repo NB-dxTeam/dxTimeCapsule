@@ -29,7 +29,10 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     private let areYouSerious = UILabel()
     private let deleteAccountLabel = UILabel()
     private let dividerView = UIView()
-    private var loadingIndicator = UIActivityIndicatorView(style: .medium) // 로딩 인디케이터 추가
+    private var loadingIndicator = UIActivityIndicatorView(style: .medium) // 로딩 인디케이터 추가\
+    
+    private let searchUserButton = UIButton()
+    private let friendListButton = UIButton()
 
     
     // MARK: - Lifecycle
@@ -38,7 +41,6 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         setupViews()
         setupConstraints()
         showLoadingIndicator() // 데이터 로딩 전 로딩 인디케이터 표시
-        addLogoToNavigationBar()
         userProfileViewModel.fetchUserData { [weak self] in
             self?.hideLoadingIndicator() // 데이터 로딩 완료 후 로딩 인디케이터 숨김
             self?.bindViewModel()
@@ -54,23 +56,6 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     }
     
     // MARK: - Setup
-    
-    private func addLogoToNavigationBar() {
-        // 로고 이미지 설정
-        let logoImage = UIImage(named: "App_Logo")
-        let imageView = UIImageView(image: logoImage)
-        imageView.contentMode = .scaleAspectFit
-        
-        // 이미지 뷰의 크기 설정
-        let imageSize = CGSize(width: 150, height: 45) // 원하는 크기로 조절
-        imageView.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: imageSize) // x값을 0으로 변경하여 왼쪽 상단에 위치하도록 설정
-        
-        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height))
-        containerView.addSubview(imageView)
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: containerView)
-    }
-
     private func setupViews() {
         view.backgroundColor = .white
         view.addSubview(profileImageView)
@@ -81,6 +66,8 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         view.addSubview(emailLabel)
         view.addSubview(labelsContainerView)
         view.addSubview(loadingIndicator)
+        view.addSubview(searchUserButton)
+        view.addSubview(friendListButton)
         
         
         // 로딩 인디케이터 설정
@@ -134,10 +121,23 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         logoutButton.addTarget(self, action: #selector(logoutTapped), for: .touchUpInside)
         logoutButton.layer.cornerRadius = 12
         
+        // Search User Button Setup
+        searchUserButton.setTitle("친구찾으러가기(임시)", for: .normal)
+        searchUserButton.titleLabel?.font = .pretendardSemiBold(ofSize: 14)
+        searchUserButton.setTitleColor(.darkGray, for: .normal)
+        searchUserButton.addTarget(self, action: #selector(searchUserButtonTapped), for: .touchUpInside)
+        
+        // Search User Button Setup
+        friendListButton.setTitle("친구목록보기(임시)", for: .normal)
+        friendListButton.titleLabel?.font = .pretendardSemiBold(ofSize: 14)
+        friendListButton.setTitleColor(.darkGray, for: .normal)
+        friendListButton.addTarget(self, action: #selector(friendListButtonTapped), for: .touchUpInside)
+        
+        
         // Divider View Setup
         dividerView.backgroundColor = .lightGray
         
-        // "계정이 없으신가요?" 라벨 설정
+        // "정말 탈퇴하실건가요?" 라벨 설정
         areYouSerious.text = "Are you really going to leave?"
         areYouSerious.font = .pretendardSemiBold(ofSize: 14)
         areYouSerious.textColor = .black
@@ -192,6 +192,20 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
             make.top.equalTo(emailLabel.snp.bottom).offset(20)
             make.left.right.equalToSuperview().inset(50)
             make.height.equalTo(50)
+        }
+        
+        searchUserButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(logoutButton.snp.bottom).offset(20)
+            make.left.right.equalToSuperview().inset(50)
+            make.height.equalTo(20)
+        }
+        
+        friendListButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(searchUserButton.snp.bottom).offset(5)
+            make.left.right.equalToSuperview().inset(50)
+            make.height.equalTo(20)
         }
         
         // Ensure dividerView is added to the view before setting constraints
@@ -373,6 +387,22 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
             print("로그아웃 실패: \(signOutError.localizedDescription)")
         }
     }
+    
+    @objc private func searchUserButtonTapped() {
+        // 새로운 ViewController를 생성합니다.
+        let searchUserViewController = SearchUserTableViewController()
+        
+        // 현재 ViewController에서 모달로 새 ViewController를 표시합니다.
+        self.present(searchUserViewController, animated: true, completion: nil)
+    }
+    
+    @objc private func friendListButtonTapped() {
+        let friendListViewController = FriendsListViewController()
+        
+        // 현재 ViewController에서 모달로 새 ViewController를 표시합니다.
+        self.present(friendListViewController, animated: true, completion: nil)
+    }
+    
     
     @objc private func deleteProfileTapped() {
         // 사용자 ID를 가져옵니다.
