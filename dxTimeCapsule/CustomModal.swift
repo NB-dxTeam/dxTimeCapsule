@@ -48,20 +48,21 @@ class CustomModal: UIViewController {
         // 헤더 등록
         capsuleCollection.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderView")
         capsuleCollection.isPagingEnabled = true // 페이징 활성화
-        capsuleCollection.showsVerticalScrollIndicator = true // 수직 스크롤 인디케이터 표시 여부 설정.
+        capsuleCollection.showsVerticalScrollIndicator = false // 수직 스크롤 인디케이터 표시 여부 설정.
         capsuleCollection.decelerationRate = .normal // 콜렉션 뷰의 감속 속도 설정
         capsuleCollection.alpha = 1 // 투명도
         if let layout = capsuleCollection.collectionViewLayout as? UICollectionViewFlowLayout {
+            layout.collectionView?.isPagingEnabled = true
             layout.scrollDirection = .vertical // 스크롤 방향(수직)
             let screenWidth = UIScreen.main.bounds.width
             let itemWidth = screenWidth * 0.9 // 화면 너비의 90%를 아이템 너비로 설정
-            let itemHeight: CGFloat = 250 // 아이템 높이는 고정 값으로 설정
+            let itemHeight: CGFloat = 240 // 아이템 높이는 고정 값으로 설정
             layout.itemSize = CGSize(width: itemWidth, height: itemHeight)
             // 섹션 여백 설정
             let sectionInsetHorizontal = screenWidth * 0.05 // 좌우 여백을 화면 너비의 5%로 설정
             layout.sectionInset = UIEdgeInsets(top: 24, left: sectionInsetHorizontal, bottom: 24, right: sectionInsetHorizontal)
             // 최소 줄 간격 설정
-            let minimumLineSpacing = screenWidth * 0.2 // 최소 줄 간격을 화면 너비의 10%로 설정
+            let minimumLineSpacing = screenWidth * 0.1 // 최소 줄 간격을 화면 너비의 10%로 설정
             layout.minimumLineSpacing = minimumLineSpacing
             layout.sectionHeadersPinToVisibleBounds = true
         }
@@ -173,13 +174,12 @@ class HeaderView: UICollectionReusableView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = .gray
+        self.backgroundColor = .white
         addSubview(headerLabel)
         
         headerLabel.snp.makeConstraints { make in
             make.leading.equalTo(30)
             make.top.equalTo(20)
-            
         }
 
     }
@@ -193,3 +193,10 @@ class HeaderView: UICollectionReusableView {
 //    }
 }
 
+import SwiftUI
+
+struct PreView: PreviewProvider {
+    static var previews: some View {
+        CapsuleMapViewController().toPreview()
+    }
+}

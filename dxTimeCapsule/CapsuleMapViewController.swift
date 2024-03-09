@@ -35,9 +35,9 @@ class CapsuleMapViewController: UIViewController {
     private lazy var tapDidModal: UIButton = {
         let button = UIButton()
         // "listicon" 이름의 이미지로 버튼의 아이콘 설정
-        button.setImage(UIImage(named: "listicon"), for: .normal)
-        button.layer.masksToBounds = true
-        button.layer.cornerRadius = 50
+        button.setBackgroundImage(UIImage(named: "listicon"), for: .normal)
+//        button.layer.masksToBounds = true
+//        button.layer.cornerRadius = 10
         // 버튼이 탭 되었을 때 실행될 액션 추가
         button.addTarget(self, action: #selector(modalButton(_:)), for: .touchUpInside)
         return button
@@ -111,22 +111,22 @@ extension CapsuleMapViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
         stackView.snp.makeConstraints { make in
-            make.centerX.equalTo(capsuleMaps.snp.centerX)
-            make.bottom.equalTo(capsuleMaps.snp.bottom).offset(-20)
-            make.width.equalTo(capsuleMaps.snp.width).multipliedBy(0.3) // 맵 뷰의 너비에 따라 조정
-            make.height.equalTo(80) // backView의 높이를 지정합니다.
+            make.bottom.equalTo(capsuleMaps.snp.bottom).offset(-10)
+            make.trailing.equalTo(capsuleMaps.snp.trailing).offset(-10)
+            make.width.equalTo(capsuleMaps.snp.width).multipliedBy(0.1) // 맵 뷰의 너비에 따라 조정
+            make.height.equalTo(40) // backView의 높이를 지정합니다.
         }
         backView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         tapDidModal.snp.makeConstraints { make in
             make.center.equalToSuperview() // backView의 중심에 배치
-            make.size.equalTo(CGSize(width: 100, height: 100)) // 버튼의 크기를 설정합니다.
+            make.size.equalTo(CGSize(width: 20, height: 20)) // 버튼의 크기를 설정합니다.
         }
         currentLocationBotton.snp.makeConstraints { make in
-            make.centerY.equalTo(capsuleMaps.snp.centerY).offset(-30)
+            make.top.equalTo(capsuleMaps.snp.top).offset(10)
             make.trailing.equalTo(capsuleMaps.snp.trailing).offset(-5)
-            make.size.equalTo(CGSize(width: 50, height: 50))
+            make.size.equalTo(CGSize(width: 40, height: 40))
         }
     }
     private func buttons() {
@@ -322,9 +322,9 @@ extension CapsuleMapViewController: UISheetPresentationControllerDelegate {
 import SwiftUI
 import FirebaseFirestoreInternal
 
-struct PreView: PreviewProvider {
+struct Preview: PreviewProvider {
     static var previews: some View {
-        MainTabBarView().toPreview()
+        CapsuleMapViewController().toPreview()
     }
 }
 #if DEBUG
