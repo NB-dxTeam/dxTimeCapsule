@@ -3,7 +3,7 @@ import FirebaseFirestore
 
 struct TimeCapsule {
     var id: String // 타임캡슐 고유 ID
-    var uid: String // 타임박스를 생성한 사용자의 ID
+    var uid: String // 타임박스를 생성한 사용자의 uID
     var userName : String // 타임박스를 생성한 사용자의 useName
     var imageURL: [String]? // 타임캡슐 안의 사진들
     var userLocation: GeoPoint? // 사용자 위치

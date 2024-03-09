@@ -34,6 +34,10 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         setupProperties()
         setupUI()
         requestPhotoLibraryPermission()
+        
+        // Add pan gesture recognizer to detect downward drag
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        view.addGestureRecognizer(panGesture)
     }
     
     override func viewDidLayoutSubviews() {
@@ -135,14 +139,19 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     
     @objc private func didTapNextButton() {
         let postWritingVC = PostWritingViewController()
-        postWritingVC.modalPresentationStyle = .custom
-        postWritingVC.transitioningDelegate = self
+        if #available(iOS 15.0, *) {
+            if let sheet = postWritingVC.sheetPresentationController {
+                sheet.detents = [.medium()] // Adjust to [.medium()] or create custom detent for desired height
+                // Use `largestUndimmedDetentIdentifier` to allow interaction with the background
+                sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+            }
+        } else {
+            // Fallback on earlier versions: Adjust `modalPresentationStyle` as needed or use custom presentation controllers
+            postWritingVC.modalPresentationStyle = .pageSheet
+        }
         present(postWritingVC, animated: true, completion: nil)
     }
-    
-    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-          return HalfModalPresentationController(presentedViewController: presented, presenting: presenting)
-      }
+
     
     // MARK: - UICollectionViewDataSource Methods
     
@@ -201,6 +210,32 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
             DispatchQueue.main.async {
                 self.imageView.image = image // 첫 번째 사진을 이미지 뷰에 표시
             }
+        }
+    }
+    
+    // MARK: - Pan Gesture Handler
+    @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: view)
+        let velocity = gesture.velocity(in: view)
+        
+        switch gesture.state {
+        case .changed:
+            if translation.y > 0 {
+                // Move the view down with the drag
+                view.frame.origin.y = translation.y
+            }
+        case .ended:
+            if velocity.y > 0 {
+                // Dismiss the modal if dragged downward with enough velocity
+                dismiss(animated: true, completion: nil)
+            } else {
+                // Reset the view position if drag distance is less than 100 points
+                UIView.animate(withDuration: 0.3) {
+                    self.view.frame.origin.y = 0
+                }
+            }
+        default:
+            break
         }
     }
 
