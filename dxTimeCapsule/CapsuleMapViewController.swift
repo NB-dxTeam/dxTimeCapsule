@@ -207,7 +207,9 @@ extension CapsuleMapViewController {
             if let sheet = vc.sheetPresentationController {
                 DispatchQueue.main.async {
                     sheet.animateChanges {
-                        sheet.detents = [.half] // Switch to .half detent
+                        sheet.detents = [.half, .large()]
+                        sheet.selectedDetentIdentifier = .half
+                        sheet.largestUndimmedDetentIdentifier = .large
                     }
                 }
             }
