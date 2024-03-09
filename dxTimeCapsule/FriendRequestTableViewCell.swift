@@ -1,64 +1,65 @@
 import UIKit
 import SnapKit
 import SDWebImage
-import FirebaseFirestore
 import FirebaseAuth
 
 class FriendRequestTableViewCell: UITableViewCell {
-    let db = Firestore.firestore()
-    
     var user: User?
-    var acceptRequestButtonTapped: (() -> Void)?
-    //var declineRequestButtonTapped: (() -> Void)? // 나중에 구현
+    var friendsViewModel: FriendsViewModel?
+    var acceptFriendRequestAction: (() -> Void)?
+
+    private let userProfileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.layer.cornerRadius = 25
+        imageView.clipsToBounds = true
+        return imageView
+    }()
     
-    var userProfileImageView: UIImageView!
-    var userNameLabel: UILabel!
-    var acceptButton: UIButton!
-    //var declineButton: UIButton! // 나중에 구현
-    var statusLabel: UILabel! // 상태를 나타내는 레이블
+    private let userNameLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 24)
+        return label
+    }()
+    
+    private let acceptButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("친구 수락", for: .normal)
+        button.layer.borderColor = UIColor(hex: "#D53369").cgColor
+        button.layer.borderWidth = 1
+        button.setTitleColor(UIColor(hex: "#D53369"), for: .normal)
+        button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 14)
+        button.layer.cornerRadius = 10
+        return button
+    }()
+    
+    private let statusLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Now friend"
+        label.font = UIFont.pretendardSemiBold(ofSize: 14)
+        label.textColor = UIColor(hex: "D15E6B")
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
+    }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
-        setupLayout()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        acceptButton.setBlurryBeach() // 버튼의 스타일을 설정함
-    }
     
     // MARK: - UI Setup
+    
     private func setupUI() {
-        userProfileImageView = UIImageView()
-        userProfileImageView.layer.cornerRadius = 25
-        userProfileImageView.clipsToBounds = true
         contentView.addSubview(userProfileImageView)
-        
-        userNameLabel = UILabel()
-        userNameLabel.font = UIFont.boldSystemFont(ofSize: 24)
         contentView.addSubview(userNameLabel)
-        
-        acceptButton = UIButton(type: .system)
-        acceptButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        acceptButton.layer.cornerRadius = 10
-        acceptButton.setTitle("Accept", for: .normal) // 버튼 텍스트 설정
         contentView.addSubview(acceptButton)
-        
-        statusLabel = UILabel()
-        statusLabel.font = UIFont.systemFont(ofSize: 14)
-        statusLabel.textColor = UIColor(hex: "D15E6B")
-        statusLabel.textAlignment = .center
         contentView.addSubview(statusLabel)
         
-        acceptButton.addTarget(self, action: #selector(acceptButtonTapped), for: .touchUpInside)
-    }
-    
-    private func setupLayout() {
         userProfileImageView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalToSuperview().offset(15)
@@ -73,47 +74,90 @@ class FriendRequestTableViewCell: UITableViewCell {
         acceptButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.trailing.equalToSuperview().offset(-15)
-            make.width.equalTo(120) // 버튼의 너비 설정
+            make.width.equalTo(120)
             make.height.equalTo(30)
         }
         
         statusLabel.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.trailing.equalToSuperview().offset(-15)
-            make.width.equalTo(120)
-            make.height.equalTo(30)
+            make.centerY.equalTo(acceptButton.snp.centerY)
+            make.trailing.equalTo(acceptButton.snp.trailing)
+            make.width.equalTo(acceptButton.snp.width)
+            make.height.equalTo(acceptButton.snp.height)
         }
-    }
-    
-    private func fetchUser(with userId: String, completion: @escaping (User?) -> Void) {
-        db.collection("users").document(userId).getDocument { documentSnapshot, error in
-            guard let document = documentSnapshot, document.exists, error == nil else {
-                completion(nil)
-                return
-            }
-            
-            let data = document.data()
-            let user = User(
-                uid: userId,
-                email: data?["email"] as? String ?? "",
-                username: data?["username"] as? String ?? "",
-                profileImageUrl: data?["profileImageUrl"] as? String
-            )
-            completion(user)
-        }
+        
+        acceptButton.addTarget(self, action: #selector(acceptFriendRequest), for: .touchUpInside)
     }
     
     // MARK: - Configuration
-    
-    func configure(with user: User) {
+    func configure(with user: User, viewModel: FriendsViewModel) {
         self.user = user
+        self.friendsViewModel = viewModel
         userNameLabel.text = user.username
-        userProfileImageView.sd_setImage(with: URL(string: user.profileImageUrl ?? ""), placeholderImage: UIImage(named: "placeholder"))
-        acceptButton.isHidden = false
-        statusLabel.isHidden = true
+        userProfileImageView.sd_setImage(with: URL(string: user.profileImageUrl ?? ""), placeholderImage: UIImage(named: "defaultProfileImage"))
+        acceptButton.isHidden = false // 버튼을 항상 보이게 설정
+
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            acceptButton.isHidden = true
+            statusLabel.isHidden = true
+            return
+        }
+        
+        acceptButton.addTarget(self, action: #selector(acceptFriendRequest), for: .touchUpInside) // 버튼 액션 추가
+        updateFriendshipStatusUI(user: user, currentUserID: currentUserID)
     }
     
-    @objc private func acceptButtonTapped() {
-        acceptRequestButtonTapped?()
+    
+    // MARK: - Functions
+    private func updateFriendshipStatusUI(user: User, currentUserID: String) {
+        friendsViewModel?.checkFriendshipStatus(forUser: user.uid) { status in
+            DispatchQueue.main.async {
+                self.acceptButton.isHidden = false
+                switch status {
+                case "요청 받음":
+                    self.acceptButton.isHidden = false
+                    self.statusLabel.isHidden = true
+                    
+                case "이미 친구입니다":
+                    self.updateUIAsAlreadyFriends()
+                    
+                default:
+                    self.acceptButton.isHidden = false
+                    self.statusLabel.isHidden = true
+                }
+            }
+        }
     }
+    
+    private func updateUIAsAlreadyFriends() {
+        DispatchQueue.main.async {
+            self.acceptButton.isHidden = true
+            self.statusLabel.isHidden = false
+        }
+    }
+    
+    @objc private func acceptFriendRequest() {
+        guard let user = user, let currentUserID = Auth.auth().currentUser?.uid else {
+            print("User information missing or error.")
+            return
+        }
+        
+        friendsViewModel?.checkFriendshipStatus(forUser: user.uid) { status in
+            DispatchQueue.main.async {
+                switch status {
+                case "요청 받음":
+                    self.friendsViewModel?.acceptFriendRequest(fromUser: user.uid, forUser: currentUserID) { success, error in
+                        if success {
+                            self.updateUIAsAlreadyFriends()
+                        } else {
+                            print("Failed to accept friend request: \(error?.localizedDescription ?? "Unknown error")")
+                        }
+                    }
+
+                default:
+                    print("No action defined for this status.")
+                }
+            }
+        }
+    }
+
 }
