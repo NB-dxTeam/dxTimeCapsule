@@ -26,7 +26,7 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         let viewControllers = [homeViewController, searchModalTableViewController, locationConfirmationViewController, notificationViewController, profileViewController]
         
         self.viewControllers = viewControllers
-        self.tabBar.tintColor = UIColor(hex: "#D53369")
+        self.tabBar.tintColor = UIColor(hex: "#FF3A4A")
         self.tabBar.backgroundColor = .white
         
 
@@ -51,7 +51,7 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         return resizedImage
     }
     
- 
+
 
 }
 

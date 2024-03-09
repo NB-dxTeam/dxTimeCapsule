@@ -57,7 +57,7 @@ extension UIButton {
     
     // Sin City Red
     func setSinCityRed() {
-        setGradient(colors: [#colorLiteral(red: 0.9294117647, green: 0.1294117647, blue: 0.2274509804, alpha: 1), #colorLiteral(red: 0.5764705882, green: 0.1607843137, blue: 0.1176470588, alpha: 1)])
+        setGradient(colors: [#colorLiteral(red: 1, green: 0.2274509804, blue: 0.2901960784, alpha: 1), #colorLiteral(red: 0.5764705882, green: 0.1607843137, blue: 0.1176470588, alpha: 1)])
     }
     
 
@@ -72,8 +72,24 @@ extension UIButton {
         gradientLayer.cornerRadius = self.layer.cornerRadius
         self.layer.insertSublayer(gradientLayer, at: 0)
         layer.cornerRadius = 8
-
-        
     }
     
+    // 단색 버튼
+    func configureButton(_ button: UIButton) {
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 16
+        button.backgroundColor = UIColor(hex: "#FF3A4A")
+        button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 16)
+        
+        // 그림자 설정
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowRadius = 6 // 그림자의 블러 정도 설정 (조금 더 부드럽게)
+        button.layer.shadowOpacity = 0.3 // 그림자의 투명도 설정 (적당한 농도로)
+        button.layer.shadowOffset =  CGSize(width: 0, height: 3) // 그림자 방향 설정 (아래로 조금 더 멀리)
+        
+        
+        button.snp.makeConstraints { make in
+            make.height.equalTo(40)
+        }
+    }
 }
