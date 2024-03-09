@@ -27,20 +27,10 @@ class HomeViewController: UIViewController {
     
     // pagelogo 이미지뷰 생성
     let logoImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "pagelogo"))
+        let imageView = UIImageView(image: UIImage(named: "App_Logo"))
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
-    
-    //알림 버튼 생성
-    let addFriendsButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "person.fill.badge.plus"), for: .normal)
-        button.addTarget(self, action: #selector(addFriendsButtonTapped), for: .touchUpInside)
-        button.isUserInteractionEnabled = true
-        return button
-    }()
-    
     // 메인 타임캡슐 이미지 배열
     let mainTCImages = [UIImage(named: "IMG1"), UIImage(named: "IMG2"), UIImage(named: "IMG3"), UIImage(named: "IMG4")]
 
@@ -134,17 +124,24 @@ class HomeViewController: UIViewController {
         attributedString.append(NSAttributedString(string: "+를 눌러 계속해서 시간여행을 떠나보세요!", attributes: [
             .font: UIFont.systemFont(ofSize: 16)
         ]))
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 5 // 두줄 사이 간격 조절
+        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length)) // 간격 적용
+        
         let label = UILabel()
         label.numberOfLines = 2
         label.textColor = .black
         label.attributedText = attributedString
+        label.textAlignment = .center
         return label
     }()
     
     // noMainTC 버튼
     let addTCButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "plus.app"), for: .normal)
+        let image = UIImage(systemName: "plus.app")?.withRenderingMode(.alwaysTemplate)
+        button.tintColor = UIColor(red: 213/255.0, green: 51/255.0, blue: 105/255.0, alpha: 1.0)
+        button.setBackgroundImage(image, for: .normal)
         button.isUserInteractionEnabled = false
         return button
     }()
@@ -153,7 +150,7 @@ class HomeViewController: UIViewController {
     lazy var noMainTCStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
-        stackView.alignment = .fill
+        stackView.alignment = .center
         stackView.spacing = 10
         stackView.addArrangedSubview(self.noMainTCLabel)
         stackView.addArrangedSubview(self.addTCButton)
@@ -368,11 +365,14 @@ class HomeViewController: UIViewController {
         let imageView = UIImageView(image: logoImage)
         imageView.contentMode = .scaleAspectFit
         
-        
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "person.fill.badge.plus"), for: .normal)
-        
-        let friendAddImage = button
+        let addFriendsButton: UIButton = {
+            let button = UIButton(type: .system)
+            button.setImage(UIImage(systemName: "person.fill.badge.plus"), for: .normal)
+            button.addTarget(self, action: #selector(addFriendsButtonTapped), for: .touchUpInside)
+            button.isUserInteractionEnabled = true
+            return button
+        }()
+
         
         let imageSize = CGSize(width: 150, height: 50) // 원하는 크기로 조절
         imageView.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: imageSize) // x값을 0으로 변경하여 왼쪽 상단에 위치하도록 설정
@@ -382,34 +382,12 @@ class HomeViewController: UIViewController {
         containerView.addSubview(imageView)
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: containerView)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: friendAddImage)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: addFriendsButton)
     }
 
 
     private func configureUI(){
         
-        // 커스텀 네비게이션 바 추가
-        view.addSubview(customNavBar)
-        customNavBar.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
-            make.left.right.equalToSuperview()
-            make.height.equalTo(40)
-        }
-        
-//        pagelogo 이미지뷰 추가
-        customNavBar.addSubview(logoImageView)
-         logoImageView.snp.makeConstraints { make in
-            make.centerY.equalTo(customNavBar)
-            make.left.equalTo(customNavBar).offset(20)
-            make.width.equalTo(170)
-           }
-        
-           // 알림 버튼 추가
-        customNavBar.addSubview(addFriendsButton)
-        addFriendsButton.snp.makeConstraints { make in
-            make.centerY.equalTo(customNavBar)
-            make.right.equalTo(customNavBar).offset(-20)
-           }
 
         // 메인 타임캡슐 그림자 추가
         view.addSubview(mainContainerView)
@@ -434,7 +412,6 @@ class HomeViewController: UIViewController {
         duestTCInforStackView.snp.makeConstraints { make in
             make.top.equalTo(mainContainerView.snp.bottom).offset(10)
             make.leading.trailing.equalToSuperview().inset(30)
-            // 높이는 maincontainerView의 너비의 1/5로 설정
             make.height.equalToSuperview().multipliedBy(0.5/6.0)
         }
         
@@ -443,6 +420,18 @@ class HomeViewController: UIViewController {
             make.top.equalTo(mainContainerView.snp.bottom).offset(10)
             make.leading.trailing.equalToSuperview().inset(30)
             make.height.equalToSuperview().multipliedBy(0.5/6.0)
+        }
+        noMainTCStackView.addArrangedSubview(noMainTCLabel)
+        noMainTCLabel.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+        }
+        
+        noMainTCStackView.addArrangedSubview(addTCButton)
+        addTCButton.snp.makeConstraints { make in
+            make.width.equalTo(addTCButton.snp.height)
+            make.height.equalTo(noMainTCStackView.snp.height).multipliedBy(2.0/3.0)
+            make.centerY.equalTo(noMainTCStackView.snp.centerY)
+            make.trailing.equalTo(noMainTCStackView.snp.trailing)
         }
         
         // locationInforStackView의 위치 설정
