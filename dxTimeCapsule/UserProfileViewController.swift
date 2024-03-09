@@ -52,7 +52,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         // 이미지 뷰의 크기에 따라 cornerRadius를 동적으로 설정합니다.
         let imageSize: CGFloat = profileImageView.frame.width
         profileImageView.layer.cornerRadius = imageSize / 2
-        logoutButton.setGradient(colors: [#colorLiteral(red: 0.831372549, green: 0.2, blue: 0.4117647059, alpha: 1), #colorLiteral(red: 0.7960784314, green: 0.6784313725, blue: 0.4274509804, alpha: 1)])
+        logoutButton.backgroundColor = UIColor(hex: "#FF3A4A")
     }
     
     // MARK: - Setup
@@ -117,9 +117,21 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         
         // Logout Button Setup
         logoutButton.setTitle("Logout", for: .normal)
-        logoutButton.titleLabel?.font = .pretendardSemiBold(ofSize: 14)
         logoutButton.addTarget(self, action: #selector(logoutTapped), for: .touchUpInside)
-        logoutButton.layer.cornerRadius = 12
+        logoutButton.layer.cornerRadius = 16
+        logoutButton.backgroundColor = UIColor(hex: "#FF3A4A")
+        logoutButton.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 16)
+        
+        // 그림자 설정
+        logoutButton.layer.shadowColor = UIColor.black.cgColor
+        logoutButton.layer.shadowRadius = 6 // 그림자의 블러 정도 설정 (조금 더 부드럽게)
+        logoutButton.layer.shadowOpacity = 0.3 // 그림자의 투명도 설정 (적당한 농도로)
+        logoutButton.layer.shadowOffset =  CGSize(width: 0, height: 3) // 그림자 방향 설정 (아래로 조금 더 멀리)
+        
+        
+        logoutButton.snp.makeConstraints { make in
+            make.height.equalTo(40)
+        }
         
         // Search User Button Setup
         searchUserButton.setTitle("친구찾으러가기(임시)", for: .normal)
