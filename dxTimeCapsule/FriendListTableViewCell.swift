@@ -5,13 +5,33 @@ import SDWebImage
 class FriendListTableViewCell: UITableViewCell {
     var user: User? {
         didSet {
-            configure(with: user)
+            configure()
         }
     }
     
-    var userProfileImageView: UIImageView!
-    var userNameLabel: UILabel!
-    var statusLabel: UILabel!
+    var friendsViewModel: FriendsViewModel? // ViewModel 추가
+    
+    private var userProfileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.layer.cornerRadius = 25
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+    
+    private var userNameLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 24)
+        return label
+    }()
+    
+    private var statusLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor(hex: "D15E6B")
+        label.textAlignment = .center
+        return label
+    }()
+    
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -25,19 +45,8 @@ class FriendListTableViewCell: UITableViewCell {
     
     // MARK: - UI Setup
     private func setupUI() {
-        userProfileImageView = UIImageView()
-        userProfileImageView.layer.cornerRadius = 25
-        userProfileImageView.clipsToBounds = true
         contentView.addSubview(userProfileImageView)
-        
-        userNameLabel = UILabel()
-        userNameLabel.font = UIFont.boldSystemFont(ofSize: 24)
         contentView.addSubview(userNameLabel)
-        
-        statusLabel = UILabel()
-        statusLabel.font = UIFont.systemFont(ofSize: 14)
-        statusLabel.textColor = UIColor(hex: "D15E6B")
-        statusLabel.textAlignment = .center
         contentView.addSubview(statusLabel)
     }
     
@@ -62,10 +71,12 @@ class FriendListTableViewCell: UITableViewCell {
     }
     
     // MARK: - Configuration
-    func configure(with user: User?) {
+    private func configure() {
         guard let user = user else { return }
         userNameLabel.text = user.username
-        userProfileImageView.sd_setImage(with: URL(string: user.profileImageUrl ?? ""), placeholderImage: UIImage(named: "placeholder"))
-        statusLabel.text = "Friend"
+        userProfileImageView.sd_setImage(with: URL(string: user.profileImageUrl ?? ""), placeholderImage: UIImage(named: "defaultProfileImage"))
+        
+        // viewModel을 사용하는 추가 구성 로직이 필요할 경우 여기에 추가합니다.
+        // 예를 들어, 사용자의 친구 상태를 확인하고 statusLabel을 업데이트할 수 있습니다.
     }
 }
