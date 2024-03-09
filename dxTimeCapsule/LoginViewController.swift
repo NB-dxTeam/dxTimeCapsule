@@ -51,8 +51,8 @@ class LoginViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        loginButton.setBlurryBeach()
-        socialLogin.setBlurryBeach()
+        loginButton.backgroundColor = UIColor(hex: "#FF3A4A")
+        socialLogin.backgroundColor = UIColor(hex: "#FF3A4A")
 
     }
     
@@ -79,12 +79,12 @@ class LoginViewController: UIViewController {
         labelsContainerView.addSubview(signUpActionLabel)
         
         // 로그인 이미지 설정
-        logoImageView.image = UIImage(named: "LoginLogo")
+        logoImageView.image = UIImage(named: "AppMainLogo")
         
         
         // 앱 이름 설정
         appNameLabel.text = "Memorium"
-        appNameLabel.font = UIFont.proximaNovaBold(ofSize: 40)
+        appNameLabel.font = UIFont.proximaNovaBold(ofSize: 44)
         appNameLabel.textAlignment = .center
         
         // 이메일 텍스트필드 설정
@@ -121,9 +121,9 @@ class LoginViewController: UIViewController {
     // MARK: - Setup Layouts
     private func setupLayouts() {
         logoImageView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(80)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(40)
             make.centerX.equalToSuperview()
-            make.width.height.equalTo(200)
+            make.width.height.equalTo(300)
         }
         
         appNameLabel.snp.makeConstraints { make in
@@ -132,7 +132,7 @@ class LoginViewController: UIViewController {
         }
         
         emailTextField.snp.makeConstraints { make in
-            make.top.equalTo(appNameLabel.snp.bottom).offset(40)
+            make.top.equalTo(appNameLabel.snp.bottom).offset(20)
             make.left.right.equalToSuperview().inset(50)
             make.height.equalTo(44)
         }
@@ -258,17 +258,25 @@ private extension LoginViewController {
         textField.layer.backgroundColor = UIColor.systemGray6.cgColor
         textField.font = UIFont.pretendardRegular(ofSize: 14)
         textField.snp.makeConstraints { make in
-            make.height.equalTo(44)
+            make.height.equalTo(40)
         }
     }
     
     func configureButton(_ button: UIButton, title: String) {
         button.setTitle(title, for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 8
-        button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 14)
+        button.layer.cornerRadius = 16
+        button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 16)
+        
+        // 그림자 설정
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowRadius = 6 // 그림자의 블러 정도 설정 (조금 더 부드럽게)
+        button.layer.shadowOpacity = 0.3 // 그림자의 투명도 설정 (적당한 농도로)
+        button.layer.shadowOffset =  CGSize(width: 0, height: 3) // 그림자 방향 설정 (아래로 조금 더 멀리)
+        
+        
         button.snp.makeConstraints { make in
-            make.height.equalTo(44)
+            make.height.equalTo(40)
         }
     }
 
@@ -290,5 +298,15 @@ extension LoginViewController: UITextFieldDelegate {
             didTapLoginButton() // 로그인 버튼의 액션 실행
         }
         return true
+    }
+}
+
+
+// MARK: - SwiftUI Preview
+import SwiftUI
+
+struct MainTabBarViewPreview22 : PreviewProvider {
+    static var previews: some View {
+        LoginViewController().toPreview()
     }
 }

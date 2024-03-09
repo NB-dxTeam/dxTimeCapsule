@@ -57,7 +57,7 @@ extension UIButton {
     
     // Sin City Red
     func setSinCityRed() {
-        setGradient(colors: [#colorLiteral(red: 0.9294117647, green: 0.1294117647, blue: 0.2274509804, alpha: 1), #colorLiteral(red: 0.5764705882, green: 0.1607843137, blue: 0.1176470588, alpha: 1)])
+        setGradient(colors: [#colorLiteral(red: 1, green: 0.2274509804, blue: 0.2901960784, alpha: 1), #colorLiteral(red: 0.5764705882, green: 0.1607843137, blue: 0.1176470588, alpha: 1)])
     }
     
 
