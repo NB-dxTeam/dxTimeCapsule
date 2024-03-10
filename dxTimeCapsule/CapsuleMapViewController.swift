@@ -324,7 +324,7 @@ import FirebaseFirestoreInternal
 
 struct Preview: PreviewProvider {
     static var previews: some View {
-        CapsuleMapViewController().toPreview()
+        CustomModal().toPreview()
     }
 }
 #if DEBUG

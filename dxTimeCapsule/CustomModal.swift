@@ -16,6 +16,15 @@ class CustomModal: UIViewController {
     
     var capsuleInfo = [CapsuleInfo]()
     var onCapsuleSelected: ((Double, Double) -> Void)? //선택된 위치 정보를 받아 처리하는 클로저
+    private var headerCollection: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.backgroundColor = .white
+        collection.layer.cornerRadius = 20
+        collection.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        collection.layer.masksToBounds = true
+        return collection
+    }()
     private var capsuleCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -35,8 +44,16 @@ class CustomModal: UIViewController {
     // addsubView, autolayout
     private func setupUI() {
         view.addSubview(capsuleCollection)
+        view.addSubview(headerCollection)
+        headerCollection.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(48)
+        }
         capsuleCollection.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalTo(headerCollection.snp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
     }
     // 콜렉션 뷰 옵션
@@ -45,8 +62,6 @@ class CustomModal: UIViewController {
         capsuleCollection.dataSource = self
         // 셀 등록
         capsuleCollection.register(LockedCapsuleCell.self, forCellWithReuseIdentifier: LockedCapsuleCell.identifier)
-        // 헤더 등록
-        capsuleCollection.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderView")
         capsuleCollection.isPagingEnabled = true // 페이징 활성화
         capsuleCollection.showsVerticalScrollIndicator = false // 수직 스크롤 인디케이터 표시 여부 설정.
         capsuleCollection.decelerationRate = .normal // 콜렉션 뷰의 감속 속도 설정
@@ -56,14 +71,14 @@ class CustomModal: UIViewController {
             layout.scrollDirection = .vertical // 스크롤 방향(수직)
             let screenWidth = UIScreen.main.bounds.width
             let itemWidth = screenWidth * 0.9 // 화면 너비의 90%를 아이템 너비로 설정
-            let itemHeight: CGFloat = 240 // 아이템 높이는 고정 값으로 설정
+            let itemHeight: CGFloat = 230 // 아이템 높이는 고정 값으로 설정
             layout.itemSize = CGSize(width: itemWidth, height: itemHeight)
             // 섹션 여백 설정
             let sectionInsetHorizontal = screenWidth * 0.05 // 좌우 여백을 화면 너비의 5%로 설정
-            layout.sectionInset = UIEdgeInsets(top: 24, left: sectionInsetHorizontal, bottom: 24, right: sectionInsetHorizontal)
+            layout.sectionInset = UIEdgeInsets(top: 10, left: sectionInsetHorizontal, bottom: 10, right: sectionInsetHorizontal)
             // 최소 줄 간격 설정
-            let minimumLineSpacing = screenWidth * 0.1 // 최소 줄 간격을 화면 너비의 10%로 설정
-            layout.minimumLineSpacing = minimumLineSpacing
+            let minimumLineSpacing = itemHeight * 0.2 // 최소 줄 간격을 화면 너비의 10%로 설정
+            layout.minimumLineSpacing = 20
             layout.sectionHeadersPinToVisibleBounds = true
         }
     }
@@ -124,20 +139,6 @@ extension CustomModal: UICollectionViewDataSource, UICollectionViewDelegate {
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard kind == UICollectionView.elementKindSectionHeader else {
-            return UICollectionReusableView()
-        }
-        
-        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderView", for: indexPath) as! HeaderView
-        //headerView.sortButtonAction = { [weak self] in
-        // 등록일순, D-day순, 거리순 로직 구현
-        //}
-        
-        //collectionView.reloadData()
-        headerView.headerLabel.text = "여기에 정렬 옵션 추가"
-        return headerView
-    }
     
     // MARK: - UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -146,57 +147,11 @@ extension CustomModal: UICollectionViewDataSource, UICollectionViewDelegate {
     }
 }
 
-extension CustomModal: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        // 헤더 뷰의 크기 설정
-        return CGSize(width: collectionView.frame.width, height: 48)
-    }
-}
-
-// MARK: - CollectionView Header
-class HeaderView: UICollectionReusableView {
-    static let reuseIdentifier = "HeaderView"
-    
-    // 정렬 버튼
-//    private let sortCapsule: UIButton = {
-//        let button = UIButton()
-//        button.setTitle("등록일순", for: .normal)
-//        return button
-//    }()
-    var headerLabel: UILabel = {
-        let label = UILabel()
-        label.text = "여기에 정렬 옵션 추가"
-        return label
-    }()
-    
-    // 버튼 클로저
-    var sortButtonAction: (() -> Void)?
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.backgroundColor = .white
-        addSubview(headerLabel)
-        
-        headerLabel.snp.makeConstraints { make in
-            make.leading.equalTo(30)
-            make.top.equalTo(20)
-        }
-
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-//    @objc func didTapSortButton() {
-//        sortButtonAction?()
-//    }
-}
 
 import SwiftUI
 
 struct PreView: PreviewProvider {
     static var previews: some View {
-        CapsuleMapViewController().toPreview()
+        CustomModal().toPreview()
     }
 }

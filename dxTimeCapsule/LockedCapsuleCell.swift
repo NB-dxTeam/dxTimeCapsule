@@ -94,7 +94,7 @@ class LockedCapsuleCell: UICollectionViewCell {
         contentView.addSubview(creationDate)
         
         registerImage.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(10)
+            make.top.equalToSuperview()
             make.leading.equalToSuperview().offset(10)
             make.trailing.equalToSuperview().offset(-10)
             make.height.equalTo(registerImage.snp.width).multipliedBy(1.0/2.0)
