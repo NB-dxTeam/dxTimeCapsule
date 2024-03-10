@@ -44,7 +44,7 @@ class OpenedTCViewController: UIViewController {
     private func configCollection() {
         capsuleCollection.delegate = self
         capsuleCollection.dataSource = self
-        capsuleCollection.register(OpendedTCCell.self, forCellWithReuseIdentifier: OpendedTCCell.identifier)
+        capsuleCollection.register(TimeCapsuleCell.self, forCellWithReuseIdentifier: TimeCapsuleCell.identifier)
         capsuleCollection.isPagingEnabled = true
         capsuleCollection.showsVerticalScrollIndicator = true
         capsuleCollection.decelerationRate = .normal
@@ -107,7 +107,7 @@ extension OpenedTCViewController: UICollectionViewDataSource, UICollectionViewDe
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OpendedTCCell.identifier, for: indexPath) as? OpendedTCCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TimeCapsuleCell.identifier, for: indexPath) as? TimeCapsuleCell else {
             fatalError("Unable to dequeue OpendedTCCell")
         }
         
@@ -116,3 +116,10 @@ extension OpenedTCViewController: UICollectionViewDataSource, UICollectionViewDe
         return cell
     }
 }
+
+//import SwiftUI
+//struct PreVie10w: PreviewProvider {
+//    static var previews: some View {
+//        OpenedTCViewController().toPreview()
+//    }
+//}

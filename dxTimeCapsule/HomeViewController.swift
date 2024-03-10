@@ -538,10 +538,10 @@ class HomeViewController: UIViewController {
     }
 
 }
-
-import SwiftUI
-struct PreVie11w: PreviewProvider {
-    static var previews: some View {
-        MainTabBarView().toPreview()
-    }
-}
+//
+//import SwiftUI
+//struct PreVie11w: PreviewProvider {
+//    static var previews: some View {
+//        MainTabBarView().toPreview()
+//    }
+//}
