@@ -1,3 +1,10 @@
+//
+//  OpenedTCViewController.swift
+//  dxTimeCapsule
+//
+//  Created by 안유진 on 3/8/24.
+//
+
 import UIKit
 import SnapKit
 import FirebaseFirestore

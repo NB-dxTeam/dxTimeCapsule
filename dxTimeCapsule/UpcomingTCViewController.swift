@@ -2,7 +2,7 @@
 //  UpcomingTCViewController.swift
 //  dxTimeCapsule
 //
-//  Created by t2023-m0028 on 3/8/24.
+//  Created by 안유진 on 3/8/24.
 //
 
 import UIKit

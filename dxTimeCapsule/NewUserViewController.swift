@@ -2,7 +2,7 @@
 //  NewUserViewController.swift
 //  dxTimeCapsule
 //
-//  Created by t2023-m0028 on 3/10/24.
+//  Created by 안유진 on 3/10/24.
 //
 
 import UIKit
@@ -34,7 +34,7 @@ class NewUserViewController: UIViewController {
         button.backgroundColor = UIColor(red: 213/255.0, green: 51/255.0, blue: 105/255.0, alpha: 1.0)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .black)
         button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(addNewTC), for: .touchUpInside)
+        button.addTarget(NewUserViewController.self, action: #selector(addNewTC), for: .touchUpInside)
         return button
     }()
     

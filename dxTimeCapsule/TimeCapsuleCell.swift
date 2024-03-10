@@ -2,7 +2,7 @@
 //  TimeCapsuleCell.swift
 //  dxTimeCapsule
 //
-//  Created by 유진 on 3/8/24.
+//  Created by 안유진 on 3/8/24.
 //
 
 import UIKit

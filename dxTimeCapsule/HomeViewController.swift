@@ -2,7 +2,7 @@
 //  HomeViewController.swift
 //  dxTimeCapsule
 //
-//  Created by t2023-m0031 on 2/23/24.
+//  Created by 안유진 on 2/23/24.
 //
 
 import UIKit
@@ -18,19 +18,8 @@ class HomeViewController: UIViewController {
 
     // MARK: - Properties
     
-    // 커스텀 네비게이션 바
-    let customNavBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        return view
-    }()
-    
-    // pagelogo 이미지뷰 생성
-    let logoImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "App_Logo"))
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }()
+    var documentId: String?
+
     // 메인 타임캡슐 이미지 배열
     let mainTCImages = [UIImage(named: "IMG1"), UIImage(named: "IMG2"), UIImage(named: "IMG3"), UIImage(named: "IMG4")]
 
@@ -167,7 +156,7 @@ class HomeViewController: UIViewController {
         button.setBackgroundImage(image, for: .normal)
         button.clipsToBounds = true
         button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(openedTCButtonTapped), for: .touchUpInside)
+        button.addTarget(HomeViewController.self, action: #selector(openedTCButtonTapped), for: .touchUpInside)
         
         // 버튼 내에 UILabel 추가
         let titleLabel = UILabel()
@@ -195,7 +184,7 @@ class HomeViewController: UIViewController {
         button.setBackgroundImage(image, for: .normal)
         button.clipsToBounds = true
         button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(upcomingTCButtonTapped), for: .touchUpInside)
+        button.addTarget(HomeViewController.self, action: #selector(upcomingTCButtonTapped), for: .touchUpInside)
         
         // 버튼 내에 UILabel 추가
         let titleLabel = UILabel()
@@ -261,16 +250,17 @@ class HomeViewController: UIViewController {
                                 }
                             }
                     } else if let document = querySnapshot?.documents.first {
+                        self.documentId = document.documentID // documentId 업데이트
                         let userLocation = document.get("userLocation") as? String ?? "Unknown Location"
                         let location = document.get("location") as? String ?? "Unknown address"
                         let tcBoxImageURL = document.get("tcBoxImageURL") as? String ?? ""
                         let openDateTimestamp = document.get("openDate") as? Timestamp
                         let openDate = openDateTimestamp?.dateValue()
                         
-                        print("Fetched location name: \(userLocation)")
-                        print("Fetched location address: \(location)")
-                        print("Fetched photo URL: \(tcBoxImageURL)")
-                        print("Fetched open date: \(openDate)")
+//                        print("Fetched location name: \(userLocation)")
+//                        print("Fetched location address: \(location)")
+//                        print("Fetched photo URL: \(tcBoxImageURL)")
+//                        print("Fetched open date: \(openDate)")
                         
                         // 메인 스레드에서 UI 업데이트를 수행합니다.
                         DispatchQueue.main.async {
@@ -496,22 +486,23 @@ class HomeViewController: UIViewController {
     
     @objc private func addFriendsButtonTapped() {
         print("친구추가가 클릭되었습니다")
-        let addFriendsVC = SearchUserTableViewController()
+        let addFriendsVC = NewUserViewController()
         let navController = UINavigationController(rootViewController: addFriendsVC)
         present(navController, animated: true, completion: nil)
     }
     
-    @objc private func duestTCStackViewTapped() {
+    @objc private func duestTCStackViewTapped(with documentID: String) {
         print("DuestTC 스택뷰가 클릭되었습니다")
         let mainCapsuleVC = MainCapsuleViewController()
-        let navController = UINavigationController(rootViewController: mainCapsuleVC)
-        present(navController, animated: true, completion: nil)
+        mainCapsuleVC.documentId = documentId
+        mainCapsuleVC.modalPresentationStyle = .fullScreen // 전체 화면
+        present(mainCapsuleVC, animated: true, completion: nil)
     }
     
     @objc private func addNewTC() {
         print("새 타임머신 만들기 클릭되었습니다")
-        let mainCapsuleVC = PhotoUploadViewController()
-        let navController = UINavigationController(rootViewController: mainCapsuleVC)
+        let addNewTC = PhotoUploadViewController()
+        let navController = UINavigationController(rootViewController: addNewTC)
         present(navController, animated: true, completion: nil)
     }
     
