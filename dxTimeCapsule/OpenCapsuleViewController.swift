@@ -15,6 +15,7 @@ class OpenCapsuleViewController: UIViewController {
     var documentId: String?
 
     private var topBarView: UIView!
+    private var homeButton: UIButton!
     private var titleLabel: UILabel!
     private var separatorLine: UIView!
     private var logoImageView: UIImageView!
@@ -29,12 +30,42 @@ class OpenCapsuleViewController: UIViewController {
         view.backgroundColor = .white
 
         setupUIComponents()
+        setupHomeButton()  // 여기에 setupHomeButton 호출 추가
         loadTimeCapsuleData()
+    }
+    
+    private func setupHomeButton() {
+        homeButton = UIButton(type: .system)
+        let homeImage = UIImage(systemName: "chevron.left") // SF Symbols에서 "house.fill" 이미지 사용
+        homeButton.setImage(homeImage, for: .normal)
+        homeButton.tintColor = UIColor(red: 209/255.0, green: 94/255.0, blue: 107/255.0, alpha: 1) // 버튼 색상 설정
+        homeButton.addTarget(self, action: #selector(homeButtonTapped), for: .touchUpInside)
+
+        topBarView.addSubview(homeButton) // topBarView에 버튼 추가
+        homeButton.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.centerY.equalToSuperview() // 상단바 뷰의 센터와 맞춤
+            make.width.height.equalTo(30) // 버튼의 크기 설정
+        }
+    }
+
+    @objc private func homeButtonTapped() {
+        // 홈 화면 뷰 컨트롤러 인스턴스를 생성합니다.
+        let homeVC = HomeViewController() // HomeViewController는 여러분의 홈 화면 뷰 컨트롤러 클래스입니다.
+        
+        // 홈 화면으로 전환합니다.
+        // UIWindowScene과 UIWindow를 찾아서 rootViewController를 변경합니다.
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+            window.rootViewController = UINavigationController(rootViewController: homeVC) // 네비게이션 컨트롤러 사용 예시
+            window.makeKeyAndVisible()
+            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: nil, completion: nil)
+        }
     }
 
     private func setupUIComponents() {
         // 상단 바 뷰 설정
-        let topBarView = UIView()
+        topBarView = UIView()
 //        topBarView.backgroundColor = .systemBlue // 상단 바의 배경색 설정
         view.addSubview(topBarView)
         topBarView.snp.makeConstraints { make in
@@ -139,7 +170,7 @@ class OpenCapsuleViewController: UIViewController {
         memoryTextView = UITextView()
         memoryTextView.text =  """
                                 지난 2022년 10월 6일은
-                                빈지노님과 함께 보내셨군요!
+                                지민님과 함께 보내셨군요!
                                 굉장히 즐거웠던 날이에요.😋
                                 """
         memoryTextView.isEditable = false
@@ -156,7 +187,7 @@ class OpenCapsuleViewController: UIViewController {
         // 메시지 확인하기 버튼 설정
         messageButton = UIButton(type: .system)
         messageButton.setTitle("그날의 메시지", for: .normal)
-        messageButton.backgroundColor = .systemOrange // 색상 설정
+        messageButton.backgroundColor = UIColor(red: 209/255.0, green: 94/255.0, blue: 107/255.0, alpha: 1) // 색상 설정
         messageButton.setTitleColor(.white, for: .normal)
         messageButton.layer.cornerRadius = 10
         view.addSubview(messageButton)
