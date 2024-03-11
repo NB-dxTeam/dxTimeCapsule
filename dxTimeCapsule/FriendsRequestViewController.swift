@@ -4,8 +4,12 @@ import FirebaseFirestore
 
 class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    
+    private var db = Firestore.firestore()
+    
     private var alarmLabel: UILabel!
     private var friendRequests: [User] = []
+    private var capsules: [TimeCapsule] = []
     private let tableView = UITableView()
     private let viewModel = FriendsViewModel()
     
@@ -53,7 +57,7 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(FriendRequestTableViewCell.self, forCellReuseIdentifier: "FriendRequestCell")
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "CapsuleCell")
+        tableView.register(CapsuleTableViewCell.self, forCellReuseIdentifier: "CapsuleCell")
         tableView.tableFooterView = UIView()
         
         view.addSubview(tableView)
@@ -80,6 +84,50 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
             }
         }
     }
+    
+    private func fetchCapsules() {
+        guard let userID = Auth.auth().currentUser?.uid else { return }
+        db.collection("TimeCapsules").whereField("uid", isEqualTo: userID).order(by: "openTimeCapsuleDate", descending: false).getDocuments { (snapshot, error) in
+            if let error = error {
+                print("Error getting documents: \(error)")
+            } else {
+                var tempCapsules: [TimeCapsule] = []
+                snapshot?.documents.forEach { document in
+                    let data = document.data()
+                    let id = document.documentID
+                    let uid = data["uid"] as? String ?? ""
+                    let userName = data["userName"] as? String ?? ""
+                    let imageURL = data["imageURL"] as? [String] ?? []
+                    let description = data["description"] as? String ?? ""
+                    let tagFriends = data["tagFriends"] as? [String] ?? []
+                    let createTimeCapsuleDate = (data["createTimeCapsuleDate"] as? Timestamp)?.dateValue() ?? Date()
+                    let openTimeCapsuleDate = (data["openTimeCapsuleDate"] as? Timestamp)?.dateValue() ?? Date()
+                    let isOpened = data["isOpened"] as? Bool ?? false
+
+                    // 여기에서 userLocation 처리는 예시를 생략했습니다. 필요하다면 GeoPoint로부터 latitude와 longitude를 추출합니다.
+
+                    let capsule = TimeCapsule(
+                        id: id,
+                        uid: uid,
+                        userName: userName,
+                        imageURL: imageURL,
+                        userLocation: nil, // GeoPoint를 처리하여 설정
+                        description: description,
+                        tagFriends: tagFriends,
+                        createTimeCapsuleDate: createTimeCapsuleDate,
+                        openTimeCapsuleDate: openTimeCapsuleDate,
+                        isOpened: isOpened
+                    )
+                    tempCapsules.append(capsule)
+                }
+                self.capsules = tempCapsules
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+        }
+    }
+
     
     private func observeFriendRequests() {
         guard let userId = Auth.auth().currentUser?.uid else { return }
@@ -121,7 +169,7 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
         case 0:
             return friendRequests.count
         case 1:
-            return 3 // 다가오는 캡슐의 갯수는 예시로 3을 사용
+            return capsules.count
         default:
             return 0
         }
@@ -144,8 +192,9 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
              }
              return cell
          case 1:
-             let cell = tableView.dequeueReusableCell(withIdentifier: "CapsuleCell", for: indexPath)
-             cell.textLabel?.text = "다가오는 캡슐 \(indexPath.row + 1)"
+             let cell = tableView.dequeueReusableCell(withIdentifier: "CapsuleCell", for: indexPath) as! CapsuleTableViewCell
+             let capsule = capsules[indexPath.row]
+             cell.configure(with: capsule)
              return cell
          default:
              return UITableViewCell()
@@ -154,7 +203,7 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 40))
-        headerView.backgroundColor = UIColor.lightGray
+        headerView.backgroundColor = UIColor.white
         
         let label = UILabel(frame: CGRect(x: 15, y: 0, width: tableView.frame.width - 30, height: 40))
         label.font = UIFont.boldSystemFont(ofSize: 20)
