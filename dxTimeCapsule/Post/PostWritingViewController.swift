@@ -50,7 +50,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
     
     private let tagFriendsButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("친구 태그하기", for: .normal)
+        button.setTitle("친구 태그", for: .normal)
         button.setTitleColor(UIColor(hex: "#D53369"), for: .normal)
         button.titleLabel?.font = .pretendardSemiBold(ofSize: 16)
         button.backgroundColor = .white.withAlphaComponent(0.85)
@@ -89,10 +89,6 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         setupViews()
         
         descriptionTextView.delegate = self
-//        tagFriendsButton.addTarget(self, action: #selector(tagFriendsButtonTapped), for: .touchUpInside)
-        createButton.addTarget(self, action: #selector(createTimeCapsule), for: .touchUpInside)
-        tagFriendsButton.addTarget(self, action: #selector(tagfriendListButtonTapped), for: .touchUpInside)
-
         
         // Add pan gesture recognizer to detect downward drag
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
@@ -128,24 +124,26 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
             make.top.equalTo(openDateTitleLabel.snp.bottom).offset(5)
             make.leading.equalTo(openDateTitleLabel)
             make.height.equalTo(50)
-            
         }
         
         tagFriendsButton.snp.makeConstraints { make in
             make.top.equalTo(descriptionTextView.snp.bottom).offset(20)
             make.centerY.equalTo(openDateTitleLabel)
             make.trailing.equalToSuperview().inset(20)
-            make.width.equalTo(150)
+            make.width.equalTo(120)
             make.height.equalTo(50)
         }
-        
+        tagFriendsButton.addTarget(self, action: #selector(tagfriendListButtonTapped), for: .touchUpInside)
 
         createButton.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().inset(80)
+            make.top.equalTo(datePicker.snp.bottom).offset(20)
             make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview().offset(20)
             make.width.equalTo(200)
             make.height.equalTo(40)
         }
+        createButton.addTarget(self, action: #selector(createTimeCapsule), for: .touchUpInside)
+
         
         taggedFriendsLabel.snp.makeConstraints { make in
             make.top.equalTo(createButton.snp.bottom).offset(20)
@@ -278,28 +276,29 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
     }
     
     func textViewDidChange(_ textView: UITextView) {
-         // Update create button state based on text input
-     }
+    }
+
+    private func updateCreateButtonState() {
+        let isDescriptionEmpty = descriptionTextView.text.isEmpty || descriptionTextView.text == "타임박스에 들어갈 편지를 쓰세요!"
+        createButton.isEnabled = selectedImage != nil && !isDescriptionEmpty
+    }
+
     
     // 여기수정하기
     @objc private func createTimeCapsule() {
+        let tabBarController = MainTabBarView()
         // 타임박스 생성 로직 (Firestore에 데이터 저장 등)
+        print("임시 타임박스를 생성합니다.")
 
         // Firestore에 데이터 저장이 성공했다고 가정하고, 성공 알림창 표시
         let alert = UIAlertController(title: "성공", message: "타임박스가 성공적으로 생성되었습니다!", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { _ in
             // 확인 버튼을 누르면 홈 화면으로 이동
-            self.navigationController?.popToRootViewController(animated: true)
+            self.present(tabBarController, animated: true, completion: nil)
         }))
         self.present(alert, animated: true, completion: nil)
     }
 
-    private func updateCreateButtonState() {
-        let isDescriptionEmpty = descriptionTextView.text.isEmpty || descriptionTextView.text == "타임박스에 들어갈 편지를 쓰세요!"
-        let isImageSelected = selectedImage != nil
-        createButton.isEnabled = !isDescriptionEmpty && isImageSelected
-    }
-    
     func updateUI(with friends: [User]) {
         // Assuming you have a way to display friends in the UI
         // You can update the UI to display the list of friends

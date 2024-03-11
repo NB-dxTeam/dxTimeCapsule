@@ -297,7 +297,7 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         if let location = locations.first {
             var coordinate = location.coordinate
             // Adjusting latitude by adding 0.015 to slightly shift the map view up
-            coordinate.latitude += 0.015
+            coordinate.latitude -= 0.015
 
             let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 5000, longitudinalMeters: 5000)
             mapView.setRegion(region, animated: true)

@@ -251,13 +251,16 @@ extension CapsuleMapViewController {
 // MARK: -MKMapViewDalegate
 extension CapsuleMapViewController: MKMapViewDelegate {
     func setupMapView() {
+        
         // 대리자를 뷰컨으로 설정
         capsuleMaps.delegate = self
         capsuleMaps.showsCompass = false
+        
         // 위치 사용 시 사용자의 현재 위치 표시
         capsuleMaps.showsUserLocation = true
         capsuleMaps.layer.masksToBounds = true
         capsuleMaps.layer.cornerRadius = 10
+        
         // 애니메이션 효과가 추가 되어 부드럽게 화면 확대 및 이동
         //capsuleMaps.setUserTrackingMode(.follow, animated: true)
         capsuleMaps.setUserTrackingMode(.followWithHeading, animated: true)
