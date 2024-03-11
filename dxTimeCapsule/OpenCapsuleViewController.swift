@@ -56,11 +56,9 @@ class OpenCapsuleViewController: UIViewController {
 
     @objc private func homeButtonTapped() {
         // 모든 모달 뷰 컨트롤러를 닫고, 루트 뷰 컨트롤러로 돌아가기
-        self.view.window?.rootViewController?.dismiss(animated: true, completion: {
-            if let tabBarController = self.view.window?.rootViewController as? UITabBarController {
-                tabBarController.selectedIndex = 0
-            }
-        })
+        let tabBarController = MainTabBarView()
+        tabBarController.modalPresentationStyle = .fullScreen
+        present(tabBarController, animated: true, completion: nil)
     }
 
     private func setupUIComponents() {
