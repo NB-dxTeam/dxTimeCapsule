@@ -73,14 +73,26 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         return button
     }()
     
+    private let taggedFriendsLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 16)
+        label.textColor = .black
+        label.numberOfLines = 0 // Allows multiple lines
+        label.text = "Tagged Friends: None"
+        return label
+    }()
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white.withAlphaComponent(0.8)
         setupViews()
         
         descriptionTextView.delegate = self
-        tagFriendsButton.addTarget(self, action: #selector(tagFriendsButtonTapped), for: .touchUpInside)
+//        tagFriendsButton.addTarget(self, action: #selector(tagFriendsButtonTapped), for: .touchUpInside)
         createButton.addTarget(self, action: #selector(createTimeCapsule), for: .touchUpInside)
+        tagFriendsButton.addTarget(self, action: #selector(tagfriendListButtonTapped), for: .touchUpInside)
+
         
         // Add pan gesture recognizer to detect downward drag
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
@@ -91,7 +103,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
     private func setupViews() {
         navigationItem.title = "타임캡슐 만들기"
         
-        let views = [descriptionTitleLabel, descriptionTextView, openDateTitleLabel, datePicker, tagFriendsButton, createButton]
+        let views = [descriptionTitleLabel, descriptionTextView, openDateTitleLabel, datePicker, tagFriendsButton, createButton, taggedFriendsLabel]
         views.forEach(view.addSubview)
         
         descriptionTitleLabel.snp.makeConstraints { make in
@@ -127,13 +139,26 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
             make.height.equalTo(50)
         }
         
+
         createButton.snp.makeConstraints { make in
             make.bottom.equalToSuperview().inset(80)
             make.centerX.equalToSuperview()
             make.width.equalTo(200)
             make.height.equalTo(40)
         }
+        
+        taggedFriendsLabel.snp.makeConstraints { make in
+            make.top.equalTo(createButton.snp.bottom).offset(20)
+            make.leading.trailing.equalToSuperview().inset(20)
+        }
     }
+    
+    @objc func tagfriendListButtonTapped() {
+        let tagFriendListViewController = TagFriendsListViewController()
+        tagFriendListViewController.delegate = self // Set self as delegate
+        self.present(tagFriendListViewController, animated: true, completion: nil)
+    }
+
     
     @objc func tagFriendsButtonTapped() {
         guard let currentUserUID = Auth.auth().currentUser?.uid else { return }
@@ -280,6 +305,16 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         // You can update the UI to display the list of friends
         // For example, you can use a table view to show the list of friends
     }
+    
+    func updateTaggedFriendsUI() {
+        if friends.isEmpty {
+            taggedFriendsLabel.text = "Tagged Friends: None"
+        } else {
+            let names = friends.map { $0.username }.joined(separator: ", ")
+            taggedFriendsLabel.text = "Tagged Friends: \(names)"
+        }
+    }
+
     // MARK: - Pan Gesture Handler
     @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: view)
@@ -304,6 +339,13 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         default:
             break
         }
+    }
+}
+
+extension PostWritingViewController: TagFriendsListViewControllerDelegate {
+    func didTagFriends(_ taggedFriends: [User]) {
+        self.friends = taggedFriends
+        updateTaggedFriendsUI() // Update UI with tagged friends
     }
 }
 

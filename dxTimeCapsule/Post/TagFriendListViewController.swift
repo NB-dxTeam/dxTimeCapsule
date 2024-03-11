@@ -2,32 +2,63 @@ import UIKit
 import FirebaseFirestore
 import FirebaseAuth
 
-class FriendsListViewController: UIViewController {
+protocol TagFriendsListViewControllerDelegate: AnyObject {
+    func didTagFriends(_ taggedFriends: [User])
+}
+
+class TagFriendsListViewController: UIViewController {
     
     var tableView: UITableView!
     let db = Firestore.firestore()
     var currentUser: User?
     var friends: [User] = []
+    weak var delegate: TagFriendsListViewControllerDelegate?
+    private let confirmSelectionButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Confirm Selection", for: .normal)
+        button.backgroundColor = UIColor.blue
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupTableView()
+        setupConfirmSelectionButton()
         fetchCurrentUser()
+    }
+    
+    func confirmSelection() {
+        let selectedFriends = tableView.indexPathsForSelectedRows?.compactMap { indexPath -> User? in
+            return friends[indexPath.row]
+        } ?? []
+        
+        delegate?.didTagFriends(selectedFriends)
+        dismiss(animated: true, completion: nil)
+    }
+    private func setupConfirmSelectionButton() {
+        view.addSubview(confirmSelectionButton)
+        confirmSelectionButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
+            make.leading.equalTo(view).offset(20)
+            make.trailing.equalTo(view).offset(-20)
+            make.height.equalTo(50)
+        }
+        confirmSelectionButton.addTarget(self, action: #selector(confirmSelectionButtonTapped), for: .touchUpInside)
     }
     
     private func setupTableView() {
         tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(TagFriendListTableViewCell.self, forCellReuseIdentifier: "FriendCell")
+        tableView.allowsMultipleSelection = true // Enable multiple selection
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "tagFriendCell") // Update to the correct cell class
         view.addSubview(tableView)
-        
-        tableView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
+        // Constraints setup...
     }
-    
+
     private func fetchCurrentUser() {
         // Fetch current user data from Firebase
         guard let currentUserID = Auth.auth().currentUser?.uid else { return }
@@ -52,7 +83,7 @@ class FriendsListViewController: UIViewController {
     private func fetchFriends(forUserID userID: String) {
         db.collection("friendships").whereField("userUids", arrayContains: userID).getDocuments { [weak self] snapshot, error in
             guard let self = self, let documents = snapshot?.documents, error == nil else {
-                print("Error fetching friends: \(error)")
+                print("Error fetching friends: \(String(describing: error))")
                 return
             }
             
@@ -97,16 +128,23 @@ class FriendsListViewController: UIViewController {
             }
         }
     }
+    
+    @objc private func confirmSelectionButtonTapped() {
+        let selectedFriends = (tableView.indexPathsForSelectedRows ?? []).map { friends[$0.row] }
+        delegate?.didTagFriends(selectedFriends)
+        dismiss(animated: true, completion: nil)
+    }
+
 
 }
 
-extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource {
+extension TagFriendsListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return friends.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "FriendCell", for: indexPath) as! FriendListTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "tagFriendCell", for: indexPath) as! TagFriendListTableViewCell
         cell.user = friends[indexPath.row]
         return cell
     }

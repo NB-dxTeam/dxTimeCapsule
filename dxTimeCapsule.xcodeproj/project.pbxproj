@@ -24,6 +24,8 @@
 		1F367EA62B8F803A00563908 /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F367EA52B8F803A00563908 /* UIColor+Hex.swift */; };
 		1F4339722B9ADEB0006D39F5 /* CapsuleAnnotationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4339712B9ADEB0006D39F5 /* CapsuleAnnotationModel.swift */; };
 		1F52DE1D2B972C9000EE2E1E /* CustomModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F52DE1C2B972C9000EE2E1E /* CustomModal.swift */; };
+		1F52F8B62B9CD69F00974F0B /* TagFriendListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F52F8B52B9CD69F00974F0B /* TagFriendListViewController.swift */; };
+		1F52F8B92B9CDADC00974F0B /* TagFriendListTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F52F8B82B9CDADC00974F0B /* TagFriendListTableCell.swift */; };
 		1F5786D92B849AF800C40B08 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5786D82B849AF800C40B08 /* AppDelegate.swift */; };
 		1F5786E52B849AFA00C40B08 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F5786E42B849AFA00C40B08 /* Assets.xcassets */; };
 		1F5786E82B849AFA00C40B08 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F5786E62B849AFA00C40B08 /* LaunchScreen.storyboard */; };
@@ -84,7 +86,7 @@
 		D22B171E2B97163C006CAEA6 /* Friendship.swift in Sources */ = {isa = PBXBuildFile; fileRef = D22B171D2B97163C006CAEA6 /* Friendship.swift */; };
 		D22B171F2B973416006CAEA6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467D1DE22B972499005249B1 /* SceneDelegate.swift */; };
 		D25B20EB2B89CD02006CEED8 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25B20EA2B89CD02006CEED8 /* SplashViewController.swift */; };
-		D274E0162B9C243900FAF849 /* FriendListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D274E0152B9C243900FAF849 /* FriendListTableViewCell.swift */; };
+		D274E0162B9C243900FAF849 /* TagFriendListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D274E0152B9C243900FAF849 /* TagFriendListTableViewCell.swift */; };
 		D274E01E2B9CC69000FAF849 /* FriendsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D274E01D2B9CC69000FAF849 /* FriendsListViewController.swift */; };
 		FFC457642B8F0F36000761E9 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC457632B8F0F36000761E9 /* UserProfileViewModel.swift */; };
 		FFC457662B8F0F74000761E9 /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC457652B8F0F74000761E9 /* UserProfileViewController.swift */; };
@@ -109,6 +111,8 @@
 		1F367EA52B8F803A00563908 /* UIColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Hex.swift"; sourceTree = "<group>"; };
 		1F4339712B9ADEB0006D39F5 /* CapsuleAnnotationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleAnnotationModel.swift; sourceTree = "<group>"; };
 		1F52DE1C2B972C9000EE2E1E /* CustomModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModal.swift; sourceTree = "<group>"; };
+		1F52F8B52B9CD69F00974F0B /* TagFriendListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFriendListViewController.swift; sourceTree = "<group>"; };
+		1F52F8B82B9CDADC00974F0B /* TagFriendListTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFriendListTableCell.swift; sourceTree = "<group>"; };
 		1F5786D52B849AF800C40B08 /* dxTimeCapsule.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dxTimeCapsule.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F5786D82B849AF800C40B08 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1F5786E42B849AFA00C40B08 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -174,7 +178,7 @@
 		D22B171B2B971599006CAEA6 /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
 		D22B171D2B97163C006CAEA6 /* Friendship.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Friendship.swift; sourceTree = "<group>"; };
 		D25B20EA2B89CD02006CEED8 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
-		D274E0152B9C243900FAF849 /* FriendListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendListTableViewCell.swift; sourceTree = "<group>"; };
+		D274E0152B9C243900FAF849 /* TagFriendListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFriendListTableViewCell.swift; sourceTree = "<group>"; };
 		D274E01D2B9CC69000FAF849 /* FriendsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListViewController.swift; sourceTree = "<group>"; };
 		FFC457632B8F0F36000761E9 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
 		FFC457652B8F0F74000761E9 /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
@@ -216,6 +220,8 @@
 				1F0D3B2B2B89AA2B00A31E82 /* PhotoUploadViewController.swift */,
 				1F2450172B9B4D74002C68BB /* PostWritingViewController.swift */,
 				1F2450232B9BF0A4002C68BB /* DatePickerModalViewController.swift */,
+				1F52F8B52B9CD69F00974F0B /* TagFriendListViewController.swift */,
+				27F382802B8FA1350005F733 /* NotificationView */,
 				1F24501C2B9B5942002C68BB /* Cell */,
 			);
 			path = Post;
@@ -311,7 +317,6 @@
 				1FAB4DEC2B8C29D80054618A /* Authentication */,
 				1F0B91372B9089A50022EDD9 /* TabBar */,
 				1FC44F0A2B932E9F002A75AF /* Upload */,
-				27F382802B8FA1350005F733 /* NotificationView */,
 				D20CDCCB2B95979900B93788 /* Alarm */,
 				1F722F0D2B938CB500407850 /* SplashVew */,
 				27C81E412B8A39E9001E3623 /* HomeView */,
@@ -519,8 +524,10 @@
 			children = (
 				27F3827E2B8FA1240005F733 /* NotificationTableViewCell.swift */,
 				27865AD32B8DFCA900DB8DB6 /* NotificationViewController.swift */,
+				1F52F8B82B9CDADC00974F0B /* TagFriendListTableCell.swift */,
 			);
 			name = NotificationView;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		D20CDCCB2B95979900B93788 /* Alarm */ = {
@@ -528,7 +535,7 @@
 			children = (
 				D20CDCCC2B959DFE00B93788 /* FriendsRequestViewController.swift */,
 				D20CDCCE2B96D86100B93788 /* FriendRequestTableViewCell.swift */,
-				D274E0152B9C243900FAF849 /* FriendListTableViewCell.swift */,
+				D274E0152B9C243900FAF849 /* TagFriendListTableViewCell.swift */,
 				D274E01D2B9CC69000FAF849 /* FriendsListViewController.swift */,
 			);
 			name = Alarm;
@@ -675,6 +682,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FFC457642B8F0F36000761E9 /* UserProfileViewModel.swift in Sources */,
+				1F52F8B92B9CDADC00974F0B /* TagFriendListTableCell.swift in Sources */,
 				1F2450162B9B4CB2002C68BB /* FirestoreService.swift in Sources */,
 				D22B171E2B97163C006CAEA6 /* Friendship.swift in Sources */,
 				FFC457662B8F0F74000761E9 /* UserProfileViewController.swift in Sources */,
@@ -683,7 +691,7 @@
 				46EA9BAE2B89A27E00633EC4 /* CapsuleMapViewController.swift in Sources */,
 				D274E01E2B9CC69000FAF849 /* FriendsListViewController.swift in Sources */,
 				1F0854322B8F254B00711660 /* MainCapsuleViewController.swift in Sources */,
-				D274E0162B9C243900FAF849 /* FriendListTableViewCell.swift in Sources */,
+				D274E0162B9C243900FAF849 /* TagFriendListTableViewCell.swift in Sources */,
 				460FE7672B8A200D00AF8086 /* LockedCapsuleCell.swift in Sources */,
 				4E4F6CDB2B99C2B500154ED1 /* OpenCapsuleViewController.swift in Sources */,
 				4E2A09CA2B8F86C600911390 /* FadeInAnimator.swift in Sources */,
@@ -717,6 +725,7 @@
 				D20CDCCF2B96D86100B93788 /* FriendRequestTableViewCell.swift in Sources */,
 				1F52DE1D2B972C9000EE2E1E /* CustomModal.swift in Sources */,
 				1F24501F2B9B82D3002C68BB /* HalfModalPresentationController.swift in Sources */,
+				1F52F8B62B9CD69F00974F0B /* TagFriendListViewController.swift in Sources */,
 				1F5786F22B849CA900C40B08 /* AuthenticationViewModel.swift in Sources */,
 				1FB387372B8862AF00054816 /* MainFeedViewController.swift in Sources */,
 				1F2450242B9BF0A4002C68BB /* DatePickerModalViewController.swift in Sources */,
@@ -887,7 +896,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = dxTimeCapsule/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
-				INFOPLIST_KEY_NSCameraUsageDescription = "카메라에 접근하기 위해 피룡한 권한입니다.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "카메라에 접근하기 위해 필요한 권한입니다.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진 앨범에 접근하기위해 필요한 권한입니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사용자의 현재 위치를 기반으로 정보를 제공하기 위해 필요한 권한입니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -920,7 +929,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = dxTimeCapsule/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
-				INFOPLIST_KEY_NSCameraUsageDescription = "카메라에 접근하기 위해 피룡한 권한입니다.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "카메라에 접근하기 위해 필요한 권한입니다.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진 앨범에 접근하기위해 필요한 권한입니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사용자의 현재 위치를 기반으로 정보를 제공하기 위해 필요한 권한입니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

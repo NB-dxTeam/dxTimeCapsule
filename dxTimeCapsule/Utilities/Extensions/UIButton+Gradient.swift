@@ -16,9 +16,9 @@ extension UIButton {
 
     }
 
-    // ViceCity 테마
-    func setViceCity() {
-        setGradient(colors: [#colorLiteral(red: 0.2039215686, green: 0.5803921569, blue: 0.9019607843, alpha: 1), #colorLiteral(red: 0.9254901961, green: 0.431372549, blue: 0.6784313725, alpha: 1)])
+    // custom1 테마
+    func setCustom1() {
+        setGradient(colors: [#colorLiteral(red: 1, green: 0.2274509804, blue: 0.2901960784, alpha: 1), #colorLiteral(red: 1, green: 0.6549019608, blue: 0.3176470588, alpha: 1)])
 
     }
 
@@ -28,11 +28,6 @@ extension UIButton {
 
     }
 
-    // Mango Custom 테마
-    func setMangoustom() {
-        setGradient(colors: [#colorLiteral(red: 1, green: 0.8862745098, blue: 0.3490196078, alpha: 1), #colorLiteral(red: 0.7894003391, green: 0.2963732481, blue: 0.2954288721, alpha: 1)])
-
-    }
     
     // PurpleParadise 테마
     func setPurpleParadise() {

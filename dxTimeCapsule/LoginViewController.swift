@@ -51,8 +51,10 @@ class LoginViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        loginButton.backgroundColor = UIColor(hex: "#FF3A4A")
-        socialLogin.backgroundColor = UIColor(hex: "#FF3A4A")
+//        loginButton.backgroundColor = UIColor(hex: "#FF3A4A")
+//        socialLogin.backgroundColor = UIColor(hex: "#FF3A4A")
+        loginButton.setCustom1()
+        socialLogin.setCustom1()
 
     }
     

@@ -320,7 +320,6 @@
       "subtype" : "44mm"
     },
     {
-      "filename" : "1024 1.png",
       "idiom" : "watch",
       "role" : "quickLook",
       "scale" : "2x",
@@ -335,6 +334,7 @@
       "subtype" : "49mm"
     },
     {
+      "filename" : "1024 1.png",
       "idiom" : "watch-marketing",
       "scale" : "1x",
       "size" : "1024x1024"
