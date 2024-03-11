@@ -12,7 +12,11 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(returnToHome), name: NSNotification.Name("ReturnToHome"), object: nil)
     }
     
-
+    @objc func returnToHome() {
+        // 첫 번째 탭(홈 화면)으로 이동합니다. - 우경
+        self.selectedIndex = 0
+    }
+    
     private func setupTabs() {
         let homeViewController = UINavigationController(rootViewController: HomeViewController())
         let searchModalTableViewController = UINavigationController(rootViewController: CapsuleMapViewController())
@@ -51,10 +55,5 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
 
     deinit {
         NotificationCenter.default.removeObserver(self)
-    }
-    
-    @objc func returnToHome() {
-        // 첫 번째 탭(홈 화면)으로 이동합니다. - 우경
-        self.selectedIndex = 0
     }
 }
