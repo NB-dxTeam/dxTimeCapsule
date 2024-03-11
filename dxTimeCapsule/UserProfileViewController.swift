@@ -131,7 +131,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         }
         
         // Search User Button Setup
-        friendListButton.setTitle("친구목록보기(임시)", for: .normal)
+        friendListButton.setTitle("친구목록보기", for: .normal)
         friendListButton.titleLabel?.font = .pretendardSemiBold(ofSize: 14)
         friendListButton.setTitleColor(.darkGray, for: .normal)
         friendListButton.addTarget(self, action: #selector(friendListButtonTapped), for: .touchUpInside)

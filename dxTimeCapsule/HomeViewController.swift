@@ -15,14 +15,14 @@ import FirebaseAuth
 //}
 
 class HomeViewController: UIViewController {
-
+    
     // MARK: - Properties
     
     var documentId: String?
-
+    
     // 메인 타임캡슐 이미지 배열
     let mainTCImages = [UIImage(named: "IMG1"), UIImage(named: "IMG2"), UIImage(named: "IMG3"), UIImage(named: "IMG4")]
-
+    
     // 현재 표시 중인 이미지의 인덱스
     var currentImageIndex = 0
     
@@ -78,7 +78,7 @@ class HomeViewController: UIViewController {
         label.contentMode = .top
         return label
     }()
-
+    
     // 장소정보 스택뷰
     lazy var locationInforStackView: UIStackView = {
         let stackView = UIStackView()
@@ -134,7 +134,7 @@ class HomeViewController: UIViewController {
         button.isUserInteractionEnabled = false
         return button
     }()
- 
+    
     // noMainTC 스택뷰
     lazy var noMainTCStackView: UIStackView = {
         let stackView = UIStackView()
@@ -176,7 +176,7 @@ class HomeViewController: UIViewController {
         
         return button
     }()
-
+    
     // 다가오는 타임캡슐 버튼
     let upcomingTCButton: UIButton = {
         let button = UIButton(type: .system)
@@ -237,18 +237,18 @@ class HomeViewController: UIViewController {
                     // 데이터가 없는 경우 처리
                     if querySnapshot?.documents.isEmpty ?? true {
                         print("No upcoming memories found")
-                            DispatchQueue.main.async {
-                                self.animateMainTCImageChange()
-                                self.duestTCInforStackView.removeFromSuperview()
-                                self.upcomingTCButton.isEnabled = false
-                                self.upcomingTCButton.setBackgroundImage(UIImage(named: "empty"), for: .normal)
-                                if let titleLabel = self.upcomingTCButton.subviews.first(where: { $0 is UILabel }) as? UILabel {
-                                    titleLabel.text = ""
-                                    titleLabel.textColor = .black
-                                    titleLabel.backgroundColor = UIColor.gray.withAlphaComponent(0)
-                                    titleLabel.font = UIFont.boldSystemFont(ofSize: 100)
-                                }
+                        DispatchQueue.main.async {
+                            self.animateMainTCImageChange()
+                            self.duestTCInforStackView.removeFromSuperview()
+                            self.upcomingTCButton.isEnabled = false
+                            self.upcomingTCButton.setBackgroundImage(UIImage(named: "empty"), for: .normal)
+                            if let titleLabel = self.upcomingTCButton.subviews.first(where: { $0 is UILabel }) as? UILabel {
+                                titleLabel.text = ""
+                                titleLabel.textColor = .black
+                                titleLabel.backgroundColor = UIColor.gray.withAlphaComponent(0)
+                                titleLabel.font = UIFont.boldSystemFont(ofSize: 100)
                             }
+                        }
                     } else if let document = querySnapshot?.documents.first {
                         self.documentId = document.documentID // documentId 업데이트
                         let userLocation = document.get("userLocation") as? String ?? "Unknown Location"
@@ -257,10 +257,10 @@ class HomeViewController: UIViewController {
                         let openDateTimestamp = document.get("openDate") as? Timestamp
                         let openDate = openDateTimestamp?.dateValue()
                         
-//                        print("Fetched location name: \(userLocation)")
-//                        print("Fetched location address: \(location)")
-//                        print("Fetched photo URL: \(tcBoxImageURL)")
-//                        print("Fetched open date: \(openDate)")
+                        //                        print("Fetched location name: \(userLocation)")
+                        //                        print("Fetched location address: \(location)")
+                        //                        print("Fetched photo URL: \(tcBoxImageURL)")
+                        //                        print("Fetched open date: \(openDate)")
                         
                         // 메인 스레드에서 UI 업데이트를 수행합니다.
                         DispatchQueue.main.async {
@@ -325,7 +325,7 @@ class HomeViewController: UIViewController {
                             self.openedTCButton.isEnabled = false
                             self.openedTCButton.setBackgroundImage(UIImage(named: "empty"), for: .normal)
                             if let titleLabel = self.openedTCButton.subviews.first(where: { $0 is UILabel }) as? UILabel {
-                                        titleLabel.text = "NO\nMemories\nYET😭"
+                                titleLabel.text = "NO\nMemories\nYET😭"
                             }
                         }
                     }
@@ -341,7 +341,7 @@ class HomeViewController: UIViewController {
         fetchTimeCapsuleData()
         configureUI()
         addLogoToNavigationBar()
-
+        
     }
     
     // MARK: - Helpers
@@ -361,9 +361,9 @@ class HomeViewController: UIViewController {
             button.isUserInteractionEnabled = true
             return button
         }()
-
         
-        let imageSize = CGSize(width: 150, height: 50) // 원하는 크기로 조절
+        
+        let imageSize = CGSize(width: 120, height: 40) // 원하는 크기로 조절
         imageView.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: imageSize) // x값을 0으로 변경하여 왼쪽 상단에 위치하도록 설정
         
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height))
@@ -373,21 +373,21 @@ class HomeViewController: UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: containerView)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: addFriendsButton)
     }
-
-
+    
+    
     private func configureUI(){
         
-
+        
         // 메인 타임캡슐 그림자 추가
         view.addSubview(mainContainerView)
         mainContainerView.snp.makeConstraints { make in
-
-             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(15)
-
-             make.leading.trailing.equalToSuperview().inset(20)
+            
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(15)
+            
+            make.leading.trailing.equalToSuperview().inset(20)
             make.height.equalToSuperview().multipliedBy(2.0/6.0)
-                  }
-              
+        }
+        
         // mainTCImageView를 maincontainerView에 추가
         mainContainerView.addSubview(mainTCImageView)
         mainTCImageView.snp.makeConstraints { make in
@@ -395,7 +395,7 @@ class HomeViewController: UIViewController {
         }
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(mainTCImageViewTapped))
         mainTCImageView.addGestureRecognizer(tapGesture)
-
+        
         // infoAndDdayStackView의 위치 설정
         view.addSubview(duestTCInforStackView)
         duestTCInforStackView.snp.makeConstraints { make in
@@ -429,17 +429,17 @@ class HomeViewController: UIViewController {
             make.leading.trailing.equalToSuperview().inset(5)
             make.height.equalTo(mainContainerView.snp.width).multipliedBy(1.0/5.0)
         }
-
+        
         // userLocationLabel의 슈퍼뷰 설정
         locationNameLabel.snp.makeConstraints { make in
             make.height.equalTo(locationNameLabel.font.pointSize) // 폰트 크기에 맞는 높이로 설정
         }
-
+        
         // locationLabel의 슈퍼뷰 설정
         locationAddressLabel.snp.makeConstraints { make in
             make.height.equalTo(locationAddressLabel.font.pointSize) // 폰트 크기에 맞는 높이로 설정
         }
-
+        
         // dDayLabel의 슈퍼뷰 설정
         duestTCInforStackView.addSubview(dDayLabel)
         dDayLabel.snp.makeConstraints { make in
@@ -465,21 +465,21 @@ class HomeViewController: UIViewController {
     func animateMainTCImageChange() {
         // 현재 표시 중인 이미지 페이드 아웃
         UIView.transition(with: mainTCImageView,duration: 3.0, options: .transitionCrossDissolve, animations: {
-                        self.mainTCImageView.image = self.mainTCImages[self.currentImageIndex]
-                         },
-                         completion: { _ in
-                        self.moveToNextImage()
-                         self.animateMainTCImageChange()
-                                 })
-                              }
-                              private func moveToNextImage() {
-                                  currentImageIndex += 1
-                                  if currentImageIndex == mainTCImages.count {
-                                      currentImageIndex = 0
-                                  }
-                              }
-                          
-
+            self.mainTCImageView.image = self.mainTCImages[self.currentImageIndex]
+        },
+                          completion: { _ in
+            self.moveToNextImage()
+            self.animateMainTCImageChange()
+        })
+    }
+    private func moveToNextImage() {
+        currentImageIndex += 1
+        if currentImageIndex == mainTCImages.count {
+            currentImageIndex = 0
+        }
+    }
+    
+    
     
     // MARK: - Actions
     
@@ -524,7 +524,7 @@ class HomeViewController: UIViewController {
         let navController = UINavigationController(rootViewController: upcomingVC)
         present(navController, animated: true, completion: nil)
     }
-
+    
 }
 //
 //import SwiftUI
