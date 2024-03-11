@@ -81,7 +81,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         button.setTitle("타임박스 만들기", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .pretendardSemiBold(ofSize: 16)
-        button.backgroundColor = UIColor(hex: "#D53369").withAlphaComponent(0.85)
+        button.backgroundColor = UIColor(hex: "#FF3A4A").withAlphaComponent(0.85)
         button.layer.cornerRadius = 8
         button.layer.shadowOpacity = 0.3
         button.layer.shadowRadius = 5
