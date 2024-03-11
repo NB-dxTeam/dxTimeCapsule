@@ -17,7 +17,7 @@ class SignUpViewController: UIViewController  {
     private let signUpButton = UIButton(type: .system)
     
     private let labelsContainerView = UIView()
-    
+        
     private let dividerView = UIView()
     
     private let alreadyHaveAccountLabel = UILabel()

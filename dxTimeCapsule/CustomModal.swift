@@ -10,18 +10,12 @@ import SnapKit
 import FirebaseFirestore
 import FirebaseAuth
 
-struct TimeCapsules {
-    var creationDate: Date
-    var openDate: Date
-    var userLocation: String
-    var photoUrl: String
-    var comment: String
-}
+
 
 class CustomModal: UIViewController {
     
-    var timeCapsule = [TimeCapsules]()
-    
+    var capsuleInfo = [CapsuleInfo]()
+    var onCapsuleSelected: ((Double, Double) -> Void)? //선택된 위치 정보를 받아 처리하는 클로저
     private var capsuleCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -30,11 +24,6 @@ class CustomModal: UIViewController {
         collection.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         collection.layer.masksToBounds = true
         return collection
-    }()
-    private var dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yy.MM.dd"
-        return formatter
     }()
     
     override func viewDidLoad() {
@@ -61,7 +50,7 @@ class CustomModal: UIViewController {
         capsuleCollection.isPagingEnabled = true // 페이징 활성화
         capsuleCollection.showsVerticalScrollIndicator = true // 수직 스크롤 인디케이터 표시 여부 설정.
         capsuleCollection.decelerationRate = .normal // 콜렉션 뷰의 감속 속도 설정
-        capsuleCollection.alpha = 0.8
+        capsuleCollection.alpha = 1 // 투명도
         if let layout = capsuleCollection.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .vertical // 스크롤 방향(수직)
             let screenWidth = UIScreen.main.bounds.width
@@ -72,53 +61,56 @@ class CustomModal: UIViewController {
             let sectionInsetHorizontal = screenWidth * 0.05 // 좌우 여백을 화면 너비의 5%로 설정
             layout.sectionInset = UIEdgeInsets(top: 24, left: sectionInsetHorizontal, bottom: 24, right: sectionInsetHorizontal)
             // 최소 줄 간격 설정
-            let minimumLineSpacing = screenWidth * 0.1 // 최소 줄 간격을 화면 너비의 10%로 설정
+            let minimumLineSpacing = screenWidth * 0.2 // 최소 줄 간격을 화면 너비의 10%로 설정
             layout.minimumLineSpacing = minimumLineSpacing
-            
+            layout.sectionHeadersPinToVisibleBounds = true
         }
     }
     // 데이터 정보 가져오기.
     private func fetchTimeCapsulesInfo() {
         let db = Firestore.firestore()
         let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // Example UID, replace with dynamic UID
-        
         db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
+            .whereField("isOpened", isEqualTo: false) // 아직 열리지 않은 타임캡슐만 선택
+            .order(by: "openDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
             .getDocuments { [weak self] (querySnapshot, err) in
                 if let documents = querySnapshot?.documents {
                     print("documents 개수: \(documents.count)")
-                    self?.timeCapsule = documents.compactMap { doc in
+                    self?.capsuleInfo = documents.compactMap { doc in
                         let data = doc.data()
-                        let capsule = TimeCapsules(
-                            creationDate: data["creationDate"] as? Date ?? Date(),
-                            openDate: data["openDate"] as? Date ?? Date(),
-                            userLocation: data["userLocation"] as? String ?? "",
-                            photoUrl: data["photoUrl"] as? String ?? "",
-                            comment: data["comment"] as? String ?? ""
+                        let capsule = CapsuleInfo(
+                            TimeCapsuleId: doc.documentID,
+                            tcBoxImageURL: data["tcBoxImageURL"] as? String,
+                            latitude: data["latitude"] as? Double ?? 37.5115,
+                            longitude: data["longitude"] as? Double ?? 127.0986,
+                            userLocation: data["userLocation"] as? String,
+                            userComment: data["userComment"] as? String,
+                            createTimeCapsuleDate: (data["creationDate"] as? Timestamp)?.dateValue() ?? Date(),
+                            openTimeCapsuleDate: (data["openDate"] as? Timestamp)?.dateValue() ?? Date(),
+                            isOpened: data["isOpened"] as? Bool ?? false
                         )
                         print("매핑된 캡슐: \(capsule)")
                         return capsule
                     }
                     print("Fetching time capsules for userID: \(userId)")
-                    print("Fetched \(self?.timeCapsule.count ?? 0) timecapsules")
+                    print("Fetched \(self?.capsuleInfo.count ?? 0) timecapsules")
                     
                     DispatchQueue.main.async {
-                        print("콜렉션 뷰 리로드.")
+                        print("collectionView reload.")
                         self?.capsuleCollection.reloadData()
                     }
                 } else if let err = err {
                     print("Error getting documents: \(err)")
-                } else {
-                    print("문서 성공적으로 가져옴.")
                 }
             }
     }
 }
 
-extension CustomModal: UICollectionViewDelegate, UICollectionViewDataSource {
+extension CustomModal: UICollectionViewDataSource, UICollectionViewDelegate {
     // MARK: - UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return timeCapsule.count
+        return capsuleInfo.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -126,8 +118,8 @@ extension CustomModal: UICollectionViewDelegate, UICollectionViewDataSource {
             fatalError("Unable to dequeue LockedCapsuleCell")
         }
         
-        let timeCapsule = timeCapsule[indexPath.row]
-        cell.configure(with: timeCapsule)
+        let capsuleInfo = capsuleInfo[indexPath.row]
+        cell.configure(with: capsuleInfo)
         return cell
     }
     
@@ -145,19 +137,18 @@ extension CustomModal: UICollectionViewDelegate, UICollectionViewDataSource {
         headerView.headerLabel.text = "여기에 정렬 옵션 추가"
         return headerView
     }
+    
+    // MARK: - UICollectionViewDelegate
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedCapsule = capsuleInfo[indexPath.row]
+        onCapsuleSelected?(selectedCapsule.latitude, selectedCapsule.longitude)
+    }
 }
 
 extension CustomModal: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         // 헤더 뷰의 크기 설정
         return CGSize(width: collectionView.frame.width, height: 48)
-    }
-}
-
-extension CustomModal {
-    // D-Day 남은 일수 계산
-    func daysUntilOpenDate(_ date: Date) -> Int {
-        return Calendar.current.dateComponents([.day], from: Date(), to: date).day ?? 0
     }
 }
 

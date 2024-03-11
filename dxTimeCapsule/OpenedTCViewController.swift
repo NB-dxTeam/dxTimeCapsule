@@ -1,95 +1,118 @@
 import UIKit
 import SnapKit
-//
+import FirebaseFirestore
+import FirebaseAuth
+
 //#Preview{
 //    OpenedTCViewController()
 //}
 
-class OpenedTCViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class OpenedTCViewController: UIViewController {
     
     // MARK: - Properties
     
-    // Dummy data
-    let images = ["Panda1", "Panda2", "Panda3", "Panda4", "Panda5", "Panda6", "Panda7"]
-    let topLabelData = ["Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "Title 7"]
-    let bottomLabelData = ["Description 1", "Description 2", "Description 3", "Description 4", "Description 5", "Description 6", "Description 7"]
-    
-    // MARK: - UI Components
-    
-    let collectionView: UICollectionView = {
+    var capsuleInfo = [TCInfo]()
+    var onCapsuleSelected: ((Double, Double) -> Void)?
+    private var capsuleCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .white
-        collectionView.showsHorizontalScrollIndicator = false
-        return collectionView
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.backgroundColor = .white
+        collection.layer.cornerRadius = 30
+        collection.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        collection.layer.masksToBounds = true
+        return collection
     }()
     
-    let pageControl: UIPageControl = {
-        let pageControl = UIPageControl()
-        pageControl.currentPageIndicatorTintColor = .black
-        pageControl.pageIndicatorTintColor = .lightGray
-        return pageControl
-    }()
-    
-    // MARK: - View Life Cycle
+    // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupViews()
-        setupConstraints()
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.register(OpendedTCCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        setupUI()
+        configCollection()
+        fetchTimeCapsulesInfo()
     }
     
-    // MARK: - Setup
+    // MARK: - UI Setup
     
-    private func setupViews() {
-        view.backgroundColor = .white
-        navigationItem.title = "저장된 타임캡슐"
-        view.addSubview(collectionView)
-        view.addSubview(pageControl)
-    }
-    
-    private func setupConstraints() {
-        collectionView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(20)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-50)
+    private func setupUI() {
+        view.addSubview(capsuleCollection)
+        capsuleCollection.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
+    }
+    
+    private func configCollection() {
+        capsuleCollection.delegate = self
+        capsuleCollection.dataSource = self
+        capsuleCollection.register(OpendedTCCell.self, forCellWithReuseIdentifier: OpendedTCCell.identifier)
+        capsuleCollection.isPagingEnabled = true
+        capsuleCollection.showsVerticalScrollIndicator = true
+        capsuleCollection.decelerationRate = .normal
+        capsuleCollection.alpha = 1
         
-        pageControl.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+        if let layout = capsuleCollection.collectionViewLayout as? UICollectionViewFlowLayout {
+            layout.scrollDirection = .vertical
+            let screenWidth = UIScreen.main.bounds.width
+            let itemWidth = screenWidth * 0.9
+            let itemHeight: CGFloat = 250
+            layout.itemSize = CGSize(width: itemWidth, height: itemHeight)
+            let sectionInsetHorizontal = screenWidth * 0.05
+            layout.sectionInset = UIEdgeInsets(top: 24, left: sectionInsetHorizontal, bottom: 24, right: sectionInsetHorizontal)
+            let minimumLineSpacing = screenWidth * 0.1
+            layout.minimumLineSpacing = minimumLineSpacing
         }
     }
     
-    // MARK: - UICollectionViewDataSource
+    // MARK: - Data Fetching
     
+    private func fetchTimeCapsulesInfo() {
+        let db = Firestore.firestore()
+        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2"
+        db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
+            .whereField("isOpened", isEqualTo: true)
+            .order(by: "openDate", descending: false)
+            .getDocuments { [weak self] (querySnapshot, err) in
+                if let documents = querySnapshot?.documents {
+                    print("documents 개수: \(documents.count)")
+                    self?.capsuleInfo = documents.compactMap { doc in
+                        let data = doc.data()
+                        let capsule = TCInfo(
+                            tcBoxImageURL: data["photoUrl"] as? String,
+                            userLocation: data["userLocation"] as? String,
+                            createTimeCapsuleDate: (data["creationDate"] as? Timestamp)?.dateValue() ?? Date(),
+                            openTimeCapsuleDate: (data["openDate"] as? Timestamp)?.dateValue() ?? Date()
+                        )
+                        print("매핑된 캡슐: \(capsule)")
+                        return capsule
+                    }
+                    print("Fetching time capsules for userID: \(userId)")
+                    print("Fetched \(self?.capsuleInfo.count ?? 0) timecapsules")
+                    
+                    DispatchQueue.main.async {
+                        print("collectionView reload.")
+                        self?.capsuleCollection.reloadData()
+                    }
+                } else if let err = err {
+                    print("Error getting documents: \(err)")
+                }
+            }
+    }
+}
+
+// MARK: - UICollectionViewDataSource, UICollectionViewDelegate
+
+extension OpenedTCViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return min(images.count, topLabelData.count, bottomLabelData.count)
+        return capsuleInfo.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! OpendedTCCollectionViewCell
-        let imageData = images[indexPath.item]
-        let topLabel = topLabelData[indexPath.item]
-        let bottomLabel = bottomLabelData[indexPath.item]
-        cell.configure(with: imageData, topLabelData: topLabel, bottomLabelData: bottomLabel)
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OpendedTCCell.identifier, for: indexPath) as? OpendedTCCell else {
+            fatalError("Unable to dequeue OpendedTCCell")
+        }
+        
+        let tcInfo = capsuleInfo[indexPath.row]
+        cell.configure(with: tcInfo)
         return cell
-    }
-    
-    // MARK: - UICollectionViewDelegateFlowLayout
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.frame.width - 40
-        let height = collectionView.frame.height / 5 - 20
-        return CGSize(width: width, height: height)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 20 // Adjust as needed
     }
 }

@@ -13,14 +13,15 @@ class TimeCapsuleCreationViewModel {
         let data: [String: Any] = [
             "id": timeCapsule.uid,
             "userId": userId, // 현재 로그인한 사용자의 ID
-            "mood": timeCapsule.userMood, // 기분
-            "photoUrl": timeCapsule.timeCapsuleImageURL ?? "", // 사진url
-            "location": timeCapsule.gpslocation , // 위치
-            "user_location": timeCapsule.userLocation ?? "", // 사용자 위치
-            "comment": timeCapsule.userLocation ?? "", // 코멘트
-            "tags": timeCapsule.tagFriend ?? [], // 태그
-            "openDate": timeCapsule.createTimeCapsuleDate, // 개봉일
-            "creationDate": timeCapsule.createTimeCapsuleDate // 생성일
+            "userName": timeCapsule.userName, // 타임박스를 생성한 사용자의 userName
+            "imageURL": timeCapsule.imageURL!, // 업로드 장소 이미지 사진의 URL
+            "userLocation": timeCapsule.userLocation!, // 사용자 위치
+            "description": timeCapsule.description!, // 타임캡슐 설명
+            "tagFriends": timeCapsule.tagFriends!, // 친구 태그 배열
+            "createTimeCapsuleDate": timeCapsule.createTimeCapsuleDate, // 생성일
+            "openTimeCapsuleDate": timeCapsule.openTimeCapsuleDate, // 개봉일
+            "isOpened": timeCapsule.isOpened // 오프 ㄴ여부
+
         ]
         
         db.collection("timeCapsules").addDocument(data: data) { error in
