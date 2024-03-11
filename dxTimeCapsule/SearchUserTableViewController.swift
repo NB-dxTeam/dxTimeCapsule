@@ -74,7 +74,7 @@ class SearchUserTableViewController: UIViewController, UITableViewDelegate, UITa
         view.addSubview(searchContainerView)
         
         searchContainerView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(-70)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(searchBar.snp.bottom)
         }
