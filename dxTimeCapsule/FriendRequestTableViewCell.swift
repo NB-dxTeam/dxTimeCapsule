@@ -24,9 +24,9 @@ class FriendRequestTableViewCell: UITableViewCell {
     private let acceptButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("친구 수락", for: .normal)
-        button.layer.borderColor = UIColor(hex: "#D53369").cgColor
+        button.layer.borderColor = UIColor(hex: "#FF3A4A").cgColor
         button.layer.borderWidth = 1
-        button.setTitleColor(UIColor(hex: "#D53369"), for: .normal)
+        button.setTitleColor(UIColor(hex: "#FF3A4A"), for: .normal)
         button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 14)
         button.layer.cornerRadius = 10
         return button
@@ -36,7 +36,7 @@ class FriendRequestTableViewCell: UITableViewCell {
         let label = UILabel()
         label.text = "Now friend"
         label.font = UIFont.pretendardSemiBold(ofSize: 14)
-        label.textColor = UIColor(hex: "D15E6B")
+        label.textColor = UIColor(hex: "FF3A4A")
         label.textAlignment = .center
         label.isHidden = true
         return label
