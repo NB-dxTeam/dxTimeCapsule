@@ -486,8 +486,7 @@ class HomeViewController: UIViewController {
     @objc private func addFriendsButtonTapped() {
         print("친구추가가 클릭되었습니다")
         let addFriendsVC = SearchUserTableViewController()
-        let navController = UINavigationController(rootViewController: addFriendsVC)
-        present(navController, animated: true, completion: nil)
+        navigationController?.pushViewController(addFriendsVC, animated: true)
     }
     
     @objc private func duestTCStackViewTapped() {
