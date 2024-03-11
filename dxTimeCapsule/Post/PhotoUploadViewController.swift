@@ -54,7 +54,7 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        nextButton.setCustom1()
+        nextButton.setInstagram()
     }
     
     private func setupProperties() {
