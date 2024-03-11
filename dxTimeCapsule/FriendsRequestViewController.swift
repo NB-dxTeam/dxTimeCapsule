@@ -7,7 +7,7 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
     
     private var db = Firestore.firestore()
     
-    private var alarmLabel: UILabel!
+//    private var alarmLabel: UILabel!
     private var friendRequests: [User] = []
     private var capsules: [TimeCapsule] = []
     private let tableView = UITableView()
@@ -32,17 +32,17 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func setUI() {
-        alarmLabel = UILabel()
-        alarmLabel.text = "알람"
-        alarmLabel.font = UIFont.systemFont(ofSize: 26, weight: .bold)
-        alarmLabel.textAlignment = .left
-        
-        view.addSubview(alarmLabel)
-        
-        alarmLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(-40)
-            make.leading.trailing.equalToSuperview().offset(16)
-        }
+//        alarmLabel = UILabel()
+//        alarmLabel.text = "알람"
+//        alarmLabel.font = UIFont.systemFont(ofSize: 26, weight: .bold)
+//        alarmLabel.textAlignment = .left
+//        
+//        view.addSubview(alarmLabel)
+//        
+//        alarmLabel.snp.makeConstraints { make in
+//            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(-40)
+//            make.leading.trailing.equalToSuperview().offset(16)
+//        }
         
         view.addSubview(noRequestsLabel)
         noRequestsLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 20)
@@ -63,7 +63,7 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
         
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(alarmLabel.snp.bottom)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.bottom.trailing.equalToSuperview()
         }
     }

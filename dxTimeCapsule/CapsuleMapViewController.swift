@@ -66,7 +66,7 @@ class CapsuleMapViewController: UIViewController {
         buttons()
         loadCapsuleInfos()
         tapDidModal.setBlurryBeach()
-        addLogoToNavigationBar()
+//        addLogoToNavigationBar()
     }
     
     override func viewDidLayoutSubviews() {
