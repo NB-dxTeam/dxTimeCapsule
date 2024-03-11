@@ -40,6 +40,8 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        createCapsuleButton.setCustom1()
+
     }
     
     private func initializeComponents() {
@@ -75,6 +77,8 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         setupCurrentLocationButton()
         setupCenterView()
         hideCenterView()
+        
+
     }
     
     private func setupMapView() {
@@ -154,7 +158,6 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         createCapsuleButton.setTitle("여기에 생성하기", for: .normal)
         createCapsuleButton.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 18)
         createCapsuleButton.layer.cornerRadius = 8
-        createCapsuleButton.backgroundColor = UIColor(hex: "#D53369")
         createCapsuleButton.addTarget(self, action: #selector(handleCreateCapsuleTap), for: .touchUpInside)
         // Ensure this line is reached during execution by adding a print statement or breakpoint here.
         
@@ -167,7 +170,7 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         
         modifyLocationButton.setTitle("위치 수정하기", for: .normal)
         modifyLocationButton.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 18)
-        modifyLocationButton.setTitleColor(UIColor(hex: "#D53369"), for: .normal)
+        modifyLocationButton.setTitleColor(UIColor(hex: "#FF3A4A"), for: .normal)
         modifyLocationButton.addTarget(self, action: #selector(handleModifyLocationTap), for: .touchUpInside) // 수정
         centerView.addSubview(modifyLocationButton)
         modifyLocationButton.snp.makeConstraints { make in
