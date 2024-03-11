@@ -76,6 +76,13 @@ class LockedCapsuleCell: UICollectionViewCell {
             // 날짜 차이에 따라 D-Day 표시를 조정합니다.
             let dDayPrefix = daysUntilOpening < 0 ? "D+" : "D-"
             self.dDay.text = "\(dDayPrefix)\(abs(daysUntilOpening))"
+            
+            // 배경색 설정 로직 추가
+            if dDayPrefix == "D+" {
+                self.dDay.backgroundColor = .gray // "D+" 일 때 회색으로 설정
+            } else if dDayPrefix == "D-" {
+                self.dDay.backgroundColor = UIColor(hex: "#FF3A4A") // "D-"일 때 빨간색으로 설정
+            }
         }
 
         // 사용자 위치를 설정합니다.

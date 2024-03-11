@@ -29,14 +29,27 @@ class CustomModal: UIViewController {
         let layout = UICollectionViewFlowLayout()
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.backgroundColor = .white
-        collection.layer.cornerRadius = 20
-        collection.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        collection.layer.masksToBounds = true
+        //collection.layer.cornerRadius = 20
+       // collection.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        //collection.layer.masksToBounds = true
         return collection
     }()
-    
+    private lazy var stackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.alignment = .fill
+        stack.distribution = .fillEqually
+        stack.spacing = 10
+        return stack
+    }()
+    private lazy var aBotton: UIButton = {
+        let button = UIButton()
+        
+        return button
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         setupUI()
         configCollection()
         fetchTimeCapsulesInfo()
