@@ -50,7 +50,8 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         // 이미지 뷰의 크기에 따라 cornerRadius를 동적으로 설정합니다.
         let imageSize: CGFloat = profileImageView.frame.width
         profileImageView.layer.cornerRadius = imageSize / 2
-        logoutButton.backgroundColor = UIColor(hex: "#FF3A4A")
+//        logoutButton.backgroundColor = UIColor(hex: "#FF3A4A")
+        logoutButton.setCustom1()
     }
     
     // MARK: - Setup
@@ -116,7 +117,8 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         logoutButton.setTitle("Logout", for: .normal)
         logoutButton.addTarget(self, action: #selector(logoutTapped), for: .touchUpInside)
         logoutButton.layer.cornerRadius = 16
-        logoutButton.backgroundColor = UIColor(hex: "#FF3A4A")
+//        logoutButton.backgroundColor = UIColor(hex: "#FF3A4A")
+        logoutButton.setCustom1()
         logoutButton.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 16)
         
         // 그림자 설정
@@ -199,7 +201,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         
         friendListButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(logoutButton.snp.bottom).offset(5)
+            make.top.equalTo(logoutButton.snp.bottom).offset(20)
             make.left.right.equalToSuperview().inset(50)
             make.height.equalTo(20)
         }
