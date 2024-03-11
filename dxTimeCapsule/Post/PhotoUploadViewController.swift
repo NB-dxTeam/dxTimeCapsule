@@ -18,7 +18,7 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         let label = UILabel()
         label.text = "타임박스에 들어갈 사진을 선택해주세요!"
         label.font = .pretendardBold(ofSize: 16)
-        label.textColor = UIColor(hex: "#D53369")
+        label.textColor = UIColor(hex: "#FF3A4A")
         label.backgroundColor = .white.withAlphaComponent(0.85)
         label.textAlignment = .center
         label.layer.cornerRadius = 8
