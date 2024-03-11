@@ -157,7 +157,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         // Delete Account Label Setup
         deleteAccountLabel.text = "Leave Account"
         deleteAccountLabel.font = .pretendardSemiBold(ofSize: 14)
-        deleteAccountLabel.textColor = UIColor(hex: "#D28488")
+        deleteAccountLabel.textColor = UIColor(hex: "#FF3A4A")
         deleteAccountLabel.textAlignment = .center
         
         labelsContainerView.addSubview(areYouSerious)
@@ -174,7 +174,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         profileImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview().offset(-130)
-            make.width.height.equalTo(220)
+            make.width.height.equalTo(150)
             profileImageView.setRoundedImage()
         }
         
