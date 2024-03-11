@@ -115,10 +115,14 @@ class SearchUserTableViewCell: UITableViewCell {
                     
                 case "요청 받음":
                     self.friendActionButton.isHidden = false
+<<<<<<< HEAD
                     self.friendActionButton.layer.borderColor = UIColor(hex: "#C82D6B").cgColor
+=======
+                    self.friendActionButton.layer.borderColor = UIColor(hex: "#FF3A4A").cgColor
+>>>>>>> e8a0304ca34c47f8fc7459eb4d0639a699694387
                     self.friendActionButton.layer.borderWidth = 1
                     self.friendActionButton.setTitle("Accept", for: .normal)
-                    self.friendActionButton.setTitleColor(UIColor(hex: "#D53369"), for: .normal)
+                    self.friendActionButton.setTitleColor(UIColor(hex: "#FF3A4A"), for: .normal)
                     self.friendActionButton.titleLabel?.font = UIFont.pretendardRegular(ofSize: 14)
                     self.statusLabel.isHidden = true
                     
@@ -127,7 +131,7 @@ class SearchUserTableViewCell: UITableViewCell {
                     
                 default:
                     self.friendActionButton.isHidden = false
-                    self.friendActionButton.setBlurryBeach()
+                    self.friendActionButton.setCustom1()
                     self.friendActionButton.setTitle("Friend Request", for: .normal)
                     self.friendActionButton.setTitleColor(.white, for: .normal)
                     self.friendActionButton.titleLabel?.font = UIFont.pretendardRegular(ofSize: 14)
@@ -141,7 +145,11 @@ class SearchUserTableViewCell: UITableViewCell {
         DispatchQueue.main.async {
             self.friendActionButton.isHidden = true
             self.statusLabel.text = "Already friend"
+<<<<<<< HEAD
             self.statusLabel.textColor = UIColor(hex: "C82D6B")
+=======
+            self.statusLabel.textColor = UIColor(hex: "FF3A4A")
+>>>>>>> e8a0304ca34c47f8fc7459eb4d0639a699694387
             self.statusLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
             self.statusLabel.isHidden = false
         }

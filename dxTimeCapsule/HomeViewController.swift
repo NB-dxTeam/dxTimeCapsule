@@ -455,7 +455,7 @@ class HomeViewController: UIViewController {
         // 버튼 스택뷰를 뷰에 추가
         view.addSubview(buttonStackView)
         buttonStackView.snp.makeConstraints { make in
-            let offset = UIScreen.main.bounds.height * (1.0/6.0)
+            let offset = UIScreen.main.bounds.height * (0.8/6.0)
             make.top.equalTo(mainContainerView.snp.bottom).offset(offset)
             make.leading.trailing.equalToSuperview().inset(20)
             make.height.equalToSuperview().multipliedBy(1.5/6.0)// 버튼 높이 조정

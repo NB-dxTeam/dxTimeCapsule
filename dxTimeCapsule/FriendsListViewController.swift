@@ -20,7 +20,7 @@ class FriendsListViewController: UIViewController {
         tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(TagFriendListTableViewCell.self, forCellReuseIdentifier: "FriendCell")
+        tableView.register(FriendListTableViewCell.self, forCellReuseIdentifier: "FriendCell")
         view.addSubview(tableView)
         
         tableView.snp.makeConstraints { make in
