@@ -36,7 +36,7 @@ class FriendRequestTableViewCell: UITableViewCell {
         let label = UILabel()
         label.text = "Now friend"
         label.font = UIFont.pretendardSemiBold(ofSize: 14)
-        label.textColor = UIColor(hex: "FF3A4A")
+        label.textColor = UIColor(hex: "C82D6B")
         label.textAlignment = .center
         label.isHidden = true
         return label

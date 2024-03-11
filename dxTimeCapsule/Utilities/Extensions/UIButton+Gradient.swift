@@ -74,7 +74,7 @@ extension UIButton {
     func configureButton(_ button: UIButton) {
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 16
-        button.backgroundColor = UIColor(hex: "#FF3A4A")
+        button.backgroundColor = UIColor(hex: "#C82D6B")
         button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 16)
         
         // 그림자 설정

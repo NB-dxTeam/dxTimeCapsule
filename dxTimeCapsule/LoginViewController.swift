@@ -109,7 +109,7 @@ class LoginViewController: UIViewController {
         // "회원가입" 라벨 &설정
         signUpActionLabel.text = "Sign up !"
         signUpActionLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
-        signUpActionLabel.textColor = UIColor(hex: "#FF3A4A")
+        signUpActionLabel.textColor = UIColor(hex: "#C82D6B")
         signUpActionLabel.isUserInteractionEnabled = true
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSignUpLabel))

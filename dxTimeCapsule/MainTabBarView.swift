@@ -28,7 +28,7 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         profileViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Profile_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Profile_Select", targetSize: CGSize(width: 24, height: 24)))
         let viewControllers = [homeViewController, searchModalTableViewController, locationConfirmationViewController, notificationViewController, profileViewController]
         self.viewControllers = viewControllers
-        self.tabBar.tintColor = UIColor(hex: "#FF3A4A")
+        self.tabBar.tintColor = UIColor(hex: "#C82D6B")
         self.tabBar.backgroundColor = .white
     }
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {

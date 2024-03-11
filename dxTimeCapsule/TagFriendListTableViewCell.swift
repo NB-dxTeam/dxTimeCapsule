@@ -27,7 +27,7 @@ class TagFriendListTableViewCell: UITableViewCell {
     private var statusLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = UIColor(hex: "D15E6B")
+        label.textColor = UIColor(hex: "C82D6B")
         label.textAlignment = .center
         return label
     }()
