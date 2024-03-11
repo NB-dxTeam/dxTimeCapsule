@@ -36,7 +36,7 @@ class OpenCapsuleViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        messageButton.setCustom1()
+        messageButton.setInstagram()
       }
     
     private func setupHomeButton() {
@@ -187,7 +187,7 @@ class OpenCapsuleViewController: UIViewController {
         // 메시지 확인하기 버튼 설정
         messageButton = UIButton(type: .system)
         messageButton.setTitle("그날의 메시지", for: .normal)
-        messageButton.setCustom1() // 색상 설정
+        messageButton.setInstagram() // 색상 설정
         messageButton.setTitleColor(.white, for: .normal)
         messageButton.layer.cornerRadius = 10
         view.addSubview(messageButton)

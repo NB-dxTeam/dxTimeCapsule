@@ -35,8 +35,8 @@ class SignUpViewController: UIViewController  {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        signUpButton.setCustom1()
-        selectImageButton.setCustom1()
+        signUpButton.setInstagram()
+        selectImageButton.setInstagram()
         
     }
     

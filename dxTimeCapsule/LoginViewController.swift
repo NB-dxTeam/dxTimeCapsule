@@ -53,8 +53,8 @@ class LoginViewController: UIViewController {
         
 //        loginButton.backgroundColor = UIColor(hex: "#FF3A4A")
 //        socialLogin.backgroundColor = UIColor(hex: "#FF3A4A")
-        loginButton.setCustom1()
-        socialLogin.setCustom1()
+        loginButton.setInstagram()
+        socialLogin.setInstagram()
 
     }
     

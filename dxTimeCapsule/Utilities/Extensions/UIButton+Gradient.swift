@@ -11,8 +11,9 @@ extension UIButton {
     }
 
     // AzurLane 테마
-    func setAzurLane() {
-        setGradient(colors: [#colorLiteral(red: 0.4980392157, green: 0.4980392157, blue: 0.8352941176, alpha: 1), #colorLiteral(red: 0.5254901961, green: 0.6588235294, blue: 0.9058823529, alpha: 1), #colorLiteral(red: 0.568627451, green: 0.9176470588, blue: 0.8941176471, alpha: 1)])
+    func setInstagram() {
+    
+        setGradient(colors: [#colorLiteral(red: 0.5137254902, green: 0.2274509804, blue: 0.7058823529, alpha: 1), #colorLiteral(red: 0.9921568627, green: 0.1137254902, blue: 0.1137254902, alpha: 1), #colorLiteral(red: 0.9882352941, green: 0.6901960784, blue: 0.2705882353, alpha: 1)])
 
     }
 

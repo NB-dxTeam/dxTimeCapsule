@@ -40,7 +40,7 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        createCapsuleButton.setCustom1()
+        createCapsuleButton.setInstagram()
 
     }
     
