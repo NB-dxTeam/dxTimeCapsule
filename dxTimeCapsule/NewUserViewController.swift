@@ -38,6 +38,11 @@ class NewUserViewController: UIViewController {
         return button
     }()
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        addNewTCButton.setCustom1()
+      }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()

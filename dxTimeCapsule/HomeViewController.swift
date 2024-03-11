@@ -156,7 +156,7 @@ class HomeViewController: UIViewController {
         button.setBackgroundImage(image, for: .normal)
         button.clipsToBounds = true
         button.layer.cornerRadius = 10
-        button.addTarget(HomeViewController.self, action: #selector(openedTCButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(openedTCButtonTapped), for: .touchUpInside)
         
         // 버튼 내에 UILabel 추가
         let titleLabel = UILabel()
@@ -184,7 +184,7 @@ class HomeViewController: UIViewController {
         button.setBackgroundImage(image, for: .normal)
         button.clipsToBounds = true
         button.layer.cornerRadius = 10
-        button.addTarget(HomeViewController.self, action: #selector(upcomingTCButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(upcomingTCButtonTapped), for: .touchUpInside)
         
         // 버튼 내에 UILabel 추가
         let titleLabel = UILabel()
@@ -338,12 +338,9 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-//        navigationController?.isNavigationBarHidden = true
         fetchTimeCapsuleData()
         configureUI()
-        
-        // 네비게이션 바에 로고 이미지 추가
-         addLogoToNavigationBar()
+        addLogoToNavigationBar()
 
     }
     
@@ -357,7 +354,9 @@ class HomeViewController: UIViewController {
         
         let addFriendsButton: UIButton = {
             let button = UIButton(type: .system)
-            button.setImage(UIImage(systemName: "person.fill.badge.plus"), for: .normal)
+            let image = UIImage(systemName: "person.fill.badge.plus")?.withRenderingMode(.alwaysTemplate) // 이미지를 템플릿 모드로 설정
+            button.setImage(image, for: .normal)
+            button.tintColor = UIColor.systemGray
             button.addTarget(self, action: #selector(addFriendsButtonTapped), for: .touchUpInside)
             button.isUserInteractionEnabled = true
             return button
@@ -486,17 +485,16 @@ class HomeViewController: UIViewController {
     
     @objc private func addFriendsButtonTapped() {
         print("친구추가가 클릭되었습니다")
-        let addFriendsVC = NewUserViewController()
+        let addFriendsVC = SearchUserTableViewController()
         let navController = UINavigationController(rootViewController: addFriendsVC)
         present(navController, animated: true, completion: nil)
     }
     
-    @objc private func duestTCStackViewTapped(with documentID: String) {
+    @objc private func duestTCStackViewTapped() {
         print("DuestTC 스택뷰가 클릭되었습니다")
         let mainCapsuleVC = MainCapsuleViewController()
         mainCapsuleVC.documentId = documentId
-        mainCapsuleVC.modalPresentationStyle = .fullScreen // 전체 화면
-        present(mainCapsuleVC, animated: true, completion: nil)
+        navigationController?.pushViewController(mainCapsuleVC, animated: true)
     }
     
     @objc private func addNewTC() {
@@ -509,8 +507,8 @@ class HomeViewController: UIViewController {
     @objc private func mainTCImageViewTapped() {
         print("메인 타임캡슐 보러가기 버튼이 클릭되었습니다")
         let mainCapsuleVC = MainCapsuleViewController()
-        let navController = UINavigationController(rootViewController: mainCapsuleVC)
-        present(navController, animated: true, completion: nil)
+        mainCapsuleVC.documentId = documentId
+        navigationController?.pushViewController(mainCapsuleVC, animated: true)
     }
     
     @objc func openedTCButtonTapped(){
