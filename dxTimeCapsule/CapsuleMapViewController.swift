@@ -108,9 +108,9 @@ extension CapsuleMapViewController {
     }
     private func autoLayouts() {
         capsuleMaps.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.leading.trailing.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(10)
+            make.leading.trailing.equalToSuperview().inset(10)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
         }
         stackView.snp.makeConstraints { make in
             make.bottom.equalTo(capsuleMaps.snp.bottom).offset(-10)
@@ -257,6 +257,8 @@ extension CapsuleMapViewController: MKMapViewDelegate {
         capsuleMaps.showsCompass = false
         // 위치 사용 시 사용자의 현재 위치 표시
         capsuleMaps.showsUserLocation = true
+        capsuleMaps.layer.masksToBounds = true
+        capsuleMaps.layer.cornerRadius = 10
         // 애니메이션 효과가 추가 되어 부드럽게 화면 확대 및 이동
         //capsuleMaps.setUserTrackingMode(.follow, animated: true)
         capsuleMaps.setUserTrackingMode(.followWithHeading, animated: true)
@@ -326,7 +328,7 @@ import FirebaseFirestoreInternal
 
 struct Preview: PreviewProvider {
     static var previews: some View {
-        CustomModal().toPreview()
+        CapsuleMapViewController().toPreview()
     }
 }
 #if DEBUG
