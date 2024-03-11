@@ -13,12 +13,15 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     private var titleLabel: UILabel!
     private var createCapsuleButton: UIButton!
     private var modifyLocationButton: UIButton!
+    private var currentLocationBotton = UIButton()
+
     
     private var centerView: UIView!
     private let centerViewHeight: CGFloat = 200
     
     private var isCenterViewPresented: Bool = false
     private var longPressMessageLabel: UILabel!
+
     
     // MARK: - Constants
     
@@ -68,9 +71,9 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     
     private func setupLayout() {
         setupMapView()
-        setupCurrentLocationButton()
         setupTitleLabelAndButtons()
-        setupCenterView() // Ensure centerView is configured
+        setupCurrentLocationButton()
+        setupCenterView()
         hideCenterView()
     }
     
@@ -80,52 +83,58 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
             make.edges.equalToSuperview()
         }
     }
-    
-    private func setupCurrentLocationButton() {
-        let configuration = UIImage.SymbolConfiguration(pointSize: 50, weight: .medium, scale: .medium)
-        let image = UIImage(systemName: "location.circle", withConfiguration: configuration)?.withTintColor(.black.withAlphaComponent(0.85) , renderingMode: .alwaysOriginal)
-        currentLocationButton.setImage(image, for: .normal)
-        currentLocationButton.addTarget(self, action: #selector(currentLocationButtonTapped), for: .touchUpInside)
-        view.addSubview(currentLocationButton)
-        currentLocationButton.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
-            make.right.equalTo(view.safeAreaLayoutGuide.snp.right).offset(-20)
-            make.width.height.equalTo(40) // 버튼의 크기를 유지하면서 내부 이미지의 크기를 조정했습니다.
-        }
-    }
 
+    
     
     // MARK: - Action
     
     private func configureLocationServices() {
-          locationManager = CLLocationManager()
-          locationManager.delegate = self
-          
-          if CLLocationManager.locationServicesEnabled() {
-              switch locationManager.authorizationStatus {
-              case .notDetermined:
-                  locationManager.requestWhenInUseAuthorization()
-              case .authorizedWhenInUse, .authorizedAlways:
-                  locationManager.startUpdatingLocation()
-              case .denied, .restricted:
-                  // Handle denied or restricted access
-                  break
-              @unknown default:
-                  fatalError("Unhandled case")
-              }
-          } else {
-              // Location services are not enabled
-              // Handle this scenario as needed
-          }
-      }
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        mapView.showsUserLocation = true // Make sure the map view shows the user location
+        
+        if CLLocationManager.locationServicesEnabled() {
+            switch locationManager.authorizationStatus {
+            case .notDetermined:
+                locationManager.requestWhenInUseAuthorization()
+            case .authorizedWhenInUse, .authorizedAlways:
+                locationManager.startUpdatingLocation()
+            case .denied, .restricted:
+                // Handle denied or restricted access with an alert or guidance to settings
+                break
+            @unknown default:
+                fatalError("Unhandled case")
+            }
+        } else {
+            // Location services are not enabled; guide users to enable it in settings
+        }
+    }
+
       
     
-    @objc private func currentLocationButtonTapped() {
-        mapView.showsUserLocation = true
-        locationManager.startUpdatingLocation()
+    private func setupCurrentLocationButton() {
+        view.addSubview(currentLocationBotton) // currentLocationBotton 추가
+        
+        currentLocationBotton.setImage(UIImage(named: "locationicon"), for: .normal) // 이미지 설정
+        currentLocationBotton.setTitleColor(.black, for: .normal)
+        currentLocationBotton.layer.backgroundColor = UIColor.white.withAlphaComponent(0.6).cgColor
+        currentLocationBotton.layer.cornerRadius = 10
+        
+        
+
+        currentLocationBotton.addTarget(self, action: #selector(currentLocationButtonTapped), for: .touchUpInside) // 연결된 함수 설정
+        
+        currentLocationBotton.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(20) // 뷰의 safeArea의 위쪽에서 20pt 떨어진 곳에 배치
+            make.trailing.equalTo(view.safeAreaLayoutGuide).inset(20) // 뷰의 safeArea의 오른쪽에서 20pt 떨어진 곳에 배치
+            make.width.height.equalTo(40) // 너비와 높이는 40pt로 설정
+        }
     }
     
     private func setupTitleLabelAndButtons() {
+
+ 
+        
         titleLabel = UILabel()
         createCapsuleButton = UIButton()
         modifyLocationButton = UIButton()
@@ -148,7 +157,6 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         createCapsuleButton.backgroundColor = UIColor(hex: "#D53369")
         createCapsuleButton.addTarget(self, action: #selector(handleCreateCapsuleTap), for: .touchUpInside)
         // Ensure this line is reached during execution by adding a print statement or breakpoint here.
-        
         
         centerView.addSubview(createCapsuleButton)
         createCapsuleButton.snp.makeConstraints { make in
@@ -228,7 +236,6 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         }
     }
 
-    
     private func presentBottomSheetModally() {
         let bottomSheetController = BottomSheetViewController() // Assign to class property
         if let sheetController = bottomSheetController.presentationController as? UISheetPresentationController {
@@ -239,6 +246,12 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         }
         present(bottomSheetController, animated: true, completion: nil)
     }
+    
+    @objc func currentLocationButtonTapped() {
+        mapView.showsUserLocation = true
+        locationManager.startUpdatingLocation()
+    }
+    
     
     @objc private func handleCreateCapsuleTap() {
         let photoUploadVC = PhotoUploadViewController()
@@ -279,18 +292,23 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         }
     }
     
-    
     // MARK: - CLLocationManagerDelegate
     internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.first {
-            let coordinate = location.coordinate
-            mapView.setRegion(MKCoordinateRegion(center: coordinate, span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)), animated: true)
-            
+            var coordinate = location.coordinate
+            // Adjusting latitude by adding 0.015 to slightly shift the map view up
+            coordinate.latitude += 0.015
+
+            let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 5000, longitudinalMeters: 5000)
+            mapView.setRegion(region, animated: true)
+
+            // Optionally, you might want to add an annotation at the user's actual location
             let annotation = MKPointAnnotation()
-            annotation.coordinate = CLLocationCoordinate2D(latitude: coordinate.latitude + 0.15, longitude: coordinate.longitude)
+            annotation.coordinate = location.coordinate // Use the original coordinate here
             mapView.addAnnotation(annotation)
         }
     }
+
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         // Handle authorization status changes
@@ -310,6 +328,12 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
 }
 func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
     // Handle annotation deselection
+}
+
+func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    print("Failed to find user's location: \(error.localizedDescription)")
+    // Implement your error handling logic here
+    // For example, you could alert the user to check their location settings
 }
 
 
@@ -332,3 +356,4 @@ struct MainTabBarViewPreview2 : PreviewProvider {
         LocationMapkitViewController().toPreview()
     }
 }
+

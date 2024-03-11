@@ -1,20 +1,20 @@
 //
-//  OpendedCapsuleCell.swift
+//  TimeCapsuleCell.swift
 //  dxTimeCapsule
 //
-//  Created by t2023-m0028 on 3/8/24.
+//  Created by 안유진 on 3/8/24.
 //
 
 import UIKit
 import SnapKit
 import FirebaseFirestoreInternal
 
-class OpendedTCCell: UICollectionViewCell {
+class TimeCapsuleCell: UICollectionViewCell {
     
     // MARK: - Properties
     
     // 셀 식별자
-    static let identifier = "OpendedTCCell"
+    static let identifier = "TimeCapsuleCell"
     
     // 캡슐 이미지를 표시하는 이미지 뷰
     lazy var registerImage: UIImageView = {
@@ -97,7 +97,6 @@ class OpendedTCCell: UICollectionViewCell {
         self.userLocation.text = capsuleInfo.userLocation ?? "Unknown location"
         
         // 생성 날짜 설정
-        dateFormatter.dateFormat = "yyyy-MM-dd"
         let dateStr = dateFormatter.string(from: capsuleInfo.createTimeCapsuleDate)
         self.creationDate.text = dateStr
     }

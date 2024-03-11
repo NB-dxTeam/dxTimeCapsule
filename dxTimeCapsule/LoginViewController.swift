@@ -109,7 +109,7 @@ class LoginViewController: UIViewController {
         // "회원가입" 라벨 &설정
         signUpActionLabel.text = "Sign up !"
         signUpActionLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
-        signUpActionLabel.textColor = UIColor(hex: "#D53369")
+        signUpActionLabel.textColor = UIColor(hex: "#FF3A4A")
         signUpActionLabel.isUserInteractionEnabled = true
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSignUpLabel))
@@ -224,9 +224,8 @@ class LoginViewController: UIViewController {
                 } else {
                     print("Login succeeded") // Debug print
                     let mainTabVC = MainTabBarView()
-                    let navigationController = UINavigationController(rootViewController: mainTabVC)
-                       navigationController.modalPresentationStyle = .fullScreen
-                       self.present(navigationController, animated: true, completion: nil)
+                    mainTabVC.modalPresentationStyle = .fullScreen
+                       self.present(mainTabVC, animated: true, completion: nil)
                 }
             }
         }
