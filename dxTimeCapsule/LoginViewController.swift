@@ -224,9 +224,8 @@ class LoginViewController: UIViewController {
                 } else {
                     print("Login succeeded") // Debug print
                     let mainTabVC = MainTabBarView()
-                    let navigationController = UINavigationController(rootViewController: mainTabVC)
-                       navigationController.modalPresentationStyle = .fullScreen
-                       self.present(navigationController, animated: true, completion: nil)
+                    mainTabVC.modalPresentationStyle = .fullScreen
+                       self.present(mainTabVC, animated: true, completion: nil)
                 }
             }
         }

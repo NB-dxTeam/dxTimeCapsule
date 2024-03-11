@@ -901,6 +901,7 @@
 				INFOPLIST_FILE = dxTimeCapsule/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSCameraUsageDescription = "카메라에 접근하기 위해 필요한 권한입니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재 위치를 가져오기위해 필요한 권한입니다.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진 앨범에 접근하기위해 필요한 권한입니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사용자의 현재 위치를 기반으로 정보를 제공하기 위해 필요한 권한입니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -934,6 +935,7 @@
 				INFOPLIST_FILE = dxTimeCapsule/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSCameraUsageDescription = "카메라에 접근하기 위해 필요한 권한입니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재 위치를 가져오기위해 필요한 권한입니다.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진 앨범에 접근하기위해 필요한 권한입니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사용자의 현재 위치를 기반으로 정보를 제공하기 위해 필요한 권한입니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

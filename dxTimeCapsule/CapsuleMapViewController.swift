@@ -42,6 +42,7 @@ class CapsuleMapViewController: UIViewController {
         button.addTarget(self, action: #selector(modalButton(_:)), for: .touchUpInside)
         return button
     }()
+    
     private lazy var currentLocationBotton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "locationicon"), for: .normal)
@@ -52,6 +53,7 @@ class CapsuleMapViewController: UIViewController {
         button.addTarget(self, action: #selector(locationButton(_:)), for: .touchUpInside)
         return button
     }()// 현재 위치로
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
