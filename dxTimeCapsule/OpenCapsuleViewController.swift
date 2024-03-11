@@ -34,6 +34,11 @@ class OpenCapsuleViewController: UIViewController {
         loadTimeCapsuleData()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        messageButton.setCustom1()
+      }
+    
     private func setupHomeButton() {
         homeButton = UIButton(type: .system)
         let homeImage = UIImage(systemName: "chevron.left") // SF Symbols에서 "house.fill" 이미지 사용
@@ -50,17 +55,12 @@ class OpenCapsuleViewController: UIViewController {
     }
 
     @objc private func homeButtonTapped() {
-        // 홈 화면 뷰 컨트롤러 인스턴스를 생성합니다.
-        let homeVC = HomeViewController() // HomeViewController는 여러분의 홈 화면 뷰 컨트롤러 클래스입니다.
-        
-        // 홈 화면으로 전환합니다.
-        // UIWindowScene과 UIWindow를 찾아서 rootViewController를 변경합니다.
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
-            window.rootViewController = UINavigationController(rootViewController: homeVC) // 네비게이션 컨트롤러 사용 예시
-            window.makeKeyAndVisible()
-            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: nil, completion: nil)
-        }
+        // 모든 모달 뷰 컨트롤러를 닫고, 루트 뷰 컨트롤러로 돌아가기
+        self.view.window?.rootViewController?.dismiss(animated: true, completion: {
+            if let tabBarController = self.view.window?.rootViewController as? UITabBarController {
+                tabBarController.selectedIndex = 0
+            }
+        })
     }
 
     private func setupUIComponents() {
@@ -187,7 +187,7 @@ class OpenCapsuleViewController: UIViewController {
         // 메시지 확인하기 버튼 설정
         messageButton = UIButton(type: .system)
         messageButton.setTitle("그날의 메시지", for: .normal)
-        messageButton.backgroundColor = UIColor(red: 209/255.0, green: 94/255.0, blue: 107/255.0, alpha: 1) // 색상 설정
+        messageButton.setCustom1() // 색상 설정
         messageButton.setTitleColor(.white, for: .normal)
         messageButton.layer.cornerRadius = 10
         view.addSubview(messageButton)
