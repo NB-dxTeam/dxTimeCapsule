@@ -24,6 +24,7 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setUI()
         setupTableView()
         fetchFriendRequests()
@@ -39,7 +40,7 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
         view.addSubview(alarmLabel)
         
         alarmLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(-40)
             make.leading.trailing.equalToSuperview().offset(16)
         }
         
