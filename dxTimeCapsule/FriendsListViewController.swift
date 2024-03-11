@@ -20,7 +20,7 @@ class FriendsListViewController: UIViewController {
         tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(FriendListTableViewCell.self, forCellReuseIdentifier: "FriendCell")
+        tableView.register(TagFriendListTableViewCell.self, forCellReuseIdentifier: "FriendCell")
         view.addSubview(tableView)
         
         tableView.snp.makeConstraints { make in
@@ -34,7 +34,7 @@ class FriendsListViewController: UIViewController {
         
         db.collection("users").document(currentUserID).getDocument { [weak self] snapshot, error in
             guard let self = self, let document = snapshot, document.exists, error == nil else {
-                print("Error fetching current user: \(error)")
+                print("Error fetching current user: \(String(describing: error))")
                 return
             }
             
@@ -81,8 +81,9 @@ class FriendsListViewController: UIViewController {
                     if let friendData = friendSnapshot?.data(),
                         let uid = friendData["uid"] as? String,
                         let email = friendData["email"] as? String,
-                        let username = friendData["username"] as? String {
-                         let friend = User(uid: uid, email: email, username: username)
+                        let username = friendData["username"] as? String,
+                       let imageUrl = friendData["profileImageUrl"] as? String {
+                         let friend = User(uid: uid, email: email, username: username, profileImageUrl: imageUrl)
                          fetchedFriends.append(friend) // Append fetched friend to the temporary array
                     }
                 }
@@ -108,5 +109,9 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
         let cell = tableView.dequeueReusableCell(withIdentifier: "FriendCell", for: indexPath) as! FriendListTableViewCell
         cell.user = friends[indexPath.row]
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
     }
 }

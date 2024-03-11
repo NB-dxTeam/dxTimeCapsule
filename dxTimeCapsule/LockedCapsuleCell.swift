@@ -12,7 +12,7 @@ import FirebaseFirestoreInternal
 
 class LockedCapsuleCell: UICollectionViewCell {
     static let identifier = "LockedCapsuleCell"
-    lazy var registerImage: UIImageView = { // photoUrl
+    lazy var registerImage: UIImageView = {
         let image = UIImageView()
         image.contentMode = .scaleToFill
         image.clipsToBounds = true
@@ -76,6 +76,13 @@ class LockedCapsuleCell: UICollectionViewCell {
             // 날짜 차이에 따라 D-Day 표시를 조정합니다.
             let dDayPrefix = daysUntilOpening < 0 ? "D+" : "D-"
             self.dDay.text = "\(dDayPrefix)\(abs(daysUntilOpening))"
+            
+            // 배경색 설정 로직 추가
+            if dDayPrefix == "D+" {
+                self.dDay.backgroundColor = .gray // "D+" 일 때 회색으로 설정
+            } else if dDayPrefix == "D-" {
+                self.dDay.backgroundColor = UIColor(hex: "#FF3A4A") // "D-"일 때 빨간색으로 설정
+            }
         }
 
         // 사용자 위치를 설정합니다.
@@ -94,8 +101,9 @@ class LockedCapsuleCell: UICollectionViewCell {
         contentView.addSubview(creationDate)
         
         registerImage.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview().offset(10)
-            make.width.equalTo(330) //
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview().offset(10)
+            make.trailing.equalToSuperview().offset(-10)
             make.height.equalTo(registerImage.snp.width).multipliedBy(1.0/2.0)
         }
         
@@ -108,8 +116,8 @@ class LockedCapsuleCell: UICollectionViewCell {
         
         userLocation.snp.makeConstraints { make in
             make.top.equalTo(registerImage.snp.bottom).offset(5)
-            make.leading.equalTo(dDay.snp.trailing).offset(10)
-            make.height.equalTo(70)
+            make.leading.equalTo(dDay.snp.trailing).offset(30)
+            make.height.equalTo(30)
             make.width.equalTo(190)
         }
         
@@ -127,6 +135,5 @@ class LockedCapsuleCell: UICollectionViewCell {
         self.layer.cornerRadius = 30.0 // 모서리 설정
     }
 }
-
 
 
