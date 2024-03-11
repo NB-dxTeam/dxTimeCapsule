@@ -30,8 +30,6 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     private let deleteAccountLabel = UILabel()
     private let dividerView = UIView()
     private var loadingIndicator = UIActivityIndicatorView(style: .medium) // 로딩 인디케이터 추가\
-    
-    private let searchUserButton = UIButton()
     private let friendListButton = UIButton()
 
     
@@ -66,7 +64,6 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         view.addSubview(emailLabel)
         view.addSubview(labelsContainerView)
         view.addSubview(loadingIndicator)
-        view.addSubview(searchUserButton)
         view.addSubview(friendListButton)
         
         
@@ -132,12 +129,6 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         logoutButton.snp.makeConstraints { make in
             make.height.equalTo(40)
         }
-        
-        // Search User Button Setup
-        searchUserButton.setTitle("친구찾으러가기(임시)", for: .normal)
-        searchUserButton.titleLabel?.font = .pretendardSemiBold(ofSize: 14)
-        searchUserButton.setTitleColor(.darkGray, for: .normal)
-        searchUserButton.addTarget(self, action: #selector(searchUserButtonTapped), for: .touchUpInside)
         
         // Search User Button Setup
         friendListButton.setTitle("친구목록보기(임시)", for: .normal)
@@ -206,16 +197,9 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
             make.height.equalTo(50)
         }
         
-        searchUserButton.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(logoutButton.snp.bottom).offset(20)
-            make.left.right.equalToSuperview().inset(50)
-            make.height.equalTo(20)
-        }
-        
         friendListButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(searchUserButton.snp.bottom).offset(5)
+            make.top.equalTo(logoutButton.snp.bottom).offset(5)
             make.left.right.equalToSuperview().inset(50)
             make.height.equalTo(20)
         }

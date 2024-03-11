@@ -12,8 +12,8 @@ import FirebaseAuth
 
 class MainCapsuleViewController: UIViewController {
     private var viewModel = MainCapsuleViewModel()
-    private var documentId: String?
-    
+    var documentId: String?
+
     //장소명
     private lazy var locationName: UILabel = {
         let label = UILabel()
