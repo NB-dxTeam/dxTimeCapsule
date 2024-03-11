@@ -100,6 +100,10 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    }
+    
     // MARK: - UI Setup
     private func setupUI() {
         
