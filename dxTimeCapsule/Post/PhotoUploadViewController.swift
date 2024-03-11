@@ -13,8 +13,19 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
      private var assets: [PHAsset] = []
      private var selectedAssets: [PHAsset] = []
      private var imageManager = PHCachingImageManager()
-     private let titleLabel = UILabel()
      
+    private let bannerLabel: UILabel = {
+        let label = UILabel()
+        label.text = "타임박스에 들어갈 사진을 선택해주세요!"
+        label.font = .boldSystemFont(ofSize: 16)
+        label.textColor = .white
+        label.backgroundColor = UIColor(hex: "#D53369").withAlphaComponent(0.85)
+        label.textAlignment = .center
+        label.layer.cornerRadius = 8
+        label.clipsToBounds = true
+        return label
+    }()
+
      private lazy var collectionView: UICollectionView = {
          let layout = UICollectionViewFlowLayout()
          layout.minimumInteritemSpacing = 3
@@ -34,7 +45,8 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         setupProperties()
         setupUI()
         requestPhotoLibraryPermission()
-        
+        setupBannerLabel()
+
         // Add pan gesture recognizer to detect downward drag
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
         view.addGestureRecognizer(panGesture)
@@ -51,7 +63,7 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         
         nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
-        nextButton.layer.cornerRadius = 10
+        nextButton.layer.cornerRadius = 8
     }
     
     // MARK: - Setup UI
@@ -106,6 +118,24 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         }
     }
     
+    private func setupBannerLabel() {
+        view.addSubview(bannerLabel)
+        bannerLabel.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(40)
+            make.leading.trailing.equalToSuperview().inset(30)
+            make.height.equalTo(50)
+        }
+
+        // Automatically hide the banner after 2 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            UIView.animate(withDuration: 0.5) {
+                self.bannerLabel.alpha = 0
+                
+            } completion: { _ in
+                self.bannerLabel.removeFromSuperview()
+            }
+        }
+    }
     private func fetchPhotos() {
         let allPhotosOptions = PHFetchOptions()
         allPhotosOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
