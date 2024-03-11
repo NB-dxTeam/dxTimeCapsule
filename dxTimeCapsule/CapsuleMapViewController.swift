@@ -49,7 +49,7 @@ class CapsuleMapViewController: UIViewController {
         button.backgroundColor = UIColor.white.withAlphaComponent(0.6)
         button.setTitleColor(.black, for: .normal)
         button.layer.masksToBounds = true
-        button.layer.cornerRadius = 100
+        button.layer.cornerRadius = 10
         button.addTarget(self, action: #selector(locationButton(_:)), for: .touchUpInside)
         return button
     }()// 현재 위치로
@@ -66,7 +66,6 @@ class CapsuleMapViewController: UIViewController {
         buttons()
         loadCapsuleInfos()
         tapDidModal.setBlurryBeach()
-        currentLocationBotton.setBlurryBeach()
         addLogoToNavigationBar()
     }
     
