@@ -486,7 +486,7 @@ class HomeViewController: UIViewController {
     @objc private func addFriendsButtonTapped() {
         print("친구추가가 클릭되었습니다")
         let addFriendsVC = SearchUserTableViewController()
-    
+        addFriendsVC.modalPresentationStyle = .fullScreen
         present(addFriendsVC, animated: true, completion: nil)
     }
     @objc private func duestTCStackViewTapped() {
