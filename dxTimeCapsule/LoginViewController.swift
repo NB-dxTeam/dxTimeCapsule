@@ -53,8 +53,8 @@ class LoginViewController: UIViewController {
         
 //        loginButton.backgroundColor = UIColor(hex: "#FF3A4A")
 //        socialLogin.backgroundColor = UIColor(hex: "#FF3A4A")
-        loginButton.setCustom1()
-        socialLogin.setCustom1()
+        loginButton.setInstagram()
+        socialLogin.setInstagram()
 
     }
     
@@ -109,7 +109,7 @@ class LoginViewController: UIViewController {
         // "회원가입" 라벨 &설정
         signUpActionLabel.text = "Sign up !"
         signUpActionLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
-        signUpActionLabel.textColor = UIColor(hex: "#FF3A4A")
+        signUpActionLabel.textColor = UIColor(hex: "#C82D6B")
         signUpActionLabel.isUserInteractionEnabled = true
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSignUpLabel))

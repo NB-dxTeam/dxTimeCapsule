@@ -12,7 +12,11 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(returnToHome), name: NSNotification.Name("ReturnToHome"), object: nil)
     }
     
-
+    @objc func returnToHome() {
+        // 첫 번째 탭(홈 화면)으로 이동합니다. - 우경
+        self.selectedIndex = 0
+    }
+    
     private func setupTabs() {
         let homeViewController = UINavigationController(rootViewController: HomeViewController())
         let searchModalTableViewController = UINavigationController(rootViewController: CapsuleMapViewController())
@@ -28,7 +32,7 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         profileViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Profile_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Profile_Select", targetSize: CGSize(width: 24, height: 24)))
         let viewControllers = [homeViewController, searchModalTableViewController, locationConfirmationViewController, notificationViewController, profileViewController]
         self.viewControllers = viewControllers
-        self.tabBar.tintColor = UIColor(hex: "#FF3A4A")
+        self.tabBar.tintColor = UIColor(hex: "#C82D6B")
         self.tabBar.backgroundColor = .white
     }
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
@@ -51,10 +55,5 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
 
     deinit {
         NotificationCenter.default.removeObserver(self)
-    }
-    
-    @objc func returnToHome() {
-        // 첫 번째 탭(홈 화면)으로 이동합니다. - 우경
-        self.selectedIndex = 0
     }
 }

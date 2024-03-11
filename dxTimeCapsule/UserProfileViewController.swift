@@ -51,7 +51,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         let imageSize: CGFloat = profileImageView.frame.width
         profileImageView.layer.cornerRadius = imageSize / 2
 //        logoutButton.backgroundColor = UIColor(hex: "#FF3A4A")
-        logoutButton.setCustom1()
+        logoutButton.setInstagram()
     }
     
     // MARK: - Setup
@@ -118,7 +118,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         logoutButton.addTarget(self, action: #selector(logoutTapped), for: .touchUpInside)
         logoutButton.layer.cornerRadius = 16
 //        logoutButton.backgroundColor = UIColor(hex: "#FF3A4A")
-        logoutButton.setCustom1()
+        logoutButton.setInstagram()
         logoutButton.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 16)
         
         // 그림자 설정
@@ -150,7 +150,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         // Delete Account Label Setup
         deleteAccountLabel.text = "Leave Account"
         deleteAccountLabel.font = .pretendardSemiBold(ofSize: 14)
-        deleteAccountLabel.textColor = UIColor(hex: "#FF3A4A")
+        deleteAccountLabel.textColor = UIColor(hex: "#C82D6B")
         deleteAccountLabel.textAlignment = .center
         
         labelsContainerView.addSubview(areYouSerious)

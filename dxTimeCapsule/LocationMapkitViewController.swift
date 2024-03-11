@@ -40,7 +40,7 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        createCapsuleButton.setCustom1()
+        createCapsuleButton.setInstagram()
 
     }
     
@@ -170,7 +170,7 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         
         modifyLocationButton.setTitle("위치 수정하기", for: .normal)
         modifyLocationButton.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 18)
-        modifyLocationButton.setTitleColor(UIColor(hex: "#FF3A4A"), for: .normal)
+        modifyLocationButton.setTitleColor(UIColor(hex: "#C82D6B"), for: .normal)
         modifyLocationButton.addTarget(self, action: #selector(handleModifyLocationTap), for: .touchUpInside) // 수정
         centerView.addSubview(modifyLocationButton)
         modifyLocationButton.snp.makeConstraints { make in

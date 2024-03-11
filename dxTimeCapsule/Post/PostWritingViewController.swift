@@ -29,7 +29,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 16)
         label.text = "내용"
-        label.textColor = UIColor(hex: "#FF3A4A")
+        label.textColor = UIColor(hex: "#C82D6B")
         return label
     }()
     
@@ -47,7 +47,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 16)
         label.text = "박스 개봉 날짜"
-        label.textColor = UIColor(hex: "#FF3A4A")
+        label.textColor = UIColor(hex: "#C82D6B")
         return label
     }()
     
@@ -61,7 +61,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
     private let tagFriendsButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("친구 태그", for: .normal)
-        button.setTitleColor(UIColor(hex: "#FF3A4A"), for: .normal)
+        button.setTitleColor(UIColor(hex: "#C82D6B"), for: .normal)
         button.titleLabel?.font = .pretendardSemiBold(ofSize: 16)
         button.backgroundColor = .white.withAlphaComponent(0.85)
         button.layer.cornerRadius = 8
@@ -81,7 +81,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         button.setTitle("타임박스 만들기", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .pretendardSemiBold(ofSize: 16)
-        button.backgroundColor = UIColor(hex: "#FF3A4A").withAlphaComponent(0.85)
+        button.setInstagram()
         button.layer.cornerRadius = 8
         button.layer.shadowOpacity = 0.3
         button.layer.shadowRadius = 5

@@ -81,7 +81,7 @@ class LockedCapsuleCell: UICollectionViewCell {
             if dDayPrefix == "D+" {
                 self.dDay.backgroundColor = .gray // "D+" 일 때 회색으로 설정
             } else if dDayPrefix == "D-" {
-                self.dDay.backgroundColor = UIColor(hex: "#FF3A4A") // "D-"일 때 빨간색으로 설정
+                self.dDay.backgroundColor = UIColor(hex: "#C82D6B") // "D-"일 때 빨간색으로 설정
             }
         }
 
