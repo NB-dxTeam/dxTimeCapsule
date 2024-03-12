@@ -107,7 +107,7 @@ extension CapsuleMapViewController {
     }
     private func autoLayouts() {
         capsuleMaps.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(10)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(15)
             make.leading.trailing.equalToSuperview().inset(10)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
         }
@@ -161,6 +161,9 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
             .getDocuments { [weak self] (snapshot, error) in
             guard let documents = snapshot?.documents else {
                 print("Error fetching documents: \(error!)")
+                DispatchQueue.main.async {
+                    self?.showLoadFailureAlert(withError: error!)
+                }
                 return
             }
             
