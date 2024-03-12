@@ -28,10 +28,10 @@ class CustomModal: UIViewController {
     private var capsuleCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collection.backgroundColor = .white
-        //collection.layer.cornerRadius = 20
+        collection.backgroundColor = .red
+        //collection.layer.cornerRadius = 10
        // collection.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        //collection.layer.masksToBounds = true
+        collection.layer.masksToBounds = true
         return collection
     }()
     private lazy var stackView: UIStackView = {
@@ -90,8 +90,8 @@ class CustomModal: UIViewController {
             let sectionInsetHorizontal = screenWidth * 0.05 // 좌우 여백을 화면 너비의 5%로 설정
             layout.sectionInset = UIEdgeInsets(top: 10, left: sectionInsetHorizontal, bottom: 10, right: sectionInsetHorizontal)
             // 최소 줄 간격 설정
-            let minimumLineSpacing = itemHeight * 0.2 // 최소 줄 간격을 화면 너비의 10%로 설정
-            layout.minimumLineSpacing = 20
+            let minimumLineSpacing = itemHeight * 0.1 // 최소 줄 간격을 화면 너비의 10%로 설정
+            layout.minimumLineSpacing = minimumLineSpacing
             layout.sectionHeadersPinToVisibleBounds = true
         }
     }
@@ -130,6 +130,9 @@ class CustomModal: UIViewController {
                     }
                 } else if let err = err {
                     print("Error getting documents: \(err)")
+                    DispatchQueue.main.async {
+                        self?.showLoadFailureAlert(withError: err)
+                    }
                 }
             }
     }
