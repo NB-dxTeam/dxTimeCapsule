@@ -1,6 +1,5 @@
 import Foundation
 import FirebaseFirestore
-import FirebaseAuth
 
 struct TimeCapsule {
     var id: String // 타임캡슐 고유 ID

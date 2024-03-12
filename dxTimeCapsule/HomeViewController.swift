@@ -175,6 +175,17 @@ class HomeViewController: UIViewController {
         return button
     }()
     
+    let openedButtonContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 10
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.5
+        view.layer.shadowOffset = CGSize(width: 2, height: 4)
+        view.layer.shadowRadius = 7
+        return view
+    }()
+    
     // 다가오는 타임캡슐 버튼
     let upcomingTCButton: UIButton = {
         let button = UIButton(type: .system)
@@ -203,9 +214,20 @@ class HomeViewController: UIViewController {
         return button
     }()
     
+    let upcomingButtonContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 10
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.5
+        view.layer.shadowOffset = CGSize(width: 2, height: 4)
+        view.layer.shadowRadius = 7
+        return view
+    }()
+    
     // 버튼 스택뷰
     lazy var buttonStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [openedTCButton, upcomingTCButton])
+        let stackView = UIStackView(arrangedSubviews: [openedButtonContainerView, upcomingButtonContainerView])
         stackView.axis = .horizontal
         stackView.spacing = 20
         stackView.alignment = .fill
@@ -294,7 +316,7 @@ class HomeViewController: UIViewController {
             }
         db.collection("timeCapsules")
             .whereField("uid", isEqualTo: userId)
-            .whereField("isOpened", isEqualTo: false)
+            .whereField("isOpened", isEqualTo: true)
             .getDocuments { [weak self] (querySnapshot, err) in
                 guard let self = self else { return }
                 if let err = err {
@@ -369,7 +391,8 @@ class HomeViewController: UIViewController {
         // 메인 타임캡슐 그림자 추가
         view.addSubview(mainContainerView)
         mainContainerView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(15)
+            let offset = UIScreen.main.bounds.height * (0.15/6.0)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(offset)
             make.leading.trailing.equalToSuperview().inset(20)
             make.height.equalToSuperview().multipliedBy(2.0/6.0)
         }
@@ -384,16 +407,18 @@ class HomeViewController: UIViewController {
         
         view.addSubview(duestTCInforStackView)
         duestTCInforStackView.snp.makeConstraints { make in
-            make.top.equalTo(mainContainerView.snp.bottom).offset(20)
+            let offset = UIScreen.main.bounds.height * (0.15/6.0)
+            make.top.equalTo(mainContainerView.snp.bottom).offset(offset)
             make.leading.trailing.equalToSuperview().inset(30)
-            make.height.equalToSuperview().multipliedBy(1.0/6.0)
+            make.height.equalToSuperview().multipliedBy(0.8/6.0)
         }
         
         view.addSubview(noMainTCStackView)
         noMainTCStackView.snp.makeConstraints { make in
-            make.top.equalTo(mainContainerView.snp.bottom).offset(10)
+            let offset = UIScreen.main.bounds.height * (0.15/6.0)
+            make.top.equalTo(mainContainerView.snp.bottom).offset(offset)
             make.leading.trailing.equalToSuperview().inset(30)
-            make.height.equalToSuperview().multipliedBy(0.5/6.0)
+            make.height.equalToSuperview().multipliedBy(0.8/6.0)
         }
         noMainTCStackView.addArrangedSubview(noMainTCLabel)
         noMainTCLabel.snp.makeConstraints { make in
@@ -403,20 +428,29 @@ class HomeViewController: UIViewController {
         noMainTCStackView.addArrangedSubview(addTCButton)
         addTCButton.snp.makeConstraints { make in
             make.width.equalTo(addTCButton.snp.height)
-            make.height.equalTo(noMainTCStackView.snp.height).multipliedBy(2.0/3.0)
+            make.height.equalTo(noMainTCStackView.snp.height).multipliedBy(1.6/3.0)
+            make.top.equalTo(noMainTCStackView.snp.top).inset(10)
+            make.trailing.equalTo(noMainTCStackView.snp.trailing)
         }
         
         // 버튼 스택뷰에 버튼 추가
-        buttonStackView.addArrangedSubview(openedTCButton)
-        buttonStackView.addArrangedSubview(upcomingTCButton)
+        openedButtonContainerView.addSubview(openedTCButton)
+        openedTCButton.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        upcomingButtonContainerView.addSubview(upcomingTCButton)
+        upcomingTCButton.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         
         // 버튼 스택뷰를 뷰에 추가
         view.addSubview(buttonStackView)
         buttonStackView.snp.makeConstraints { make in
-            let offset = UIScreen.main.bounds.height * (0.8/6.0)
-            make.top.equalTo(mainContainerView.snp.bottom).offset(offset)
+            let offset1 = UIScreen.main.bounds.height * (1.1/6.0)
+            let offset2 = UIScreen.main.bounds.height * (0.15/6.0)
+            make.top.equalTo(mainContainerView.snp.bottom).offset(offset1)
             make.leading.trailing.equalToSuperview().inset(20)
-            make.height.equalToSuperview().multipliedBy(1.7/6.0)// 버튼 높이 조정
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(offset2)// 버튼 높이 조정
         }
     }
     
@@ -484,10 +518,10 @@ class HomeViewController: UIViewController {
     }
     
 }
-//
-//import SwiftUI
-//struct PreVie11w: PreviewProvider {
-//    static var previews: some View {
-//        MainTabBarView().toPreview()
-//    }
-//}
+
+import SwiftUI
+struct PreVie11w: PreviewProvider {
+    static var previews: some View {
+        MainTabBarView().toPreview()
+    }
+}
