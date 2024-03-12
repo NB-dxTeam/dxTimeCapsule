@@ -53,6 +53,8 @@ class HomeViewController: UIViewController {
         let label = UILabel()
         label.text = "서서울호수공원"
         label.font = UIFont.boldSystemFont(ofSize: 30)
+        label.numberOfLines = 0
+        label.adjustsFontSizeToFitWidth = true
         label.textColor = .black
         return label
     }()
@@ -62,6 +64,7 @@ class HomeViewController: UIViewController {
     let locationAddressLabel: UILabel = {
         let label = UILabel()
         label.text = "서울시 양천구 신월동"
+        label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 15)
         label.textColor = .black
         return label
@@ -82,22 +85,22 @@ class HomeViewController: UIViewController {
     // 장소정보 스택뷰
     lazy var locationInforStackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.axis = .vertical
+        stackView.axis = .horizontal
         stackView.alignment = .fill
         stackView.spacing = 0
         stackView.addArrangedSubview(self.locationNameLabel)
-        stackView.addArrangedSubview(self.locationAddressLabel)
+        stackView.addArrangedSubview(self.dDayLabel)
         return stackView
     }()
     
     // DuestTC 스택뷰
     lazy var duestTCInforStackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.axis = .horizontal
+        stackView.axis = .vertical
         stackView.alignment = .fill
-        stackView.spacing = 10
+        stackView.spacing = 0
         stackView.addArrangedSubview(self.locationInforStackView)
-        stackView.addArrangedSubview(self.dDayLabel)
+        stackView.addArrangedSubview(self.locationAddressLabel)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(duestTCStackViewTapped))
         stackView.addGestureRecognizer(tapGesture)
         stackView.isUserInteractionEnabled = true
@@ -354,25 +357,31 @@ class HomeViewController: UIViewController {
         
         let addFriendsButton: UIButton = {
             let button = UIButton(type: .system)
-            let image = UIImage(systemName: "person.fill.badge.plus")?.withRenderingMode(.alwaysTemplate) // 이미지를 템플릿 모드로 설정
-            button.setImage(image, for: .normal)
+            let image = UIImage(systemName: "person.badge.plus")?.withRenderingMode(.alwaysTemplate) // 이미지를 템플릿 모드로 설정
+            button.setBackgroundImage(image, for: .normal)
+            button.clipsToBounds = true
             button.tintColor = UIColor.systemGray
             button.addTarget(self, action: #selector(addFriendsButtonTapped), for: .touchUpInside)
             button.isUserInteractionEnabled = true
+            button.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
             return button
         }()
         
-        
-        let imageSize = CGSize(width: 120, height: 40) // 원하는 크기로 조절
-        imageView.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: imageSize) // x값을 0으로 변경하여 왼쪽 상단에 위치하도록 설정
-        
+        let imageSize = CGSize(width: 120, height: 40)
+        imageView.frame = CGRect(origin: CGPoint(x: 0, y: -5), size: imageSize)
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height))
         
         containerView.addSubview(imageView)
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: containerView)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: addFriendsButton)
+        
+        // Add a space before adding the addFriendsButton
+        let space = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        space.width = 20 // Adjust the width of the space as needed
+        
+        navigationItem.rightBarButtonItems = [space, UIBarButtonItem(customView: addFriendsButton)]
     }
+
     
     
     private func configureUI(){
@@ -396,12 +405,11 @@ class HomeViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(mainTCImageViewTapped))
         mainTCImageView.addGestureRecognizer(tapGesture)
         
-        // infoAndDdayStackView의 위치 설정
         view.addSubview(duestTCInforStackView)
         duestTCInforStackView.snp.makeConstraints { make in
-            make.top.equalTo(mainContainerView.snp.bottom).offset(10)
+            make.top.equalTo(mainContainerView.snp.bottom).offset(20)
             make.leading.trailing.equalToSuperview().inset(30)
-            make.height.equalToSuperview().multipliedBy(0.5/6.0)
+            make.height.equalToSuperview().multipliedBy(1.0/6.0)
         }
         
         view.addSubview(noMainTCStackView)
@@ -423,30 +431,28 @@ class HomeViewController: UIViewController {
             make.trailing.equalTo(noMainTCStackView.snp.trailing)
         }
         
-        // locationInforStackView의 위치 설정
-        locationInforStackView.snp.makeConstraints { make in
-            make.top.equalTo(mainContainerView.snp.bottom).offset(10)
-            make.leading.trailing.equalToSuperview().inset(5)
-            make.height.equalTo(mainContainerView.snp.width).multipliedBy(1.0/5.0)
-        }
-        
-        // userLocationLabel의 슈퍼뷰 설정
-        locationNameLabel.snp.makeConstraints { make in
-            make.height.equalTo(locationNameLabel.font.pointSize) // 폰트 크기에 맞는 높이로 설정
-        }
-        
-        // locationLabel의 슈퍼뷰 설정
-        locationAddressLabel.snp.makeConstraints { make in
-            make.height.equalTo(locationAddressLabel.font.pointSize) // 폰트 크기에 맞는 높이로 설정
-        }
-        
-        // dDayLabel의 슈퍼뷰 설정
-        duestTCInforStackView.addSubview(dDayLabel)
-        dDayLabel.snp.makeConstraints { make in
-            make.top.equalTo(mainContainerView.snp.bottom).inset(5)
-            make.width.equalTo(mainContainerView.snp.width).multipliedBy(1.0/5.0)
-            make.height.equalTo(mainContainerView.snp.width).multipliedBy(1.0/5.0)
-        }
+//        // locationInforStackView의 위치 설정
+//        locationInforStackView.snp.makeConstraints { make in
+//            make.top.equalTo(mainContainerView.snp.bottom).offset(10)
+//            make.leading.trailing.equalToSuperview().inset(5)
+//            make.height.equalTo(mainContainerView.snp.width).multipliedBy(1.0/5.0)
+//        }
+//        
+//        // userLocationLabel의 슈퍼뷰 설정
+//        locationNameLabel.snp.makeConstraints { make in
+//            make.height.equalTo(locationNameLabel.font.pointSize)
+//        }
+//
+//        // locationLabel의 슈퍼뷰 설정
+//        locationAddressLabel.snp.makeConstraints { make in
+//            make.height.equalTo(locationAddressLabel.font.pointSize)
+//        }
+//        
+//        // dDayLabel의 슈퍼뷰 설정
+//        dDayLabel.snp.makeConstraints { make in
+//            make.top.equalTo(mainContainerView.snp.bottom)
+//            make.width.equalTo(mainContainerView.snp.width).multipliedBy(1.0/5.0)
+//        }
         
         // 버튼 스택뷰에 버튼 추가
         buttonStackView.addArrangedSubview(openedTCButton)
@@ -458,7 +464,7 @@ class HomeViewController: UIViewController {
             let offset = UIScreen.main.bounds.height * (0.8/6.0)
             make.top.equalTo(mainContainerView.snp.bottom).offset(offset)
             make.leading.trailing.equalToSuperview().inset(20)
-            make.height.equalToSuperview().multipliedBy(1.5/6.0)// 버튼 높이 조정
+            make.height.equalToSuperview().multipliedBy(1.7/6.0)// 버튼 높이 조정
         }
     }
     
@@ -526,10 +532,10 @@ class HomeViewController: UIViewController {
     }
     
 }
-//
-//import SwiftUI
-//struct PreVie11w: PreviewProvider {
-//    static var previews: some View {
-//        MainTabBarView().toPreview()
-//    }
-//}
+
+import SwiftUI
+struct PreVie11w: PreviewProvider {
+    static var previews: some View {
+        MainTabBarView().toPreview()
+    }
+}
