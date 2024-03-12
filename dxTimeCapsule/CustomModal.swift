@@ -90,8 +90,8 @@ class CustomModal: UIViewController {
             let sectionInsetHorizontal = screenWidth * 0.05 // 좌우 여백을 화면 너비의 5%로 설정
             layout.sectionInset = UIEdgeInsets(top: 10, left: sectionInsetHorizontal, bottom: 10, right: sectionInsetHorizontal)
             // 최소 줄 간격 설정
-            let minimumLineSpacing = itemHeight * 0.2 // 최소 줄 간격을 화면 너비의 10%로 설정
-            layout.minimumLineSpacing = 20
+            let minimumLineSpacing = itemHeight * 0.1 // 최소 줄 간격을 화면 너비의 10%로 설정
+            layout.minimumLineSpacing = minimumLineSpacing
             layout.sectionHeadersPinToVisibleBounds = true
         }
     }
