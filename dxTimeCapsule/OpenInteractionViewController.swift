@@ -159,14 +159,14 @@ class OpenInteractionViewController: UIViewController {
         }
     }
     // 실기기 연결 하지않을때 시뮬레이터에서 테스트할 수 있는 쉐이크 모션 메소드 메소드
-    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        if motion == .motionShake {
-            // Shake 이벤트가 발생했을 때 실행할 로직입니다.
-            // 예: progress 값을 조금씩 증가시키고, 이를 통해 게이지를 업데이트합니다.
-            let newProgress = min(self.progress + 0.1, 1)
-            self.progress = newProgress
-        }
-    }
+//    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+//        if motion == .motionShake {
+//            // Shake 이벤트가 발생했을 때 실행할 로직입니다.
+//            // 예: progress 값을 조금씩 증가시키고, 이를 통해 게이지를 업데이트합니다.
+//            let newProgress = min(self.progress + 0.1, 1)
+//            self.progress = newProgress
+//        }
+//    }
 }
 
 
