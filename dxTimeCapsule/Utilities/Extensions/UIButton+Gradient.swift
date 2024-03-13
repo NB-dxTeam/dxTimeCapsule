@@ -6,18 +6,20 @@ extension UIButton {
     
     // BlurryBeach 테마
     func setBlurryBeach() {
-        setGradient(colors: [#colorLiteral(red: 0.8352941176, green: 0.2, blue: 0.4117647059, alpha: 1), #colorLiteral(red: 0.7960784314, green: 0.6784313725, blue: 0.4274509804, alpha: 1)])
+        setGradient(colors: [#colorLiteral(red: 0.831372549, green: 0.2, blue: 0.4117647059, alpha: 1), #colorLiteral(red: 0.7960784314, green: 0.6784313725, blue: 0.4274509804, alpha: 1)])
+        setTitleColor(.white, for: .normal)
     }
 
     // AzurLane 테마
-    func setAzurLane() {
-        setGradient(colors: [#colorLiteral(red: 0.4980392157, green: 0.4980392157, blue: 0.8352941176, alpha: 1), #colorLiteral(red: 0.5254901961, green: 0.6588235294, blue: 0.9058823529, alpha: 1), #colorLiteral(red: 0.568627451, green: 0.9176470588, blue: 0.8941176471, alpha: 1)])
+    func setInstagram() {
+    
+        setGradient(colors: [#colorLiteral(red: 0.5137254902, green: 0.2274509804, blue: 0.7058823529, alpha: 1), #colorLiteral(red: 0.9921568627, green: 0.1137254902, blue: 0.1137254902, alpha: 1), #colorLiteral(red: 0.9882352941, green: 0.6901960784, blue: 0.2705882353, alpha: 1)])
 
     }
 
-    // ViceCity 테마
-    func setViceCity() {
-        setGradient(colors: [#colorLiteral(red: 0.2039215686, green: 0.5803921569, blue: 0.9019607843, alpha: 1), #colorLiteral(red: 0.9254901961, green: 0.431372549, blue: 0.6784313725, alpha: 1)])
+    // custom1 테마
+    func setCustom1() {
+        setGradient(colors: [#colorLiteral(red: 1, green: 0.2274509804, blue: 0.2901960784, alpha: 1), #colorLiteral(red: 1, green: 0.6549019608, blue: 0.3176470588, alpha: 1)])
 
     }
 
@@ -27,11 +29,6 @@ extension UIButton {
 
     }
 
-    // Mango Custom 테마
-    func setMangoustom() {
-        setGradient(colors: [#colorLiteral(red: 1, green: 0.8862745098, blue: 0.3490196078, alpha: 1), #colorLiteral(red: 0.7894003391, green: 0.2963732481, blue: 0.2954288721, alpha: 1)])
-
-    }
     
     // PurpleParadise 테마
     func setPurpleParadise() {
@@ -56,7 +53,7 @@ extension UIButton {
     
     // Sin City Red
     func setSinCityRed() {
-        setGradient(colors: [#colorLiteral(red: 0.9294117647, green: 0.1294117647, blue: 0.2274509804, alpha: 1), #colorLiteral(red: 0.5764705882, green: 0.1607843137, blue: 0.1176470588, alpha: 1)])
+        setGradient(colors: [#colorLiteral(red: 1, green: 0.2274509804, blue: 0.2901960784, alpha: 1), #colorLiteral(red: 0.5764705882, green: 0.1607843137, blue: 0.1176470588, alpha: 1)])
     }
     
 
@@ -71,8 +68,24 @@ extension UIButton {
         gradientLayer.cornerRadius = self.layer.cornerRadius
         self.layer.insertSublayer(gradientLayer, at: 0)
         layer.cornerRadius = 8
-
-        
     }
     
+    // 단색 버튼
+    func configureButton(_ button: UIButton) {
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 16
+        button.backgroundColor = UIColor(hex: "#C82D6B")
+        button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 16)
+        
+        // 그림자 설정
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowRadius = 6 // 그림자의 블러 정도 설정 (조금 더 부드럽게)
+        button.layer.shadowOpacity = 0.3 // 그림자의 투명도 설정 (적당한 농도로)
+        button.layer.shadowOffset =  CGSize(width: 0, height: 3) // 그림자 방향 설정 (아래로 조금 더 멀리)
+        
+        
+        button.snp.makeConstraints { make in
+            make.height.equalTo(40)
+        }
+    }
 }

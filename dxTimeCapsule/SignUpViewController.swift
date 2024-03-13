@@ -17,7 +17,7 @@ class SignUpViewController: UIViewController  {
     private let signUpButton = UIButton(type: .system)
     
     private let labelsContainerView = UIView()
-    
+        
     private let dividerView = UIView()
     
     private let alreadyHaveAccountLabel = UILabel()
@@ -35,8 +35,8 @@ class SignUpViewController: UIViewController  {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        signUpButton.setBlurryBeach()
-        selectImageButton.setBlurryBeach()
+        signUpButton.setInstagram()
+        selectImageButton.setInstagram()
         
     }
     
@@ -85,7 +85,7 @@ class SignUpViewController: UIViewController  {
         signInActionLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
         signInActionLabel.textAlignment = .center
         signInActionLabel.isUserInteractionEnabled = true
-        signInActionLabel.textColor = UIColor(hex: "#D53369")
+        signInActionLabel.textColor = UIColor(hex: "#C82D6B")
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(alreadyHaveAccountTapped))
         signInActionLabel.addGestureRecognizer(tapGesture)

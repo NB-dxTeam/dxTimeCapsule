@@ -1,7 +1,7 @@
 //
 //  MainCapsuleViewController.swift
 //  dxTimeCapsule
-//
+
 //  Created by 김우경 on 2/23/24.
 //
 
@@ -12,7 +12,8 @@ import FirebaseAuth
 
 class MainCapsuleViewController: UIViewController {
     private var viewModel = MainCapsuleViewModel()
-    
+    var documentId: String?
+
     //장소명
     private lazy var locationName: UILabel = {
         let label = UILabel()
@@ -40,7 +41,7 @@ class MainCapsuleViewController: UIViewController {
     //캡슐이미지
     private lazy var capsuleImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "MainCapsule3")
+        imageView.image = UIImage(named: "TimeCapsule")
         imageView.contentMode = .scaleAspectFit
         imageView.isUserInteractionEnabled = true // 이미지 뷰가 사용자 인터랙션을 받을 수 있도록 설정
         return imageView
@@ -76,13 +77,17 @@ class MainCapsuleViewController: UIViewController {
         // 사용자의 UID로 필터링하고, openDate 필드로 오름차순 정렬한 후, 최상위 1개 문서만 가져옵니다.
            db.collection("timeCapsules")
              .whereField("uid", isEqualTo: userId)
+             .whereField("isOpened", isEqualTo: false) // 아직 열리지 않은 타임캡슐만 선택
              .order(by: "openDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
              .limit(to: 1) // 가장 개봉일이 가까운 타임캡슐 1개만 선택
-             .getDocuments { (querySnapshot, err) in
-                 if let err = err {
-                     print("Error getting documents: \(err)")
+             .getDocuments { [weak self] (querySnapshot, err) in
+                           guard let self = self else { return }
+                           if let err = err {
+                               print("Error getting documents: \(err)")
                      
                  } else if let document = querySnapshot?.documents.first { // 첫 번째 문서만 사용
+                     self.documentId = document.documentID // documentId 업데이트
+                    
                      // 문서에서 "userLocation" 필드의 값을 가져옵니다.
                      let userLocation = document.get("userLocation") as? String ?? "Unknown Location"
                      print("Fetched location: \(userLocation)")
@@ -140,8 +145,8 @@ class MainCapsuleViewController: UIViewController {
         capsuleImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview().offset(10)
-            make.width.equalTo(380)
-            make.height.equalTo(380)
+            make.width.equalTo(400)
+            make.height.equalTo(400)
         }
         
         // "타임캡슐을 오픈하세요!"
@@ -150,19 +155,19 @@ class MainCapsuleViewController: UIViewController {
             make.top.equalTo(capsuleImageView.snp.bottom).offset(5) // 이미지 아래에 위치
         }
         
-        // 장소명 레이블 레이아웃 설정
+        // 장소명
         locationName.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(80)
             make.centerX.equalToSuperview()
         }
         
-        // D-day 레이블 레이아웃 설정
+        // D-day
         daysLabel.snp.makeConstraints { make in
-            make.top.equalTo(locationName.snp.bottom).offset(450)
+            make.top.equalTo(locationName.snp.bottom).offset(460)
             make.centerX.equalToSuperview()
         }
         
-        // 생성 날짜 레이블 레이아웃 설정
+        // 생성 날짜
         creationDateLabel.snp.makeConstraints { make in
             make.top.equalTo(daysLabel.snp.bottom).offset(5) // D-day 레이블 아래에 위치
             make.centerX.equalToSuperview()
@@ -218,16 +223,17 @@ class MainCapsuleViewController: UIViewController {
             // x,y 값으로 확대값 설정
             self.capsuleImageView.transform = self.capsuleImageView.transform.scaledBy(x: 5.0, y: 5.0)
         }) { [weak self] _ in
-            guard let strongSelf = self else { return }
+                   guard let self = self, let documentId = self.documentId else { return }
             // 애니메이션이 완료된 인터렉션뷰로 전환
-            self?.navigateToOpenInteractionViewController()
+            self.navigateToOpenInteractionViewController(with: documentId)
         }
     }
     
     // OpenInteractionViewController로 네비게이션
-    private func navigateToOpenInteractionViewController() {
+    private func navigateToOpenInteractionViewController(with documentID: String) {
         let openInteractionVC = OpenInteractionViewController()
         
+        openInteractionVC.documentId = documentId // documentId 전달
         openInteractionVC.modalPresentationStyle = .custom // 커스텀 모달 스타일 사용
         openInteractionVC.transitioningDelegate = self // 트랜지션 델리게이트 지정
         openInteractionVC.modalPresentationStyle = .fullScreen
@@ -251,10 +257,10 @@ class MainCapsuleViewController: UIViewController {
         }
     }
     
-    @objc private func openTimeCapsule() {
-        // 여기에 타임캡슐을 오픈할 때의 애니메이션과 로직을 구현
-        print("타임캡슐 오픈 로직을 구현")
-    }
+//    @objc private func openTimeCapsule() {
+//        // 여기에 타임캡슐을 오픈할 때의 애니메이션과 로직을 구현
+//        print("타임캡슐 오픈 로직을 구현")
+//    }
 }
 
 extension MainCapsuleViewController: UIViewControllerTransitioningDelegate {

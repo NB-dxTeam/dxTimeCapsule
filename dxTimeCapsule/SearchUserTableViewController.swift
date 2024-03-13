@@ -33,10 +33,9 @@ class SearchUserTableViewController: UIViewController, UITableViewDelegate, UITa
         super.viewDidLoad()
         setupSearchComponents()
         setupTableView()
-        
         searchBar.delegate = self
     }
-    
+
     func setupSearchComponents() {
         searchContainerView = UIView()
         searchContainerView.backgroundColor = .white
@@ -58,13 +57,13 @@ class SearchUserTableViewController: UIViewController, UITableViewDelegate, UITa
         view.addSubview(searchContainerView)
         
         searchContainerView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(-80)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(searchBar.snp.bottom)
         }
         
         searchLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(16)
+            make.top.equalToSuperview()
             make.leading.equalToSuperview().offset(16)
             make.trailing.equalToSuperview().offset(-16)
         }
@@ -96,57 +95,48 @@ class SearchUserTableViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     // MARK: - UISearchBarDelegate
-       func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-           // 디바운싱 로직을 여기에 적용
-           searchDebounceTimer?.invalidate()
-           searchDebounceTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { [weak self] _ in
-               self?.performSearch(with: searchText)
-           })
-       }
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        searchDebounceTimer?.invalidate()
+        searchDebounceTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { [weak self] _ in
+            self?.performSearch(with: searchText)
+        })
+    }
 
        // MARK: - Functions
-       private func performSearch(with searchText: String) {
-           guard !searchText.isEmpty else {
-               searchResults = []
-               tableView.reloadData()
-               return
-           }
+    private func performSearch(with searchText: String) {
+         guard !searchText.isEmpty else {
+             searchResults = []
+             tableView.reloadData()
+             return
+         }
 
-           friendsViewModel.searchUsersByUsername(username: searchText) { [weak self] users, error in
-               DispatchQueue.main.async {
-                   if let error = error {
-                       print("Error searching users: \(error.localizedDescription)")
-                   } else {
-                       self?.searchResults = users ?? []
-                       self?.tableView.reloadData()
-                   }
-               }
-           }
-       }
+         friendsViewModel.searchUsersByUsername(username: searchText) { [weak self] users, error in
+             DispatchQueue.main.async {
+                 if let error = error {
+                     print("Error searching users: \(error.localizedDescription)")
+                 } else {
+                     self?.searchResults = users ?? []
+                     self?.tableView.reloadData()
+                 }
+             }
+         }
+     }
 
        // MARK: - TableView Delegate & DataSource
-       func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-           return searchResults.count
-       }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return searchResults.count
+    }
 
-       func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-           return 80
-       }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
+    }
 
-       func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-           guard let cell = tableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as? SearchUserTableViewCell else {
-               return UITableViewCell()
-           }
-           let user = searchResults[indexPath.row]
-           cell.configure(with: user, viewModel: friendsViewModel)
-
-           cell.friendActionButtonTapAction = {
-               print("친구 추가/요청 로직 실행: \(user.username)")
-               // 여기에 친구 추가/요청 로직을 구현합니다.
-           }
-
-           return cell
-       }
-    
-    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as? SearchUserTableViewCell else {
+            return UITableViewCell()
+        }
+        let user = searchResults[indexPath.row]
+        cell.configure(with: user, viewModel: friendsViewModel)
+        return cell
+    }
 }

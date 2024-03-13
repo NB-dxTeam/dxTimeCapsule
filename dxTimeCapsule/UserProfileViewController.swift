@@ -22,13 +22,15 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     private let labelsContainerView = UIView()
     private let profileImageView = UIImageView()
     private let nicknameLabel = UILabel()
+    private let editUsernameButton = UIButton()
     private let emailLabel = UILabel()
-    private let selectImageLabel = UILabel()
+//    private let selectImageLabel = UILabel()
     private let logoutButton = UIButton()
     private let areYouSerious = UILabel()
     private let deleteAccountLabel = UILabel()
     private let dividerView = UIView()
-    private var loadingIndicator = UIActivityIndicatorView(style: .medium) // 로딩 인디케이터 추가
+    private var loadingIndicator = UIActivityIndicatorView(style: .medium) // 로딩 인디케이터 추가\
+    private let friendListButton = UIButton()
 
     
     // MARK: - Lifecycle
@@ -48,20 +50,23 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         // 이미지 뷰의 크기에 따라 cornerRadius를 동적으로 설정합니다.
         let imageSize: CGFloat = profileImageView.frame.width
         profileImageView.layer.cornerRadius = imageSize / 2
-        logoutButton.setGradient(colors: [#colorLiteral(red: 0.831372549, green: 0.2, blue: 0.4117647059, alpha: 1), #colorLiteral(red: 0.7960784314, green: 0.6784313725, blue: 0.4274509804, alpha: 1)])
+//        logoutButton.backgroundColor = UIColor(hex: "#FF3A4A")
+        logoutButton.setInstagram()
     }
     
     // MARK: - Setup
     private func setupViews() {
         view.backgroundColor = .white
         view.addSubview(profileImageView)
-        view.addSubview(selectImageLabel)
         view.addSubview(nicknameLabel)
+        view.addSubview(editUsernameButton)
         view.addSubview(logoutButton)
         view.addSubview(dividerView)
         view.addSubview(emailLabel)
         view.addSubview(labelsContainerView)
         view.addSubview(loadingIndicator)
+        view.addSubview(friendListButton)
+        
         
         // 로딩 인디케이터 설정
         loadingIndicator.center = view.center
@@ -71,37 +76,73 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         profileImageView.clipsToBounds = true
         profileImageView.layer.cornerRadius = 50
         
-        // Select Image Label
-        selectImageLabel.text = "Edit"
-        selectImageLabel.font = .systemFont(ofSize: 14, weight: .regular)
-        selectImageLabel.textColor = UIColor(hex: "#D28488")
-        selectImageLabel.textAlignment = .center
+        // 프로필 이미지 뷰 설정
+        profileImageView.isUserInteractionEnabled = true
         
-        let labelTapGesture = UITapGestureRecognizer(target: self, action: #selector(changePhotoTapped))
-        selectImageLabel.isUserInteractionEnabled = true
-        selectImageLabel.addGestureRecognizer(labelTapGesture)
+        // 프로필 이미지 탭 제스처 추가
+        let imageTapGesture = UITapGestureRecognizer(target: self, action: #selector(changePhotoTapped))
+        profileImageView.addGestureRecognizer(imageTapGesture)
         
         let imageSize: CGFloat = 220 // 원하는 이미지 크기로 설정
         profileImageView.layer.cornerRadius = imageSize / 2 // 이미지 뷰를 둥글게 처리하기 위해 반지름을 이미지 크기의 절반으로 설정
-    
+        
+        // "Edit" 레이블 추가
+        let editLabel = UILabel()
+        editLabel.text = "Edit"
+        editLabel.font = UIFont.pretendardBold(ofSize: 15)
+        editLabel.textColor =  .white
+        
+        profileImageView.addSubview(editLabel)
+        
+        editLabel.snp.makeConstraints { make in
+          make.bottom.equalTo(profileImageView.snp.bottom).offset(-10)
+          make.centerX.equalTo(profileImageView.snp.centerX)
+        }
+        
         // Nickname Label Setup
         nicknameLabel.font = .pretendardSemiBold(ofSize: 24)
         nicknameLabel.textAlignment = .center
         
+        // Edit Nickname Button Setup
+        editUsernameButton.setTitle("Edit", for: .normal)
+        editUsernameButton.titleLabel?.font = .pretendardSemiBold(ofSize: 15)
+        editUsernameButton.setTitleColor(.darkGray, for: .normal)
+        editUsernameButton.addTarget(self, action: #selector(editUsernameTapped), for: .touchUpInside)
+
         // Email Label Setup
         logoutButton.titleLabel?.font = .pretendardSemiBold(ofSize: 24)
         emailLabel.textAlignment = .center
         
         // Logout Button Setup
         logoutButton.setTitle("Logout", for: .normal)
-        logoutButton.titleLabel?.font = .pretendardSemiBold(ofSize: 14)
         logoutButton.addTarget(self, action: #selector(logoutTapped), for: .touchUpInside)
-        logoutButton.layer.cornerRadius = 12
+        logoutButton.layer.cornerRadius = 16
+//        logoutButton.backgroundColor = UIColor(hex: "#FF3A4A")
+        logoutButton.setInstagram()
+        logoutButton.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 16)
+        
+        // 그림자 설정
+        logoutButton.layer.shadowColor = UIColor.black.cgColor
+        logoutButton.layer.shadowRadius = 6 // 그림자의 블러 정도 설정 (조금 더 부드럽게)
+        logoutButton.layer.shadowOpacity = 0.3 // 그림자의 투명도 설정 (적당한 농도로)
+        logoutButton.layer.shadowOffset =  CGSize(width: 0, height: 3) // 그림자 방향 설정 (아래로 조금 더 멀리)
+        
+        
+        logoutButton.snp.makeConstraints { make in
+            make.height.equalTo(40)
+        }
+        
+        // Search User Button Setup
+        friendListButton.setTitle("친구목록보기", for: .normal)
+        friendListButton.titleLabel?.font = .pretendardSemiBold(ofSize: 14)
+        friendListButton.setTitleColor(.darkGray, for: .normal)
+        friendListButton.addTarget(self, action: #selector(friendListButtonTapped), for: .touchUpInside)
+        
         
         // Divider View Setup
         dividerView.backgroundColor = .lightGray
         
-        // "계정이 없으신가요?" 라벨 설정
+        // "정말 탈퇴하실건가요?" 라벨 설정
         areYouSerious.text = "Are you really going to leave?"
         areYouSerious.font = .pretendardSemiBold(ofSize: 14)
         areYouSerious.textColor = .black
@@ -109,7 +150,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         // Delete Account Label Setup
         deleteAccountLabel.text = "Leave Account"
         deleteAccountLabel.font = .pretendardSemiBold(ofSize: 14)
-        deleteAccountLabel.textColor = UIColor(hex: "#D28488")
+        deleteAccountLabel.textColor = UIColor(hex: "#C82D6B")
         deleteAccountLabel.textAlignment = .center
         
         labelsContainerView.addSubview(areYouSerious)
@@ -120,26 +161,27 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         deleteAccountLabel.addGestureRecognizer(tapGesture)
     }
 
+
     private func setupConstraints() {
         // Profile Image View Constraints
         profileImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview().offset(-130)
-            make.width.height.equalTo(220)
+            make.width.height.equalTo(150)
             profileImageView.setRoundedImage()
-        }
-        
-        // Select Image Label Constraints
-        selectImageLabel.snp.makeConstraints { make in
-            make.top.equalTo(profileImageView.snp.bottom).offset(5)
-            make.left.right.equalToSuperview().inset(20)
         }
         
         // Nickname Label Constraints
         nicknameLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(selectImageLabel.snp.bottom).offset(20)
+            make.top.equalTo(profileImageView.snp.bottom).offset(20) // 수정된 부분
             make.left.right.equalToSuperview().inset(20)
+        }
+
+        editUsernameButton.snp.makeConstraints { make in
+            make.centerY.equalTo(nicknameLabel)
+            make.leading.equalTo(nicknameLabel.snp.trailing).offset(-30)
+            make.width.height.equalTo(20) // Adjust the size as needed
         }
         
         // Email Label Constraints
@@ -155,6 +197,13 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
             make.top.equalTo(emailLabel.snp.bottom).offset(20)
             make.left.right.equalToSuperview().inset(50)
             make.height.equalTo(50)
+        }
+        
+        friendListButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(logoutButton.snp.bottom).offset(20)
+            make.left.right.equalToSuperview().inset(50)
+            make.height.equalTo(20)
         }
         
         // Ensure dividerView is added to the view before setting constraints
@@ -236,19 +285,92 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         }
     }
 
-    // MARK: - Actions
-    @objc private func changePhotoTapped() {
+// MARK: - Fuctions
+    func openCamera() {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            let imagePickerController = UIImagePickerController()
+            imagePickerController.delegate = self
+            imagePickerController.sourceType = .camera
+            present(imagePickerController, animated: true)
+        }
+    }
+
+    func openPhotoLibrary() {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
-        imagePickerController.allowsEditing = true
         imagePickerController.sourceType = .photoLibrary
-        present(imagePickerController, animated: true, completion: nil)
+        present(imagePickerController, animated: true)
     }
     
+    // MARK: - Actions
+    
+    @objc private func editUsernameTapped() {
+        let alertController = UIAlertController(title: "닉네임 수정", message: "새로운 닉네임을 입력하세요.", preferredStyle: .alert)
+        
+        alertController.addTextField { textField in
+            textField.placeholder = "새로운 닉네임"
+        }
+        
+        let saveAction = UIAlertAction(title: "저장", style: .default) { [weak self] _ in
+            if let newNickname = alertController.textFields?.first?.text, !newNickname.isEmpty {
+                self?.updateUsername(newNickname)
+            } else {
+                // Show an error message if the new username is empty
+                self?.showErrorMessage("닉네임을 입력하세요.")
+            }
+        }
+        alertController.addAction(saveAction)
+        
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+
+    private func updateUsername(_ newUsername: String) {
+        // Update locally
+        nicknameLabel.text = newUsername
+        
+        // Update on server (Firestore)
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        let userRef = Firestore.firestore().collection("users").document(userId)
+        userRef.setData(["username": newUsername], merge: true) { error in
+            if let error = error {
+                print("Error updating username in Firestore: \(error.localizedDescription)")
+                // If update fails, revert back the username locally
+                self.nicknameLabel.text = self.userProfileViewModel.nickname
+            } else {
+                print("Username updated successfully")
+            }
+        }
+    }
+
+
+    private func showErrorMessage(_ message: String) {
+        let alertController = UIAlertController(title: "오류", message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
+    }
+
+    
     @objc private func logoutTapped() {
+        let alertController = UIAlertController(title: "로그아웃", message: "로그아웃 하시겠습니까?", preferredStyle: .alert)
+        
+        let yesAction = UIAlertAction(title: "예", style: .default) { [weak self] _ in
+            self?.performLogout()
+        }
+        alertController.addAction(yesAction)
+        
+        let noAction = UIAlertAction(title: "아니오", style: .cancel, handler: nil)
+        alertController.addAction(noAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+
+    private func performLogout() {
         do {
             try Auth.auth().signOut()
-            
             
             guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
             guard let sceneDelegate = windowScene.delegate as? SceneDelegate else { return }
@@ -258,12 +380,27 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
             sceneDelegate.window?.makeKeyAndVisible()
             
             print("로그아웃 성공")
-
             
         } catch let signOutError as NSError {
             print("로그아웃 실패: \(signOutError.localizedDescription)")
         }
     }
+    
+    @objc private func searchUserButtonTapped() {
+        // 새로운 ViewController를 생성합니다.
+        let searchUserViewController = SearchUserTableViewController()
+        
+        // 현재 ViewController에서 모달로 새 ViewController를 표시합니다.
+        self.present(searchUserViewController, animated: true, completion: nil)
+    }
+    
+    @objc private func friendListButtonTapped() {
+        let friendListViewController = FriendsListViewController()
+        
+        // 현재 ViewController에서 모달로 새 ViewController를 표시합니다.
+        self.present(friendListViewController, animated: true, completion: nil)
+    }
+    
     
     @objc private func deleteProfileTapped() {
         // 사용자 ID를 가져옵니다.
@@ -317,6 +454,35 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         }
     }
     
+    @objc private func changePhotoTapped() {
+        let alertController = UIAlertController(title: "프로필 사진 변경", message: "사진을 선택해주세요.", preferredStyle: .actionSheet)
+
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            let cameraAction = UIAlertAction(title: "카메라로 촬영하기", style: .default) { [weak self] _ in
+                self?.presentImagePicker(sourceType: .camera)
+            }
+            alertController.addAction(cameraAction)
+        }
+
+        let photoLibraryAction = UIAlertAction(title: "앨범에서 선택하기", style: .default) { [weak self] _ in
+            self?.presentImagePicker(sourceType: .photoLibrary)
+        }
+        alertController.addAction(photoLibraryAction)
+
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        alertController.addAction(cancelAction)
+
+        present(alertController, animated: true)
+    }
+
+    private func presentImagePicker(sourceType: UIImagePickerController.SourceType) {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = sourceType
+        imagePickerController.allowsEditing = true
+        present(imagePickerController, animated: true)
+    }
+
     
     // MARK: - Image Picker Delegate
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -376,8 +542,6 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     }
     
 }
-
-
 
 func configureButton(_ button: UIButton, title: String) {
     button.setTitle(title, for: .normal)

@@ -1,12 +1,10 @@
 //
-//  SceneDelegate.swift
-//  dxTimeCapsule
+// SceneDelegate.swift
+// dxTimeCapsule
 //
-//  Created by t2023-m0031 on 2/20/24.
+// Created by t2023-m0031 on 2/20/24.
 //
-
 import UIKit
-
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
@@ -17,16 +15,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         window.overrideUserInterfaceStyle = .light
         
-        let splashVC = SplashViewController()
-        window.rootViewController = splashVC
+        let spalshVC = SplashViewController()
+        window.rootViewController = spalshVC
         window.makeKeyAndVisible()
         
         self.window = window
-            
+        
     }
-
-
-
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.

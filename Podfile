@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-# platform :ios, '9.0'
+platform :ios, '16.0'
 
 target 'dxTimeCapsule' do
   # Comment the next line if you don't want to use dynamic frameworks
@@ -12,6 +12,5 @@ target 'dxTimeCapsule' do
   pod 'FirebaseAuth'
   pod 'FirebaseFirestore', :git => 'https://github.com/firebase/firebase-ios-sdk.git', :branch => 'main'
   pod 'FirebaseUI'
-  pod 'NMapsMap'
   pod 'SDWebImage'
 end
