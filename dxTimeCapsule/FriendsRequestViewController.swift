@@ -100,7 +100,7 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
                     let userName = data["userName"] as? String ?? ""
                     let imageURL = data["imageURL"] as? [String] ?? []
                     let description = data["description"] as? String ?? ""
-                    let tagFriends = data["tagFriends"] as? [String] ?? []
+                    let tagFriendName = data["tagFriends"] as? [String] ?? []
                     let createTimeCapsuleDate = (data["createTimeCapsuleDate"] as? Timestamp)?.dateValue() ?? Date()
                     let openTimeCapsuleDate = (data["openTimeCapsuleDate"] as? Timestamp)?.dateValue() ?? Date()
                     let isOpened = data["isOpened"] as? Bool ?? false
@@ -114,7 +114,7 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
                         imageURL: imageURL,
                         userLocation: nil, // GeoPoint를 처리하여 설정
                         description: description,
-                        tagFriends: tagFriends,
+                        tagFriendName: tagFriendName,
                         createTimeCapsuleDate: createTimeCapsuleDate,
                         openTimeCapsuleDate: openTimeCapsuleDate,
                         isOpened: isOpened

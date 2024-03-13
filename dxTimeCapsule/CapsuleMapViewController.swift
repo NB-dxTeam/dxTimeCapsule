@@ -377,27 +377,27 @@ extension CapsuleMapViewController: UISheetPresentationControllerDelegate {
     }
 }
 // MARK: - Preview
-//import SwiftUI
-//import FirebaseFirestoreInternal
-//
-//struct Preview: PreviewProvider {
-//    static var previews: some View {
-//        CapsuleMapViewController().toPreview()
-//    }
-//}
-//
-//#if DEBUG
-//extension UIViewController {
-//    private struct Preview: UIViewControllerRepresentable {
-//            let viewController: UIViewController
-//            func makeUIViewController(context: Context) -> UIViewController {
-//                return viewController
-//            }
-//            func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
-//            }
-//        }
-//        func toPreview() -> some View {
-//            Preview(viewController: self)
-//        }
-//}
-//#endif
+import SwiftUI
+import FirebaseFirestoreInternal
+
+struct Preview: PreviewProvider {
+    static var previews: some View {
+        CapsuleMapViewController().toPreview()
+    }
+}
+
+#if DEBUG
+extension UIViewController {
+    private struct Preview: UIViewControllerRepresentable {
+            let viewController: UIViewController
+            func makeUIViewController(context: Context) -> UIViewController {
+                return viewController
+            }
+            func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+            }
+        }
+        func toPreview() -> some View {
+            Preview(viewController: self)
+        }
+}
+#endif

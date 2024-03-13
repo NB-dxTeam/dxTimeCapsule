@@ -252,11 +252,15 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     }
 
     @objc private func handleModifyLocationTap() {
-            toggleCenterView()
+        if isCenterViewPresented {
+            hideCenterView()
+        } else {
             showBannerMessage(message: "원하는 위치에 탭을 꾹 눌러주세요!")
             setupLongPressGesture()
-
+            showCenterView()
+        }
     }
+
     
     // MARK: - Gesture
     private func setupLongPressGesture() {
@@ -341,11 +345,11 @@ extension MKMapView {
 }
 
 // MARK: - SwiftUI Preview
-//import SwiftUI
-//
-//struct MainTabBarViewPreview2 : PreviewProvider {
-//    static var previews: some View {
-//        LocationMapkitViewController().toPreview()
-//    }
-//}
-//
+import SwiftUI
+
+struct MainTabBarViewPreview2 : PreviewProvider {
+    static var previews: some View {
+        LocationMapkitViewController().toPreview()
+    }
+}
+

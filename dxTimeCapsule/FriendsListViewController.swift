@@ -3,7 +3,6 @@ import FirebaseFirestore
 import FirebaseAuth
 
 class FriendsListViewController: UIViewController {
-    
     var tableView: UITableView!
     let db = Firestore.firestore()
     var currentUser: User?
@@ -28,7 +27,7 @@ class FriendsListViewController: UIViewController {
         }
     }
     
-    private func fetchCurrentUser() {
+    func fetchCurrentUser() {
         // Fetch current user data from Firebase
         guard let currentUserID = Auth.auth().currentUser?.uid else { return }
         
@@ -49,7 +48,7 @@ class FriendsListViewController: UIViewController {
         }
     }
     
-    private func fetchFriends(forUserID userID: String) {
+    func fetchFriends(forUserID userID: String) {
         db.collection("friendships").whereField("userUids", arrayContains: userID).getDocuments { [weak self] snapshot, error in
             guard let self = self, let documents = snapshot?.documents, error == nil else {
                 print("Error fetching friends: \(error)")

@@ -2,7 +2,7 @@ import Foundation
 import FirebaseFirestore
 import FirebaseAuth
 
-struct User {
+struct User: Decodable {
     var uid: String
     var email: String
     var username: String
