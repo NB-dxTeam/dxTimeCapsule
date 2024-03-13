@@ -43,16 +43,44 @@ class CapsuleMapViewController: UIViewController {
         return button
     }()
     
-    private lazy var currentLocationBotton: UIButton = {
+    private lazy var currentLocationButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "locationicon"), for: .normal)
         button.backgroundColor = UIColor.white.withAlphaComponent(0.6)
-        button.setTitleColor(.black, for: .normal)
         button.layer.masksToBounds = true
-        button.layer.cornerRadius = 10
+        button.layer.cornerRadius = 2
         button.addTarget(self, action: #selector(locationButton(_:)), for: .touchUpInside)
         return button
     }()// 현재 위치로
+    private let zoomInButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setBackgroundImage(UIImage(named: "plusicon02"), for: .normal)
+        button.backgroundColor = UIColor.white.withAlphaComponent(0.6)
+        button.layer.masksToBounds = true
+        button.layer.cornerRadius = 5
+        button.addTarget(self, action: #selector(zoomIn), for: .touchUpInside)
+        return button
+    }()
+    
+    private let zoomOutButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setBackgroundImage(UIImage(named: "minusicon02"), for: .normal)
+        button.backgroundColor = UIColor.white.withAlphaComponent(0.6)
+        button.setTitleColor(.black, for: .normal)
+        button.layer.masksToBounds = true
+        button.layer.cornerRadius = 5
+        button.addTarget(self, action: #selector(zoomOut), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var zoomStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [zoomInButton, zoomOutButton])
+        stackView.axis = .vertical
+        stackView.spacing = 5
+        stackView.distribution = .fillEqually
+        stackView.alignment = .fill
+        return stackView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -97,7 +125,8 @@ extension CapsuleMapViewController {
     private func addSubViews() {
         self.view.addSubview(capsuleMaps)
         self.view.addSubview(tapDidModal)
-        self.view.addSubview(currentLocationBotton)
+        self.view.addSubview(currentLocationButton)
+        self.view.addSubview(zoomStackView)
         capsuleMaps.addSubview(stackView)
     }
     private func setupStackView() {
@@ -107,7 +136,7 @@ extension CapsuleMapViewController {
     }
     private func autoLayouts() {
         capsuleMaps.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(10)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(15)
             make.leading.trailing.equalToSuperview().inset(10)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
         }
@@ -124,15 +153,33 @@ extension CapsuleMapViewController {
             make.center.equalToSuperview() // backView의 중심에 배치
             make.size.equalTo(CGSize(width: 20, height: 20)) // 버튼의 크기를 설정합니다.
         }
-        currentLocationBotton.snp.makeConstraints { make in
+        currentLocationButton.snp.makeConstraints { make in
             make.top.equalTo(capsuleMaps.snp.top).offset(10)
             make.trailing.equalTo(capsuleMaps.snp.trailing).offset(-5)
             make.size.equalTo(CGSize(width: 40, height: 40))
         }
+        zoomStackView.snp.makeConstraints { make in
+            make.trailing.equalTo(capsuleMaps.snp.trailing).offset(-5)
+            make.centerY.equalTo(capsuleMaps.snp.centerY)
+            make.width.equalTo(30)
+        }
     }
     private func buttons() {
         tapDidModal.addTarget(self, action: #selector(modalButton(_:)), for: .touchUpInside)
-        currentLocationBotton.addTarget(self, action: #selector(locationButton(_:)), for: .touchUpInside)
+        currentLocationButton.addTarget(self, action: #selector(locationButton(_:)), for: .touchUpInside)
+        
+    }
+    // MARK: - Actions for zoom buttons
+    @objc private func zoomIn() {
+        let region = MKCoordinateRegion(center: capsuleMaps.centerCoordinate, span: capsuleMaps.region.span)
+        let zoomedRegion = capsuleMaps.regionThatFits(MKCoordinateRegion(center: region.center, span: MKCoordinateSpan(latitudeDelta: region.span.latitudeDelta / 2, longitudeDelta: region.span.longitudeDelta / 2)))
+        capsuleMaps.setRegion(zoomedRegion, animated: true)
+    }
+    
+    @objc private func zoomOut() {
+        let region = MKCoordinateRegion(center: capsuleMaps.centerCoordinate, span: capsuleMaps.region.span)
+        let zoomedRegion = capsuleMaps.regionThatFits(MKCoordinateRegion(center: region.center, span: MKCoordinateSpan(latitudeDelta: region.span.latitudeDelta * 2, longitudeDelta: region.span.longitudeDelta * 2)))
+        capsuleMaps.setRegion(zoomedRegion, animated: true)
     }
 }
 
@@ -161,6 +208,9 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
             .getDocuments { [weak self] (snapshot, error) in
             guard let documents = snapshot?.documents else {
                 print("Error fetching documents: \(error!)")
+                DispatchQueue.main.async {
+                    self?.showLoadFailureAlert(withError: error!)
+                }
                 return
             }
             

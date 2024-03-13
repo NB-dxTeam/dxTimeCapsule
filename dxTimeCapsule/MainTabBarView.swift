@@ -8,14 +8,14 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         setupTabs()
         self.delegate = self
         
-        // NotificationCenter Observer 추가 - 우경
-        NotificationCenter.default.addObserver(self, selector: #selector(returnToHome), name: NSNotification.Name("ReturnToHome"), object: nil)
+//        // NotificationCenter Observer 추가 - 우경
+//        NotificationCenter.default.addObserver(self, selector: #selector(returnToHome), name: NSNotification.Name("ReturnToHome"), object: nil)
     }
     
-    @objc func returnToHome() {
-        // 첫 번째 탭(홈 화면)으로 이동합니다. - 우경
-        self.selectedIndex = 0
-    }
+//    @objc func returnToHome() {
+//        // 첫 번째 탭(홈 화면)으로 이동합니다. - 우경
+//        self.selectedIndex = 0
+//    }
     
     private func setupTabs() {
         let homeViewController = UINavigationController(rootViewController: HomeViewController())
@@ -52,8 +52,8 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         }
         return resizedImage
     }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
+//    추가 우경
+//    deinit {
+//        NotificationCenter.default.removeObserver(self)
+//    }
 }

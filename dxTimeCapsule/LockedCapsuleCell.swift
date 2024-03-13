@@ -101,7 +101,7 @@ class LockedCapsuleCell: UICollectionViewCell {
         contentView.addSubview(creationDate)
         
         registerImage.snp.makeConstraints { make in
-            make.top.equalToSuperview()
+            make.top.equalToSuperview().offset(5)
             make.leading.equalToSuperview().offset(10)
             make.trailing.equalToSuperview().offset(-10)
             make.height.equalTo(registerImage.snp.width).multipliedBy(1.0/2.0)
@@ -132,7 +132,7 @@ class LockedCapsuleCell: UICollectionViewCell {
         
         //self.layer.borderWidth =  // 테두리 두께
         self.layer.borderColor = UIColor.gray.cgColor// 테두리 색상
-        self.layer.cornerRadius = 30.0 // 모서리 설정
+        self.layer.cornerRadius = 10.0 // 모서리 설정
     }
 }
 

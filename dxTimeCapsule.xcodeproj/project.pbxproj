@@ -67,6 +67,7 @@
 		1FE313B12B98114700E02045 /* LocationHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE313B02B98114700E02045 /* LocationHistoryViewModel.swift */; };
 		1FF8691B2B8F4D81007B5112 /* UIButton+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF8691A2B8F4D81007B5112 /* UIButton+Gradient.swift */; };
 		27865AD42B8DFCA900DB8DB6 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27865AD32B8DFCA900DB8DB6 /* NotificationViewController.swift */; };
+		27966F092BA06A41009EC5F3 /* HomeViewControllerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27966F082BA06A41009EC5F3 /* HomeViewControllerModel.swift */; };
 		27D241B22B8F33A5000F8F16 /* OpenedTCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D241B12B8F33A5000F8F16 /* OpenedTCViewController.swift */; };
 		27F3827F2B8FA1240005F733 /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F3827E2B8FA1240005F733 /* NotificationTableViewCell.swift */; };
 		27FC12892B9A64B1008CBEB8 /* TimeCapsuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FC12882B9A64B1008CBEB8 /* TimeCapsuleCell.swift */; };
@@ -159,6 +160,7 @@
 		248D085A35F0BF5C6FF29A81 /* Pods-dxTimeCapsule.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.debug.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.debug.xcconfig"; sourceTree = "<group>"; };
 		267B4DC3DC733F68AF7B17D0 /* Pods_dxTimeCapsule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dxTimeCapsule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		27865AD32B8DFCA900DB8DB6 /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
+		27966F082BA06A41009EC5F3 /* HomeViewControllerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewControllerModel.swift; sourceTree = "<group>"; };
 		27D241B12B8F33A5000F8F16 /* OpenedTCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenedTCViewController.swift; sourceTree = "<group>"; };
 		27F3827E2B8FA1240005F733 /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
 		27FC12882B9A64B1008CBEB8 /* TimeCapsuleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCapsuleCell.swift; sourceTree = "<group>"; };
@@ -309,6 +311,7 @@
 				1FAB4DF52B8C48AF0054618A /* FriendsViewModel.swift */,
 				FFC457632B8F0F36000761E9 /* UserProfileViewModel.swift */,
 				1FE313B02B98114700E02045 /* LocationHistoryViewModel.swift */,
+				27966F082BA06A41009EC5F3 /* HomeViewControllerModel.swift */,
 			);
 			name = ViewModel;
 			sourceTree = "<group>";
@@ -723,6 +726,7 @@
 				D22B171F2B973416006CAEA6 /* SceneDelegate.swift in Sources */,
 				1F0B91082B9026020022EDD9 /* UIImageView+RoundImage.swift in Sources */,
 				1FE313B12B98114700E02045 /* LocationHistoryViewModel.swift in Sources */,
+				27966F092BA06A41009EC5F3 /* HomeViewControllerModel.swift in Sources */,
 				1FF8691B2B8F4D81007B5112 /* UIButton+Gradient.swift in Sources */,
 				D20CDCCD2B959DFE00B93788 /* FriendsRequestViewController.swift in Sources */,
 				D20CDCCF2B96D86100B93788 /* FriendRequestTableViewCell.swift in Sources */,
