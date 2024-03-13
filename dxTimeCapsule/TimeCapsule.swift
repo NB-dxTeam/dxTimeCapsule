@@ -34,6 +34,28 @@ struct TCInfo {
     var photoUrl: String? // 업로드된 사진의 URL
 }
 
+struct dDayCalculation {
+    func calculateDDay(from startDate: Date, to endDate: Date) -> Int {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.day], from: startDate, to: endDate)
+        return components.day ?? 0
+    }
+    let openDate: Date
+    
+    func dDay() -> String {
+        let daysUntilOpening = calculateDDay(from: Date(), to: openDate)
+        let dDayPrefix = daysUntilOpening <= 0 ? "D+" : "D-"
+        return "\(dDayPrefix)\(abs(daysUntilOpening))"
+    }
+}
+
+//// D-Day 계산
+//if let openDate = openDate {
+//    let timeCapsule = dDayCalculation(openDate: openDate)
+//    self.dDayLabel이름.text = timeCapsule.dDay()
+//}
+
+
 /*
  func fetchTimeCapsuleData() {
          let db = Firestore.firestore()
