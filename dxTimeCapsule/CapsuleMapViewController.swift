@@ -9,12 +9,14 @@ import UIKit
 import MapKit
 import CoreLocation
 import SnapKit
+import FirebaseFirestore
 
 class CapsuleMapViewController: UIViewController {
     
     private let capsuleMaps = MKMapView() // 지도 뷰
     var locationManager = CLLocationManager()
     var currentDetent: String? = nil
+    
     // 원래 지도의 중심 위치를 저장할 변수
     private var originalCenterCoordinate: CLLocationCoordinate2D?
     private lazy var stackView: UIStackView = {
@@ -375,26 +377,27 @@ extension CapsuleMapViewController: UISheetPresentationControllerDelegate {
     }
 }
 // MARK: - Preview
-import SwiftUI
-import FirebaseFirestoreInternal
-
-struct Preview: PreviewProvider {
-    static var previews: some View {
-        CapsuleMapViewController().toPreview()
-    }
-}
-#if DEBUG
-extension UIViewController {
-    private struct Preview: UIViewControllerRepresentable {
-            let viewController: UIViewController
-            func makeUIViewController(context: Context) -> UIViewController {
-                return viewController
-            }
-            func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
-            }
-        }
-        func toPreview() -> some View {
-            Preview(viewController: self)
-        }
-}
-#endif
+//import SwiftUI
+//import FirebaseFirestoreInternal
+//
+//struct Preview: PreviewProvider {
+//    static var previews: some View {
+//        CapsuleMapViewController().toPreview()
+//    }
+//}
+//
+//#if DEBUG
+//extension UIViewController {
+//    private struct Preview: UIViewControllerRepresentable {
+//            let viewController: UIViewController
+//            func makeUIViewController(context: Context) -> UIViewController {
+//                return viewController
+//            }
+//            func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+//            }
+//        }
+//        func toPreview() -> some View {
+//            Preview(viewController: self)
+//        }
+//}
+//#endif

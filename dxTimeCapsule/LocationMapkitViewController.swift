@@ -352,11 +352,11 @@ extension MKMapView {
 }
 
 // MARK: - SwiftUI Preview
-import SwiftUI
-
-struct MainTabBarViewPreview2 : PreviewProvider {
-    static var previews: some View {
-        LocationMapkitViewController().toPreview()
-    }
-}
-
+//import SwiftUI
+//
+//struct MainTabBarViewPreview2 : PreviewProvider {
+//    static var previews: some View {
+//        LocationMapkitViewController().toPreview()
+//    }
+//}
+//
