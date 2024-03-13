@@ -44,11 +44,16 @@ struct dDayCalculation {
     
     func dDay() -> String {
         let daysUntilOpening = calculateDDay(from: Date(), to: openDate)
-        let dDayPrefix = daysUntilOpening <= 0 ? "D+" : "D-"
-        return "\(dDayPrefix)\(abs(daysUntilOpening))"
+        if daysUntilOpening == 0 {
+            // (수정) 오늘이 개봉일일 때 "D-day" 반환
+            return "D-day"
+        } else {
+            // 개봉일이 아닐 때는 "D+날짜" 또는 "D-날짜" 반환
+            let dDayPrefix = daysUntilOpening < 0 ? "D+" : "D-"
+            return "\(dDayPrefix)\(abs(daysUntilOpening))"
+        }
     }
 }
-
 //// D-Day 계산
 //if let openDate = openDate {
 //    let timeCapsule = dDayCalculation(openDate: openDate)
