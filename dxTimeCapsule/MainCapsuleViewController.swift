@@ -13,12 +13,36 @@ import FirebaseAuth
 class MainCapsuleViewController: UIViewController {
     private var viewModel = MainCapsuleViewModel()
     var documentId: String?
-
+    
+    // D-day 레이블 설정
+    private lazy var dDayLabel: UILabel = {
+        let label = UILabel()
+        label.text = "D-100" // 예시 텍스트
+        label.textColor = .white // 텍스트 색상은 흰색
+        label.backgroundColor = .red // 배경색은 빨간색
+        label.font = .systemFont(ofSize: 14, weight: .bold) // 볼드체 폰트 사용
+        label.textAlignment = .center // 텍스트 가운데 정렬
+        label.layer.cornerRadius = 10 // 모서리 둥글기 반지름 설정
+        label.clipsToBounds = true // 모서리 둥글기 적용을 위해 필요
+        label.layer.borderWidth = 1 // 테두리 두께
+        label.layer.borderColor = UIColor.red.cgColor // 테두리 색상은 빨간색
+        return label
+    }()
+    
     //장소명
     private lazy var locationName: UILabel = {
         let label = UILabel()
         label.text = "제주 국제 공항"
         label.font = .systemFont(ofSize: 24, weight: .bold)
+        return label
+    }()
+    
+    //상세주소
+    private lazy var detailedLocationLabel: UILabel = {
+        let label = UILabel()
+        label.text = "상세 주소 정보 로딩 중..."
+        label.font = .systemFont(ofSize: 14)
+        label.textColor = .systemGray
         return label
     }()
     
@@ -28,13 +52,6 @@ class MainCapsuleViewController: UIViewController {
         label.text = "생성일: "
         label.font = .systemFont(ofSize: 14)
         label.textColor = .darkGray
-        return label
-    }()
-    
-    //D-day
-    private lazy var daysLabel: UILabel = {
-        let label = UILabel()
-        label.text = viewModel.daysUntilOpening
         return label
     }()
     
@@ -97,6 +114,13 @@ class MainCapsuleViewController: UIViewController {
                          self.locationName.text = userLocation
                      }
                      
+                     // 'location' 필드 값 가져오기 및 상세 주소 레이블 텍스트 설정
+                     if let detailedLocation = document.get("location") as? String {
+                         DispatchQueue.main.async {
+                             self.detailedLocationLabel.text = detailedLocation
+                         }
+                     }
+                     
                 // 'openDate' 필드 값 가져오기 및 D-day 계산
                 if let openDateTimestamp = document.get("openDate") as? Timestamp {
                     let openDate = openDateTimestamp.dateValue()
@@ -104,7 +128,7 @@ class MainCapsuleViewController: UIViewController {
                     let dDayString = dDayCalculation.dDay()
                          
                     DispatchQueue.main.async {
-                        self.daysLabel.text = dDayString // D-day 표시 업데이트
+                        self.dDayLabel.text = dDayString // D-day 표시 업데이트
                     }
                 }
                      
@@ -147,10 +171,12 @@ class MainCapsuleViewController: UIViewController {
 //    }
     
     private func setupLayout() {
+        view.addSubview(dDayLabel)
+        view.addSubview(locationName)
         view.addSubview(capsuleImageView)
         view.addSubview(openCapsuleLabel)
         view.addSubview(creationDateLabel)
-        [locationName, daysLabel,].forEach { view.addSubview($0) }
+        [locationName, dDayLabel,].forEach { view.addSubview($0) }
         
         // 캡슐 이미지
         capsuleImageView.snp.makeConstraints { make in
@@ -165,22 +191,38 @@ class MainCapsuleViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.top.equalTo(capsuleImageView.snp.bottom).offset(5) // 이미지 아래에 위치
         }
+
+        // dDay 레이블 레이아웃 설정
+           dDayLabel.snp.makeConstraints { make in
+               make.leading.greaterThanOrEqualToSuperview().offset(8) // 화면 왼쪽 가장자리로부터 최소 8포인트 간격을 줍니다.
+               make.trailing.lessThanOrEqualTo(locationName.snp.leading).offset(-8) // locationName과의 간격
+               // dDayLabel의 중심이 locationName과 동일한 세로 축을 공유하도록 설정
+               make.centerY.equalTo(locationName.snp.centerY)
+           }
+           
+           // locationName 레이블 레이아웃 설정
+           locationName.snp.makeConstraints { make in
+               make.trailing.lessThanOrEqualToSuperview().offset(-8) // 화면 오른쪽 가장자리로부터 최소 8포인트 간격을 줍니다.
+               // locationName 레이블의 중앙이 뷰의 중앙에 오도록 설정합니다.
+               make.centerX.equalToSuperview()
+               make.centerY.equalToSuperview().offset(-40) // 원하는 y축 위치로 조정
+           }
+           
+           // dDay 레이블과 locationName 레이블이 서로 가운데 정렬이 되도록 조정합니다.
+           dDayLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+           locationName.setContentCompressionResistancePriority(.required, for: .horizontal)
+       
         
-        // 장소명
-        locationName.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(80)
-            make.centerX.equalToSuperview()
-        }
-        
-        // D-day
-        daysLabel.snp.makeConstraints { make in
-            make.top.equalTo(locationName.snp.bottom).offset(460)
+        // 상세 주소 레이블 레이아웃 설정
+        view.addSubview(detailedLocationLabel)
+        detailedLocationLabel.snp.makeConstraints { make in
+            make.top.equalTo(locationName.snp.bottom).offset(8) // locationName 아래에 위치
             make.centerX.equalToSuperview()
         }
         
         // 생성 날짜
         creationDateLabel.snp.makeConstraints { make in
-            make.top.equalTo(daysLabel.snp.bottom).offset(5) // D-day 레이블 아래에 위치
+            make.top.equalTo(openCapsuleLabel.snp.bottom).offset(50) // 오픈캡슐 레이블 아래에 위치
             make.centerX.equalToSuperview()
         }
     }
@@ -197,8 +239,9 @@ class MainCapsuleViewController: UIViewController {
 //           backLightImageView.isHidden = true
            creationDateLabel.isHidden = true
            locationName.isHidden = true
-           daysLabel.isHidden = true
+           dDayLabel.isHidden = true
            openCapsuleLabel.isHidden = true
+           detailedLocationLabel.isHidden = true
         
         addShakeAnimation()
         // 흔들림 애니메이션 총 지속 시간보다 약간 짧은 딜레이 후에 페이드아웃 및 확대 애니메이션 시작
