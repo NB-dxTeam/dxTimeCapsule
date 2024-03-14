@@ -10,10 +10,6 @@ import SnapKit
 import FirebaseFirestore
 import FirebaseAuth
 
-//#Preview{
-//    MainTabBarView()
-//}
-
 class HomeViewController: UIViewController {
     
     // MARK: - Properties
@@ -53,51 +49,53 @@ class HomeViewController: UIViewController {
         let label = UILabel()
         label.text = "서서울호수공원"
         label.font = UIFont.boldSystemFont(ofSize: 30)
+        label.numberOfLines = 0
+        label.adjustsFontSizeToFitWidth = true
         label.textColor = .black
         return label
     }()
     
     
     // 위치 레이블
-    let locationAddressLabel: UILabel = {
-        let label = UILabel()
+    let locationAddressLabel: VerticallyAlignedLabel = {
+        let label = VerticallyAlignedLabel()
         label.text = "서울시 양천구 신월동"
-        label.font = UIFont.systemFont(ofSize: 15)
+        label.font = UIFont.systemFont(ofSize: 17)
         label.textColor = .black
+        label.verticalAlignment = .top // 수직 정렬 설정
         return label
     }()
     
-    
     // D-Day 레이블
-    let dDayLabel: UILabel = {
-        let label = UILabel()
+    let dDayLabel: VerticallyAlignedLabel = {
+        let label = VerticallyAlignedLabel()
         label.text = "D-DAY"
         label.font = UIFont.boldSystemFont(ofSize: 15)
         label.textColor = .red
         label.textAlignment = .right
-        label.contentMode = .top
+        label.verticalAlignment = .top
         return label
     }()
     
     // 장소정보 스택뷰
     lazy var locationInforStackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.axis = .vertical
+        stackView.axis = .horizontal
         stackView.alignment = .fill
         stackView.spacing = 0
         stackView.addArrangedSubview(self.locationNameLabel)
-        stackView.addArrangedSubview(self.locationAddressLabel)
+        stackView.addArrangedSubview(self.dDayLabel)
         return stackView
     }()
     
     // DuestTC 스택뷰
     lazy var duestTCInforStackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.axis = .horizontal
+        stackView.axis = .vertical
         stackView.alignment = .fill
-        stackView.spacing = 10
+        stackView.spacing = 0
         stackView.addArrangedSubview(self.locationInforStackView)
-        stackView.addArrangedSubview(self.dDayLabel)
+        stackView.addArrangedSubview(self.locationAddressLabel)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(duestTCStackViewTapped))
         stackView.addGestureRecognizer(tapGesture)
         stackView.isUserInteractionEnabled = true
@@ -106,22 +104,22 @@ class HomeViewController: UIViewController {
     }()
     
     // noMainTC 라벨
-    let noMainTCLabel: UILabel = {
+    let noMainTCLabel: VerticallyAlignedLabel = {
         let attributedString = NSMutableAttributedString(string: "더이상 열어볼 캡슐이 없어요😭\n", attributes: [
-            .font: UIFont.boldSystemFont(ofSize: 23)
+            .font: UIFont.boldSystemFont(ofSize: 20)
         ])
         attributedString.append(NSAttributedString(string: "+를 눌러 계속해서 시간여행을 떠나보세요!", attributes: [
-            .font: UIFont.systemFont(ofSize: 16)
+            .font: UIFont.systemFont(ofSize: 15)
         ]))
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 5 // 두줄 사이 간격 조절
         attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length)) // 간격 적용
         
-        let label = UILabel()
+        let label = VerticallyAlignedLabel()
         label.numberOfLines = 2
         label.textColor = .black
         label.attributedText = attributedString
-        label.textAlignment = .center
+        label.verticalAlignment = .top
         return label
     }()
     
@@ -177,6 +175,17 @@ class HomeViewController: UIViewController {
         return button
     }()
     
+    let openedButtonContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 10
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.5
+        view.layer.shadowOffset = CGSize(width: 2, height: 4)
+        view.layer.shadowRadius = 7
+        return view
+    }()
+    
     // 다가오는 타임캡슐 버튼
     let upcomingTCButton: UIButton = {
         let button = UIButton(type: .system)
@@ -205,9 +214,20 @@ class HomeViewController: UIViewController {
         return button
     }()
     
+    let upcomingButtonContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 10
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.5
+        view.layer.shadowOffset = CGSize(width: 2, height: 4)
+        view.layer.shadowRadius = 7
+        return view
+    }()
+    
     // 버튼 스택뷰
     lazy var buttonStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [openedTCButton, upcomingTCButton])
+        let stackView = UIStackView(arrangedSubviews: [openedButtonContainerView, upcomingButtonContainerView])
         stackView.axis = .horizontal
         stackView.spacing = 20
         stackView.alignment = .fill
@@ -257,11 +277,6 @@ class HomeViewController: UIViewController {
                         let openDateTimestamp = document.get("openDate") as? Timestamp
                         let openDate = openDateTimestamp?.dateValue()
                         
-                        //                        print("Fetched location name: \(userLocation)")
-                        //                        print("Fetched location address: \(location)")
-                        //                        print("Fetched photo URL: \(tcBoxImageURL)")
-                        //                        print("Fetched open date: \(openDate)")
-                        
                         // 메인 스레드에서 UI 업데이트를 수행합니다.
                         DispatchQueue.main.async {
                             self.locationNameLabel.text = userLocation
@@ -269,19 +284,8 @@ class HomeViewController: UIViewController {
                             self.noMainTCStackView.removeFromSuperview()
                             // D-Day 계산
                             if let openDate = openDate {
-                                let dateFormatter = DateFormatter()
-                                dateFormatter.dateFormat = "yyyy-MM-dd"
-                                dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul") // UTC+9:00
-                                
-                                let today = Date()
-                                let calendar = Calendar.current
-                                let components = calendar.dateComponents([.day], from: today, to: openDate)
-                                
-                                if let daysUntilOpening = components.day {
-                                    // 날짜 차이에 따라 표시되는 기호를 변경하여 D-Day 표시
-                                    let dDayPrefix = daysUntilOpening <= 0 ? "D+" : "D-"
-                                    self.dDayLabel.text = "\(dDayPrefix)\(abs(daysUntilOpening))"
-                                }
+                                let timeCapsule = dDayCalculation(openDate: openDate)
+                                self.dDayLabel.text = timeCapsule.dDay()
                             }
                             
                             if !tcBoxImageURL.isEmpty {
@@ -312,7 +316,7 @@ class HomeViewController: UIViewController {
             }
         db.collection("timeCapsules")
             .whereField("uid", isEqualTo: userId)
-            .whereField("isOpened", isEqualTo: false)
+            .whereField("isOpened", isEqualTo: true)
             .getDocuments { [weak self] (querySnapshot, err) in
                 guard let self = self else { return }
                 if let err = err {
@@ -354,25 +358,31 @@ class HomeViewController: UIViewController {
         
         let addFriendsButton: UIButton = {
             let button = UIButton(type: .system)
-            let image = UIImage(systemName: "person.fill.badge.plus")?.withRenderingMode(.alwaysTemplate) // 이미지를 템플릿 모드로 설정
-            button.setImage(image, for: .normal)
+            let image = UIImage(systemName: "person.badge.plus")?.withRenderingMode(.alwaysTemplate) // 이미지를 템플릿 모드로 설정
+            button.setBackgroundImage(image, for: .normal)
+            button.clipsToBounds = true
             button.tintColor = UIColor.systemGray
             button.addTarget(self, action: #selector(addFriendsButtonTapped), for: .touchUpInside)
             button.isUserInteractionEnabled = true
+            button.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
             return button
         }()
         
-        
-        let imageSize = CGSize(width: 120, height: 40) // 원하는 크기로 조절
-        imageView.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: imageSize) // x값을 0으로 변경하여 왼쪽 상단에 위치하도록 설정
-        
+        let imageSize = CGSize(width: 120, height: 40)
+        imageView.frame = CGRect(origin: CGPoint(x: 0, y: -5), size: imageSize)
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height))
         
         containerView.addSubview(imageView)
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: containerView)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: addFriendsButton)
+        
+        // Add a space before adding the addFriendsButton
+        let space = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        space.width = 20 // Adjust the width of the space as needed
+        
+        navigationItem.rightBarButtonItems = [space, UIBarButtonItem(customView: addFriendsButton)]
     }
+
     
     
     private func configureUI(){
@@ -381,9 +391,8 @@ class HomeViewController: UIViewController {
         // 메인 타임캡슐 그림자 추가
         view.addSubview(mainContainerView)
         mainContainerView.snp.makeConstraints { make in
-            
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(15)
-            
+            let offset = UIScreen.main.bounds.height * (0.15/6.0)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(offset)
             make.leading.trailing.equalToSuperview().inset(20)
             make.height.equalToSuperview().multipliedBy(2.0/6.0)
         }
@@ -396,19 +405,20 @@ class HomeViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(mainTCImageViewTapped))
         mainTCImageView.addGestureRecognizer(tapGesture)
         
-        // infoAndDdayStackView의 위치 설정
         view.addSubview(duestTCInforStackView)
         duestTCInforStackView.snp.makeConstraints { make in
-            make.top.equalTo(mainContainerView.snp.bottom).offset(10)
+            let offset = UIScreen.main.bounds.height * (0.15/6.0)
+            make.top.equalTo(mainContainerView.snp.bottom).offset(offset)
             make.leading.trailing.equalToSuperview().inset(30)
-            make.height.equalToSuperview().multipliedBy(0.5/6.0)
+            make.height.equalToSuperview().multipliedBy(0.8/6.0)
         }
         
         view.addSubview(noMainTCStackView)
         noMainTCStackView.snp.makeConstraints { make in
-            make.top.equalTo(mainContainerView.snp.bottom).offset(10)
+            let offset = UIScreen.main.bounds.height * (0.15/6.0)
+            make.top.equalTo(mainContainerView.snp.bottom).offset(offset)
             make.leading.trailing.equalToSuperview().inset(30)
-            make.height.equalToSuperview().multipliedBy(0.5/6.0)
+            make.height.equalToSuperview().multipliedBy(0.8/6.0)
         }
         noMainTCStackView.addArrangedSubview(noMainTCLabel)
         noMainTCLabel.snp.makeConstraints { make in
@@ -418,47 +428,29 @@ class HomeViewController: UIViewController {
         noMainTCStackView.addArrangedSubview(addTCButton)
         addTCButton.snp.makeConstraints { make in
             make.width.equalTo(addTCButton.snp.height)
-            make.height.equalTo(noMainTCStackView.snp.height).multipliedBy(2.0/3.0)
-            make.centerY.equalTo(noMainTCStackView.snp.centerY)
+            make.height.equalTo(noMainTCStackView.snp.height).multipliedBy(1.6/3.0)
+            make.top.equalTo(noMainTCStackView.snp.top).inset(10)
             make.trailing.equalTo(noMainTCStackView.snp.trailing)
         }
         
-        // locationInforStackView의 위치 설정
-        locationInforStackView.snp.makeConstraints { make in
-            make.top.equalTo(mainContainerView.snp.bottom).offset(10)
-            make.leading.trailing.equalToSuperview().inset(5)
-            make.height.equalTo(mainContainerView.snp.width).multipliedBy(1.0/5.0)
-        }
-        
-        // userLocationLabel의 슈퍼뷰 설정
-        locationNameLabel.snp.makeConstraints { make in
-            make.height.equalTo(locationNameLabel.font.pointSize) // 폰트 크기에 맞는 높이로 설정
-        }
-        
-        // locationLabel의 슈퍼뷰 설정
-        locationAddressLabel.snp.makeConstraints { make in
-            make.height.equalTo(locationAddressLabel.font.pointSize) // 폰트 크기에 맞는 높이로 설정
-        }
-        
-        // dDayLabel의 슈퍼뷰 설정
-        duestTCInforStackView.addSubview(dDayLabel)
-        dDayLabel.snp.makeConstraints { make in
-            make.top.equalTo(mainContainerView.snp.bottom).inset(5)
-            make.width.equalTo(mainContainerView.snp.width).multipliedBy(1.0/5.0)
-            make.height.equalTo(mainContainerView.snp.width).multipliedBy(1.0/5.0)
-        }
-        
         // 버튼 스택뷰에 버튼 추가
-        buttonStackView.addArrangedSubview(openedTCButton)
-        buttonStackView.addArrangedSubview(upcomingTCButton)
+        openedButtonContainerView.addSubview(openedTCButton)
+        openedTCButton.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        upcomingButtonContainerView.addSubview(upcomingTCButton)
+        upcomingTCButton.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         
         // 버튼 스택뷰를 뷰에 추가
         view.addSubview(buttonStackView)
         buttonStackView.snp.makeConstraints { make in
-            let offset = UIScreen.main.bounds.height * (0.8/6.0)
-            make.top.equalTo(mainContainerView.snp.bottom).offset(offset)
+            let offset1 = UIScreen.main.bounds.height * (1.1/6.0)
+            let offset2 = UIScreen.main.bounds.height * (0.15/6.0)
+            make.top.equalTo(mainContainerView.snp.bottom).offset(offset1)
             make.leading.trailing.equalToSuperview().inset(20)
-            make.height.equalToSuperview().multipliedBy(1.5/6.0)// 버튼 높이 조정
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(offset2)// 버튼 높이 조정
         }
     }
     

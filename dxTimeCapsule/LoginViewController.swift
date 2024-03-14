@@ -306,8 +306,8 @@ extension LoginViewController: UITextFieldDelegate {
 // MARK: - SwiftUI Preview
 import SwiftUI
 
-struct MainTabBarViewPreview22 : PreviewProvider {
-    static var previews: some View {
-        LoginViewController().toPreview()
-    }
-}
+//struct MainTabBarViewPreview22 : PreviewProvider {
+//    static var previews: some View {
+//        LoginViewController().toPreview()
+//    }
+//}

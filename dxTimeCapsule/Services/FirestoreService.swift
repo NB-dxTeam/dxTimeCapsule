@@ -19,7 +19,6 @@ class FirestoreService {
     private let db = Firestore.firestore()
     private let storageRef = Storage.storage().reference()
     
-    
     // MARK: - Upload Image
     func uploadImage(_ image: UIImage, completion: @escaping (Result<String, Error>) -> Void) {
         let storageRef = Storage.storage().reference().child("timecapsule_images/\(UUID().uuidString).jpg")
