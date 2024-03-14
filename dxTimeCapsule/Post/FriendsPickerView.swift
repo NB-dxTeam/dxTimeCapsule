@@ -9,36 +9,41 @@ import SwiftUI
 
 struct FriendsPickerView: View {
     @Binding var selectedFriends: [String]
-    var friends: [Friend]
-    @Environment(\.dismiss) var dismiss
+    @State var friends: [Friend]
     
     var body: some View {
-        NavigationView {
-            List(friends, id: \.id) { friend in
-                Button(action: {
-                    if selectedFriends.contains(friend.id) {
-                        selectedFriends.removeAll { $0 == friend.id }
+        List {
+            ForEach(friends, id: \.id) { friend in
+                MultipleSelectionRow(title: friend.name, isSelected: selectedFriends.contains(friend.id)) {
+                    if let index = selectedFriends.firstIndex(of: friend.id) {
+                        selectedFriends.remove(at: index)
                     } else {
                         selectedFriends.append(friend.id)
-                    }
-                }) {
-                    HStack {
-                        Text(friend.name)
-                        Spacer()
-                        if selectedFriends.contains(friend.id) {
-                            Image(systemName: "checkmark").foregroundColor(.blue)
-                        }
-                    }
-                }
-            }
-            .navigationTitle("Select Friends")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Done") {
-                        dismiss()
                     }
                 }
             }
         }
+        .navigationTitle("Select Friends")
     }
 }
+
+struct MultipleSelectionRow: View {
+    var title: String
+    var isSelected: Bool
+    var action:() -> Void
+    
+    var body: some View {
+        HStack {
+            Text(title)
+            Spacer()
+            if isSelected {
+                Image(systemName: "checkmark")
+            }
+        }
+        .contentShape(Rectangle())  // Ensure the entire row is tappable
+        .onTapGesture {
+            self.action()
+        }
+    }
+}
+    

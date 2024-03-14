@@ -14,28 +14,24 @@ struct TimeCapsule {
     var isOpened: Bool = false //개봉여부
     
     static let emojis: [Emoji] = [
-        Emoji(symbol: "😭", description: "슬픈"),
-        Emoji(symbol: "😫", description: "짜증"),
-        Emoji(symbol: "🙂", description: "평범"),
-        Emoji(symbol: "🥰", description: "설레는"),
-        Emoji(symbol: "😆", description: "즐거운"),
-        Emoji(symbol: "🥹", description: "감동적인"),
-        Emoji(symbol: "🥳", description: "행복"),
-        Emoji(symbol: "🥵", description: "무더운"),
-        Emoji(symbol: "🥶", description: "추운"),
-        Emoji(symbol: "🫠", description: "스트레스가 많은"),
-        Emoji(symbol: "🤒", description: "아픈")
+        Emoji(id: "1", symbol: "😭", description: "슬픈"),
+        Emoji(id: "2", symbol: "😫", description: "짜증"),
+        Emoji(id: "3", symbol: "😫", description: "짜증"),
+        Emoji(id: "4", symbol: "🙂", description: "평범"),
+        Emoji(id: "5", symbol: "🥰", description: "설레는"),
+        Emoji(id: "6", symbol: "😆", description: "즐거운"),
+        Emoji(id: "7", symbol: "🥹", description: "감동적인"),
+        Emoji(id: "8", symbol: "🥳", description: "행복"),
+        Emoji(id: "9", symbol: "🥵", description: "무더운"),
+        Emoji(id: "10", symbol: "🥶", description: "추운"),
+        Emoji(id: "11", symbol: "🫠", description: "스트레스가 많은"),
+        Emoji(id: "12", symbol: "🤒", description: "아픈")
     ]
     
-    
-    struct Emoji: Hashable {
-        var symbol: String
-        var description: String
-        
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(symbol)
-            hasher.combine(description)
-        }
+    struct Emoji: Identifiable, Hashable {
+        let id: String
+        let symbol: String
+        let description: String
     }
 }
 

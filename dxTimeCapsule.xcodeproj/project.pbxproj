@@ -28,6 +28,7 @@
 		1F52F8B92B9CDADC00974F0B /* TagFriendListTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F52F8B82B9CDADC00974F0B /* TagFriendListTableCell.swift */; };
 		1F53E50A2BA20A8C004141C7 /* Button+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F53E5092BA20A8C004141C7 /* Button+Custom.swift */; };
 		1F53E50D2BA222A2004141C7 /* FriendsPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F53E50C2BA222A2004141C7 /* FriendsPickerView.swift */; };
+		1F53E5112BA27D5D004141C7 /* UploadPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F53E5102BA27D5D004141C7 /* UploadPostViewModel.swift */; };
 		1F5786D92B849AF800C40B08 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5786D82B849AF800C40B08 /* AppDelegate.swift */; };
 		1F5786E52B849AFA00C40B08 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F5786E42B849AFA00C40B08 /* Assets.xcassets */; };
 		1F5786E82B849AFA00C40B08 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F5786E62B849AFA00C40B08 /* LaunchScreen.storyboard */; };
@@ -122,6 +123,7 @@
 		1F52F8B82B9CDADC00974F0B /* TagFriendListTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFriendListTableCell.swift; sourceTree = "<group>"; };
 		1F53E5092BA20A8C004141C7 /* Button+Custom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Button+Custom.swift"; sourceTree = "<group>"; };
 		1F53E50C2BA222A2004141C7 /* FriendsPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsPickerView.swift; sourceTree = "<group>"; };
+		1F53E5102BA27D5D004141C7 /* UploadPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPostViewModel.swift; sourceTree = "<group>"; };
 		1F5786D52B849AF800C40B08 /* dxTimeCapsule.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dxTimeCapsule.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F5786D82B849AF800C40B08 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1F5786E42B849AFA00C40B08 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -330,6 +332,7 @@
 				FFC457632B8F0F36000761E9 /* UserProfileViewModel.swift */,
 				1FE313B02B98114700E02045 /* LocationHistoryViewModel.swift */,
 				27966F082BA06A41009EC5F3 /* HomeViewControllerModel.swift */,
+				1F53E5102BA27D5D004141C7 /* UploadPostViewModel.swift */,
 			);
 			name = ViewModel;
 			sourceTree = "<group>";
@@ -748,6 +751,7 @@
 				1F53E50A2BA20A8C004141C7 /* Button+Custom.swift in Sources */,
 				1FAB4DF62B8C48AF0054618A /* FriendsViewModel.swift in Sources */,
 				1FAACDE12B8FAA520005B993 /* UIImage+RoundImage.swift in Sources */,
+				1F53E5112BA27D5D004141C7 /* UploadPostViewModel.swift in Sources */,
 				1F5787132B86DBF900C40B08 /* LoginViewController.swift in Sources */,
 				1FB387402B8881DB00054816 /* TimeCapsule.swift in Sources */,
 				1FB387392B8863DE00054816 /* HomeViewController.swift in Sources */,

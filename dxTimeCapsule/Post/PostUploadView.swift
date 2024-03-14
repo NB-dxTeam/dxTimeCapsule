@@ -10,22 +10,24 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
 
-struct Friend: Identifiable, Decodable {
-    var id: String
-    var name: String
-    var profileImageUrl: String
-}
 struct PostUploadView: View {
+
     @Environment(\.dismiss) var dismiss
     @State private var showPhotoPicker = false
     @State private var selectedImage: UIImage?
     @State private var description: String = ""
-    @State private var selectedEmoji: TimeCapsule.Emoji?
+    @State private var selectedEmoji: TimeCapsule.Emoji? = TimeCapsule.emojis.first
     @State private var openTimeCapsuleDate = Date()
     @State private var selectedFriends: [String] = []
     @State private var showingFriendsPicker = false
-
+    @State private var currentUser: User?
     @State private var friends: [Friend] = []
+    @State private var isPresenting: Bool = false
+    @State private var presentationType: PresentationType = .none
+    
+    enum PresentationType {
+        case photoPicker, friendsPicker, none
+    }
 
     var body: some View {
         NavigationView {
@@ -47,22 +49,19 @@ struct PostUploadView: View {
                             .frame(height: 100)
                     }
                     
-                    Section(header: Text("Select Emoji")) {
-                        Picker("Emoji", selection: $selectedEmoji) {
-                            ForEach(TimeCapsule.emojis, id: \.self) { emoji in
-                                Text("\(emoji.symbol) \(emoji.description)")
-                                    .tag(emoji)
-                            }
+                    Picker("Emoji", selection: $selectedEmoji) {
+                        Text("None").tag(TimeCapsule.Emoji?.none) // Explicitly handle nil case
+                        ForEach(TimeCapsule.emojis, id: \.self) { emoji in
+                            Text("\(emoji.symbol) \(emoji.description)").tag(emoji as TimeCapsule.Emoji?)
                         }
                     }
 
+
                     Section(header: Text("Friend Tag")) {
                         Button("Select Friends") {
-                            showingFriendsPicker = true
+                            presentationType = .friendsPicker // friendsPicker로 설정
+                            isPresenting = true // 시트 표시
                         }
-                    }
-                    .sheet(isPresented: $showingFriendsPicker) {
-                        FriendsPickerView(selectedFriends: $selectedFriends, friends: friends)
                     }
 
                     Section(header: Text("Box Open Date")) {
@@ -77,29 +76,78 @@ struct PostUploadView: View {
                 .padding()
             }
             .navigationTitle("Create Post")
-            .sheet(isPresented: $showPhotoPicker) {
-                PhotoPicker(selectedImage: $selectedImage)
-            }
-            .onAppear {
-//                fetchFriends().insta
-            }
-        }
-    }
-    
-    private func fetchFriends() {
-        guard let currentUserID = Auth.auth().currentUser?.uid else { return }
-        
-        Firestore.firestore().collection("users").document(currentUserID).getDocument { document, error in
-            guard let document = document, document.exists, error == nil else {
-                print("Error fetching user data: \(error?.localizedDescription ?? "")")
-                return
+            
+            .sheet(isPresented: $isPresenting) {
+                // presentationType에 따라 적절한 시트 표시
+                switch presentationType {
+                    case .photoPicker:
+                        PhotoPicker(selectedImage: $selectedImage)
+                    case .friendsPicker:
+                        FriendsPickerView(selectedFriends: $selectedFriends, friends: friends)
+                    case .none:
+                        EmptyView()
+                }
             }
             
-            if let friendIDs = document.get("friends") as? [String] {
-                self.loadFriendDetails(friendIDs: friendIDs)
+            .onAppear {
+                fetchFriends()
             }
         }
     }
+
+    
+    private func fetchFriends() {
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            print("Debug: Cannot fetch current user ID")
+            return
+        }
+        print("Debug: Current user ID: \(currentUserID)")
+        let db = Firestore.firestore()
+
+        db.collection("users").document(currentUserID).getDocument { document, error in
+            if let error = error {
+                print("Debug: Error fetching user data: \(error.localizedDescription)")
+                return
+            }
+            guard let document = document, document.exists else {
+                print("Debug: Document does not exist")
+                return
+            }
+            print("Debug: Fetched user document data")
+            if let friendIDs = document.get("friends") as? [String], !friendIDs.isEmpty {
+                print("Debug: Friend IDs: \(friendIDs)")
+                self.friends.removeAll()
+                for friendID in friendIDs {
+                    db.collection("users").document(friendID).getDocument { document, error in
+                        if let error = error {
+                            print("Debug: Error fetching friend details for ID \(friendID): \(error.localizedDescription)")
+                            return
+                        }
+                        guard let document = document, document.exists else {
+                            print("Debug: Friend document for ID \(friendID) does not exist")
+                            return
+                        }
+                        print("Debug: Fetched friend document data for ID \(friendID)")
+
+                        let friend = Friend(
+                            id: friendID,
+                            name: document.get("username") as? String ?? "Unknown",
+                            profileImageUrl: document.get("profileImageUrl") as? String ?? nil
+                        )
+                        
+                        DispatchQueue.main.async {
+                            print("Debug: Adding friend to array: \(friend)")
+                            self.friends.append(friend)
+                            print("Debug: Current friends array: \(self.friends)")
+                        }
+                    }
+                }
+            } else {
+                print("Debug: No friend IDs found or friends array is empty")
+            }
+        }
+    }
+
 
 
     private func loadFriendDetails(friendIDs: [String]) {
@@ -122,24 +170,6 @@ struct PostUploadView: View {
 
 }
 
-struct MultipleSelectionRow: View {
-    var title: String
-    var isSelected: Bool
-    var action: () -> Void
-    
-    var body: some View {
-        Button(action: self.action) {
-            HStack {
-                Text(title)
-                if isSelected {
-                    Spacer()
-                    Image(systemName: "checkmark")
-                }
-            }
-        }
-        .foregroundColor(.black)
-    }
-}
 
 
 #Preview(body: {

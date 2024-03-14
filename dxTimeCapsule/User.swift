@@ -14,3 +14,9 @@ struct User: Decodable {
     
 }
 
+struct Friend: Identifiable, Decodable {
+    var id: String
+    var name: String
+    var profileImageUrl: String?
+    
+}
