@@ -7,7 +7,7 @@
 
 import UIKit
 import SnapKit
-import SDWebImage
+//import SDWebImage
 import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
