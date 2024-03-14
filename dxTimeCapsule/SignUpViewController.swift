@@ -13,8 +13,17 @@ class SignUpViewController: UIViewController  {
     private let selectImageButton = UIButton()
     private let emailTextField = UITextField()
     private let passwordTextField = UITextField()
+    private let confirmPasswordTextField = UITextField()
     private let usernameTextField = UITextField()
     private let signUpButton = UIButton(type: .system)
+    
+    
+    // 유효성 라벨
+    private let emailValidationLabel = UILabel()
+    private let passwordValidationLabel = UILabel()
+    private let confirmPasswordValidationLabel = UILabel()
+    private let usernameValidationLabel = UILabel()
+
     
     private let labelsContainerView = UIView()
         
@@ -30,14 +39,16 @@ class SignUpViewController: UIViewController  {
         super.viewDidLoad()
         setupViews()
         setupLayouts()
-        print("SignUpViewController - viewDidLoad() called")
+        
+        emailTextField.addTarget(self, action: #selector(emailTextFieldDidChange(_:)), for: .editingChanged)
+        passwordTextField.addTarget(self, action: #selector(passwordTextFieldDidChange(_:)), for: .editingChanged)
+        confirmPasswordTextField.addTarget(self, action: #selector(confirmPasswordTextFieldDidChange(_:)), for: .editingChanged)
     }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         signUpButton.setInstagram()
-        selectImageButton.setInstagram()
-        
     }
     
     // MARK: - Setup Views
@@ -53,13 +64,25 @@ class SignUpViewController: UIViewController  {
         view.addSubview(profileImageView)
         
         // Configure the selectImageButton
-        configureButton(selectImageButton, title: "Select Image")
+        selectImageButton.setImage(UIImage(named: "cameraIcon"), for: .normal)
         selectImageButton.addTarget(self, action: #selector(selectImage), for: .touchUpInside)
+        view.addSubview(selectImageButton)
         
         // Configure the text fields
         configureTextField(emailTextField, placeholder: "Enter your email")
         configureTextField(passwordTextField, placeholder: "Enter your password", isSecure: true)
+        configureTextField(confirmPasswordTextField, placeholder: "Confirm your password", isSecure: true)
         configureTextField(usernameTextField, placeholder: "Enter your username")
+        
+        // configure the validationLabel
+        configureValidationLabel(emailValidationLabel)
+        configureValidationLabel(passwordValidationLabel)
+        configureValidationLabel(confirmPasswordValidationLabel)
+        configureValidationLabel(usernameValidationLabel)
+        view.addSubview(emailValidationLabel)
+        view.addSubview(passwordValidationLabel)
+        view.addSubview(confirmPasswordValidationLabel)
+        view.addSubview(usernameValidationLabel)
         
         // Configure the signUpButton
         configureButton(signUpButton, title: "Sign Up")
@@ -95,30 +118,52 @@ class SignUpViewController: UIViewController  {
         profileImageView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(80)
             make.centerX.equalToSuperview()
-            make.width.height.equalTo(220)
+            make.width.height.equalTo(180)
         }
         
         selectImageButton.snp.makeConstraints { make in
-            make.top.equalTo(profileImageView.snp.bottom).offset(20)
+            make.top.equalTo(profileImageView.snp.bottom).offset(-37)
             make.centerX.equalToSuperview()
-            make.width.equalTo(200)
-            make.height.equalTo(40)
+            make.width.equalTo(33.34)
+            make.height.equalTo(30.53) // 버튼의 높이
+
         }
-        
+
         emailTextField.snp.makeConstraints { make in
             make.top.equalTo(selectImageButton.snp.bottom).offset(20)
             make.left.right.equalToSuperview().inset(50)
             make.height.equalTo(44)
         }
+
+        emailValidationLabel.snp.makeConstraints { make in
+            make.top.equalTo(emailTextField.snp.bottom).offset(5)
+            make.left.right.equalTo(emailTextField)
+        }
         
         passwordTextField.snp.makeConstraints { make in
-            make.top.equalTo(emailTextField.snp.bottom).offset(10)
+            make.top.equalTo(emailValidationLabel.snp.bottom).offset(10)
             make.left.right.equalTo(emailTextField)
             make.height.equalTo(44)
         }
         
+        passwordValidationLabel.snp.makeConstraints { make in
+            make.top.equalTo(passwordTextField.snp.bottom).offset(5)
+            make.left.right.equalTo(passwordTextField)
+        }
+        
+        confirmPasswordTextField.snp.makeConstraints { make in
+            make.top.equalTo(passwordValidationLabel.snp.bottom).offset(10)
+            make.left.right.equalTo(passwordTextField)
+            make.height.equalTo(44)
+        }
+        
+        confirmPasswordValidationLabel.snp.makeConstraints { make in
+            make.top.equalTo(confirmPasswordTextField.snp.bottom).offset(5)
+            make.left.right.equalTo(confirmPasswordTextField)
+        }
+        
         usernameTextField.snp.makeConstraints { make in
-            make.top.equalTo(passwordTextField.snp.bottom).offset(10)
+            make.top.equalTo(confirmPasswordValidationLabel.snp.bottom).offset(10)
             make.left.right.equalTo(passwordTextField)
             make.height.equalTo(44)
         }
@@ -253,10 +298,41 @@ class SignUpViewController: UIViewController  {
         }
     }
     
+    
     @objc private func alreadyHaveAccountTapped() {
         let loginViewController = LoginViewController()
         self.present(loginViewController, animated: true, completion: nil)
         
+    }
+    @objc func emailTextFieldDidChange(_ textField: UITextField) {
+        if let email = textField.text, isValidEmail(email) {
+            emailValidationLabel.text = ""
+        } else {
+            emailValidationLabel.text = "유효한 이메일 주소를 입력하세요."
+        }
+    }
+
+    @objc func passwordTextFieldDidChange(_ textField: UITextField) {
+        if let password = textField.text, isPasswordStrong(password) {
+            passwordValidationLabel.text = ""
+        } else {
+            passwordValidationLabel.text = "비밀번호는 8자 이상 입력해주세요."
+        }
+    }
+    
+    @objc func confirmPasswordTextFieldDidChange(_ textField: UITextField) {
+        guard let confirmPassword = textField.text, let password = passwordTextField.text else {
+            confirmPasswordValidationLabel.text = "비밀번호를 다시 입력해주세요."
+            return
+        }
+        
+        if confirmPassword.isEmpty {
+            confirmPasswordValidationLabel.text = "" // 입력이 없을 때는 메시지를 표시하지 않음
+        } else if confirmPassword == password {
+            confirmPasswordValidationLabel.text = "" // 비밀번호가 일치할 때
+        } else {
+            confirmPasswordValidationLabel.text = "입력된 비밀번호와 다릅니다." // 비밀번호가 일치하지 않을 때
+        }
     }
     
     // 회원가입 함수
@@ -349,3 +425,26 @@ extension SignUpViewController: UIImagePickerControllerDelegate, UINavigationCon
     }
 }
 
+// MARK: - Private Function
+
+func isValidEmail(_ email: String) -> Bool {
+    let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+    let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+    return emailPred.evaluate(with: email)
+}
+
+func isPasswordStrong(_ password: String) -> Bool {
+    let minLength = 8
+//    let hasUpperCase = password.range(of: "[A-Z]", options: .regularExpression) != nil
+//    let hasLowerCase = password.range(of: "[a-z]", options: .regularExpression) != nil
+//    let hasDigits = password.range(of: "\\d", options: .regularExpression) != nil
+//    let hasSpecialCharacters = password.range(of: "[!@#$%^&*(),.?\":{}|<>]", options: .regularExpression) != nil
+    
+    return password.count >= minLength// && hasUpperCase && hasLowerCase && hasDigits && hasSpecialCharacters
+}
+
+private func configureValidationLabel(_ label: UILabel) {
+    label.text = "" // 초기 메시지는 비어 있음
+    label.font = UIFont.systemFont(ofSize: 12)
+    label.textColor = .red // 유효성 검사 실패 메시지는 빨간색으로 표시
+}
