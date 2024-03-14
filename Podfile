@@ -6,5 +6,4 @@ target 'dxTimeCapsule' do
   use_frameworks!
 
   # Pods for dxTimeCapsule
-  pod 'SnapKit'
 end

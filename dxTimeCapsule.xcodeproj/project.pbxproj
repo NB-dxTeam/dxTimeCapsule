@@ -74,6 +74,8 @@
 		1FCFA9E12BA3218A0066394F /* SwiftfulLoadingIndicators in Frameworks */ = {isa = PBXBuildFile; productRef = 1FCFA9E02BA3218A0066394F /* SwiftfulLoadingIndicators */; };
 		1FCFA9E42BA322290066394F /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 1FCFA9E32BA322290066394F /* SDWebImage */; };
 		1FCFA9E62BA322290066394F /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1FCFA9E52BA322290066394F /* SDWebImageMapKit */; };
+		1FCFA9E92BA322980066394F /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1FCFA9E82BA322980066394F /* SnapKit */; };
+		1FCFA9EB2BA322980066394F /* SnapKit-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 1FCFA9EA2BA322980066394F /* SnapKit-Dynamic */; };
 		1FD2B79C2B96BD7300896F9C /* LocationMapkitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B79B2B96BD7300896F9C /* LocationMapkitViewController.swift */; };
 		1FD2B7A42B96BEFE00896F9C /* NotificationName+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7A12B96BEFE00896F9C /* NotificationName+Extension.swift */; };
 		1FD2B7A52B96BEFE00896F9C /* UIStackView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7A22B96BEFE00896F9C /* UIStackView+Extensions.swift */; };
@@ -227,12 +229,14 @@
 				1FCFA9D02BA3211B0066394F /* FirebaseDatabase in Frameworks */,
 				1FCFA9DE2BA3211B0066394F /* FirebaseStorageCombine-Community in Frameworks */,
 				1FCFA9C82BA3211B0066394F /* FirebaseAppCheck in Frameworks */,
+				1FCFA9EB2BA322980066394F /* SnapKit-Dynamic in Frameworks */,
 				1FCFA9D62BA3211B0066394F /* FirebaseFirestoreCombine-Community in Frameworks */,
 				1FCFA9DC2BA3211B0066394F /* FirebaseStorage in Frameworks */,
 				1FCFA9E12BA3218A0066394F /* SwiftfulLoadingIndicators in Frameworks */,
 				EB89853CA1C2F6EB22EA50F5 /* Pods_dxTimeCapsule.framework in Frameworks */,
 				1FCFA9E42BA322290066394F /* SDWebImage in Frameworks */,
 				1FCFA9D82BA3211B0066394F /* FirebaseFirestoreSwift in Frameworks */,
+				1FCFA9E92BA322980066394F /* SnapKit in Frameworks */,
 				1FCFA9CA2BA3211B0066394F /* FirebaseAppDistribution-Beta in Frameworks */,
 				1FCFA9D42BA3211B0066394F /* FirebaseFirestore in Frameworks */,
 				1FCFA9CC2BA3211B0066394F /* FirebaseAuth in Frameworks */,
@@ -641,7 +645,6 @@
 				1F5786D12B849AF800C40B08 /* Sources */,
 				1F5786D22B849AF800C40B08 /* Frameworks */,
 				1F5786D32B849AF800C40B08 /* Resources */,
-				D8A4A7070A091A4ADB8DE7BC /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -664,6 +667,8 @@
 				1FCFA9E02BA3218A0066394F /* SwiftfulLoadingIndicators */,
 				1FCFA9E32BA322290066394F /* SDWebImage */,
 				1FCFA9E52BA322290066394F /* SDWebImageMapKit */,
+				1FCFA9E82BA322980066394F /* SnapKit */,
+				1FCFA9EA2BA322980066394F /* SnapKit-Dynamic */,
 			);
 			productName = dxTimeCapsule;
 			productReference = 1F5786D52B849AF800C40B08 /* dxTimeCapsule.app */;
@@ -697,6 +702,7 @@
 				1FCFA9C62BA3211B0066394F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				1FCFA9DF2BA321890066394F /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */,
 				1FCFA9E22BA322290066394F /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				1FCFA9E72BA322980066394F /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = 1F5786D62B849AF800C40B08 /* Products */;
 			projectDirPath = "";
@@ -753,23 +759,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D8A4A7070A091A4ADB8DE7BC /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1125,6 +1114,14 @@
 				minimumVersion = 5.19.0;
 			};
 		};
+		1FCFA9E72BA322980066394F /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1202,6 +1199,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1FCFA9E22BA322290066394F /* XCRemoteSwiftPackageReference "SDWebImage" */;
 			productName = SDWebImageMapKit;
+		};
+		1FCFA9E82BA322980066394F /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1FCFA9E72BA322980066394F /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		1FCFA9EA2BA322980066394F /* SnapKit-Dynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1FCFA9E72BA322980066394F /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = "SnapKit-Dynamic";
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
