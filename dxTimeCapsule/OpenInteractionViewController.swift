@@ -34,6 +34,7 @@ class OpenInteractionViewController: UIViewController {
         return label
     }()
   
+    private var isNavigating = false
     private var skipButton: UIButton!
     private var progressLayer: CAShapeLayer!
     private var motionManager: CMMotionManager!
@@ -41,13 +42,14 @@ class OpenInteractionViewController: UIViewController {
         didSet {
             progressLayer.strokeEnd = progress // 게이지의 진행 상황 업데이트
             //게이지가 꽉 찼을 때 새 뷰 컨트롤러로 전환
-             if progress >= 1 {
-                 DispatchQueue.main.async { [weak self] in
-                     self?.navigateToOpenCapsuleViewController()
-                 }
-             }
-         }
-     }
+            if progress >= 1 && !isNavigating {
+                isNavigating = true
+                DispatchQueue.main.async { [weak self] in
+                    self?.navigateToOpenCapsuleViewController()
+                }
+            }
+        }
+    }
     
     // OpenCapsuleViewController로 네비게이션하는 메소드
     private func navigateToOpenCapsuleViewController() {
@@ -112,7 +114,10 @@ class OpenInteractionViewController: UIViewController {
 
     // 스킵 버튼 탭
     @objc private func skipButtonTapped() {
-        navigateToOpenCapsuleViewController()
+        if !isNavigating {
+            isNavigating = true
+            navigateToOpenCapsuleViewController()
+        }
     }
     
     // 게이지 뷰 설정
@@ -151,8 +156,9 @@ class OpenInteractionViewController: UIViewController {
             // 가속도계 데이터를 받아 처리합니다.
             guard let self = self, let data = data else { return }
             // 설정한 임계값을 초과하는 가속도를 감지하면 진행률을 업데이트합니다.
-            let threshold: Double = 0.5
+            let threshold: Double = 1.5
             if abs(data.acceleration.x) > threshold || abs(data.acceleration.y) > threshold || abs(data.acceleration.z) > threshold {
+                print("Acceleration x: \(data.acceleration.x), y: \(data.acceleration.y), z: \(data.acceleration.z)")
                 let newProgress = min(self.progress + 0.1, 1) // 진행률을 증가시킵니다.
                 self.progress = newProgress // 진행 상황에 따라 게이지를 업데이트합니다.
             }

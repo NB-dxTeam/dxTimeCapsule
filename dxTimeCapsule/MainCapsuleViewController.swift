@@ -97,6 +97,17 @@ class MainCapsuleViewController: UIViewController {
                          self.locationName.text = userLocation
                      }
                      
+                // 'openDate' 필드 값 가져오기 및 D-day 계산
+                if let openDateTimestamp = document.get("openDate") as? Timestamp {
+                    let openDate = openDateTimestamp.dateValue()
+                    let dDayCalculation = dDayCalculation(openDate: openDate)
+                    let dDayString = dDayCalculation.dDay()
+                         
+                    DispatchQueue.main.async {
+                        self.daysLabel.text = dDayString // D-day 표시 업데이트
+                    }
+                }
+                     
                 // 생성일 필드 값 가져오기
                 if let creationDate = document.get("creationDate") as? Timestamp {
                     let dateFormatter = DateFormatter()

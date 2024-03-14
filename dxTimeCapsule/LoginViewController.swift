@@ -36,6 +36,7 @@ class LoginViewController: UIViewController {
         passwordTextField.delegate = self
         
         // Test 자동기입
+
         emailTextField.text =  "test1@gmail.com"
         passwordTextField.text = "123456"
         
@@ -306,8 +307,8 @@ extension LoginViewController: UITextFieldDelegate {
 // MARK: - SwiftUI Preview
 import SwiftUI
 
-struct MainTabBarViewPreview22 : PreviewProvider {
-    static var previews: some View {
-        LoginViewController().toPreview()
-    }
-}
+//struct MainTabBarViewPreview22 : PreviewProvider {
+//    static var previews: some View {
+//        LoginViewController().toPreview()
+//    }
+//}
