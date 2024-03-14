@@ -116,7 +116,7 @@
 		4E2A09CA2B8F86C600911390 /* FadeInAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */; };
 		4E4F6CDB2B99C2B500154ED1 /* OpenCapsuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4F6CDA2B99C2B500154ED1 /* OpenCapsuleViewController.swift */; };
 		4EC308DE2B8A200300EEE54C /* MainCapsuleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC308DD2B8A200300EEE54C /* MainCapsuleViewModel.swift */; };
-		691C3ED40845767FBE427C6F /* Pods_dxTimeCapsule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB2C65E0BD77D8C08052F27B /* Pods_dxTimeCapsule.framework */; };
+		CEE063A7FD808EBAB66CE1FE /* Pods_dxTimeCapsule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3655E516C18F38095BFB0567 /* Pods_dxTimeCapsule.framework */; };
 		D20CDCCA2B957D5D00B93788 /* SearchUserTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20CDCC92B957D5D00B93788 /* SearchUserTableViewController.swift */; };
 		D20CDCCD2B959DFE00B93788 /* FriendsRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20CDCCC2B959DFE00B93788 /* FriendsRequestViewController.swift */; };
 		D20CDCCF2B96D86100B93788 /* FriendRequestTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20CDCCE2B96D86100B93788 /* FriendRequestTableViewCell.swift */; };
@@ -127,6 +127,7 @@
 		D274E0162B9C243900FAF849 /* TagFriendListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D274E0152B9C243900FAF849 /* TagFriendListTableViewCell.swift */; };
 		D274E01E2B9CC69000FAF849 /* FriendsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D274E01D2B9CC69000FAF849 /* FriendsListViewController.swift */; };
 		D274E0202B9CD36500FAF849 /* CapsuleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D274E01F2B9CD36500FAF849 /* CapsuleTableViewCell.swift */; };
+		D28C38A22BA35178009DBB88 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = D28C38A12BA35178009DBB88 /* SnapKit */; };
 		D2BB73E22BA32FF500391EF0 /* TermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BB73E12BA32FF500391EF0 /* TermsViewController.swift */; };
 		D2BB73E42BA3301500391EF0 /* TermsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BB73E32BA3301500391EF0 /* TermsTableViewCell.swift */; };
 		D2BB73E62BA3303300391EF0 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BB73E52BA3303300391EF0 /* AuthService.swift */; };
@@ -209,6 +210,8 @@
 		27FC12882B9A64B1008CBEB8 /* TimeCapsuleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCapsuleCell.swift; sourceTree = "<group>"; };
 		27FC128A2B9A64E5008CBEB8 /* UpcomingTCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingTCViewController.swift; sourceTree = "<group>"; };
 		27FD43CB2B9CD8E900D83B27 /* NewUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewUserViewController.swift; sourceTree = "<group>"; };
+		35A1BF79D8A72EB7735BBC41 /* Pods-dxTimeCapsule.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.release.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.release.xcconfig"; sourceTree = "<group>"; };
+		3655E516C18F38095BFB0567 /* Pods_dxTimeCapsule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dxTimeCapsule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedCapsuleCell.swift; sourceTree = "<group>"; };
 		461D3C2B2BA1791F009C8B6E /* Annotation+UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Annotation+UIView.swift"; sourceTree = "<group>"; };
 		461D3C2E2BA17CF3009C8B6E /* CapsuleAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleAnnotationView.swift; sourceTree = "<group>"; };
@@ -219,9 +222,7 @@
 		4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeInAnimator.swift; sourceTree = "<group>"; };
 		4E4F6CDA2B99C2B500154ED1 /* OpenCapsuleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenCapsuleViewController.swift; sourceTree = "<group>"; };
 		4EC308DD2B8A200300EEE54C /* MainCapsuleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCapsuleViewModel.swift; sourceTree = "<group>"; };
-		8E60CCC70F94FFA023EB480A /* Pods-dxTimeCapsule.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.release.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.release.xcconfig"; sourceTree = "<group>"; };
-		BB2C65E0BD77D8C08052F27B /* Pods_dxTimeCapsule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dxTimeCapsule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C0A1C8629D546B10BFFE9BE7 /* Pods-dxTimeCapsule.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.debug.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.debug.xcconfig"; sourceTree = "<group>"; };
+		CACE823ACEA78029EEA12B53 /* Pods-dxTimeCapsule.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.debug.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.debug.xcconfig"; sourceTree = "<group>"; };
 		D20CDCC92B957D5D00B93788 /* SearchUserTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserTableViewController.swift; sourceTree = "<group>"; };
 		D20CDCCC2B959DFE00B93788 /* FriendsRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsRequestViewController.swift; sourceTree = "<group>"; };
 		D20CDCCE2B96D86100B93788 /* FriendRequestTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestTableViewCell.swift; sourceTree = "<group>"; };
@@ -244,12 +245,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FE03CC22BA33E4700E75AB2 /* FirebaseMessaging in Frameworks */,
+				D28C38A22BA35178009DBB88 /* SnapKit in Frameworks */,
 				1FE03C512BA3390500E75AB2 /* SwiftfulLoadingIndicators in Frameworks */,
 				1FE03CD42BA33E5B00E75AB2 /* SDWebImage in Frameworks */,
 				1FE03CB42BA33E2D00E75AB2 /* FirebaseFirestoreSwift in Frameworks */,
 				1FE03C9E2BA33E1300E75AB2 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				1FE03CB62BA33E2D00E75AB2 /* FirebaseFunctions in Frameworks */,
-				691C3ED40845767FBE427C6F /* Pods_dxTimeCapsule.framework in Frameworks */,
 				1FE03CD62BA33E5B00E75AB2 /* SDWebImageMapKit in Frameworks */,
 				1FE03C982BA33E1300E75AB2 /* FirebaseAnalytics in Frameworks */,
 				1FE03CA42BA33E1300E75AB2 /* FirebaseAuth in Frameworks */,
@@ -274,20 +275,13 @@
 				1FE03CA62BA33E2D00E75AB2 /* FirebaseAuthCombine-Community in Frameworks */,
 				1FE03CCC2BA33E4700E75AB2 /* FirebaseStorageCombine-Community in Frameworks */,
 				1FE03CBA2BA33E2D00E75AB2 /* FirebaseInAppMessaging-Beta in Frameworks */,
+				CEE063A7FD808EBAB66CE1FE /* Pods_dxTimeCapsule.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1F0B29D7F7333EEC42A2E999 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				BB2C65E0BD77D8C08052F27B /* Pods_dxTimeCapsule.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		1F0B91372B9089A50022EDD9 /* TabBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -368,7 +362,7 @@
 				1F5786D72B849AF800C40B08 /* dxTimeCapsule */,
 				25AD7CDE47BA0E85739F3959 /* Pods */,
 				1F43396E2B9ADCEB006D39F5 /* Recovered References */,
-				1F0B29D7F7333EEC42A2E999 /* Frameworks */,
+				3A2999F59812559BDB2F7BD1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -618,8 +612,8 @@
 		25AD7CDE47BA0E85739F3959 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				C0A1C8629D546B10BFFE9BE7 /* Pods-dxTimeCapsule.debug.xcconfig */,
-				8E60CCC70F94FFA023EB480A /* Pods-dxTimeCapsule.release.xcconfig */,
+				CACE823ACEA78029EEA12B53 /* Pods-dxTimeCapsule.debug.xcconfig */,
+				35A1BF79D8A72EB7735BBC41 /* Pods-dxTimeCapsule.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -645,6 +639,14 @@
 			);
 			name = NotificationView;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		3A2999F59812559BDB2F7BD1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3655E516C18F38095BFB0567 /* Pods_dxTimeCapsule.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		461D3C2D2BA17CB0009C8B6E /* Mapkit+Annotation */ = {
@@ -676,11 +678,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1F5786EC2B849AFA00C40B08 /* Build configuration list for PBXNativeTarget "dxTimeCapsule" */;
 			buildPhases = (
-				0422B758C45B3C9FE199B4D8 /* [CP] Check Pods Manifest.lock */,
+				414193FA7ACB6570C453DAC9 /* [CP] Check Pods Manifest.lock */,
 				1F5786D12B849AF800C40B08 /* Sources */,
 				1F5786D22B849AF800C40B08 /* Frameworks */,
 				1F5786D32B849AF800C40B08 /* Resources */,
-				49175A690ACCCB567FA1D738 /* [CP] Embed Pods Frameworks */,
+				9EBE7989BDB724535203E075 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -718,6 +720,7 @@
 				1FE03CCB2BA33E4700E75AB2 /* FirebaseStorageCombine-Community */,
 				1FE03CD32BA33E5B00E75AB2 /* SDWebImage */,
 				1FE03CD52BA33E5B00E75AB2 /* SDWebImageMapKit */,
+				D28C38A12BA35178009DBB88 /* SnapKit */,
 			);
 			productName = dxTimeCapsule;
 			productReference = 1F5786D52B849AF800C40B08 /* dxTimeCapsule.app */;
@@ -751,6 +754,7 @@
 				1FE03C4F2BA3390500E75AB2 /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */,
 				1FE03C962BA33E1300E75AB2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				1FE03CD22BA33E5B00E75AB2 /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				D28C38A02BA35178009DBB88 /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = 1F5786D62B849AF800C40B08 /* Products */;
 			projectDirPath = "";
@@ -787,7 +791,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0422B758C45B3C9FE199B4D8 /* [CP] Check Pods Manifest.lock */ = {
+		414193FA7ACB6570C453DAC9 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -809,7 +813,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		49175A690ACCCB567FA1D738 /* [CP] Embed Pods Frameworks */ = {
+		9EBE7989BDB724535203E075 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1050,7 +1054,7 @@
 		};
 		1F5786ED2B849AFA00C40B08 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C0A1C8629D546B10BFFE9BE7 /* Pods-dxTimeCapsule.debug.xcconfig */;
+			baseConfigurationReference = CACE823ACEA78029EEA12B53 /* Pods-dxTimeCapsule.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1095,7 +1099,7 @@
 		};
 		1F5786EE2B849AFA00C40B08 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8E60CCC70F94FFA023EB480A /* Pods-dxTimeCapsule.release.xcconfig */;
+			baseConfigurationReference = 35A1BF79D8A72EB7735BBC41 /* Pods-dxTimeCapsule.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1184,6 +1188,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.19.0;
+			};
+		};
+		D28C38A02BA35178009DBB88 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1338,6 +1350,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1FE03CD22BA33E5B00E75AB2 /* XCRemoteSwiftPackageReference "SDWebImage" */;
 			productName = SDWebImageMapKit;
+		};
+		D28C38A12BA35178009DBB88 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D28C38A02BA35178009DBB88 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
