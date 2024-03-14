@@ -70,9 +70,9 @@ class MainCapsuleViewController: UIViewController {
         let db = Firestore.firestore()
         
         // 로그인한 사용자의 UID를 가져옵니다.
-//        guard let userId = Auth.auth().currentUser?.uid else { return }
+        guard let userId = Auth.auth().currentUser?.uid else { return }
         
-        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // 테스트를 위한 임시 UID
+//        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // 테스트를 위한 임시 UID
 
         // 사용자의 UID로 필터링하고, openDate 필드로 오름차순 정렬한 후, 최상위 1개 문서만 가져옵니다.
            db.collection("timeCapsules")
@@ -96,6 +96,17 @@ class MainCapsuleViewController: UIViewController {
                      DispatchQueue.main.async {
                          self.locationName.text = userLocation
                      }
+                     
+                // 'openDate' 필드 값 가져오기 및 D-day 계산
+                if let openDateTimestamp = document.get("openDate") as? Timestamp {
+                    let openDate = openDateTimestamp.dateValue()
+                    let dDayCalculation = dDayCalculation(openDate: openDate)
+                    let dDayString = dDayCalculation.dDay()
+                         
+                    DispatchQueue.main.async {
+                        self.daysLabel.text = dDayString // D-day 표시 업데이트
+                    }
+                }
                      
                 // 생성일 필드 값 가져오기
                 if let creationDate = document.get("creationDate") as? Timestamp {

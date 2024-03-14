@@ -28,7 +28,7 @@ class CustomModal: UIViewController {
     private var capsuleCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collection.backgroundColor = .red
+        collection.backgroundColor = .white
         //collection.layer.cornerRadius = 10
        // collection.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         collection.layer.masksToBounds = true

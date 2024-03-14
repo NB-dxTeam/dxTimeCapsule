@@ -77,8 +77,6 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         setupCurrentLocationButton()
         setupCenterView()
         hideCenterView()
-        
-
     }
     
     private func setupMapView() {
@@ -88,8 +86,6 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         }
     }
 
-    
-    
     // MARK: - Action
     
     private func configureLocationServices() {
@@ -113,8 +109,6 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
             // Location services are not enabled; guide users to enable it in settings
         }
     }
-
-      
     
     private func setupCurrentLocationButton() {
         view.addSubview(currentLocationBotton) // currentLocationBotton 추가
@@ -123,9 +117,7 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         currentLocationBotton.setTitleColor(.black, for: .normal)
         currentLocationBotton.layer.backgroundColor = UIColor.white.withAlphaComponent(0.6).cgColor
         currentLocationBotton.layer.cornerRadius = 10
-        
-        
-
+    
         currentLocationBotton.addTarget(self, action: #selector(currentLocationButtonTapped), for: .touchUpInside) // 연결된 함수 설정
         
         currentLocationBotton.snp.makeConstraints { make in
@@ -137,8 +129,6 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     
     private func setupTitleLabelAndButtons() {
 
- 
-        
         titleLabel = UILabel()
         createCapsuleButton = UIButton()
         modifyLocationButton = UIButton()
@@ -217,7 +207,6 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         bannerLabel.textColor = .black
         bannerLabel.layer.cornerRadius = 8
         bannerLabel.layer.masksToBounds = true
-
         bannerLabel.backgroundColor = UIColor.white.withAlphaComponent(0.8)
         view.addSubview(bannerLabel)
         bannerLabel.snp.makeConstraints { make in
@@ -263,11 +252,15 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     }
 
     @objc private func handleModifyLocationTap() {
-            toggleCenterView()
+        if isCenterViewPresented {
+            hideCenterView()
+        } else {
             showBannerMessage(message: "원하는 위치에 탭을 꾹 눌러주세요!")
             setupLongPressGesture()
-
+            showCenterView()
+        }
     }
+
     
     // MARK: - Gesture
     private func setupLongPressGesture() {
@@ -351,7 +344,7 @@ extension MKMapView {
     }
 }
 
-// MARK: - SwiftUI Preview
+//// MARK: - SwiftUI Preview
 //import SwiftUI
 //
 //struct MainTabBarViewPreview2 : PreviewProvider {

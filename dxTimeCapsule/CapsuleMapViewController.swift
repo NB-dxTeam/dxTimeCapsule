@@ -19,6 +19,7 @@ class CapsuleMapViewController: UIViewController {
     
     // 원래 지도의 중심 위치를 저장할 변수
     private var originalCenterCoordinate: CLLocationCoordinate2D?
+    private var shouldShowModal = false
     private lazy var stackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
@@ -60,7 +61,7 @@ class CapsuleMapViewController: UIViewController {
         button.backgroundColor = UIColor.white.withAlphaComponent(0.6)
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 5
-        button.addTarget(self, action: #selector(zoomIn), for: .touchUpInside)
+        
         return button
     }()
     
@@ -71,7 +72,6 @@ class CapsuleMapViewController: UIViewController {
         button.setTitleColor(.black, for: .normal)
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 5
-        button.addTarget(self, action: #selector(zoomOut), for: .touchUpInside)
         return button
     }()
     
@@ -91,7 +91,6 @@ class CapsuleMapViewController: UIViewController {
         setupStackView()
         autoLayouts()
         locationSetting()
-        showModalVC()
         setupMapView()
         buttons()
         loadCapsuleInfos()
@@ -99,6 +98,12 @@ class CapsuleMapViewController: UIViewController {
 //        addLogoToNavigationBar()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if shouldShowModal {
+            showModalVC()
+        }
+    }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 //        tapDidModal.setBlurryBeach()
@@ -138,8 +143,8 @@ extension CapsuleMapViewController {
     }
     private func autoLayouts() {
         capsuleMaps.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(15)
-            make.leading.trailing.equalToSuperview().inset(10)
+            make.top.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
         }
         stackView.snp.makeConstraints { make in
@@ -156,7 +161,7 @@ extension CapsuleMapViewController {
             make.size.equalTo(CGSize(width: 20, height: 20)) // 버튼의 크기를 설정합니다.
         }
         currentLocationButton.snp.makeConstraints { make in
-            make.top.equalTo(capsuleMaps.snp.top).offset(10)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(10)
             make.trailing.equalTo(capsuleMaps.snp.trailing).offset(-5)
             make.size.equalTo(CGSize(width: 40, height: 40))
         }
@@ -169,7 +174,8 @@ extension CapsuleMapViewController {
     private func buttons() {
         tapDidModal.addTarget(self, action: #selector(modalButton(_:)), for: .touchUpInside)
         currentLocationButton.addTarget(self, action: #selector(locationButton(_:)), for: .touchUpInside)
-        
+        zoomOutButton.addTarget(self, action: #selector(zoomOut), for: .touchUpInside)
+        zoomInButton.addTarget(self, action: #selector(zoomIn), for: .touchUpInside)
     }
     // MARK: - Actions for zoom buttons
     @objc private func zoomIn() {
@@ -198,10 +204,12 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
         
     }
     
-    
     // 데이터 정보 불러오기
     func loadCapsuleInfos() {
         let db =  Firestore.firestore()
+        
+        // 로그인한 사용자의 UID를 가져옵니다.
+//        guard let userId = Auth.auth().currentUser?.uid else { return }
         let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2"
         
         db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
@@ -227,7 +235,8 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
                     userComment: data["userComment"] as? String,
                     createTimeCapsuleDate: (data["creationDate"] as? Timestamp)?.dateValue() ?? Date(),
                     openTimeCapsuleDate: (data["openDate"] as? Timestamp)?.dateValue() ?? Date(),
-                    isOpened: data["isOpened"] as? Bool ?? false
+                    isOpened: data["isOpened"] as? Bool ?? false,
+                    friendID: data["friendID"] as? String ?? ""
                 )
                 print("Loaded capsule: \(capsule.TimeCapsuleId) at [Lat: \(capsule.latitude), Long: \(capsule.longitude)]")
                 return capsule
@@ -238,10 +247,30 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
     
     // 타임캡슐 정보를 기반으로 어노테이션 추가
     func addAnnotations(from capsules: [CapsuleInfo]) {
+        let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yy.MM.dd" // 날짜 형식 지정
+            dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul") // 한국 시간대 설정
+            dateFormatter.locale = Locale(identifier: "ko_KR") // 로케일을 한국어로 설정
+        
         for capsule in capsules {
             let coordinate = CLLocationCoordinate2D(latitude: capsule.latitude, longitude: capsule.longitude)
-            let annotation = CapsuleAnnotationModel(coordinate: coordinate, title: capsule.userLocation, subtitle: "개봉일: \(capsule.openTimeCapsuleDate)", info: capsule)
+            
+            // Firestore에서 가져온 날짜를 한국 시간대에 맞춰 형식화
+            let formattedOpenDate = dateFormatter.string(from: capsule.createTimeCapsuleDate)
+            let weekday = Calendar.current.component(.weekday, from: capsule.createTimeCapsuleDate)
+            let weekdaySymbol = dateFormatter.weekdaySymbols[weekday - 1] // 요일 계산
+            
+            // 어노테이션 서브타이틀에 날짜와 요일을 추가
+            let annotation = CapsuleAnnotationModel(
+                coordinate: coordinate,
+                title: capsule.userLocation,
+                subtitle: "등록한 날짜: \(formattedOpenDate) (\(weekdaySymbol))",
+                info: capsule,
+                firends: "친구: \(capsule.friendID ?? "")"
+            )
+            
             self.capsuleMaps.addAnnotation(annotation)
+            
         }
         print("지도에 \(capsules.count)개의 어노테이션이 추가되었습니다.")
     }
@@ -276,14 +305,16 @@ extension CapsuleMapViewController {
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
             // 어둡지 않게 표시되는 최대 크기의 상태 설정
             sheet.largestUndimmedDetentIdentifier = .large
+            
         }
-        
+        //vc.isModalInPresentation = true
+        vc.modalPresentationStyle = .formSheet
         self.present(vc, animated: true)
     }
     
     func moveToLocation(latitude: Double, longitude: Double) {
-        var adjustedLatitude = latitude
-        var adjustedLongitude = longitude
+        let adjustedLatitude = latitude
+        let adjustedLongitude = longitude
         
         let location = CLLocationCoordinate2D(latitude: adjustedLatitude, longitude: adjustedLongitude)
         let region = MKCoordinateRegion(center: location, latitudinalMeters: 2000, longitudinalMeters: 2000) // 셀 탭했을 때, 줌 상태
@@ -316,7 +347,7 @@ extension CapsuleMapViewController: MKMapViewDelegate {
         // 애니메이션 효과가 추가 되어 부드럽게 화면 확대 및 이동
         //capsuleMaps.setUserTrackingMode(.follow, animated: true)
         capsuleMaps.setUserTrackingMode(.followWithHeading, animated: true)
-       
+        
         let initalLocation = CLLocation(latitude: 35.9333, longitude: 127.9933)
         let regionRadius: CLLocationDistance = 400000
         let coordinateRegion = MKCoordinateRegion(center: initalLocation.coordinate, latitudinalMeters: regionRadius, longitudinalMeters: regionRadius)
@@ -328,13 +359,6 @@ extension CapsuleMapViewController: MKMapViewDelegate {
         print("지도 위치 변경")
     }
     
-    // 사용자 위치가 업데이트 될 때, 호출 ( 캡슐 셀 텝 동작시 해당지역 확대 로직 여기에 추가)
-//    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-//        let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
-//        capsuleMaps.setRegion(region, animated: true)
-//    }
-    
-    
     // 어노테이션 설정
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         // 사용자의 현재 위치 어노테이션은 기본 뷰를 사용
@@ -343,28 +367,45 @@ extension CapsuleMapViewController: MKMapViewDelegate {
         }
 
         let identifier = "CapsuleAnnotation"
-        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView
-
-        if annotationView == nil {
-            annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-            annotationView?.canShowCallout = true // 호출 아웃 사용 설정
-            //annotationView?.markerTintColor = .purple // 마커 색상 변경
-            annotationView?.glyphText = "🎁" // 마커에 표시 될 이미지
-            annotationView?.titleVisibility = .adaptive // 제목 가시성 설정
-            annotationView?.subtitleVisibility = .adaptive // 부제목 가시성 설정
+        var annotationView: MKAnnotationView
+        
+        if let dequeuedView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView {
+            dequeuedView.annotation = annotation
+            annotationView = dequeuedView
+            dequeuedView.canShowCallout = true
+            dequeuedView.animatesWhenAdded = true
+            dequeuedView.markerTintColor = .red
+            dequeuedView.glyphImage = UIImage(named: "boximage1")
+            //dequeuedView.glyphTintColor = .
         } else {
-            annotationView?.annotation = annotation
+            let markerView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            markerView.canShowCallout = true // 콜아웃 표시 설정
+            markerView.markerTintColor = .red // 마커 색상 설정
+            //markerView.glyphText = "🎁" // 마커 내 표시될 텍스트 설정
+            markerView.animatesWhenAdded = true
+            markerView.glyphImage = UIImage(named: "boximage1")
+            // 커스텀 콜아웃 뷰를 생성 및 설정
+            let calloutView = CustomCalloutView()
+            calloutView.translatesAutoresizingMaskIntoConstraints = false
+            markerView.detailCalloutAccessoryView = calloutView // 콜아웃 뷰 지정
+            
+//            // 오른쪽 액세서리 뷰에 버튼 추가
+//            let rightButton = UIButton(type: .detailDisclosure)
+//            markerView.rightCalloutAccessoryView = rightButton
+            
+            annotationView = markerView
         }
-
-        // 추가적인 커스터마이징이 필요한 경우 여기에 코드를 추가
-        annotationView?.glyphText = "🎁"
-        annotationView?.canShowCallout = true
-        annotationView?.animatesWhenAdded = true
-        annotationView?.titleVisibility = .adaptive // 제목 가시성 설정
-        annotationView?.subtitleVisibility = .adaptive // 부제목 가시성 설정
         return annotationView
     }
     
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        guard let capsuleInfo = (view.annotation as? CapsuleAnnotationModel)?.info else { return }
+        
+        // 콜아웃 뷰에 데이터를 전달하여 구성
+        if let calloutView = view.detailCalloutAccessoryView as? CustomCalloutView {
+            calloutView.configure(with: capsuleInfo)
+        }
+    }
 }
 
 // MARK: - UISheetPresentationControllerDelegate
@@ -377,15 +418,15 @@ extension CapsuleMapViewController: UISheetPresentationControllerDelegate {
     }
 }
 // MARK: - Preview
-//import SwiftUI
-//import FirebaseFirestoreInternal
+import SwiftUI
+import FirebaseFirestoreInternal
 //
 //struct Preview: PreviewProvider {
 //    static var previews: some View {
 //        CapsuleMapViewController().toPreview()
 //    }
 //}
-//
+
 //#if DEBUG
 //extension UIViewController {
 //    private struct Preview: UIViewControllerRepresentable {
