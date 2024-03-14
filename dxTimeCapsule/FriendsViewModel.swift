@@ -1,8 +1,10 @@
 import FirebaseFirestore
 import FirebaseAuth
 
-class FriendsViewModel {
+class FriendsViewModel: ObservableObject {
+    @Published var friends: [Friend] = []
     let db = Firestore.firestore()
+    
     
     // 친구 검색 (닉네임 기준 영어 2글자만 입력해도 검색되게)
     func searchUsersByUsername(username: String, completion: @escaping ([User]?, Error?) -> Void) {
@@ -200,6 +202,10 @@ class FriendsViewModel {
             )
             completion(user)
         }
+    }
+    
+    func uploadPost(description: String, selectedImage: UIImage?, emoji: String, openDate: Date) {
+        // 게시물 업로드 로직 구현
     }
     
 }
