@@ -9,7 +9,7 @@ struct TimeBox {
     var userLocation: GeoPoint? // 사용자 위치
     var userLocationTitle: String? // 위치 타이틀
     var description: String? // 타임박스 설명
-    var tagFriendUserName: [String]? // 친구 태그 username 배열
+    var tagFriendUid: [String]? // 친구 태그 uid 배열
     var createTimeBoxDate: Timestamp // 생성일
     var openTimeBoxDate: Timestamp // 개봉일
     var isOpened: Bool = false // 개봉여부
