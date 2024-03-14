@@ -71,7 +71,7 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
     
     private func fetchFriendRequests() {
         guard let currentUserId = Auth.auth().currentUser?.uid else { return }
-        viewModel.fetchFriendRequests(forUser: currentUserId) { [weak self] users, error in
+        viewModel.friendRequestsList(forUser: currentUserId) { [weak self] users, error in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 if let users = users {
@@ -114,7 +114,7 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
                         imageURL: imageURL,
                         userLocation: nil, // GeoPoint를 처리하여 설정
                         description: description,
-                        tagFriendName: tagFriendName,
+                        tagFriendUserName: tagFriendName,
                         createTimeCapsuleDate: createTimeCapsuleDate,
                         openTimeCapsuleDate: openTimeCapsuleDate,
                         isOpened: isOpened

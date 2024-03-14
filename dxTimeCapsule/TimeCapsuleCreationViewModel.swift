@@ -17,7 +17,7 @@ class TimeCapsuleCreationViewModel {
             "imageURL": timeCapsule.imageURL!, // 업로드 장소 이미지 사진의 URL
             "userLocation": timeCapsule.userLocation!, // 사용자 위치
             "description": timeCapsule.description!, // 타임캡슐 설명
-            "tagFriends": timeCapsule.tagFriendName!, // 친구 태그 배열
+            "tagFriends": timeCapsule.tagFriendUserName!, // 친구 태그 배열
             "createTimeCapsuleDate": timeCapsule.createTimeCapsuleDate, // 생성일
             "openTimeCapsuleDate": timeCapsule.openTimeCapsuleDate, // 개봉일
             "isOpened": timeCapsule.isOpened // 오픈 여부

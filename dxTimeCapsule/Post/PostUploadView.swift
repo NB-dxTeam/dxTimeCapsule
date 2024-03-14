@@ -11,168 +11,79 @@ import FirebaseFirestore
 import FirebaseStorage
 
 struct PostUploadView: View {
-
+    
+    // MARK: - Properties
+    
     @Environment(\.dismiss) var dismiss
-    @State private var showPhotoPicker = false
+    @State private var showPhotoPicker: Bool = false
     @State private var selectedImage: UIImage?
-    @State private var description: String = ""
-    @State private var selectedEmoji: TimeCapsule.Emoji? = TimeCapsule.emojis.first
-    @State private var openTimeCapsuleDate = Date()
-    @State private var selectedFriends: [String] = []
-    @State private var showingFriendsPicker = false
     @State private var currentUser: User?
     @State private var friends: [Friend] = []
-    @State private var isPresenting: Bool = false
-    @State private var presentationType: PresentationType = .none
+    private var viewModel = FriendsViewModel()
     
-    enum PresentationType {
-        case photoPicker, friendsPicker, none
-    }
-
+    
+    // MARK: - Body
+    
     var body: some View {
-        NavigationView {
-            VStack {
-                Form {
-                    Section {
-                        Button("Select Image") {
-                            showPhotoPicker = true
-                        }
-                        if let selectedImage = selectedImage {
-                            Image(uiImage: selectedImage)
-                                .resizable()
-                                .scaledToFit()
-                        }
-                    }
-                    
-                    Section(header: Text("Description")) {
-                        TextEditor(text: $description)
-                            .frame(height: 100)
-                    }
-                    
-                    Picker("Emoji", selection: $selectedEmoji) {
-                        Text("None").tag(TimeCapsule.Emoji?.none) // Explicitly handle nil case
-                        ForEach(TimeCapsule.emojis, id: \.self) { emoji in
-                            Text("\(emoji.symbol) \(emoji.description)").tag(emoji as TimeCapsule.Emoji?)
-                        }
-                    }
-
-
-                    Section(header: Text("Friend Tag")) {
-                        Button("Select Friends") {
-                            presentationType = .friendsPicker // friendsPicker로 설정
-                            isPresenting = true // 시트 표시
-                        }
-                    }
-
-                    Section(header: Text("Box Open Date")) {
-                        DatePicker("Open Date", selection: $openTimeCapsuleDate, displayedComponents: .date)
-                    }
-                }
-                .background(Color.white)
+        NavigationView{
+            VStack(alignment: .leading) {
+                TextField("What's on your mind?",text: .constant(""),axis: .vertical)
+                    .padding(.horizontal)
                 
-                Button("Upload") {
-                    // Handle upload
+                HStack(spacing: 30) {
+                    Button(action: {
+                        showPhotoPicker.toggle()
+                    }, label: {
+                        Image(systemName: "photo.fill.on.rectangle.fill")
+                            .foregroundStyle(.green)
+                    })
+                    
+                    Button(action: {}, label: {
+                        Image(systemName: "person.fill")
+                            .foregroundStyle(.blue)
+                    })
+                    
+                    Button(action: {}, label: {
+                        Image(systemName: "face.smiling")
+                            .foregroundStyle(.yellow)
+                    })
+                    
+                    Button(action: {}, label: {
+                        Image("pin")
+                            .resizable()
+                            .frame(width: 18, height: 18)
+                            .foregroundStyle(.red)
+                    })
+                    
+                    Button(action: {}, label: {
+                        Image(systemName: "ellipsis.circle.fill")
+                            .foregroundStyle(Color(.darkGray))
+                    })
+                    
                 }
-                .padding()
+                .padding(.top, 50)
+                .padding(.bottom, 300)
+                .padding(.left, .right, 20)
+                .padding(.horizontal)
+                
             }
-            .navigationTitle("Create Post")
-            
-            .sheet(isPresented: $isPresenting) {
-                // presentationType에 따라 적절한 시트 표시
-                switch presentationType {
-                    case .photoPicker:
-                        PhotoPicker(selectedImage: $selectedImage)
-                    case .friendsPicker:
-                        FriendsPickerView(selectedFriends: $selectedFriends, friends: friends)
-                    case .none:
-                        EmptyView()
-                }
-            }
-            
-            .onAppear {
-                fetchFriends()
-            }
+            .navigationBarTitle("Create Post", displayMode: .automatic) // 네비게이션 바 타이틀 추가
         }
     }
-
-    
-    private func fetchFriends() {
-        guard let currentUserID = Auth.auth().currentUser?.uid else {
-            print("Debug: Cannot fetch current user ID")
-            return
-        }
-        print("Debug: Current user ID: \(currentUserID)")
-        let db = Firestore.firestore()
-
-        db.collection("users").document(currentUserID).getDocument { document, error in
-            if let error = error {
-                print("Debug: Error fetching user data: \(error.localizedDescription)")
-                return
-            }
-            guard let document = document, document.exists else {
-                print("Debug: Document does not exist")
-                return
-            }
-            print("Debug: Fetched user document data")
-            if let friendIDs = document.get("friends") as? [String], !friendIDs.isEmpty {
-                print("Debug: Friend IDs: \(friendIDs)")
-                self.friends.removeAll()
-                for friendID in friendIDs {
-                    db.collection("users").document(friendID).getDocument { document, error in
-                        if let error = error {
-                            print("Debug: Error fetching friend details for ID \(friendID): \(error.localizedDescription)")
-                            return
-                        }
-                        guard let document = document, document.exists else {
-                            print("Debug: Friend document for ID \(friendID) does not exist")
-                            return
-                        }
-                        print("Debug: Fetched friend document data for ID \(friendID)")
-
-                        let friend = Friend(
-                            id: friendID,
-                            name: document.get("username") as? String ?? "Unknown",
-                            profileImageUrl: document.get("profileImageUrl") as? String ?? nil
-                        )
-                        
-                        DispatchQueue.main.async {
-                            print("Debug: Adding friend to array: \(friend)")
-                            self.friends.append(friend)
-                            print("Debug: Current friends array: \(self.friends)")
-                        }
-                    }
-                }
-            } else {
-                print("Debug: No friend IDs found or friends array is empty")
-            }
-        }
-    }
-
-
-
-    private func loadFriendDetails(friendIDs: [String]) {
-        let db = Firestore.firestore()
-        for friendID in friendIDs {
-            db.collection("users").document(friendID).getDocument { [ self] document, error in
-                guard let document = document, document.exists, error == nil else {
-                    print("Error fetching friend details: \(error?.localizedDescription ?? "")")
-                    return
-                }
-                let friend = Friend(id: friendID,
-                                    name: document.get("username") as? String ?? "",
-                                    profileImageUrl: document.get("profileImageUrl") as? String ?? "")
-                DispatchQueue.main.async {
-                    self.friends.append(friend)
-                }
-            }
-        }
-    }
-
 }
+//    .navigationBarTitle("Create Post", displayMode: .large) // 네비게이션 타이틀 설정
 
-
+//{
+//           Text("Upload")
+//               .font(.custom("Pretendard-Bold", size: 22)) // 사용자 지정 폰트 및 크기
+//               .padding(10)
+//               .frame(maxWidth: .infinity) // 왼쪽 정렬이 아닌 가운데 정렬을 위해 alignment 제거
+//               .background(Color.customInstagram) // 배경색 설정
+//               .foregroundColor(.white) // 텍스트 색상을 흰색으로 설정
+//               .cornerRadius(8) // 버튼을 둥글게 만듦
+//       }
 
 #Preview(body: {
     PostUploadView()
+    //    MainTabBarView().toPreview()
 })
-

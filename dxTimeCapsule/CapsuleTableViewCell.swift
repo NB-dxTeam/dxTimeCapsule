@@ -41,7 +41,7 @@ class CapsuleTableViewCell: UITableViewCell {
         descriptionLabel.numberOfLines = 0
     }
 
-    func configure(with capsule: TimeCapsule) {
+    func configure(with capsule: TimeBox) {
         // 이미지 설정 (실제 앱에서는 imageURL을 사용하여 이미지를 로드합니다)
         capsuleImageView.image = UIImage(named: "placeholder")
         // 설명 설정
@@ -49,6 +49,6 @@ class CapsuleTableViewCell: UITableViewCell {
         // 개봉일 설정
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
-        openDateLabel.text = "Open Date: \(dateFormatter.string(from: capsule.openTimeCapsuleDate))"
+        openDateLabel.text = "Open Date: \(dateFormatter.string(from: capsule.openTimeBoxDate))"
     }
 }

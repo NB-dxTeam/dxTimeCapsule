@@ -61,7 +61,7 @@ class FirestoreService {
             "imageURL": capsule.imageURL!,
             "userLocation": capsule.userLocation ?? NSNull(),
             "description": capsule.description!,
-            "tagFriends": capsule.tagFriendName!,
+            "tagFriends": capsule.tagFriendUserName!,
             "createTimeCapsuleDate": Timestamp(date: capsule.createTimeCapsuleDate),
             "openTimeCapsuleDate": Timestamp(date: capsule.openTimeCapsuleDate),
             "isOpened": capsule.isOpened
