@@ -15,7 +15,7 @@ class LoginViewController: UIViewController {
     private let emailTextField = UITextField()
     private let passwordTextField = UITextField()
     private let loginButton = UIButton(type: .system)
-    private let socialLogin = UIButton(type: .system)
+//    private let socialLogin = UIButton(type: .system)
     private let signUpLabel = UILabel()
     private let signUpButton = UIButton(type: .system)
     private let dividerView = UIView()
@@ -54,7 +54,7 @@ class LoginViewController: UIViewController {
 //        loginButton.backgroundColor = UIColor(hex: "#FF3A4A")
 //        socialLogin.backgroundColor = UIColor(hex: "#FF3A4A")
         loginButton.setInstagram()
-        socialLogin.setInstagram()
+//        socialLogin.setInstagram()
 
     }
     
@@ -73,7 +73,7 @@ class LoginViewController: UIViewController {
         view.addSubview(loginButton)
         view.addSubview(dividerView)
         view.addSubview(labelsContainerView)
-        view.addSubview(socialLogin)
+//        view.addSubview(socialLogin)
 
         
         // labelsContainerView 내에 라벨들을 추가
@@ -97,9 +97,9 @@ class LoginViewController: UIViewController {
         
         // 로그인 버튼 설정 및 액션 연결ㅐ
         configureButton(loginButton, title: "Login")
-        configureButton(socialLogin, title: "Social Login")
+//        configureButton(socialLogin, title: "Social Login")
         loginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
-        socialLogin.addTarget(self, action: #selector(handleGoogleSignIn), for: .touchUpInside)
+//        socialLogin.addTarget(self, action: #selector(handleGoogleSignIn), for: .touchUpInside)
 
         // "계정이 없으신가요?" 라벨 설정
         noAccountLabel.text = "Do not have an account?"
@@ -155,12 +155,12 @@ class LoginViewController: UIViewController {
         }
         
         // Google 로그인 버튼 레이아웃 설정
-        socialLogin.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(loginButton.snp.bottom).offset(20)
-            make.width.equalTo(loginButton.snp.width)
-            make.height.equalTo(44)
-        }
+//        socialLogin.snp.makeConstraints { make in
+//            make.centerX.equalToSuperview()
+//            make.top.equalTo(loginButton.snp.bottom).offset(20)
+//            make.width.equalTo(loginButton.snp.width)
+//            make.height.equalTo(44)
+//        }
         
         // Ensure dividerView is added to the view before setting constraints
         dividerView.snp.makeConstraints { make in
