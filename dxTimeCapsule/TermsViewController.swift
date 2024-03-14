@@ -141,10 +141,15 @@ class TermsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     // MARK: - Update Join Button State
     private func updateJoinButtonState() {
         // 첫 번째와 두 번째 체크박스가 모두 선택되었는지 확인
-        let isJoinEnabled = termsAgreed[0] && termsAgreed[1]
-        joinButton.isEnabled = isJoinEnabled
-        joinButton.backgroundColor = isJoinEnabled ? .systemBlue : .lightGray
+        if termsAgreed[0] && termsAgreed[1] {
+            joinButton.isEnabled = true
+            joinButton.backgroundColor = .systemBlue
+        } else {
+            joinButton.isEnabled = false
+            joinButton.backgroundColor = .lightGray
+        }
     }
+
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1

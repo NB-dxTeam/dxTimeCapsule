@@ -108,7 +108,7 @@ class TimeCapsuleCell: UICollectionViewCell {
     
     // 서브뷰들을 추가하고 Auto Layout을 설정하는 메서드
     private func setupViews() {
-        contentView.backgroundColor = UIColor.yellow
+        contentView.backgroundColor = UIColor.white
         contentView.addSubview(registerImage)
         contentView.addSubview(dDay)
         contentView.addSubview(userLocation)
