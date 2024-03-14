@@ -44,6 +44,7 @@ struct CapsuleInfo {
     var createTimeCapsuleDate: Date // 생성일
     var openTimeCapsuleDate: Date // 개봉일
     var isOpened: Bool //개봉여부
+    var friendID: String?
 }
 
 struct TCInfo {
