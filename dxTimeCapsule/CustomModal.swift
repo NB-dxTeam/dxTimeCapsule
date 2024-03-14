@@ -164,10 +164,10 @@ extension CustomModal: UICollectionViewDataSource, UICollectionViewDelegate {
 }
 
 
-import SwiftUI
-
-struct PreView: PreviewProvider {
-    static var previews: some View {
-        CustomModal().toPreview()
-    }
-}
+//import SwiftUI
+//
+//struct PreView: PreviewProvider {
+//    static var previews: some View {
+//        CustomModal().toPreview()
+//    }
+//}

@@ -1,6 +1,6 @@
 import UIKit
 import SnapKit
-import SDWebImage
+//import SDWebImage
 
 class TagFriendListTableViewCell: UITableViewCell {
     var user: User? {

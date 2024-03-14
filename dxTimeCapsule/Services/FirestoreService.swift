@@ -19,7 +19,6 @@ class FirestoreService {
     private let db = Firestore.firestore()
     private let storageRef = Storage.storage().reference()
     
-    
     // MARK: - Upload Image
     func uploadImage(_ image: UIImage, completion: @escaping (Result<String, Error>) -> Void) {
         let storageRef = Storage.storage().reference().child("timecapsule_images/\(UUID().uuidString).jpg")
@@ -62,7 +61,7 @@ class FirestoreService {
             "imageURL": capsule.imageURL!,
             "userLocation": capsule.userLocation ?? NSNull(),
             "description": capsule.description!,
-            "tagFriends": capsule.tagFriends!,
+            "tagFriends": capsule.tagFriendName!,
             "createTimeCapsuleDate": Timestamp(date: capsule.createTimeCapsuleDate),
             "openTimeCapsuleDate": Timestamp(date: capsule.openTimeCapsuleDate),
             "isOpened": capsule.isOpened

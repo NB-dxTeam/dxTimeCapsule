@@ -267,8 +267,8 @@ extension PostWritingViewController: TagFriendsListViewControllerDelegate {
 
 import SwiftUI
 // MARK: - SwiftUI Preview
-struct PostWritingViewControllerPreview1: PreviewProvider {
-    static var previews: some View {
-        PostWritingViewController().toPreview()
-    }
-}
+//struct PostWritingViewControllerPreview1: PreviewProvider {
+//    static var previews: some View {
+//        PostWritingViewController().toPreview()
+//    }
+//}

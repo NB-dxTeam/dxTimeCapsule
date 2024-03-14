@@ -7,7 +7,7 @@
 
 import UIKit
 import SnapKit
-import SDWebImage
+//import SDWebImage
 import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
@@ -50,7 +50,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         // 이미지 뷰의 크기에 따라 cornerRadius를 동적으로 설정합니다.
         let imageSize: CGFloat = profileImageView.frame.width
         profileImageView.layer.cornerRadius = imageSize / 2
-//        logoutButton.backgroundColor = UIColor(hex: "#FF3A4A")
+        
         logoutButton.setInstagram()
     }
     
@@ -83,7 +83,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         let imageTapGesture = UITapGestureRecognizer(target: self, action: #selector(changePhotoTapped))
         profileImageView.addGestureRecognizer(imageTapGesture)
         
-        let imageSize: CGFloat = 220 // 원하는 이미지 크기로 설정
+        let imageSize: CGFloat = 180 // 원하는 이미지 크기로 설정
         profileImageView.layer.cornerRadius = imageSize / 2 // 이미지 뷰를 둥글게 처리하기 위해 반지름을 이미지 크기의 절반으로 설정
         
         // "Edit" 레이블 추가
