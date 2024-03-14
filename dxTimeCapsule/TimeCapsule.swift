@@ -27,6 +27,7 @@ struct CapsuleInfo {
 }
 
 struct TCInfo {
+    var id: String? //document ID
     var tcBoxImageURL: String?
     var userLocation: String?
     var createTimeCapsuleDate: Date // 생성일

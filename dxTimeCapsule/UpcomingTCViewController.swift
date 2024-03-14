@@ -74,7 +74,8 @@ class UpcomingTCViewController: UIViewController {
     
     private func fetchTimeCapsulesInfo() {
         let db = Firestore.firestore()
-        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // Example UID, replace with dynamic UID
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+//        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // Example UID, replace with dynamic UID
         db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
             .whereField("isOpened", isEqualTo: false)
             .order(by: "openDate", descending: false)
@@ -84,6 +85,7 @@ class UpcomingTCViewController: UIViewController {
                     self?.capsuleInfo = documents.compactMap { doc in
                         let data = doc.data()
                         let capsule = TCInfo(
+                            id: doc.documentID,
                             tcBoxImageURL: data["tcBoxImageURL"] as? String,
                             userLocation: data["userLocation"] as? String,
                             createTimeCapsuleDate: (data["creationDate"] as? Timestamp)?.dateValue() ?? Date(),
