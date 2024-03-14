@@ -2,17 +2,37 @@ import Foundation
 import FirebaseFirestore
 
 struct TimeCapsule {
-    var id: String // 타임캡슐 고유 ID
-    var uid: String // 타임박스를 생성한 사용자의 uID
-    var userName : String // 타임박스를 생성한 사용자의 useName
+    var id: String // 타임박스 고유 ID
+    var uid: String // 타임박스를 생성한 사용자의 uid
+    var userName : String // 타임박스를 생성한 사용자의 닉네임
     var imageURL: [String]? // 타임캡슐 안의 사진들
     var userLocation: GeoPoint? // 사용자 위치
     var description: String? // 타임캡슐 설명
-    var tagFriends: [String]? // 친구 태그 배열
+    var tagFriendName: [String]? // 친구 태그 배열
     var createTimeCapsuleDate: Date // 생성일
     var openTimeCapsuleDate: Date // 개봉일
     var isOpened: Bool = false //개봉여부
+    var emojis: [Emoji] = [
+          Emoji(symbol: "😭", description: "슬픈"),
+          Emoji(symbol: "😫", description: "짜증"),
+          Emoji(symbol: "🙂", description: "평범"),
+          Emoji(symbol: "🥰", description: "설레는"),
+          Emoji(symbol: "😆", description: "즐거운"),
+          Emoji(symbol: "🥹", description: "감동적인"),
+          Emoji(symbol: "🥳", description: "행복"),
+          Emoji(symbol: "🥵", description: "무더운"),
+          Emoji(symbol: "🥶", description: "추운"),
+          Emoji(symbol: "🫠", description: "스트레스가 많은"),
+          Emoji(symbol: "🤒", description: "아픈")
+      ]
+  }
+
+struct Emoji {
+    var symbol: String
+    var description: String
 }
+
+// 테스트 모델 코드 //
 
 struct CapsuleInfo {
     var TimeCapsuleId: String
@@ -24,6 +44,7 @@ struct CapsuleInfo {
     var createTimeCapsuleDate: Date // 생성일
     var openTimeCapsuleDate: Date // 개봉일
     var isOpened: Bool //개봉여부
+    var friendID: String?
 }
 
 struct TCInfo {

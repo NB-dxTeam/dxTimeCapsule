@@ -203,10 +203,10 @@ extension UISheetPresentationController.Detent {
 }
 
 // MARK: - SwiftUI Preview
-import SwiftUI
-
-struct MainTabBarViewPreview1 : PreviewProvider {
-    static var previews: some View {
-        MainTabBarView().toPreview()
-    }
-}
+//import SwiftUI
+//
+//struct MainTabBarViewPreview1 : PreviewProvider {
+//    static var previews: some View {
+//        MainTabBarView().toPreview()
+//    }
+//}

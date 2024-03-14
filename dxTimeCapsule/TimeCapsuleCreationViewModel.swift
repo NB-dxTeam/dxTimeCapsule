@@ -20,7 +20,7 @@ class TimeCapsuleCreationViewModel {
             "tagFriends": timeCapsule.tagFriends!, // 친구 태그 배열
             "createTimeCapsuleDate": timeCapsule.createTimeCapsuleDate, // 생성일
             "openTimeCapsuleDate": timeCapsule.openTimeCapsuleDate, // 개봉일
-            "isOpened": timeCapsule.isOpened // 오프 ㄴ여부
+            "isOpened": timeCapsule.isOpened // 오픈 여부
 
         ]
         
