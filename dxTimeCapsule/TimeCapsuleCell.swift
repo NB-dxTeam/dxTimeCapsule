@@ -143,10 +143,10 @@ class TimeCapsuleCell: UICollectionViewCell {
         }
     }
 }
-
-import SwiftUI
-struct PreVie10w: PreviewProvider {
-    static var previews: some View {
-        UpcomingTCViewController().toPreview()
-    }
-}
+//
+//import SwiftUI
+//struct PreVie10w: PreviewProvider {
+//    static var previews: some View {
+//        UpcomingTCViewController().toPreview()
+//    }
+//}

@@ -6,4 +6,8 @@ target 'dxTimeCapsule' do
   use_frameworks!
 
   # Pods for dxTimeCapsule
+  pod 'SnapKit', '~> 5.7.0'
+  pod 'FirebaseCore', :git => 'https://github.com/firebase/firebase-ios-sdk.git', :branch => 'main'
+  pod 'FirebaseFirestore', :git => 'https://github.com/firebase/firebase-ios-sdk.git', :branch => 'main'
+  pod 'SDWebImage', '~> 5.0'
 end
