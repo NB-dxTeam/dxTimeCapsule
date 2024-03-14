@@ -113,6 +113,9 @@
 		D274E0162B9C243900FAF849 /* TagFriendListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D274E0152B9C243900FAF849 /* TagFriendListTableViewCell.swift */; };
 		D274E01E2B9CC69000FAF849 /* FriendsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D274E01D2B9CC69000FAF849 /* FriendsListViewController.swift */; };
 		D274E0202B9CD36500FAF849 /* CapsuleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D274E01F2B9CD36500FAF849 /* CapsuleTableViewCell.swift */; };
+		D2BB73E22BA32FF500391EF0 /* TermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BB73E12BA32FF500391EF0 /* TermsViewController.swift */; };
+		D2BB73E42BA3301500391EF0 /* TermsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BB73E32BA3301500391EF0 /* TermsTableViewCell.swift */; };
+		D2BB73E62BA3303300391EF0 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BB73E52BA3303300391EF0 /* AuthService.swift */; };
 		EB89853CA1C2F6EB22EA50F5 /* Pods_dxTimeCapsule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBE179F497721B49ACBD4BEF /* Pods_dxTimeCapsule.framework */; };
 		FFC457642B8F0F36000761E9 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC457632B8F0F36000761E9 /* UserProfileViewModel.swift */; };
 		FFC457662B8F0F74000761E9 /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC457652B8F0F74000761E9 /* UserProfileViewController.swift */; };
@@ -214,6 +217,9 @@
 		D274E0152B9C243900FAF849 /* TagFriendListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFriendListTableViewCell.swift; sourceTree = "<group>"; };
 		D274E01D2B9CC69000FAF849 /* FriendsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListViewController.swift; sourceTree = "<group>"; };
 		D274E01F2B9CD36500FAF849 /* CapsuleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleTableViewCell.swift; sourceTree = "<group>"; };
+		D2BB73E12BA32FF500391EF0 /* TermsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsViewController.swift; sourceTree = "<group>"; };
+		D2BB73E32BA3301500391EF0 /* TermsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsTableViewCell.swift; sourceTree = "<group>"; };
+		D2BB73E52BA3303300391EF0 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		DBE179F497721B49ACBD4BEF /* Pods_dxTimeCapsule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dxTimeCapsule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFC457632B8F0F36000761E9 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
 		FFC457652B8F0F74000761E9 /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
@@ -309,6 +315,7 @@
 			isa = PBXGroup;
 			children = (
 				1F2450152B9B4CB2002C68BB /* FirestoreService.swift */,
+				D2BB73E52BA3303300391EF0 /* AuthService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -439,6 +446,8 @@
 				1F5787122B86DBF900C40B08 /* LoginViewController.swift */,
 				1FB387342B87A0B300054816 /* SignUpViewController.swift */,
 				FFC457652B8F0F74000761E9 /* UserProfileViewController.swift */,
+				D2BB73E12BA32FF500391EF0 /* TermsViewController.swift */,
+				D2BB73E32BA3301500391EF0 /* TermsTableViewCell.swift */,
 			);
 			name = Authentication;
 			sourceTree = "<group>";
@@ -804,9 +813,11 @@
 				1FAB4DF62B8C48AF0054618A /* FriendsViewModel.swift in Sources */,
 				1FAACDE12B8FAA520005B993 /* UIImage+RoundImage.swift in Sources */,
 				1F53E5112BA27D5D004141C7 /* UploadPostViewModel.swift in Sources */,
+				D2BB73E62BA3303300391EF0 /* AuthService.swift in Sources */,
 				1F5787132B86DBF900C40B08 /* LoginViewController.swift in Sources */,
 				1FB387402B8881DB00054816 /* TimeCapsule.swift in Sources */,
 				1FB387392B8863DE00054816 /* HomeViewController.swift in Sources */,
+				D2BB73E42BA3301500391EF0 /* TermsTableViewCell.swift in Sources */,
 				D22B171F2B973416006CAEA6 /* SceneDelegate.swift in Sources */,
 				461D3C2F2BA17CF3009C8B6E /* CapsuleAnnotationView.swift in Sources */,
 				1F0B91082B9026020022EDD9 /* UIImageView+RoundImage.swift in Sources */,
@@ -823,6 +834,7 @@
 				1FB387372B8862AF00054816 /* MainFeedViewController.swift in Sources */,
 				1F2450242B9BF0A4002C68BB /* DatePickerModalViewController.swift in Sources */,
 				1F9DA7B12B8C93BD00A74D84 /* SearchUserTableViewCell.swift in Sources */,
+				D2BB73E22BA32FF500391EF0 /* TermsViewController.swift in Sources */,
 				D274E0202B9CD36500FAF849 /* CapsuleTableViewCell.swift in Sources */,
 				27FC128B2B9A64E5008CBEB8 /* UpcomingTCViewController.swift in Sources */,
 				1FBDDF7C2BA1DCDB00FCDE5A /* PhotoPicker.swift in Sources */,
