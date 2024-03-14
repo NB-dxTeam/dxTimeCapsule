@@ -42,7 +42,7 @@ class TimeCapsuleCell: UICollectionViewCell {
     lazy var userLocation: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = UIFont.systemFont(ofSize: 18)
+        label.font = UIFont.boldSystemFont(ofSize: 23)
         label.numberOfLines = 2
         return label
     }()
@@ -105,20 +105,21 @@ class TimeCapsuleCell: UICollectionViewCell {
     
     // 서브뷰들을 추가하고 Auto Layout을 설정하는 메서드
     private func setupViews() {
+        contentView.backgroundColor = UIColor.yellow
         contentView.addSubview(registerImage)
         contentView.addSubview(dDay)
         contentView.addSubview(userLocation)
         contentView.addSubview(creationDate)
         
         registerImage.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
             make.top.leading.equalToSuperview().offset(10)
-            make.leading.equalToSuperview().offset(10)
-            make.trailing.equalToSuperview().offset(-10)
-            make.height.equalTo(registerImage.snp.width).multipliedBy(1.0/2.0) // 이미지 높이 설정
+            make.width.equalToSuperview().multipliedBy(1.8/2.0)
+            make.height.equalToSuperview().multipliedBy(1.4/2.0)
         }
         
         dDay.snp.makeConstraints { make in
-            make.top.equalTo(registerImage.snp.bottom).offset(5)
+            make.top.equalTo(registerImage.snp.bottom).offset(10)
             make.leading.equalTo(registerImage.snp.leading)
             make.width.equalTo(60)
             make.height.equalTo(25)
@@ -135,5 +136,12 @@ class TimeCapsuleCell: UICollectionViewCell {
             make.trailing.equalTo(registerImage.snp.trailing)
             make.bottom.lessThanOrEqualToSuperview().inset(15)
         }
+    }
+}
+
+import SwiftUI
+struct PreVie10w: PreviewProvider {
+    static var previews: some View {
+        OpenedTCViewController().toPreview()
     }
 }

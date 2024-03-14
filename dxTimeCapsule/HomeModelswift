@@ -1,0 +1,16 @@
+//
+//  HomeModel.swift
+//  dxTimeCapsule
+//
+//  Created by 안유진 on 3/13/24.
+//
+
+import Foundation
+import UIKit
+import FirebaseFirestore
+import FirebaseAuth
+
+class HomeModel {
+    func fetchTimeCapsuleData(completion: @escaping ([TimeCapsule]) -> Void) {
+    }
+}

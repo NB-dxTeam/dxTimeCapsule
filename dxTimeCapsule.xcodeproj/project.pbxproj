@@ -68,6 +68,7 @@
 		1FF8691B2B8F4D81007B5112 /* UIButton+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF8691A2B8F4D81007B5112 /* UIButton+Gradient.swift */; };
 		27865AD42B8DFCA900DB8DB6 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27865AD32B8DFCA900DB8DB6 /* NotificationViewController.swift */; };
 		27966F092BA06A41009EC5F3 /* HomeViewControllerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27966F082BA06A41009EC5F3 /* HomeViewControllerModel.swift */; };
+		27B276AC2BA2546100C6B253 /* SwiftfulLoadingIndicators in Frameworks */ = {isa = PBXBuildFile; productRef = 27B276AB2BA2546100C6B253 /* SwiftfulLoadingIndicators */; };
 		27D241B22B8F33A5000F8F16 /* OpenedTCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D241B12B8F33A5000F8F16 /* OpenedTCViewController.swift */; };
 		27F3827F2B8FA1240005F733 /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F3827E2B8FA1240005F733 /* NotificationTableViewCell.swift */; };
 		27FC12892B9A64B1008CBEB8 /* TimeCapsuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FC12882B9A64B1008CBEB8 /* TimeCapsuleCell.swift */; };
@@ -194,6 +195,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				48EE8D76938506F10A425234 /* Pods_dxTimeCapsule.framework in Frameworks */,
+				27B276AC2BA2546100C6B253 /* SwiftfulLoadingIndicators in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -574,6 +576,7 @@
 			);
 			name = dxTimeCapsule;
 			packageProductDependencies = (
+				27B276AB2BA2546100C6B253 /* SwiftfulLoadingIndicators */,
 			);
 			productName = dxTimeCapsule;
 			productReference = 1F5786D52B849AF800C40B08 /* dxTimeCapsule.app */;
@@ -898,8 +901,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = YC9K89WX99;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = dxTimeCapsule/Info.plist;
@@ -920,6 +927,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dxTeam.dxTimeCapsule;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Memorium_dev;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -932,8 +941,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = YC9K89WX99;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = dxTimeCapsule/Info.plist;
@@ -954,6 +967,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dxTeam.dxTimeCapsule;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Memorium_dev;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -993,6 +1008,14 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		27B276AB2BA2546100C6B253 /* SwiftfulLoadingIndicators */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1FF273052B983E3C00C1526A /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */;
+			productName = SwiftfulLoadingIndicators;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1F5786CD2B849AF800C40B08 /* Project object */;
 }
