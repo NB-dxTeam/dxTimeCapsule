@@ -155,27 +155,27 @@ class HomeViewController: UIViewController {
         return stackView
     }()
     
-    // noMainTC 라벨
-    let noMainTCLabel: VerticallyAlignedLabel = {
-        let attributedString = NSMutableAttributedString(string: "더이상 열어볼 캡슐이 없어요😭\n", attributes: [
-            .font: UIFont.boldSystemFont(ofSize: 70)
-        ])
-        attributedString.append(NSAttributedString(string: "+를 눌러 계속해서 시간여행을 떠나보세요!", attributes: [
-            .font: UIFont.systemFont(ofSize: 50)
-        ]))
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 5 // 두줄 사이 간격 조절
-        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length)) // 간격 적용
-        
-        let label = VerticallyAlignedLabel()
-        label.numberOfLines = 2
-        label.textColor = .black
-        label.adjustsFontSizeToFitWidth = true
-        label.minimumScaleFactor = 0.5
-        label.attributedText = attributedString
-        label.verticalAlignment = .top
-        return label
-    }()
+//    // noMainTC 라벨
+//    let noMainTCLabel: VerticallyAlignedLabel = {
+//        let attributedString = NSMutableAttributedString(string: "더이상 열어볼 캡슐이 없어요😭\n", attributes: [
+//            .font: UIFont.boldSystemFont(ofSize: 70)
+//        ])
+//        attributedString.append(NSAttributedString(string: "+를 눌러 계속해서 시간여행을 떠나보세요!", attributes: [
+//            .font: UIFont.systemFont(ofSize: 50)
+//        ]))
+//        let paragraphStyle = NSMutableParagraphStyle()
+//        paragraphStyle.lineSpacing = 5 // 두줄 사이 간격 조절
+//        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length)) // 간격 적용
+//        
+//        let label = VerticallyAlignedLabel()
+//        label.numberOfLines = 2
+//        label.textColor = .black
+//        label.adjustsFontSizeToFitWidth = true
+//        label.minimumScaleFactor = 0.5
+//        label.attributedText = attributedString
+//        label.verticalAlignment = .top
+//        return label
+//    }()
     
     // noMainTC 버튼
     let addTCButton: UIButton = {
