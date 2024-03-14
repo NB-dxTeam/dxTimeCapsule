@@ -2,7 +2,7 @@ import Foundation
 import FirebaseFirestore
 import FirebaseAuth
 
-struct User {
+struct User: Decodable {
     var uid: String
     var email: String
     var username: String
@@ -14,3 +14,9 @@ struct User {
     
 }
 
+struct Friend: Identifiable, Decodable {
+    var id: String
+    var name: String
+    var profileImageUrl: String?
+    
+}

@@ -26,6 +26,9 @@
 		1F52DE1D2B972C9000EE2E1E /* CustomModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F52DE1C2B972C9000EE2E1E /* CustomModal.swift */; };
 		1F52F8B62B9CD69F00974F0B /* TagFriendListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F52F8B52B9CD69F00974F0B /* TagFriendListViewController.swift */; };
 		1F52F8B92B9CDADC00974F0B /* TagFriendListTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F52F8B82B9CDADC00974F0B /* TagFriendListTableCell.swift */; };
+		1F53E50A2BA20A8C004141C7 /* Button+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F53E5092BA20A8C004141C7 /* Button+Custom.swift */; };
+		1F53E50D2BA222A2004141C7 /* FriendsPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F53E50C2BA222A2004141C7 /* FriendsPickerView.swift */; };
+		1F53E5112BA27D5D004141C7 /* UploadPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F53E5102BA27D5D004141C7 /* UploadPostViewModel.swift */; };
 		1F5786D92B849AF800C40B08 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5786D82B849AF800C40B08 /* AppDelegate.swift */; };
 		1F5786E52B849AFA00C40B08 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F5786E42B849AFA00C40B08 /* Assets.xcassets */; };
 		1F5786E82B849AFA00C40B08 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F5786E62B849AFA00C40B08 /* LaunchScreen.storyboard */; };
@@ -44,6 +47,8 @@
 		1FB387392B8863DE00054816 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB387382B8863DE00054816 /* HomeViewController.swift */; };
 		1FB3873E2B88791A00054816 /* TimeCapsuleCreationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB3873D2B88791A00054816 /* TimeCapsuleCreationViewModel.swift */; };
 		1FB387402B8881DB00054816 /* TimeCapsule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB3873F2B8881DB00054816 /* TimeCapsule.swift */; };
+		1FBDDF792BA1DA3F00FCDE5A /* PostUploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBDDF782BA1DA3F00FCDE5A /* PostUploadView.swift */; };
+		1FBDDF7C2BA1DCDB00FCDE5A /* PhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBDDF7B2BA1DCDB00FCDE5A /* PhotoPicker.swift */; };
 		1FC44EDD2B90C0B3002A75AF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F0854162B8F091500711660 /* GoogleService-Info.plist */; };
 		1FC44EF52B90C491002A75AF /* ProximaNova-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1FC44EEE2B90C490002A75AF /* ProximaNova-Semibold.ttf */; };
 		1FC44EF62B90C491002A75AF /* ProximaNova-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1FC44EEF2B90C490002A75AF /* ProximaNova-Light.ttf */; };
@@ -77,11 +82,11 @@
 		461D3C2C2BA1791F009C8B6E /* Annotation+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461D3C2B2BA1791F009C8B6E /* Annotation+UIView.swift */; };
 		461D3C2F2BA17CF3009C8B6E /* CapsuleAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461D3C2E2BA17CF3009C8B6E /* CapsuleAnnotationView.swift */; };
 		46EA9BAE2B89A27E00633EC4 /* CapsuleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */; };
-		48EE8D76938506F10A425234 /* Pods_dxTimeCapsule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 267B4DC3DC733F68AF7B17D0 /* Pods_dxTimeCapsule.framework */; };
 		4E2A09C82B8F755C00911390 /* OpenInteractionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */; };
 		4E2A09CA2B8F86C600911390 /* FadeInAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */; };
 		4E4F6CDB2B99C2B500154ED1 /* OpenCapsuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4F6CDA2B99C2B500154ED1 /* OpenCapsuleViewController.swift */; };
 		4EC308DE2B8A200300EEE54C /* MainCapsuleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC308DD2B8A200300EEE54C /* MainCapsuleViewModel.swift */; };
+		6166DD6CB3ABAE56745A1B86 /* Pods_dxTimeCapsule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBE179F497721B49ACBD4BEF /* Pods_dxTimeCapsule.framework */; };
 		D20CDCCA2B957D5D00B93788 /* SearchUserTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20CDCC92B957D5D00B93788 /* SearchUserTableViewController.swift */; };
 		D20CDCCD2B959DFE00B93788 /* FriendsRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20CDCCC2B959DFE00B93788 /* FriendsRequestViewController.swift */; };
 		D20CDCCF2B96D86100B93788 /* FriendRequestTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20CDCCE2B96D86100B93788 /* FriendRequestTableViewCell.swift */; };
@@ -97,6 +102,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		16D1616DC727F6681EAD1BC4 /* Pods-dxTimeCapsule.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.release.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.release.xcconfig"; sourceTree = "<group>"; };
 		1F0854142B8EF4F400711660 /* TestLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestLoginViewController.swift; sourceTree = "<group>"; };
 		1F0854162B8F091500711660 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1F0854312B8F254B00711660 /* MainCapsuleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCapsuleViewController.swift; sourceTree = "<group>"; };
@@ -117,6 +123,9 @@
 		1F52DE1C2B972C9000EE2E1E /* CustomModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModal.swift; sourceTree = "<group>"; };
 		1F52F8B52B9CD69F00974F0B /* TagFriendListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFriendListViewController.swift; sourceTree = "<group>"; };
 		1F52F8B82B9CDADC00974F0B /* TagFriendListTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFriendListTableCell.swift; sourceTree = "<group>"; };
+		1F53E5092BA20A8C004141C7 /* Button+Custom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Button+Custom.swift"; sourceTree = "<group>"; };
+		1F53E50C2BA222A2004141C7 /* FriendsPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsPickerView.swift; sourceTree = "<group>"; };
+		1F53E5102BA27D5D004141C7 /* UploadPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPostViewModel.swift; sourceTree = "<group>"; };
 		1F5786D52B849AF800C40B08 /* dxTimeCapsule.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dxTimeCapsule.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F5786D82B849AF800C40B08 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1F5786E42B849AFA00C40B08 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -137,6 +146,8 @@
 		1FB387382B8863DE00054816 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		1FB3873D2B88791A00054816 /* TimeCapsuleCreationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCapsuleCreationViewModel.swift; sourceTree = "<group>"; };
 		1FB3873F2B8881DB00054816 /* TimeCapsule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCapsule.swift; sourceTree = "<group>"; };
+		1FBDDF782BA1DA3F00FCDE5A /* PostUploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostUploadView.swift; sourceTree = "<group>"; };
+		1FBDDF7B2BA1DCDB00FCDE5A /* PhotoPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPicker.swift; sourceTree = "<group>"; };
 		1FC44EEE2B90C490002A75AF /* ProximaNova-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNova-Semibold.ttf"; sourceTree = "<group>"; };
 		1FC44EEF2B90C490002A75AF /* ProximaNova-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNova-Light.ttf"; sourceTree = "<group>"; };
 		1FC44EF02B90C490002A75AF /* ProximaNova-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNova-Black.ttf"; sourceTree = "<group>"; };
@@ -159,8 +170,6 @@
 		1FE313AE2B9810CA00E02045 /* LocationHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHistory.swift; sourceTree = "<group>"; };
 		1FE313B02B98114700E02045 /* LocationHistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHistoryViewModel.swift; sourceTree = "<group>"; };
 		1FF8691A2B8F4D81007B5112 /* UIButton+Gradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Gradient.swift"; sourceTree = "<group>"; };
-		248D085A35F0BF5C6FF29A81 /* Pods-dxTimeCapsule.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.debug.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.debug.xcconfig"; sourceTree = "<group>"; };
-		267B4DC3DC733F68AF7B17D0 /* Pods_dxTimeCapsule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dxTimeCapsule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		27865AD32B8DFCA900DB8DB6 /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		27966F082BA06A41009EC5F3 /* HomeViewControllerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewControllerModel.swift; sourceTree = "<group>"; };
 		27D241B12B8F33A5000F8F16 /* OpenedTCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenedTCViewController.swift; sourceTree = "<group>"; };
@@ -178,7 +187,7 @@
 		4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeInAnimator.swift; sourceTree = "<group>"; };
 		4E4F6CDA2B99C2B500154ED1 /* OpenCapsuleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenCapsuleViewController.swift; sourceTree = "<group>"; };
 		4EC308DD2B8A200300EEE54C /* MainCapsuleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCapsuleViewModel.swift; sourceTree = "<group>"; };
-		C08143F4A492BB8BAA58EB32 /* Pods-dxTimeCapsule.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.release.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.release.xcconfig"; sourceTree = "<group>"; };
+		8D9FC2E2D6FE6C897DBE8807 /* Pods-dxTimeCapsule.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.debug.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.debug.xcconfig"; sourceTree = "<group>"; };
 		D20CDCC92B957D5D00B93788 /* SearchUserTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserTableViewController.swift; sourceTree = "<group>"; };
 		D20CDCCC2B959DFE00B93788 /* FriendsRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsRequestViewController.swift; sourceTree = "<group>"; };
 		D20CDCCE2B96D86100B93788 /* FriendRequestTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestTableViewCell.swift; sourceTree = "<group>"; };
@@ -188,6 +197,7 @@
 		D274E0152B9C243900FAF849 /* TagFriendListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFriendListTableViewCell.swift; sourceTree = "<group>"; };
 		D274E01D2B9CC69000FAF849 /* FriendsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListViewController.swift; sourceTree = "<group>"; };
 		D274E01F2B9CD36500FAF849 /* CapsuleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleTableViewCell.swift; sourceTree = "<group>"; };
+		DBE179F497721B49ACBD4BEF /* Pods_dxTimeCapsule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dxTimeCapsule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFC457632B8F0F36000761E9 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
 		FFC457652B8F0F74000761E9 /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -197,7 +207,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48EE8D76938506F10A425234 /* Pods_dxTimeCapsule.framework in Frameworks */,
+				6166DD6CB3ABAE56745A1B86 /* Pods_dxTimeCapsule.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -215,7 +225,6 @@
 		1F1071BA2B95D3E8009E201A /* Location */ = {
 			isa = PBXGroup;
 			children = (
-				1FD2B7B52B96C04B00896F9C /* Model */,
 				1FD2B7A72B96BF4A00896F9C /* BottomSheet */,
 				1FD2B79B2B96BD7300896F9C /* LocationMapkitViewController.swift */,
 			);
@@ -225,12 +234,15 @@
 		1F2450192B9B4F7B002C68BB /* Post */ = {
 			isa = PBXGroup;
 			children = (
+				1FBDDF782BA1DA3F00FCDE5A /* PostUploadView.swift */,
+				1FBDDF7B2BA1DCDB00FCDE5A /* PhotoPicker.swift */,
 				1F0D3B2B2B89AA2B00A31E82 /* PhotoUploadViewController.swift */,
 				1F2450172B9B4D74002C68BB /* PostWritingViewController.swift */,
-				1F2450232B9BF0A4002C68BB /* DatePickerModalViewController.swift */,
 				1F52F8B52B9CD69F00974F0B /* TagFriendListViewController.swift */,
 				27F382802B8FA1350005F733 /* NotificationView */,
+				1FBDDF752BA1D8B000FCDE5A /* Modal */,
 				1F24501C2B9B5942002C68BB /* Cell */,
+				1F53E50C2BA222A2004141C7 /* FriendsPickerView.swift */,
 			);
 			path = Post;
 			sourceTree = "<group>";
@@ -267,13 +279,21 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		1F53E5082BA20A74004141C7 /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				1F53E5092BA20A8C004141C7 /* Button+Custom.swift */,
+			);
+			path = SwiftUI;
+			sourceTree = "<group>";
+		};
 		1F5786CC2B849AF800C40B08 = {
 			isa = PBXGroup;
 			children = (
 				1F5786D72B849AF800C40B08 /* dxTimeCapsule */,
 				25AD7CDE47BA0E85739F3959 /* Pods */,
-				E66B871A42D04509909193E7 /* Frameworks */,
 				1F43396E2B9ADCEB006D39F5 /* Recovered References */,
+				E28A27C4A2D4902A7BC72FCF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -316,6 +336,7 @@
 				FFC457632B8F0F36000761E9 /* UserProfileViewModel.swift */,
 				1FE313B02B98114700E02045 /* LocationHistoryViewModel.swift */,
 				27966F082BA06A41009EC5F3 /* HomeViewControllerModel.swift */,
+				1F53E5102BA27D5D004141C7 /* UploadPostViewModel.swift */,
 			);
 			name = ViewModel;
 			sourceTree = "<group>";
@@ -341,6 +362,7 @@
 		1F5786F52B849D0D00C40B08 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				1FBDDF762BA1D90200FCDE5A /* Location */,
 				1FAB4DF72B8C49590054618A /* User.swift */,
 				1FB3873F2B8881DB00054816 /* TimeCapsule.swift */,
 				D22B171B2B971599006CAEA6 /* FriendRequest.swift */,
@@ -400,6 +422,25 @@
 			name = Capsule;
 			sourceTree = "<group>";
 		};
+		1FBDDF752BA1D8B000FCDE5A /* Modal */ = {
+			isa = PBXGroup;
+			children = (
+				1F2450232B9BF0A4002C68BB /* DatePickerModalViewController.swift */,
+			);
+			path = Modal;
+			sourceTree = "<group>";
+		};
+		1FBDDF762BA1D90200FCDE5A /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				1FD2B7B62B96C04B00896F9C /* HorizontalSearchModel.swift */,
+				1FD2B7B72B96C04B00896F9C /* CarouselButtonModel.swift */,
+				1FD2B7B82B96C04B00896F9C /* CustomPresentationDetents.swift */,
+				1FD2B7B92B96C04B00896F9C /* HorizontalSearchType.swift */,
+			);
+			path = Location;
+			sourceTree = "<group>";
+		};
 		1FC44F082B90C882002A75AF /* Pretendard */ = {
 			isa = PBXGroup;
 			children = (
@@ -452,17 +493,6 @@
 			name = BottomSheet;
 			sourceTree = "<group>";
 		};
-		1FD2B7B52B96C04B00896F9C /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				1FD2B7B62B96C04B00896F9C /* HorizontalSearchModel.swift */,
-				1FD2B7B72B96C04B00896F9C /* CarouselButtonModel.swift */,
-				1FD2B7B82B96C04B00896F9C /* CustomPresentationDetents.swift */,
-				1FD2B7B92B96C04B00896F9C /* HorizontalSearchType.swift */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
 		1FF868C72B8F4775007B5112 /* Resourses */ = {
 			isa = PBXGroup;
 			children = (
@@ -494,7 +524,7 @@
 		1FF869192B8F4D59007B5112 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				1FD2B7A12B96BEFE00896F9C /* NotificationName+Extension.swift */,
+				1F53E5082BA20A74004141C7 /* SwiftUI */,
 				1FD2B7A22B96BEFE00896F9C /* UIStackView+Extensions.swift */,
 				1F8EA39D2B9538DD004856B7 /* UIFont+CustomFont.swift */,
 				1FF8691A2B8F4D81007B5112 /* UIButton+Gradient.swift */,
@@ -503,6 +533,7 @@
 				1FA11BF12B8F8C440014002F /* UITextField+Padding.swift */,
 				1F0B91072B9026020022EDD9 /* UIImageView+RoundImage.swift */,
 				1F367EA52B8F803A00563908 /* UIColor+Hex.swift */,
+				1FD2B7A12B96BEFE00896F9C /* NotificationName+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -510,8 +541,8 @@
 		25AD7CDE47BA0E85739F3959 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				248D085A35F0BF5C6FF29A81 /* Pods-dxTimeCapsule.debug.xcconfig */,
-				C08143F4A492BB8BAA58EB32 /* Pods-dxTimeCapsule.release.xcconfig */,
+				8D9FC2E2D6FE6C897DBE8807 /* Pods-dxTimeCapsule.debug.xcconfig */,
+				16D1616DC727F6681EAD1BC4 /* Pods-dxTimeCapsule.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -561,10 +592,10 @@
 			name = Alarm;
 			sourceTree = "<group>";
 		};
-		E66B871A42D04509909193E7 /* Frameworks */ = {
+		E28A27C4A2D4902A7BC72FCF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				267B4DC3DC733F68AF7B17D0 /* Pods_dxTimeCapsule.framework */,
+				DBE179F497721B49ACBD4BEF /* Pods_dxTimeCapsule.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -576,19 +607,17 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1F5786EC2B849AFA00C40B08 /* Build configuration list for PBXNativeTarget "dxTimeCapsule" */;
 			buildPhases = (
-				6284652995A4CDA4E9B56FB9 /* [CP] Check Pods Manifest.lock */,
+				B17FAE687E3BD12319391F47 /* [CP] Check Pods Manifest.lock */,
 				1F5786D12B849AF800C40B08 /* Sources */,
 				1F5786D22B849AF800C40B08 /* Frameworks */,
 				1F5786D32B849AF800C40B08 /* Resources */,
-				0D1A818FA79BEEC8ED74B4F0 /* [CP] Embed Pods Frameworks */,
+				D8A4A7070A091A4ADB8DE7BC /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = dxTimeCapsule;
-			packageProductDependencies = (
-			);
 			productName = dxTimeCapsule;
 			productReference = 1F5786D52B849AF800C40B08 /* dxTimeCapsule.app */;
 			productType = "com.apple.product-type.application";
@@ -655,24 +684,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0D1A818FA79BEEC8ED74B4F0 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6284652995A4CDA4E9B56FB9 /* [CP] Check Pods Manifest.lock */ = {
+		B17FAE687E3BD12319391F47 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -694,6 +706,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		D8A4A7070A091A4ADB8DE7BC /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -712,6 +741,7 @@
 				46EA9BAE2B89A27E00633EC4 /* CapsuleMapViewController.swift in Sources */,
 				D274E01E2B9CC69000FAF849 /* FriendsListViewController.swift in Sources */,
 				1F0854322B8F254B00711660 /* MainCapsuleViewController.swift in Sources */,
+				1FBDDF792BA1DA3F00FCDE5A /* PostUploadView.swift in Sources */,
 				D274E0162B9C243900FAF849 /* TagFriendListTableViewCell.swift in Sources */,
 				460FE7672B8A200D00AF8086 /* LockedCapsuleCell.swift in Sources */,
 				4E4F6CDB2B99C2B500154ED1 /* OpenCapsuleViewController.swift in Sources */,
@@ -732,8 +762,10 @@
 				27FC12892B9A64B1008CBEB8 /* TimeCapsuleCell.swift in Sources */,
 				D22B171C2B971599006CAEA6 /* FriendRequest.swift in Sources */,
 				1FD2B79C2B96BD7300896F9C /* LocationMapkitViewController.swift in Sources */,
+				1F53E50A2BA20A8C004141C7 /* Button+Custom.swift in Sources */,
 				1FAB4DF62B8C48AF0054618A /* FriendsViewModel.swift in Sources */,
 				1FAACDE12B8FAA520005B993 /* UIImage+RoundImage.swift in Sources */,
+				1F53E5112BA27D5D004141C7 /* UploadPostViewModel.swift in Sources */,
 				1F5787132B86DBF900C40B08 /* LoginViewController.swift in Sources */,
 				1FB387402B8881DB00054816 /* TimeCapsule.swift in Sources */,
 				1FB387392B8863DE00054816 /* HomeViewController.swift in Sources */,
@@ -747,6 +779,7 @@
 				D20CDCCF2B96D86100B93788 /* FriendRequestTableViewCell.swift in Sources */,
 				1F52DE1D2B972C9000EE2E1E /* CustomModal.swift in Sources */,
 				1F24501F2B9B82D3002C68BB /* HalfModalPresentationController.swift in Sources */,
+				1F53E50D2BA222A2004141C7 /* FriendsPickerView.swift in Sources */,
 				1F52F8B62B9CD69F00974F0B /* TagFriendListViewController.swift in Sources */,
 				1F5786F22B849CA900C40B08 /* AuthenticationViewModel.swift in Sources */,
 				1FB387372B8862AF00054816 /* MainFeedViewController.swift in Sources */,
@@ -754,6 +787,7 @@
 				1F9DA7B12B8C93BD00A74D84 /* SearchUserTableViewCell.swift in Sources */,
 				D274E0202B9CD36500FAF849 /* CapsuleTableViewCell.swift in Sources */,
 				27FC128B2B9A64E5008CBEB8 /* UpcomingTCViewController.swift in Sources */,
+				1FBDDF7C2BA1DCDB00FCDE5A /* PhotoPicker.swift in Sources */,
 				1F0854152B8EF4F400711660 /* TestLoginViewController.swift in Sources */,
 				4E2A09C82B8F755C00911390 /* OpenInteractionViewController.swift in Sources */,
 				1F4339722B9ADEB0006D39F5 /* CapsuleAnnotationModel.swift in Sources */,
@@ -830,7 +864,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -910,7 +944,7 @@
 		};
 		1F5786ED2B849AFA00C40B08 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 248D085A35F0BF5C6FF29A81 /* Pods-dxTimeCapsule.debug.xcconfig */;
+			baseConfigurationReference = 8D9FC2E2D6FE6C897DBE8807 /* Pods-dxTimeCapsule.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -956,7 +990,7 @@
 		};
 		1F5786EE2B849AFA00C40B08 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C08143F4A492BB8BAA58EB32 /* Pods-dxTimeCapsule.release.xcconfig */;
+			baseConfigurationReference = 16D1616DC727F6681EAD1BC4 /* Pods-dxTimeCapsule.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
