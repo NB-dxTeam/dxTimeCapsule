@@ -10,14 +10,10 @@ import SnapKit
 import FirebaseFirestore
 import FirebaseAuth
 
-//#Preview{
-//    OpenedTCViewController()
-//}
-
 class OpenedTCViewController: UIViewController {
     
     // MARK: - Properties
-    
+    var documentId: String?
     var capsuleInfo = [TCInfo]()
     var onCapsuleSelected: ((Double, Double) -> Void)?
     private var capsuleCollection: UICollectionView = {
@@ -73,7 +69,8 @@ class OpenedTCViewController: UIViewController {
     
     private func fetchTimeCapsulesInfo() {
         let db = Firestore.firestore()
-        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2"
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+//              let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" 
         db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
             .whereField("isOpened", isEqualTo: true)
             .order(by: "openDate", descending: false)
@@ -83,6 +80,7 @@ class OpenedTCViewController: UIViewController {
                     self?.capsuleInfo = documents.compactMap { doc in
                         let data = doc.data()
                         let capsule = TCInfo(
+                            id: doc.documentID,
                             tcBoxImageURL: data["photoUrl"] as? String,
                             userLocation: data["userLocation"] as? String,
                             createTimeCapsuleDate: (data["creationDate"] as? Timestamp)?.dateValue() ?? Date(),
@@ -121,11 +119,13 @@ extension OpenedTCViewController: UICollectionViewDataSource, UICollectionViewDe
         cell.configure(with: tcInfo)
         return cell
     }
-}
-
-import SwiftUI
-struct PreView5: PreviewProvider {
-    static var previews: some View {
-        OpenedTCViewController().toPreview()
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let openCapsuleVC = OpenCapsuleViewController()
+        // 선택된 캡슐의 문서 ID를 가져와서 전달
+        let documentId = capsuleInfo[indexPath.item].id
+        openCapsuleVC.documentId = documentId
+        openCapsuleVC.modalPresentationStyle = .fullScreen
+        present(openCapsuleVC, animated: true, completion: nil)
     }
 }
