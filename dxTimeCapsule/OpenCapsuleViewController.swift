@@ -55,11 +55,10 @@ class OpenCapsuleViewController: UIViewController {
     }
     
     @objc private func homeButtonTapped() {
-        // 모든 모달 뷰 컨트롤러를 닫고, 루트 뷰 컨트롤러로 돌아가기
-        let tabBarController = MainTabBarView()
-        tabBarController.modalPresentationStyle = .fullScreen
-        present(tabBarController, animated: true, completion: nil)
-    }
+           let tabBarController = MainTabBarView()
+           tabBarController.modalPresentationStyle = .fullScreen
+           present(tabBarController, animated: true, completion: nil)
+       }
     
     private func setupUIComponents() {
         // 상단 바 뷰 설정
@@ -107,7 +106,7 @@ class OpenCapsuleViewController: UIViewController {
         
         // 위치 레이블 초기화 및 설정
         locationLabel = UILabel()
-        locationLabel.text = "Loading..." // 초기값
+        locationLabel.text = "Loading.." // 초기값
         locationLabel.font = UIFont.systemFont(ofSize: 12) // 폰트 설정
         locationLabel.textAlignment = .center
         view.addSubview(locationLabel)
@@ -119,7 +118,7 @@ class OpenCapsuleViewController: UIViewController {
         
         // 세부 주소 레이블 초기화 및 설정
         detailedAddressLabel = UILabel()
-        detailedAddressLabel.text = "Loading..." // 초기값
+        detailedAddressLabel.text = "Loading.." // 초기값
         detailedAddressLabel.font = UIFont.systemFont(ofSize: 10) // 폰트 설정
         detailedAddressLabel.textColor = .gray
         detailedAddressLabel.textAlignment = .center
@@ -197,7 +196,7 @@ class OpenCapsuleViewController: UIViewController {
             
             // DateFormatter 설정
                  let dateFormatter = DateFormatter()
-                 dateFormatter.dateFormat = "yyyy년 M월 d일"
+                 dateFormatter.dateFormat = "yyyy년 MM월 dd일"
                  dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul")
                  dateFormatter.locale = Locale(identifier: "ko_KR")
                  

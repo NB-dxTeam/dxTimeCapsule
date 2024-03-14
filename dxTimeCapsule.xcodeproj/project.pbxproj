@@ -79,6 +79,8 @@
 		27FC128B2B9A64E5008CBEB8 /* UpcomingTCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FC128A2B9A64E5008CBEB8 /* UpcomingTCViewController.swift */; };
 		27FD43CC2B9CD8EA00D83B27 /* NewUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FD43CB2B9CD8E900D83B27 /* NewUserViewController.swift */; };
 		460FE7672B8A200D00AF8086 /* LockedCapsuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */; };
+		461D3C2C2BA1791F009C8B6E /* Annotation+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461D3C2B2BA1791F009C8B6E /* Annotation+UIView.swift */; };
+		461D3C2F2BA17CF3009C8B6E /* CapsuleAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461D3C2E2BA17CF3009C8B6E /* CapsuleAnnotationView.swift */; };
 		46EA9BAE2B89A27E00633EC4 /* CapsuleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */; };
 		4E2A09C82B8F755C00911390 /* OpenInteractionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */; };
 		4E2A09CA2B8F86C600911390 /* FadeInAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */; };
@@ -176,6 +178,8 @@
 		27FC128A2B9A64E5008CBEB8 /* UpcomingTCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingTCViewController.swift; sourceTree = "<group>"; };
 		27FD43CB2B9CD8E900D83B27 /* NewUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewUserViewController.swift; sourceTree = "<group>"; };
 		460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedCapsuleCell.swift; sourceTree = "<group>"; };
+		461D3C2B2BA1791F009C8B6E /* Annotation+UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Annotation+UIView.swift"; sourceTree = "<group>"; };
+		461D3C2E2BA17CF3009C8B6E /* CapsuleAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleAnnotationView.swift; sourceTree = "<group>"; };
 		467D1DE22B972499005249B1 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		46B655792B9891FE001EFF23 /* CapsuleAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapsuleAnnotation.swift; sourceTree = "<group>"; };
 		46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleMapViewController.swift; sourceTree = "<group>"; };
@@ -346,9 +350,9 @@
 				1F9DA7AD2B8C921900A74D84 /* SearchUser */,
 				D20CDCCB2B95979900B93788 /* Alarm */,
 				1F722F0D2B938CB500407850 /* SplashVew */,
-				27C81E412B8A39E9001E3623 /* HomeView */,
 				46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */,
 				1FB387362B8862AF00054816 /* MainFeedViewController.swift */,
+				27C81E412B8A39E9001E3623 /* HomeView */,
 				1F0854312B8F254B00711660 /* MainCapsuleViewController.swift */,
 				1FAB4DEE2B8C2B800054618A /* Capsule */,
 			);
@@ -408,12 +412,12 @@
 		1FAB4DEE2B8C2B800054618A /* Capsule */ = {
 			isa = PBXGroup;
 			children = (
+				461D3C2D2BA17CB0009C8B6E /* Mapkit+Annotation */,
 				4E4F6CDA2B99C2B500154ED1 /* OpenCapsuleViewController.swift */,
 				4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */,
 				460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */,
 				4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */,
 				1F52DE1C2B972C9000EE2E1E /* CustomModal.swift */,
-				1F4339712B9ADEB0006D39F5 /* CapsuleAnnotationModel.swift */,
 			);
 			name = Capsule;
 			sourceTree = "<group>";
@@ -564,6 +568,16 @@
 			);
 			name = NotificationView;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		461D3C2D2BA17CB0009C8B6E /* Mapkit+Annotation */ = {
+			isa = PBXGroup;
+			children = (
+				461D3C2B2BA1791F009C8B6E /* Annotation+UIView.swift */,
+				1F4339712B9ADEB0006D39F5 /* CapsuleAnnotationModel.swift */,
+				461D3C2E2BA17CF3009C8B6E /* CapsuleAnnotationView.swift */,
+			);
+			path = "Mapkit+Annotation";
 			sourceTree = "<group>";
 		};
 		D20CDCCB2B95979900B93788 /* Alarm */ = {
@@ -756,6 +770,7 @@
 				1FB387402B8881DB00054816 /* TimeCapsule.swift in Sources */,
 				1FB387392B8863DE00054816 /* HomeViewController.swift in Sources */,
 				D22B171F2B973416006CAEA6 /* SceneDelegate.swift in Sources */,
+				461D3C2F2BA17CF3009C8B6E /* CapsuleAnnotationView.swift in Sources */,
 				1F0B91082B9026020022EDD9 /* UIImageView+RoundImage.swift in Sources */,
 				1FE313B12B98114700E02045 /* LocationHistoryViewModel.swift in Sources */,
 				27966F092BA06A41009EC5F3 /* HomeViewControllerModel.swift in Sources */,
@@ -780,6 +795,7 @@
 				1FD2B7B42B96BF5C00896F9C /* BottomSheetControllerViewModel.swift in Sources */,
 				1FD2B7BF2B96E55900896F9C /* BottomSheetViewController.swift in Sources */,
 				1FB3873E2B88791A00054816 /* TimeCapsuleCreationViewModel.swift in Sources */,
+				461D3C2C2BA1791F009C8B6E /* Annotation+UIView.swift in Sources */,
 				27865AD42B8DFCA900DB8DB6 /* NotificationViewController.swift in Sources */,
 				1F24501B2B9B4F85002C68BB /* PhotoCollectionViewCell.swift in Sources */,
 				1F9DA7AF2B8C922800A74D84 /* SearchUserViewController.swift in Sources */,
@@ -959,10 +975,13 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Memorium_dev;
+
+
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1002,10 +1021,13 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Memorium_dev;
+
+
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

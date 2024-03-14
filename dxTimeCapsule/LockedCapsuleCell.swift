@@ -104,7 +104,7 @@ class LockedCapsuleCell: UICollectionViewCell {
             make.top.equalToSuperview().offset(5)
             make.leading.equalToSuperview().offset(10)
             make.trailing.equalToSuperview().offset(-10)
-            make.height.equalTo(registerImage.snp.width).multipliedBy(1.0/2.0)
+            make.height.equalTo(registerImage.snp.width).multipliedBy(1.2/2.0)
         }
         
         dDay.snp.makeConstraints { make in
