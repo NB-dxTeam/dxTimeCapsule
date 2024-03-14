@@ -9,6 +9,8 @@
 import UIKit
 import SnapKit
 
+import SafariServices // 웹 페이지를 열기 위해 필요
+
 protocol TermsViewControllerDelegate: AnyObject {
     func didCompleteSignUp()
 }
@@ -26,7 +28,7 @@ class TermsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     // UI 컴포넌트 선언
     private let headerLabel = UILabel()
     private let tableView = UITableView()
-    private var termsAgreed = [Bool](repeating: false, count: 4)
+    private var termsAgreed = [Bool](repeating: false, count: 3)
     
     private let joinButton = UIButton()
     
@@ -35,7 +37,7 @@ class TermsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         super.viewDidLoad()
         setupViews()
         setupTableViewHeader()
-        
+        setupTableViewFooter()
         setupJoinButton() // 버튼 설정 추가
         updateJoinButtonState() // 버튼 상태 초기화
     }
@@ -88,6 +90,31 @@ class TermsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.tableHeaderView = headerView
     }
     
+    
+
+    private func setupTableViewFooter() {
+        let footerHeight: CGFloat = 50
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: footerHeight))
+        footerView.backgroundColor = .white
+
+        let termsLabel = UILabel()
+        termsLabel.text = "이용약관 보기"
+        termsLabel.textColor = .blue
+        termsLabel.isUserInteractionEnabled = true // 사용자 상호작용 활성화
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openTermsWebPage))
+        termsLabel.addGestureRecognizer(tapGesture)
+
+        footerView.addSubview(termsLabel)
+        termsLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+
+        tableView.tableFooterView = footerView
+    }
+
+    
+    
     // MARK: - Setup Join Button
     private func setupJoinButton() {
         joinButton.setTitle("Complete Sign Up", for: .normal)
@@ -132,21 +159,31 @@ class TermsViewController: UIViewController, UITableViewDelegate, UITableViewDat
             return UITableViewCell()
         }
         
-        // 셀에 표시할 텍스트를 준비합니다.
-        let titles = ["모두 동의 (선택 전체 동의)", "만 14세 이상", "서비스 이용약관 동의 (필수)", "개인정보 처리방침 동의 (필수)", "광고성 정보 수신 및 마케팅 활용 동의"]
+        let titles = ["서비스 이용약관 동의 (필수)", "개인정보 처리방침 동의 (필수)", "광고성 정보 수신 및 마케팅 활용 동의 (선택)"]
         
-        // indexPath.row에 따라 적절한 제목을 설정합니다.
-        cell.configure(with: titles[indexPath.row], isChecked: termsAgreed[indexPath.row])
+        if indexPath.row < termsAgreed.count {
+            cell.configure(with: titles[indexPath.row], isChecked: termsAgreed[indexPath.row])
+        }
         
         return cell
     }
-    
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        termsAgreed[indexPath.row] = !termsAgreed[indexPath.row]
-        tableView.reloadRows(at: [indexPath], with: .automatic)
-        updateJoinButtonState()
+        if indexPath.row < termsAgreed.count {
+            termsAgreed[indexPath.row] = !termsAgreed[indexPath.row]
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+            updateJoinButtonState()
+        }
     }
+
+    
+    @objc private func openTermsWebPage() {
+        if let url = URL(string: "https://jooyeong.notion.site/816cf16c963b492b96436b21bdea743d") {
+            let safariViewController = SFSafariViewController(url: url)
+            present(safariViewController, animated: true)
+        }
+    }
+
     
     @objc private func completeSignUp() {
         guard let email = self.email, let password = self.password, let username = self.username, let profileImage = self.profileImage else {
@@ -171,3 +208,4 @@ class TermsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
 }
+
