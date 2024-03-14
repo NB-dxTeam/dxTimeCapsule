@@ -131,7 +131,7 @@ class TermsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "TermsTableViewCell", for: indexPath) as? TermsTableViewCell else {
             return UITableViewCell()
         }
-        
+        //
         // 셀에 표시할 텍스트를 준비합니다.
         let titles = ["모두 동의 (선택 전체 동의)", "만 14세 이상", "서비스 이용약관 동의 (필수)", "개인정보 처리방침 동의 (필수)", "광고성 정보 수신 및 마케팅 활용 동의"]
         

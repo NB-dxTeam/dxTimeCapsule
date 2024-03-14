@@ -43,7 +43,7 @@ class TermsTableViewCell: UITableViewCell {
         // 체크박스의 외형을 업데이트하는 메서드 호출
         updateCheckboxAppearance()
     }
-    
+    //
     // 레이아웃 설정 메서드
     private func setupLayouts() {
         contentView.addSubview(checkboxButton)
