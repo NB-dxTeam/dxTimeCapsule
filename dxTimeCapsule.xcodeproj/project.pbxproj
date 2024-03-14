@@ -73,6 +73,7 @@
 		1FF8691B2B8F4D81007B5112 /* UIButton+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF8691A2B8F4D81007B5112 /* UIButton+Gradient.swift */; };
 		27865AD42B8DFCA900DB8DB6 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27865AD32B8DFCA900DB8DB6 /* NotificationViewController.swift */; };
 		27966F092BA06A41009EC5F3 /* HomeViewControllerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27966F082BA06A41009EC5F3 /* HomeViewControllerModel.swift */; };
+		27B276AC2BA2546100C6B253 /* SwiftfulLoadingIndicators in Frameworks */ = {isa = PBXBuildFile; productRef = 27B276AB2BA2546100C6B253 /* SwiftfulLoadingIndicators */; };
 		27D241B22B8F33A5000F8F16 /* OpenedTCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D241B12B8F33A5000F8F16 /* OpenedTCViewController.swift */; };
 		27F3827F2B8FA1240005F733 /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F3827E2B8FA1240005F733 /* NotificationTableViewCell.swift */; };
 		27FC12892B9A64B1008CBEB8 /* TimeCapsuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FC12882B9A64B1008CBEB8 /* TimeCapsuleCell.swift */; };
@@ -207,6 +208,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27B276AC2BA2546100C6B253 /* SwiftfulLoadingIndicators in Frameworks */,
 				6166DD6CB3ABAE56745A1B86 /* Pods_dxTimeCapsule.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -618,6 +620,10 @@
 			dependencies = (
 			);
 			name = dxTimeCapsule;
+			packageProductDependencies = (
+				27B276AB2BA2546100C6B253 /* SwiftfulLoadingIndicators */,
+			);
+
 			productName = dxTimeCapsule;
 			productReference = 1F5786D52B849AF800C40B08 /* dxTimeCapsule.app */;
 			productType = "com.apple.product-type.application";
@@ -977,6 +983,7 @@
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Memorium_dev;
 
 
+
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -1023,6 +1030,7 @@
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Memorium_dev;
 
 
+
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -1067,6 +1075,14 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		27B276AB2BA2546100C6B253 /* SwiftfulLoadingIndicators */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1FF273052B983E3C00C1526A /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */;
+			productName = SwiftfulLoadingIndicators;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1F5786CD2B849AF800C40B08 /* Project object */;
 }

@@ -60,12 +60,11 @@ class OpenedTCViewController: UIViewController {
         if let layout = capsuleCollection.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .vertical
             let screenWidth = UIScreen.main.bounds.width
+            let screenHeight = UIScreen.main.bounds.height
             let itemWidth = screenWidth * 0.9
-            let itemHeight: CGFloat = 250
+            let itemHeight = screenHeight * 0.3
             layout.itemSize = CGSize(width: itemWidth, height: itemHeight)
-            let sectionInsetHorizontal = screenWidth * 0.05
-            layout.sectionInset = UIEdgeInsets(top: 24, left: sectionInsetHorizontal, bottom: 24, right: sectionInsetHorizontal)
-            let minimumLineSpacing = screenWidth * 0.1
+            let minimumLineSpacing = screenHeight * 0.02
             layout.minimumLineSpacing = minimumLineSpacing
         }
     }
@@ -124,9 +123,9 @@ extension OpenedTCViewController: UICollectionViewDataSource, UICollectionViewDe
     }
 }
 
-//import SwiftUI
-//struct PreVie10w: PreviewProvider {
-//    static var previews: some View {
-//        OpenedTCViewController().toPreview()
-//    }
-//}
+import SwiftUI
+struct PreView5: PreviewProvider {
+    static var previews: some View {
+        OpenedTCViewController().toPreview()
+    }
+}
