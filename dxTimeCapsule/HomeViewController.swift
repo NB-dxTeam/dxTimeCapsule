@@ -581,71 +581,71 @@ class HomeViewController: UIViewController {
 //            }
 //        }
 //    }
-    // MARK: - VerticalAlignment
-    class VerticallyAlignedLabel: UILabel {
-        var verticalAlignment: VerticalAlignment = .middle {
-            didSet {
-                setNeedsDisplay()
-            }
-        }
-        
-        override var adjustsFontSizeToFitWidth: Bool {
-            get {
-                return super.adjustsFontSizeToFitWidth
-            }
-            set {
-                super.adjustsFontSizeToFitWidth = newValue
-            }
-        }
-        
-        override var minimumScaleFactor: CGFloat {
-            get {
-                return super.minimumScaleFactor
-            }
-            set {
-                super.minimumScaleFactor = newValue
-            }
-        }
-        
-        override func drawText(in rect: CGRect) {
-            guard let textString = text else {
-                return
-            }
-            
-            let attributedText = NSAttributedString(string: textString, attributes: [
-                NSAttributedString.Key.font: font as Any,
-                NSAttributedString.Key.foregroundColor: textColor as Any
-            ])
-            
-            var newRect = rect
-            let textSize = attributedText.boundingRect(with: rect.size, options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil).size
-            
-            switch verticalAlignment {
-            case .top:
-                newRect.size.height = textSize.height
-            case .middle:
-                newRect.origin.y += (newRect.size.height - textSize.height) / 2
-                newRect.size.height = textSize.height
-            case .bottom:
-                newRect.origin.y += newRect.size.height - textSize.height
-                newRect.size.height = textSize.height
-            }
-            
-            if adjustsFontSizeToFitWidth {
-                let scalingFactor = min(rect.width / textSize.width, 1.0)
-                let scaledFontSize = font.pointSize * scalingFactor
-                let scaledFont = font.withSize(scaledFontSize)
-                let attributes: [NSAttributedString.Key: Any] = [
-                    .font: scaledFont,
-                    .foregroundColor: textColor as Any
-                ]
-                let scaledAttributedText = NSAttributedString(string: textString, attributes: attributes)
-                scaledAttributedText.draw(in: newRect)
-            } else {
-                super.drawText(in: newRect)
-            }
-        }
-    }
+//    // MARK: - VerticalAlignment
+//    class VerticallyAlignedLabel: UILabel {
+//        var verticalAlignment: VerticalAlignment = .middle {
+//            didSet {
+//                setNeedsDisplay()
+//            }
+//        }
+//        
+//        override var adjustsFontSizeToFitWidth: Bool {
+//            get {
+//                return super.adjustsFontSizeToFitWidth
+//            }
+//            set {
+//                super.adjustsFontSizeToFitWidth = newValue
+//            }
+//        }
+//        
+//        override var minimumScaleFactor: CGFloat {
+//            get {
+//                return super.minimumScaleFactor
+//            }
+//            set {
+//                super.minimumScaleFactor = newValue
+//            }
+//        }
+//        
+//        override func drawText(in rect: CGRect) {
+//            guard let textString = text else {
+//                return
+//            }
+//            
+//            let attributedText = NSAttributedString(string: textString, attributes: [
+//                NSAttributedString.Key.font: font as Any,
+//                NSAttributedString.Key.foregroundColor: textColor as Any
+//            ])
+//            
+//            var newRect = rect
+//            let textSize = attributedText.boundingRect(with: rect.size, options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil).size
+//            
+//            switch verticalAlignment {
+//            case .top:
+//                newRect.size.height = textSize.height
+//            case .middle:
+//                newRect.origin.y += (newRect.size.height - textSize.height) / 2
+//                newRect.size.height = textSize.height
+//            case .bottom:
+//                newRect.origin.y += newRect.size.height - textSize.height
+//                newRect.size.height = textSize.height
+//            }
+//            
+//            if adjustsFontSizeToFitWidth {
+//                let scalingFactor = min(rect.width / textSize.width, 1.0)
+//                let scaledFontSize = font.pointSize * scalingFactor
+//                let scaledFont = font.withSize(scaledFontSize)
+//                let attributes: [NSAttributedString.Key: Any] = [
+//                    .font: scaledFont,
+//                    .foregroundColor: textColor as Any
+//                ]
+//                let scaledAttributedText = NSAttributedString(string: textString, attributes: attributes)
+//                scaledAttributedText.draw(in: newRect)
+//            } else {
+//                super.drawText(in: newRect)
+//            }
+//        }
+//    }
 
 
     // MARK: - Actions
