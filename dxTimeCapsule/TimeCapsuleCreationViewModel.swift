@@ -49,3 +49,24 @@ class TimeCapsuleCreationViewModel {
             }
     }
 }
+
+struct dDayCalculation {
+    func calculateDDay(from startDate: Date, to endDate: Date) -> Int {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.day], from: startDate, to: endDate)
+        return components.day ?? 0
+    }
+    let openDate: Date
+    func dDay() -> String {
+        let daysUntilOpening = calculateDDay(from: Date(), to: openDate)
+        if daysUntilOpening == 0 {
+
+            // (수정) 오늘이 개봉일일 때 "D-day" 반환
+            return "D-day"
+        } else {
+            // 개봉일이 아닐 때는 "D+날짜" 또는 "D-날짜" 반환
+            let dDayPrefix = daysUntilOpening < 0 ? "D+" : "D-"
+            return "\(dDayPrefix)\(abs(daysUntilOpening))"
+        }
+    }
+}
