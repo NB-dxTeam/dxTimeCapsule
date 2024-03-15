@@ -111,6 +111,7 @@
 		460FE7672B8A200D00AF8086 /* LockedCapsuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */; };
 		461D3C2C2BA1791F009C8B6E /* Annotation+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461D3C2B2BA1791F009C8B6E /* Annotation+UIView.swift */; };
 		461D3C2F2BA17CF3009C8B6E /* CapsuleAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461D3C2E2BA17CF3009C8B6E /* CapsuleAnnotationView.swift */; };
+		468204312BA35E3A00F40B5C /* FirestoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468204302BA35E3A00F40B5C /* FirestoreDataService.swift */; };
 		46EA9BAE2B89A27E00633EC4 /* CapsuleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */; };
 		4E2A09C82B8F755C00911390 /* OpenInteractionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */; };
 		4E2A09CA2B8F86C600911390 /* FadeInAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */; };
@@ -127,7 +128,6 @@
 		D274E0162B9C243900FAF849 /* TagFriendListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D274E0152B9C243900FAF849 /* TagFriendListTableViewCell.swift */; };
 		D274E01E2B9CC69000FAF849 /* FriendsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D274E01D2B9CC69000FAF849 /* FriendsListViewController.swift */; };
 		D274E0202B9CD36500FAF849 /* CapsuleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D274E01F2B9CD36500FAF849 /* CapsuleTableViewCell.swift */; };
-		D28C38A22BA35178009DBB88 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = D28C38A12BA35178009DBB88 /* SnapKit */; };
 		D2BB73E22BA32FF500391EF0 /* TermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BB73E12BA32FF500391EF0 /* TermsViewController.swift */; };
 		D2BB73E42BA3301500391EF0 /* TermsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BB73E32BA3301500391EF0 /* TermsTableViewCell.swift */; };
 		D2BB73E62BA3303300391EF0 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BB73E52BA3303300391EF0 /* AuthService.swift */; };
@@ -216,6 +216,7 @@
 		461D3C2B2BA1791F009C8B6E /* Annotation+UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Annotation+UIView.swift"; sourceTree = "<group>"; };
 		461D3C2E2BA17CF3009C8B6E /* CapsuleAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleAnnotationView.swift; sourceTree = "<group>"; };
 		467D1DE22B972499005249B1 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		468204302BA35E3A00F40B5C /* FirestoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreDataService.swift; sourceTree = "<group>"; };
 		46B655792B9891FE001EFF23 /* CapsuleAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapsuleAnnotation.swift; sourceTree = "<group>"; };
 		46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleMapViewController.swift; sourceTree = "<group>"; };
 		4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInteractionViewController.swift; sourceTree = "<group>"; };
@@ -245,7 +246,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FE03CC22BA33E4700E75AB2 /* FirebaseMessaging in Frameworks */,
-				D28C38A22BA35178009DBB88 /* SnapKit in Frameworks */,
 				1FE03C512BA3390500E75AB2 /* SwiftfulLoadingIndicators in Frameworks */,
 				1FE03CD42BA33E5B00E75AB2 /* SDWebImage in Frameworks */,
 				1FE03CB42BA33E2D00E75AB2 /* FirebaseFirestoreSwift in Frameworks */,
@@ -489,6 +489,7 @@
 				460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */,
 				4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */,
 				1F52DE1C2B972C9000EE2E1E /* CustomModal.swift */,
+				468204302BA35E3A00F40B5C /* FirestoreDataService.swift */,
 			);
 			name = Capsule;
 			sourceTree = "<group>";
@@ -720,7 +721,6 @@
 				1FE03CCB2BA33E4700E75AB2 /* FirebaseStorageCombine-Community */,
 				1FE03CD32BA33E5B00E75AB2 /* SDWebImage */,
 				1FE03CD52BA33E5B00E75AB2 /* SDWebImageMapKit */,
-				D28C38A12BA35178009DBB88 /* SnapKit */,
 			);
 			productName = dxTimeCapsule;
 			productReference = 1F5786D52B849AF800C40B08 /* dxTimeCapsule.app */;
@@ -754,7 +754,6 @@
 				1FE03C4F2BA3390500E75AB2 /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */,
 				1FE03C962BA33E1300E75AB2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				1FE03CD22BA33E5B00E75AB2 /* XCRemoteSwiftPackageReference "SDWebImage" */,
-				D28C38A02BA35178009DBB88 /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = 1F5786D62B849AF800C40B08 /* Products */;
 			projectDirPath = "";
@@ -856,6 +855,7 @@
 				1F5786D92B849AF800C40B08 /* AppDelegate.swift in Sources */,
 				1F8EA39E2B9538DD004856B7 /* UIFont+CustomFont.swift in Sources */,
 				1FB387352B87A0B300054816 /* SignUpViewController.swift in Sources */,
+				468204312BA35E3A00F40B5C /* FirestoreDataService.swift in Sources */,
 				1F367EA62B8F803A00563908 /* UIColor+Hex.swift in Sources */,
 				4EC308DE2B8A200300EEE54C /* MainCapsuleViewModel.swift in Sources */,
 				1F8EA39A2B944054004856B7 /* UIViewController+Debugging.swift in Sources */,
@@ -1190,14 +1190,6 @@
 				minimumVersion = 5.19.0;
 			};
 		};
-		D28C38A02BA35178009DBB88 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.7.1;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1350,11 +1342,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1FE03CD22BA33E5B00E75AB2 /* XCRemoteSwiftPackageReference "SDWebImage" */;
 			productName = SDWebImageMapKit;
-		};
-		D28C38A12BA35178009DBB88 /* SnapKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D28C38A02BA35178009DBB88 /* XCRemoteSwiftPackageReference "SnapKit" */;
-			productName = SnapKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

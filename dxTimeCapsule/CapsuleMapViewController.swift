@@ -16,7 +16,8 @@ class CapsuleMapViewController: UIViewController {
     private let capsuleMaps = MKMapView() // 지도 뷰
     var locationManager = CLLocationManager()
     var currentDetent: String? = nil
-    
+    // 타임박스 정보와 태그된 친구들의 정보를 담을 배열
+    var timeBoxAnnotationsData = [TimeBoxAnnotationData]()
     // 원래 지도의 중심 위치를 저장할 변수
     private var originalCenterCoordinate: CLLocationCoordinate2D?
     private var shouldShowModal = false
@@ -209,70 +210,100 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
         let db =  Firestore.firestore()
         
         // 로그인한 사용자의 UID를 가져옵니다.
-//        guard let userId = Auth.auth().currentUser?.uid else { return }
+        //        guard let userId = Auth.auth().currentUser?.uid else { return }
         let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2"
         
         db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
             .whereField("isOpened", isEqualTo: false) // 아직 열리지 않은 타임캡슐만 선택
             .order(by: "openDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
             .getDocuments { [weak self] (snapshot, error) in
-            guard let documents = snapshot?.documents else {
-                print("Error fetching documents: \(error!)")
-                DispatchQueue.main.async {
-                    self?.showLoadFailureAlert(withError: error!)
+                guard let documents = snapshot?.documents else {
+                    print("Error fetching documents: \(error!)")
+                    DispatchQueue.main.async {
+                        self?.showLoadFailureAlert(withError: error!)
+                    }
+                    return
                 }
-                return
+                
+                var timeBoxes = [TimeBox]()
+                let group = DispatchGroup()
+                
+                for doc in documents {
+                    let data = doc.data()
+                    let geoPoint = data["userLocation"] as? GeoPoint
+                    var timeBox = TimeBox(
+                        id: doc.documentID,
+                        uid: data["uid"] as? String ?? "",
+                        userName: data["userName"] as? String ?? "",
+                        imageURL: data["imageURL"] as? [String],
+                        userLocation: geoPoint,
+                        userLocationTitle: data["userLocationTitle"] as? String,
+                        description: data["description"] as? String,
+                        tagFriendUid: data["tagFriendUid"] as? [String],
+                        createTimeBoxDate: Timestamp(date: (data["createTimeBoxDate"] as? Timestamp)?.dateValue() ?? Date()),
+                        openTimeBoxDate: Timestamp(date: (data["openTimeBoxDate"] as? Timestamp)?.dateValue() ?? Date()),
+                        isOpened: data["isOpened"] as? Bool ?? false
+                    )
+                    
+                    if let tagFriendUids = timeBox.tagFriendUid, !tagFriendUids.isEmpty {
+                        group.enter()
+                        FirestoreDataService().fetchFriendsInfo(byUIDs: tagFriendUids) { [weak self] friendsInfo in
+                            guard let friendsInfo = friendsInfo else {
+                                group.leave()
+                                return
+                            }
+                            
+                            // 타임박스와 관련된 친구 정보를 포함하는 어노테이션 데이터를 생성
+                            let annotationData = TimeBoxAnnotationData(timeBox: timeBox, friendsInfo: friendsInfo)
+                            self?.timeBoxAnnotationsData.append(annotationData)
+                            
+                            group.leave()
+                        }
+                    }
+                    timeBoxes.append(timeBox)
+                }
+                
+                group.notify(queue: .main) {
+                    // 모든 타임박스 데이터 처리 완료 후 UI 업데이트 로직 구현 필요
+                    self?.addAnnotations(from: timeBoxes)
+                }
             }
-            
-            let capsules = documents.map { doc -> CapsuleInfo in
-                let data = doc.data()
-                let capsule = CapsuleInfo(
-                    TimeCapsuleId: doc.documentID,
-                    tcBoxImageURL: data["tcBoxImageURL"] as? String,
-                    latitude: data["latitude"] as? Double ?? 0,
-                    longitude: data["longitude"] as? Double ?? 0,
-                    userLocation: data["userLocation"] as? String,
-                    userComment: data["userComment"] as? String,
-                    createTimeCapsuleDate: (data["creationDate"] as? Timestamp)?.dateValue() ?? Date(),
-                    openTimeCapsuleDate: (data["openDate"] as? Timestamp)?.dateValue() ?? Date(),
-                    isOpened: data["isOpened"] as? Bool ?? false,
-                    friendID: data["friendID"] as? String ?? ""
-                )
-                print("Loaded capsule: \(capsule.TimeCapsuleId) at [Lat: \(capsule.latitude), Long: \(capsule.longitude)]")
-                return capsule
-            }
-                self?.addAnnotations(from: capsules)
-        }
     }
     
     // 타임캡슐 정보를 기반으로 어노테이션 추가
-    func addAnnotations(from capsules: [CapsuleInfo]) {
+    func addAnnotations(from timeBoxes: [TimeBox]) {
         let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yy.MM.dd" // 날짜 형식 지정
-            dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul") // 한국 시간대 설정
-            dateFormatter.locale = Locale(identifier: "ko_KR") // 로케일을 한국어로 설정
+        dateFormatter.dateFormat = "yy.MM.dd" // 날짜 형식 지정
+        dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul") // 한국 시간대 설정
+        dateFormatter.locale = Locale(identifier: "ko_KR") // 로케일을 한국어로 설정
         
-        for capsule in capsules {
-            let coordinate = CLLocationCoordinate2D(latitude: capsule.latitude, longitude: capsule.longitude)
+        for timeBox in timeBoxes {
+            guard let userLocation = timeBox.userLocation else { continue }
+            let coordinate = CLLocationCoordinate2D(latitude: userLocation.latitude, longitude: userLocation.longitude)
             
             // Firestore에서 가져온 날짜를 한국 시간대에 맞춰 형식화
-            let formattedOpenDate = dateFormatter.string(from: capsule.createTimeCapsuleDate)
-            let weekday = Calendar.current.component(.weekday, from: capsule.createTimeCapsuleDate)
+            let formattedCreateDate = dateFormatter.string(from: timeBox.createTimeBoxDate.dateValue())
+            let weekday = Calendar.current.component(.weekday, from: timeBox.createTimeBoxDate.dateValue())
             let weekdaySymbol = dateFormatter.weekdaySymbols[weekday - 1] // 요일 계산
             
-            // 어노테이션 서브타이틀에 날짜와 요일을 추가
-            let annotation = CapsuleAnnotationModel(
-                coordinate: coordinate,
-                title: capsule.userLocation,
-                subtitle: "등록한 날짜: \(formattedOpenDate) (\(weekdaySymbol))",
-                info: capsule,
-                firends: "친구: \(capsule.friendID ?? "")"
-            )
-            
-            self.capsuleMaps.addAnnotation(annotation)
-            
+            // FirestoreDataService 또는 비슷한 서비스를 사용하여 친구 정보 가져오기
+            FirestoreDataService().fetchFriendsInfo(byUIDs: timeBox.tagFriendUid ?? []) { [weak self] friends in
+                // 비동기적으로 친구 정보가 로드된 후에 어노테이션 생성
+                DispatchQueue.main.async {
+                    // 'friends' 배열을 직접 'CapsuleAnnotationModel'에 전달
+                    let annotation = CapsuleAnnotationModel(
+                        coordinate: coordinate,
+                        title: timeBox.userLocationTitle,
+                        subtitle: "등록한 날짜: \(formattedCreateDate) (\(weekdaySymbol))",
+                        info: timeBox, // 이 부분은 TimeBox 모델로 직접 관련 데이터를 넣어주거나 필요한 데이터만 넣어줄 수 있습니다.
+                        friends: friends // 여기에서 'friends' 타입이 [Friend]?와 일치하도록 수정됨
+                    )
+                    
+                    self?.capsuleMaps.addAnnotation(annotation)
+                }
+            }
         }
-        print("지도에 \(capsules.count)개의 어노테이션이 추가되었습니다.")
+        print("지도에 \(timeBoxes.count)개의 어노테이션이 추가되었습니다.")
     }
 }
 
@@ -399,12 +430,16 @@ extension CapsuleMapViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        guard let capsuleInfo = (view.annotation as? CapsuleAnnotationModel)?.info else { return }
-        
-        // 콜아웃 뷰에 데이터를 전달하여 구성
-        if let calloutView = view.detailCalloutAccessoryView as? CustomCalloutView {
-            calloutView.configure(with: capsuleInfo)
-        }
+        guard let capsuleAnnotation = view.annotation as? CapsuleAnnotationModel else { return }
+
+        // 이전에 추가된 콜아웃 뷰를 제거
+       // view.subviews.forEach { $0.removeFromSuperview() }
+
+        let calloutView = CustomCalloutView()
+        calloutView.configure(with: capsuleAnnotation.info, friends: capsuleAnnotation.friends)
+        view.addSubview(calloutView)
+
+        mapView.setCenter((view.annotation?.coordinate)!, animated: true)
     }
 }
 

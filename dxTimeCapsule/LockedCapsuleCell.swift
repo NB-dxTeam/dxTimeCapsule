@@ -54,9 +54,9 @@ class LockedCapsuleCell: UICollectionViewCell {
 
     }
     
-    func configure(with capsuleInfo: CapsuleInfo) {
+    func configure(with timeboxes: TimeBox) {
         // 이미지 URL을 사용하여 이미지를 로드하고 설정합니다.
-        if let imageUrl = capsuleInfo.tcBoxImageURL, let url = URL(string: imageUrl) {
+        if let imageUrl = timeboxes.imageURL?.first, let url = URL(string: imageUrl) {
             // 이미지 로딩 라이브러리를 사용한 비동기 이미지 로딩
             self.registerImage.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder"))
         } else {
@@ -70,7 +70,7 @@ class LockedCapsuleCell: UICollectionViewCell {
 
         let today = Date()
         let calendar = Calendar.current
-        let components = calendar.dateComponents([.day], from: today, to: capsuleInfo.openTimeCapsuleDate)
+        let components = calendar.dateComponents([.day], from: today, to: timeboxes.openTimeBoxDate.dateValue())
 
         if let daysUntilOpening = components.day {
             // 날짜 차이에 따라 D-Day 표시를 조정합니다.
@@ -86,13 +86,13 @@ class LockedCapsuleCell: UICollectionViewCell {
         }
 
         // 사용자 위치를 설정합니다.
-        self.userLocation.text = capsuleInfo.userLocation ?? "Unknown location"
+        self.userLocation.text = timeboxes.userLocationTitle ?? "Unknown location"
 
         // 생성 날짜를 포맷에 맞게 설정합니다.
         dateFormatter.dateFormat = "yyyy-MM-dd" // 시간 부분은 제외하고 날짜만 표시합니다.
-        let dateStr = dateFormatter.string(from: capsuleInfo.createTimeCapsuleDate)
+        let dateStr = dateFormatter.string(from: timeboxes.createTimeBoxDate.dateValue())
         self.creationDate.text = dateStr
-    }
+    } 
     
     private func setupViews() {
         contentView.addSubview(registerImage)
