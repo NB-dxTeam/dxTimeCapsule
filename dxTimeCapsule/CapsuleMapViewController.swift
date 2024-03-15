@@ -21,81 +21,76 @@ class CapsuleMapViewController: UIViewController {
     // 원래 지도의 중심 위치를 저장할 변수
     private var originalCenterCoordinate: CLLocationCoordinate2D?
     private var shouldShowModal = false
-    private lazy var stackView: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.alignment = .fill
-        stack.distribution = .fillEqually
-        stack.spacing = 10
-        return stack
-    }()
-    private lazy var backView: UIView = {
-        let backView = UIView()
-        backView.layer.masksToBounds = true
-        backView.layer.cornerRadius = 10
-        backView.backgroundColor = UIColor.gray.withAlphaComponent(0.6)
-        return backView
-    }()
-    private lazy var tapDidModal: UIButton = {
-        let button = UIButton()
-        // "listicon" 이름의 이미지로 버튼의 아이콘 설정
-        button.setBackgroundImage(UIImage(named: "listicon"), for: .normal)
-//        button.layer.masksToBounds = true
-//        button.layer.cornerRadius = 10
-        // 버튼이 탭 되었을 때 실행될 액션 추가
-        button.addTarget(self, action: #selector(modalButton(_:)), for: .touchUpInside)
-        return button
+    
+    private lazy var aButton: UIButton = createRoundButton(title: "A")
+    private lazy var bButton: UIButton = createRoundButton(title: "B")
+    private lazy var cButton: UIButton = createRoundButton(title: "C")
+    
+    private lazy var buttonsStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [aButton, bButton, cButton])
+        stackView.axis = .horizontal
+        stackView.distribution = .equalSpacing
+        stackView.alignment = .center
+        stackView.spacing = 10 // 버튼 사이의 간격을 설정합니다.
+        return stackView
     }()
     
+    // 뒤로가기 버튼
+    private lazy var backButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "arrowLeft"), for: .normal) // 시스템 아이콘을 사용합니다.
+        return button
+    }()
+    // 하프모달 버튼
+    private lazy var tapDidModal: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "list"), for: .normal)
+        button.backgroundColor = UIColor.white.withAlphaComponent(1.0)
+        button.layer.masksToBounds = true
+        button.layer.cornerRadius = 35
+        return button
+    }()
+    // 현재 위치 버튼
     private lazy var currentLocationButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "locationicon"), for: .normal)
-        button.backgroundColor = UIColor.white.withAlphaComponent(0.6)
+        button.backgroundColor = UIColor.white.withAlphaComponent(1.0)
         button.layer.masksToBounds = true
-        button.layer.cornerRadius = 2
-        button.addTarget(self, action: #selector(locationButton(_:)), for: .touchUpInside)
+        button.layer.cornerRadius = 20
         return button
-    }()// 현재 위치로
+    }()
+    // 지도 확대 버튼
     private let zoomInButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setBackgroundImage(UIImage(named: "plusicon02"), for: .normal)
-        button.backgroundColor = UIColor.white.withAlphaComponent(0.6)
-        button.layer.masksToBounds = true
-        button.layer.cornerRadius = 5
-        
+        button.setImage(UIImage(systemName: "plus"), for: .normal)
+        button.tintColor = .white
         return button
     }()
-    
+    // 줌 배경
+    private let zoomBackgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.gray.withAlphaComponent(0.5)
+        view.layer.cornerRadius = 20
+        return view
+    }()
+    // 지도 축소 버튼
     private let zoomOutButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setBackgroundImage(UIImage(named: "minusicon02"), for: .normal)
-        button.backgroundColor = UIColor.white.withAlphaComponent(0.6)
-        button.setTitleColor(.black, for: .normal)
-        button.layer.masksToBounds = true
-        button.layer.cornerRadius = 5
+        button.setImage(UIImage(systemName: "minus"), for: .normal)
+        button.tintColor = .white
         return button
-    }()
-    
-    private lazy var zoomStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [zoomInButton, zoomOutButton])
-        stackView.axis = .vertical
-        stackView.spacing = 5
-        stackView.distribution = .fillEqually
-        stackView.alignment = .fill
-        return stackView
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         addSubViews()
-        setupStackView()
+        setupZoomControls()
         autoLayouts()
         locationSetting()
         setupMapView()
         buttons()
         loadCapsuleInfos()
-        tapDidModal.setBlurryBeach()
 //        addLogoToNavigationBar()
     }
     
@@ -134,13 +129,14 @@ extension CapsuleMapViewController {
         self.view.addSubview(capsuleMaps)
         self.view.addSubview(tapDidModal)
         self.view.addSubview(currentLocationButton)
-        self.view.addSubview(zoomStackView)
-        capsuleMaps.addSubview(stackView)
+        self.view.addSubview(zoomBackgroundView)
+        view.addSubview(backButton)
+        view.addSubview(buttonsStackView)
     }
-    private func setupStackView() {
-        // 스택 뷰에 버튼과 배경 뷰를 추가
-        stackView.addArrangedSubview(backView)
-        backView.addSubview(tapDidModal)
+    private func setupZoomControls() {
+        view.addSubview(zoomBackgroundView)
+        zoomBackgroundView.addSubview(zoomInButton)
+        zoomBackgroundView.addSubview(zoomOutButton)
     }
     private func autoLayouts() {
         capsuleMaps.snp.makeConstraints { make in
@@ -148,28 +144,44 @@ extension CapsuleMapViewController {
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
         }
-        stackView.snp.makeConstraints { make in
-            make.bottom.equalTo(capsuleMaps.snp.bottom).offset(-10)
-            make.trailing.equalTo(capsuleMaps.snp.trailing).offset(-10)
-            make.width.equalTo(capsuleMaps.snp.width).multipliedBy(0.1) // 맵 뷰의 너비에 따라 조정
-            make.height.equalTo(40) // backView의 높이를 지정합니다.
+        buttonsStackView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.centerX.equalToSuperview()
         }
-        backView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+        backButton.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.leading.equalToSuperview().offset(10)
+            make.height.width.equalTo(40)
         }
         tapDidModal.snp.makeConstraints { make in
-            make.center.equalToSuperview() // backView의 중심에 배치
-            make.size.equalTo(CGSize(width: 20, height: 20)) // 버튼의 크기를 설정합니다.
+            make.bottom.equalTo(capsuleMaps.snp.bottom).offset(-20)
+            make.trailing.equalTo(capsuleMaps.snp.trailing).offset(-20)
+            make.size.equalTo(CGSize(width: 70, height: 70))
         }
         currentLocationButton.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(10)
-            make.trailing.equalTo(capsuleMaps.snp.trailing).offset(-5)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.trailing.equalTo(capsuleMaps.snp.trailing).offset(-10)
             make.size.equalTo(CGSize(width: 40, height: 40))
         }
-        zoomStackView.snp.makeConstraints { make in
-            make.trailing.equalTo(capsuleMaps.snp.trailing).offset(-5)
-            make.centerY.equalTo(capsuleMaps.snp.centerY)
-            make.width.equalTo(30)
+        zoomBackgroundView.snp.makeConstraints { make in
+            make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing).offset(-10)
+            make.centerY.equalTo(view.safeAreaLayoutGuide.snp.centerY).offset(-50) // 센터보다 위로 조금
+            make.width.equalTo(40)
+            make.height.equalTo(120)
+        }
+        
+        zoomInButton.snp.makeConstraints { make in
+            make.top.equalTo(zoomBackgroundView.snp.top).offset(10)
+            make.centerX.equalTo(zoomBackgroundView.snp.centerX)
+            make.width.equalTo(zoomBackgroundView.snp.width).multipliedBy(0.6)
+            make.height.equalTo(zoomInButton.snp.width)
+        }
+        
+        zoomOutButton.snp.makeConstraints { make in
+            make.bottom.equalTo(zoomBackgroundView.snp.bottom).offset(-10)
+            make.centerX.equalTo(zoomBackgroundView.snp.centerX)
+            make.width.equalTo(zoomBackgroundView.snp.width).multipliedBy(0.6)
+            make.height.equalTo(zoomOutButton.snp.width)
         }
     }
     private func buttons() {
@@ -189,6 +201,17 @@ extension CapsuleMapViewController {
         let region = MKCoordinateRegion(center: capsuleMaps.centerCoordinate, span: capsuleMaps.region.span)
         let zoomedRegion = capsuleMaps.regionThatFits(MKCoordinateRegion(center: region.center, span: MKCoordinateSpan(latitudeDelta: region.span.latitudeDelta * 2, longitudeDelta: region.span.longitudeDelta * 2)))
         capsuleMaps.setRegion(zoomedRegion, animated: true)
+    }
+    private func createRoundButton(title: String) -> UIButton {
+        let button = UIButton()
+        button.setTitle(title, for: .normal)
+        button.backgroundColor = .white.withAlphaComponent(0.8) // 배경색을 설정합니다.
+        button.layer.cornerRadius = 20 // 모서리를 둥글게 합니다.
+        button.snp.makeConstraints { make in // SnapKit을 사용하여 제약조건을 설정합니다.
+            make.size.equalTo(CGSize(width: 80, height: 40))
+        }
+        // 버튼의 동작은 사용자가 정의할 수 있습니다.
+        return button
     }
 }
 
@@ -455,25 +478,25 @@ extension CapsuleMapViewController: UISheetPresentationControllerDelegate {
 // MARK: - Preview
 import SwiftUI
 import FirebaseFirestoreInternal
-//
-//struct Preview: PreviewProvider {
-//    static var previews: some View {
-//        CapsuleMapViewController().toPreview()
-//    }
-//}
 
-//#if DEBUG
-//extension UIViewController {
-//    private struct Preview: UIViewControllerRepresentable {
-//            let viewController: UIViewController
-//            func makeUIViewController(context: Context) -> UIViewController {
-//                return viewController
-//            }
-//            func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
-//            }
-//        }
-//        func toPreview() -> some View {
-//            Preview(viewController: self)
-//        }
-//}
-//#endif
+struct Preview: PreviewProvider {
+    static var previews: some View {
+        CapsuleMapViewController().toPreview()
+    }
+}
+
+#if DEBUG
+extension UIViewController {
+    private struct Preview: UIViewControllerRepresentable {
+            let viewController: UIViewController
+            func makeUIViewController(context: Context) -> UIViewController {
+                return viewController
+            }
+            func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+            }
+        }
+        func toPreview() -> some View {
+            Preview(viewController: self)
+        }
+}
+#endif
