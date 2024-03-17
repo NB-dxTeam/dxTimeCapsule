@@ -127,4 +127,50 @@ extension OpenedTCViewController: UICollectionViewDataSource, UICollectionViewDe
         openCapsuleVC.modalPresentationStyle = .fullScreen
         present(openCapsuleVC, animated: true, completion: nil)
     }
+    
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
+            guard let self = self else { return nil }
+            
+            let deleteAction = UIAction(title: "삭제", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+                // 삭제 액션 처리
+                let deletedDocumentId = self.capsuleInfo[indexPath.item].id
+                if let documentId = deletedDocumentId {
+                    self.showDeleteConfirmationAlert(for: documentId, at: indexPath)
+                }
+            }
+            
+            return UIMenu(title: "", children: [deleteAction])
+        }
+        
+        return configuration
+    }
+    
+    private func showDeleteConfirmationAlert(for documentId: String, at indexPath: IndexPath) {
+        let alertController = UIAlertController(title: "삭제 확인", message: "정말로 삭제하시겠습니까?", preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        let deleteAction = UIAlertAction(title: "삭제", style: .destructive) { [weak self] _ in
+            self?.deleteDocumentFromFirebase(documentId: documentId, at: indexPath)
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(deleteAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    private func deleteDocumentFromFirebase(documentId: String, at indexPath: IndexPath) {
+        let db = Firestore.firestore()
+        db.collection("timeCapsules").document(documentId).delete { [weak self] error in
+            if let error = error {
+                print("Error removing document: \(error)")
+            } else {
+                print("Document successfully removed!")
+                // Firebase에서 문서를 삭제한 후에는 로컬 데이터를 업데이트하고 UI를 업데이트해야 합니다.
+                self?.capsuleInfo.remove(at: indexPath.item)
+                self?.capsuleCollection.deleteItems(at: [indexPath])
+            }
+        }
+    }
 }

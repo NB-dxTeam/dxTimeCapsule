@@ -10,10 +10,6 @@ import SnapKit
 import FirebaseFirestore
 import FirebaseAuth
 
-//#Preview{
-//    MainTabBarView()
-//}
-
 class UpcomingTCViewController: UIViewController {
     
     // MARK: - Properties
