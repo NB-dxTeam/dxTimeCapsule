@@ -2,6 +2,7 @@ import UIKit
 import FirebaseFirestore
 import FirebaseAuth
 
+//
 class FriendsListViewController: UIViewController {
     
     var tableView: UITableView!
