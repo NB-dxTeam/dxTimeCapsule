@@ -102,6 +102,8 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        createButton.setInstagram()
+
     }
     
     // MARK: - UI Setup

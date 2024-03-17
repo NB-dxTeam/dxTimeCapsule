@@ -31,9 +31,11 @@ class TimeCapsuleCell: UICollectionViewCell {
         let label = UILabel()
         label.backgroundColor = .systemBlue
         label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
         label.textColor = .white
         label.textAlignment = .center
-        label.layer.cornerRadius = 14
+        label.layer.cornerRadius = 12
         label.layer.masksToBounds = true
         return label
     }()
@@ -43,7 +45,8 @@ class TimeCapsuleCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = .black
         label.font = UIFont.boldSystemFont(ofSize: 23)
-        label.numberOfLines = 2
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
         return label
     }()
     
@@ -105,23 +108,25 @@ class TimeCapsuleCell: UICollectionViewCell {
     
     // 서브뷰들을 추가하고 Auto Layout을 설정하는 메서드
     private func setupViews() {
-        contentView.backgroundColor = UIColor.yellow
+        contentView.backgroundColor = UIColor.white
         contentView.addSubview(registerImage)
         contentView.addSubview(dDay)
         contentView.addSubview(userLocation)
         contentView.addSubview(creationDate)
         
         registerImage.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.leading.equalToSuperview().offset(10)
-            make.width.equalToSuperview().multipliedBy(1.8/2.0)
+            let offset = UIScreen.main.bounds.width * (0.05/2.0)
+            make.top.equalToSuperview().offset(offset)
             make.height.equalToSuperview().multipliedBy(1.4/2.0)
+            make.width.equalToSuperview().multipliedBy(1.9/2.0)
+            make.centerX.equalToSuperview()
         }
         
         dDay.snp.makeConstraints { make in
-            make.top.equalTo(registerImage.snp.bottom).offset(10)
+            let offset = UIScreen.main.bounds.width * (0.05/2.0)
+            make.top.equalTo(registerImage.snp.bottom).offset(offset)
             make.leading.equalTo(registerImage.snp.leading)
-            make.width.equalTo(60)
+            make.width.equalTo(registerImage.snp.width).multipliedBy(0.23/1.0)
             make.height.equalTo(25)
         }
         
@@ -134,14 +139,14 @@ class TimeCapsuleCell: UICollectionViewCell {
         
         creationDate.snp.makeConstraints { make in
             make.trailing.equalTo(registerImage.snp.trailing)
-            make.bottom.lessThanOrEqualToSuperview().inset(15)
+            make.bottom.lessThanOrEqualToSuperview().multipliedBy(1.95/2.0)
         }
     }
 }
-
-import SwiftUI
-struct PreVie10w: PreviewProvider {
-    static var previews: some View {
-        OpenedTCViewController().toPreview()
-    }
-}
+//
+//import SwiftUI
+//struct PreVie10w: PreviewProvider {
+//    static var previews: some View {
+//        UpcomingTCViewController().toPreview()
+//    }
+//}

@@ -1,6 +1,6 @@
 import UIKit
 import SnapKit
-import SDWebImage
+//import SDWebImage
 import FirebaseAuth
 
 class FriendRequestTableViewCell: UITableViewCell {

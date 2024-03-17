@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SnapKit
 import FirebaseFirestore
-import SDWebImage
+//import SDWebImage
 
 class OpenCapsuleViewController: UIViewController {
     var documentId: String?
