@@ -56,11 +56,10 @@ class OpenedTCViewController: UIViewController {
         if let layout = capsuleCollection.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .vertical
             let screenWidth = UIScreen.main.bounds.width
-            let screenHeight = UIScreen.main.bounds.height
             let itemWidth = screenWidth * 0.9
-            let itemHeight = screenHeight * 0.3
+            let itemHeight = screenWidth * (10.5/16)
             layout.itemSize = CGSize(width: itemWidth, height: itemHeight)
-            let minimumLineSpacing = screenHeight * 0.02
+            let minimumLineSpacing = screenWidth * 0.05
             layout.minimumLineSpacing = minimumLineSpacing
         }
     }

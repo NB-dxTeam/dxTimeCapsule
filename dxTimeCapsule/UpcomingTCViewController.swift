@@ -61,7 +61,7 @@ class UpcomingTCViewController: UIViewController {
             layout.scrollDirection = .vertical
             let screenWidth = UIScreen.main.bounds.width
             let itemWidth = screenWidth * 0.9
-            let itemHeight = screenWidth * (11/16)
+            let itemHeight = screenWidth * (10.5/16)
             layout.itemSize = CGSize(width: itemWidth, height: itemHeight)
             let minimumLineSpacing = screenWidth * 0.05
             layout.minimumLineSpacing = minimumLineSpacing
@@ -72,8 +72,8 @@ class UpcomingTCViewController: UIViewController {
     
     private func fetchTimeCapsulesInfo() {
         let db = Firestore.firestore()
-//        guard let userId = Auth.auth().currentUser?.uid else { return }
-        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // Example UID, replace with dynamic UID
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+//        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // Example UID, replace with dynamic UID
         db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
             .whereField("isOpened", isEqualTo: false)
             .order(by: "openDate", descending: false)
@@ -124,9 +124,9 @@ extension UpcomingTCViewController: UICollectionViewDataSource, UICollectionView
     }
 }
 
-import SwiftUI
-struct PreVie14w: PreviewProvider {
-    static var previews: some View {
-        UpcomingTCViewController().toPreview()
-    }
-}
+//import SwiftUI
+//struct PreVie14w: PreviewProvider {
+//    static var previews: some View {
+//        UpcomingTCViewController().toPreview()
+//    }
+//}

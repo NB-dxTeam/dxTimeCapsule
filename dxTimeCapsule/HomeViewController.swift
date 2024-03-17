@@ -59,7 +59,9 @@ class HomeViewController: UIViewController {
         label.font = UIFont.boldSystemFont(ofSize: 30)
         label.numberOfLines = 0
         label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.3
         label.textColor = .black
+     //  label.backgroundColor = .cyan
         return label
     }()
     
@@ -70,6 +72,7 @@ class HomeViewController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 17)
         label.textColor = .black
         label.verticalAlignment = .top // 수직 정렬 설정
+     //   label.backgroundColor = .gray
         return label
     }()
     
@@ -80,6 +83,7 @@ class HomeViewController: UIViewController {
         label.font = UIFont.boldSystemFont(ofSize: 15)
         label.textColor = .red
         label.textAlignment = .right
+     //   label.backgroundColor = .yellow
         label.verticalAlignment = .top
         return label
     }()
@@ -127,7 +131,7 @@ class HomeViewController: UIViewController {
     let secondLineLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontSizeToFitWidth = true
-        label.minimumScaleFactor = 0.1
+        label.minimumScaleFactor = 0.22
         label.text = "+를 눌러 계속해서 시간여행을 떠나보세요!"
         label.font = UIFont.systemFont(ofSize: 50)
         label.textColor = .black
@@ -155,28 +159,6 @@ class HomeViewController: UIViewController {
         stackView.addArrangedSubview(self.thirdLineLabel)
         return stackView
     }()
-    
-//    // noMainTC 라벨
-//    let noMainTCLabel: VerticallyAlignedLabel = {
-//        let attributedString = NSMutableAttributedString(string: "더이상 열어볼 캡슐이 없어요😭\n", attributes: [
-//            .font: UIFont.boldSystemFont(ofSize: 70)
-//        ])
-//        attributedString.append(NSAttributedString(string: "+를 눌러 계속해서 시간여행을 떠나보세요!", attributes: [
-//            .font: UIFont.systemFont(ofSize: 50)
-//        ]))
-//        let paragraphStyle = NSMutableParagraphStyle()
-//        paragraphStyle.lineSpacing = 5 // 두줄 사이 간격 조절
-//        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length)) // 간격 적용
-//        
-//        let label = VerticallyAlignedLabel()
-//        label.numberOfLines = 2
-//        label.textColor = .black
-//        label.adjustsFontSizeToFitWidth = true
-//        label.minimumScaleFactor = 0.5
-//        label.attributedText = attributedString
-//        label.verticalAlignment = .top
-//        return label
-//    }()
     
     // noMainTC 버튼
     let addTCButton: UIButton = {
@@ -581,71 +563,7 @@ class HomeViewController: UIViewController {
 //            }
 //        }
 //    }
-//    // MARK: - VerticalAlignment
-//    class VerticallyAlignedLabel: UILabel {
-//        var verticalAlignment: VerticalAlignment = .middle {
-//            didSet {
-//                setNeedsDisplay()
-//            }
-//        }
-//        
-//        override var adjustsFontSizeToFitWidth: Bool {
-//            get {
-//                return super.adjustsFontSizeToFitWidth
-//            }
-//            set {
-//                super.adjustsFontSizeToFitWidth = newValue
-//            }
-//        }
-//        
-//        override var minimumScaleFactor: CGFloat {
-//            get {
-//                return super.minimumScaleFactor
-//            }
-//            set {
-//                super.minimumScaleFactor = newValue
-//            }
-//        }
-//        
-//        override func drawText(in rect: CGRect) {
-//            guard let textString = text else {
-//                return
-//            }
-//            
-//            let attributedText = NSAttributedString(string: textString, attributes: [
-//                NSAttributedString.Key.font: font as Any,
-//                NSAttributedString.Key.foregroundColor: textColor as Any
-//            ])
-//            
-//            var newRect = rect
-//            let textSize = attributedText.boundingRect(with: rect.size, options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil).size
-//            
-//            switch verticalAlignment {
-//            case .top:
-//                newRect.size.height = textSize.height
-//            case .middle:
-//                newRect.origin.y += (newRect.size.height - textSize.height) / 2
-//                newRect.size.height = textSize.height
-//            case .bottom:
-//                newRect.origin.y += newRect.size.height - textSize.height
-//                newRect.size.height = textSize.height
-//            }
-//            
-//            if adjustsFontSizeToFitWidth {
-//                let scalingFactor = min(rect.width / textSize.width, 1.0)
-//                let scaledFontSize = font.pointSize * scalingFactor
-//                let scaledFont = font.withSize(scaledFontSize)
-//                let attributes: [NSAttributedString.Key: Any] = [
-//                    .font: scaledFont,
-//                    .foregroundColor: textColor as Any
-//                ]
-//                let scaledAttributedText = NSAttributedString(string: textString, attributes: attributes)
-//                scaledAttributedText.draw(in: newRect)
-//            } else {
-//                super.drawText(in: newRect)
-//            }
-//        }
-//    }
+
 
 
     // MARK: - Actions
@@ -689,10 +607,10 @@ class HomeViewController: UIViewController {
         navigationController?.pushViewController(upcomingTCVC, animated: true)
     }
 }
-//
-//import SwiftUI
-//struct PreVie11w: PreviewProvider {
-//    static var previews: some View {
-//        MainTabBarView().toPreview()
-//    }
-//}
+
+import SwiftUI
+struct PreVie11w: PreviewProvider {
+    static var previews: some View {
+        MainTabBarView().toPreview()
+    }
+}
