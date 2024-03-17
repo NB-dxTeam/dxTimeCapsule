@@ -31,9 +31,9 @@ class FriendsViewModel: ObservableObject {
             }
             
             let users: [User] = documents.compactMap { doc in
-                var user = User(uid: doc.documentID, email: "", username: "", profileImageUrl: nil)
+                var user = User(uid: doc.documentID, userName: "", email: "", profileImageUrl: nil)
                 user.uid = doc.get("uid") as? String ?? ""
-                user.username = doc.get("username") as? String ?? ""
+                user.userName = doc.get("username") as? String ?? ""
                 user.profileImageUrl = doc.get("profileImageUrl") as? String
                 user.email = doc.get("email") as? String ?? ""
                 print("user: \(user)")
@@ -216,8 +216,8 @@ class FriendsViewModel: ObservableObject {
                 let data = document.data()
                 let user = User(
                     uid: userId,
-                    email: data?["email"] as? String ?? "",
-                    username: data?["username"] as? String ?? "",
+                    userName: data?["email"] as? String ?? "",
+                    email: data?["username"] as? String ?? "",
                     profileImageUrl: data?["profileImageUrl"] as? String
                 )
                 completion(user)

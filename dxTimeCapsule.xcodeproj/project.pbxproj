@@ -17,7 +17,6 @@
 		1F1071B52B95CC41009E201A /* Pretendard-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1F1071B42B95CC41009E201A /* Pretendard-Black.otf */; };
 		1F1071B72B95CC4A009E201A /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1F1071B62B95CC4A009E201A /* Pretendard-Medium.otf */; };
 		1F1071B92B95CC67009E201A /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1F1071B82B95CC67009E201A /* Pretendard-Bold.otf */; };
-		1F2450162B9B4CB2002C68BB /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2450152B9B4CB2002C68BB /* FirestoreService.swift */; };
 		1F2450182B9B4D74002C68BB /* PostWritingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2450172B9B4D74002C68BB /* PostWritingViewController.swift */; };
 		1F24501B2B9B4F85002C68BB /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24501A2B9B4F85002C68BB /* PhotoCollectionViewCell.swift */; };
 		1F24501F2B9B82D3002C68BB /* HalfModalPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24501E2B9B82D3002C68BB /* HalfModalPresentationController.swift */; };
@@ -81,6 +80,7 @@
 		1FB792312BA759200069563D /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 1FB792302BA759200069563D /* FirebaseStorageCombine-Community */; };
 		1FB792342BA759310069563D /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 1FB792332BA759310069563D /* GoogleSignIn */; };
 		1FB792362BA759310069563D /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1FB792352BA759310069563D /* GoogleSignInSwift */; };
+		1FB792392BA76C470069563D /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 1FB792382BA76C470069563D /* Kingfisher */; };
 		1FBDDF792BA1DA3F00FCDE5A /* PostUploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBDDF782BA1DA3F00FCDE5A /* PostUploadView.swift */; };
 		1FBDDF7C2BA1DCDB00FCDE5A /* PhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBDDF7B2BA1DCDB00FCDE5A /* PhotoPicker.swift */; };
 		1FC44EDD2B90C0B3002A75AF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F0854162B8F091500711660 /* GoogleService-Info.plist */; };
@@ -144,7 +144,6 @@
 		1F1071B42B95CC41009E201A /* Pretendard-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Black.otf"; sourceTree = "<group>"; };
 		1F1071B62B95CC4A009E201A /* Pretendard-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Medium.otf"; sourceTree = "<group>"; };
 		1F1071B82B95CC67009E201A /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
-		1F2450152B9B4CB2002C68BB /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		1F2450172B9B4D74002C68BB /* PostWritingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostWritingViewController.swift; sourceTree = "<group>"; };
 		1F24501A2B9B4F85002C68BB /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		1F24501E2B9B82D3002C68BB /* HalfModalPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HalfModalPresentationController.swift; sourceTree = "<group>"; };
@@ -251,6 +250,7 @@
 				1FB792192BA759200069563D /* FirebaseFirestoreSwift in Frameworks */,
 				1FB792152BA759200069563D /* FirebaseFirestore in Frameworks */,
 				1FB7921B2BA759200069563D /* FirebaseFunctions in Frameworks */,
+				1FB792392BA76C470069563D /* Kingfisher in Frameworks */,
 				1FB791FA2BA758F10069563D /* SDWebImageMapKit in Frameworks */,
 				1FB792012BA759060069563D /* FirebaseAnalyticsSwift in Frameworks */,
 				1FB791FD2BA759060069563D /* FirebaseAnalytics in Frameworks */,
@@ -336,7 +336,6 @@
 		1F43397C2B9B4C77006D39F5 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				1F2450152B9B4CB2002C68BB /* FirestoreService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -712,6 +711,7 @@
 				1FB792302BA759200069563D /* FirebaseStorageCombine-Community */,
 				1FB792332BA759310069563D /* GoogleSignIn */,
 				1FB792352BA759310069563D /* GoogleSignInSwift */,
+				1FB792382BA76C470069563D /* Kingfisher */,
 			);
 			productName = dxTimeCapsule;
 			productReference = 1F5786D52B849AF800C40B08 /* dxTimeCapsule.app */;
@@ -746,6 +746,7 @@
 				1FB791F62BA758F10069563D /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				1FB791FB2BA759060069563D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				1FB792322BA759310069563D /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				1FB792372BA76C470069563D /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 1F5786D62B849AF800C40B08 /* Products */;
 			projectDirPath = "";
@@ -830,7 +831,6 @@
 			files = (
 				FFC457642B8F0F36000761E9 /* UserProfileViewModel.swift in Sources */,
 				1F52F8B92B9CDADC00974F0B /* TagFriendListTableCell.swift in Sources */,
-				1F2450162B9B4CB2002C68BB /* FirestoreService.swift in Sources */,
 				FFC457662B8F0F74000761E9 /* UserProfileViewController.swift in Sources */,
 				D20CDCCA2B957D5D00B93788 /* SearchUserTableViewController.swift in Sources */,
 				1FD2B7A52B96BEFE00896F9C /* UIStackView+Extensions.swift in Sources */,
@@ -1175,6 +1175,14 @@
 				minimumVersion = 7.0.0;
 			};
 		};
+		1FB792372BA76C470069563D /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.11.0;
+			};
+		};
 		1FF273052B983E3C00C1526A /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwiftfulThinking/SwiftfulLoadingIndicators.git";
@@ -1345,6 +1353,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1FB792322BA759310069563D /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
+		};
+		1FB792382BA76C470069563D /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1FB792372BA76C470069563D /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

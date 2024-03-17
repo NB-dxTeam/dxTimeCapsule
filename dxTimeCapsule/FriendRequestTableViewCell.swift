@@ -92,7 +92,7 @@ class FriendRequestTableViewCell: UITableViewCell {
     func configure(with user: User, viewModel: FriendsViewModel) {
         self.user = user
         self.friendsViewModel = viewModel
-        userNameLabel.text = user.username
+        userNameLabel.text = user.userName
         userProfileImageView.sd_setImage(with: URL(string: user.profileImageUrl ?? ""), placeholderImage: UIImage(named: "defaultProfileImage"))
         acceptButton.isHidden = false // 버튼을 항상 보이게 설정
 

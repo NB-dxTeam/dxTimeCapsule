@@ -41,8 +41,8 @@ class FriendsListViewController: UIViewController {
             guard let userData = document.data() else { return }
             self.currentUser = User(
                 uid: currentUserID,
-                email: userData["email"] as? String ?? "",
-                username: userData["username"] as? String ?? "",
+                userName: userData["email"] as? String ?? "",
+                email: userData["username"] as? String ?? "",
                 profileImageUrl: userData["profileImageUrl"] as? String
             )
             self.fetchFriends(forUserID: currentUserID)
@@ -83,7 +83,7 @@ class FriendsListViewController: UIViewController {
                         let email = friendData["email"] as? String,
                         let username = friendData["username"] as? String,
                        let imageUrl = friendData["profileImageUrl"] as? String {
-                         let friend = User(uid: uid, email: email, username: username, profileImageUrl: imageUrl)
+                        let friend = User(uid: uid, userName: email, email: username, profileImageUrl: imageUrl)
                          fetchedFriends.append(friend) // Append fetched friend to the temporary array
                     }
                 }

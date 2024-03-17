@@ -63,7 +63,6 @@ struct PostUploadView: View {
                 }
                 .padding(.top, 50)
                 .padding(.bottom, 300)
-                .padding(.left, .right, 20)
                 .padding(.horizontal)
                 
             }
