@@ -189,8 +189,9 @@ extension CapsuleMapViewController {
         currentLocationButton.addTarget(self, action: #selector(locationButton(_:)), for: .touchUpInside)
         zoomOutButton.addTarget(self, action: #selector(zoomOut), for: .touchUpInside)
         zoomInButton.addTarget(self, action: #selector(zoomIn), for: .touchUpInside)
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
     }
-    // MARK: - Actions for zoom buttons
+    // MARK: - Actions
     @objc private func zoomIn() {
         let region = MKCoordinateRegion(center: capsuleMaps.centerCoordinate, span: capsuleMaps.region.span)
         let zoomedRegion = capsuleMaps.regionThatFits(MKCoordinateRegion(center: region.center, span: MKCoordinateSpan(latitudeDelta: region.span.latitudeDelta / 2, longitudeDelta: region.span.longitudeDelta / 2)))
@@ -213,6 +214,16 @@ extension CapsuleMapViewController {
         // 버튼의 동작은 사용자가 정의할 수 있습니다.
         return button
     }
+    // 뒤로가기 버튼 동작
+    @objc private func backButtonTapped() {
+        if let presentedVC = presentedViewController, presentedVC is CustomModal {
+            presentedVC.dismiss(animated: true) { [weak self] in
+                self?.tabBarController?.selectedIndex = 0
+            }
+        } else {
+            self.tabBarController?.selectedIndex = 0
+        }
+    }
 }
 
 // MARK: - CLLocationManagerDelegate
@@ -233,9 +244,9 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
         let db =  Firestore.firestore()
         
         // 로그인한 사용자의 UID를 가져옵니다.
-        //        guard let userId = Auth.auth().currentUser?.uid else { return }
-        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2"
-        
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        //let userId = "FNZgZFdLTXXjOkbJY841BW1WhAB2"
+        print("Starting to load time capsule infos for user \(userId)") // 문서로드시작
         db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
             .whereField("isOpened", isEqualTo: false) // 아직 열리지 않은 타임캡슐만 선택
             .order(by: "openDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
@@ -247,7 +258,7 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
                     }
                     return
                 }
-                
+                print("Successfully fetched \(documents.count) documents") // 문서로드 성공 및 문서 수
                 var timeBoxes = [TimeBox]()
                 let group = DispatchGroup()
                 
@@ -267,7 +278,7 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
                         openTimeBoxDate: Timestamp(date: (data["openTimeBoxDate"] as? Timestamp)?.dateValue() ?? Date()),
                         isOpened: data["isOpened"] as? Bool ?? false
                     )
-                    
+                    print("TimeBox created with ID: \(timeBox.id) and userName: \(timeBox.userName)") // 각 TimeBox 객체 생성 시
                     if let tagFriendUids = timeBox.tagFriendUid, !tagFriendUids.isEmpty {
                         group.enter()
                         FirestoreDataService().fetchFriendsInfo(byUIDs: tagFriendUids) { [weak self] friendsInfo in
@@ -287,6 +298,7 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
                 }
                 
                 group.notify(queue: .main) {
+                    print("All time boxes are processed. Total: \(timeBoxes.count)") // 모든 타임박스 데이터 처리 완료 후
                     // 모든 타임박스 데이터 처리 완료 후 UI 업데이트 로직 구현 필요
                     self?.addAnnotations(from: timeBoxes)
                 }
@@ -478,6 +490,7 @@ extension CapsuleMapViewController: UISheetPresentationControllerDelegate {
 // MARK: - Preview
 import SwiftUI
 import FirebaseFirestoreInternal
+import FirebaseAuth
 
 struct Preview: PreviewProvider {
     static var previews: some View {

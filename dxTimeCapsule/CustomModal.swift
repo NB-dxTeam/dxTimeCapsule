@@ -98,7 +98,8 @@ class CustomModal: UIViewController {
     // 데이터 정보 가져오기.
     private func fetchTimeCapsulesInfo() {
         let db = Firestore.firestore()
-        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // 실제 애플리케이션에서는 동적인 UID 사용
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        //let userId = "FNZgZFdLTXXjOkbJY841BW1WhAB2" // 실제 애플리케이션에서는 동적인 UID 사용
         
         db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
             .whereField("isOpened", isEqualTo: false) // 아직 열리지 않은 타임캡슐만 선택
