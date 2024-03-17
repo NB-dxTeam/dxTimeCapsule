@@ -3,6 +3,29 @@ import FirebaseFirestore
 import FirebaseAuth
 
 
+//refactor(CapsuleTableViewCell.swift): improve code readability and add support for loading images using Kingfisher library
+//refactor(FriendRequestTableViewCell.swift): update property name from username to userName for better consistency
+//refactor(FriendsListViewController.swift): update property names and fix incorrect assignment of email and username values
+//refactor(FriendsRequestViewController.swift): update property names and fix incorrect assignment of values for TimeBox model
+//refactor(FriendsViewModel.swift): update property names and fix incorrect assignment of values for User model
+//refactor(PostUploadView.swift): remove unnecessary padding
+//refactor(TagFriendListViewController.swift): update property names and fix incorrect assignment of email and username values
+//refactor(SearchUserTableViewCell.swift): update property name from username to userName for better consistency
+//refactor(TagFriendListTableCell.swift): update property name from username to userName for better consistency
+//
+//fix(TagFriendListTableViewCell.swift): fix typo in userNameLabel text assignment, change user.username to user.userName
+//fix(TimeBox.swift): make id, uid, and userName optional in TimeBox struct to handle optional values
+//feat(TimeBox.swift): add support for userLocationTitle to be a non-optional value in TimeBox struct
+//feat(TimeBox.swift): change createTimeBoxDate and openTimeBoxDate types from Timestamp to Date in TimeBox struct
+//feat(TimeBox.swift): make isOpened property optional in TimeBox struct
+//feat(TimeBox.swift): add TimeBoxAnnotationData struct to hold TimeBox and friendsInfo data
+//feat(TimeBox.swift): add Emoji struct to hold emoji data
+//feat(TimeCapsuleCreationViewModel.swift): change parameter type in saveTimeCapsule method from TimeCapsule to TimeBox
+//feat(TimeCapsuleCreationViewModel.swift): update data dictionary in saveTimeCapsule method to match TimeBox properties
+//feat(TimeCapsuleCreationViewModel.swift): change createTimeCapsuleDate and openTimeCapsuleDate properties in data dictionary to match TimeBox properties
+//feat(TimeCapsuleCreationViewModel.swift): change tagFriends property in data dictionary to match TimeBox property
+//feat(TimeCapsuleCreationViewModel.swift): change isOpened property in data dictionary to match TimeBox property
+//feat(TimeCapsuleCreationViewModel.swift): add dDayCalculation struct to calculate D-day
 
 class FriendsListViewController: UIViewController {
     
