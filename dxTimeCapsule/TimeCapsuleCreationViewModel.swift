@@ -58,7 +58,7 @@ struct dDayCalculation {
     }
     let openDate: Date
     func dDay() -> String {
-        let daysUntilOpening = calculateDDay(from: Date(), to: openDate)
+        let daysUntilOpening = calculatepDDay(from: Date(), to: openDate)
         if daysUntilOpening == 0 {
 
             // (수정) 오늘이 개봉일일 때 "D-day" 반환
