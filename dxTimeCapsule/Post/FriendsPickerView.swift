@@ -13,12 +13,12 @@ struct FriendsPickerView: View {
     
     var body: some View {
         List {
-            ForEach(friends, id: \.id) { friend in
-                MultipleSelectionRow(title: friend.name, isSelected: selectedFriends.contains(friend.id)) {
-                    if let index = selectedFriends.firstIndex(of: friend.id) {
+            ForEach(friends, id: \.uid) { friend in
+                MultipleSelectionRow(title: friend.username, isSelected: selectedFriends.contains(friend.uid)) {
+                    if let index = selectedFriends.firstIndex(of: friend.uid) {
                         selectedFriends.remove(at: index)
                     } else {
-                        selectedFriends.append(friend.id)
+                        selectedFriends.append(friend.uid)
                     }
                 }
             }

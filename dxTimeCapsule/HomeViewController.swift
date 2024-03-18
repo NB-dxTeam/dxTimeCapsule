@@ -10,7 +10,7 @@ import SwiftUI
 import SnapKit
 import FirebaseFirestore
 import FirebaseAuth
-import SwiftfulLoadingIndicators
+//import SwiftfulLoadingIndicators
 
 class HomeViewController: UIViewController {
     
@@ -410,9 +410,15 @@ class HomeViewController: UIViewController {
     
     func fetchTimeCapsuleData() {
         DispatchQueue.main.async {
+<<<<<<< HEAD
 //            //            self.showLoadingIndicator()
 //        }
 //        DispatchQueue.global().async {
+=======
+//            self.showLoadingIndicator()
+        }
+        DispatchQueue.global().async {
+>>>>>>> origin/dev-yeong3
             let db = Firestore.firestore()
             // 로그인한 사용자의 UID를 가져옵니다.
                 guard let userId = Auth.auth().currentUser?.uid else { return }
@@ -511,10 +517,17 @@ class HomeViewController: UIViewController {
                         }
                     }
                 }
+<<<<<<< HEAD
         }
 //        DispatchQueue.main.async {
 ////            self.hideLoadingIndicator()
 //        }
+=======
+    }
+            DispatchQueue.main.async {
+//                self.hideLoadingIndicator()
+            }
+>>>>>>> origin/dev-yeong3
     }
     
     // MARK: - Image Transition Animation
@@ -539,10 +552,17 @@ class HomeViewController: UIViewController {
         }
     }
     
+<<<<<<< HEAD
 //    // MARK: - LoadingIndicator
 //    private func showLoadingIndicator() {
 //        // SwiftUI 뷰를 UIKit에서 사용할 수 있도록 UIHostingController로 감싸줍니다.
 //        let hostingController = UIHostingController(rootView: loadingIndicator)
+=======
+    // MARK: - LoadingIndicator
+//    private func showLoadingIndicator() {
+//        // SwiftUI 뷰를 UIKit에서 사용할 수 있도록 UIHostingController로 감싸줍니다.
+////        let hostingController = UIHostingController(rootView: loadingIndicator)
+>>>>>>> origin/dev-yeong3
 //        addChild(hostingController)
 //        view.addSubview(hostingController.view)
 //        hostingController.view.frame = view.bounds
@@ -550,7 +570,11 @@ class HomeViewController: UIViewController {
 //        hostingController.didMove(toParent: self)
 //        print("showLoadingIndicator가 실행되었습니다")
 //    }
+<<<<<<< HEAD
 //    
+=======
+    
+>>>>>>> origin/dev-yeong3
 //    private func hideLoadingIndicator() {
 //        // 자식 뷰 컨트롤러들을 순회하면서 UIHostingController를 찾습니다.
 //        for child in children {
@@ -563,6 +587,15 @@ class HomeViewController: UIViewController {
 //            }
 //        }
 //    }
+<<<<<<< HEAD
+=======
+    // MARK: - VerticalAlignment
+    enum VerticalAlignment {
+        case top
+        case middle
+        case bottom
+    }
+>>>>>>> origin/dev-yeong3
 
 
 

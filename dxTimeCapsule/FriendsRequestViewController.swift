@@ -9,7 +9,7 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
     
 //    private var alarmLabel: UILabel!
     private var friendRequests: [User] = []
-    private var capsules: [TimeCapsule] = []
+    private var capsules: [TimeBox] = []
     private let tableView = UITableView()
     private let viewModel = FriendsViewModel()
     
@@ -71,7 +71,7 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
     
     private func fetchFriendRequests() {
         guard let currentUserId = Auth.auth().currentUser?.uid else { return }
-        viewModel.fetchFriendRequests(forUser: currentUserId) { [weak self] users, error in
+        viewModel.friendRequestsList(forUser: currentUserId) { [weak self] users, error in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 if let users = users {
@@ -92,7 +92,7 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
             if let error = error {
                 print("Error getting documents: \(error)")
             } else {
-                var tempCapsules: [TimeCapsule] = []
+                var tempCapsules: [TimeBox] = []
                 snapshot?.documents.forEach { document in
                     let data = document.data()
                     let id = document.documentID
@@ -100,26 +100,24 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
                     let userName = data["userName"] as? String ?? ""
                     let imageURL = data["imageURL"] as? [String] ?? []
                     let description = data["description"] as? String ?? ""
+                    let userLocationGeoPoint = data["userLocation"] as? GeoPoint ?? GeoPoint(latitude: 0, longitude: 0)
                     let tagFriendName = data["tagFriends"] as? [String] ?? []
                     let createTimeCapsuleDate = (data["createTimeCapsuleDate"] as? Timestamp)?.dateValue() ?? Date()
                     let openTimeCapsuleDate = (data["openTimeCapsuleDate"] as? Timestamp)?.dateValue() ?? Date()
                     let isOpened = data["isOpened"] as? Bool ?? false
 
-                    // 여기에서 userLocation 처리는 예시를 생략했습니다. 필요하다면 GeoPoint로부터 latitude와 longitude를 추출합니다.
-
-                    let capsule = TimeCapsule(
+                    let timeBox = TimeBox(
                         id: id,
                         uid: uid,
                         userName: userName,
                         imageURL: imageURL,
-                        userLocation: nil, // GeoPoint를 처리하여 설정
+                        userLocation: userLocationGeoPoint,
+                        userLocationTitle: "", // You need to provide appropriate title for userLocation
                         description: description,
-                        tagFriendName: tagFriendName,
-                        createTimeCapsuleDate: createTimeCapsuleDate,
-                        openTimeCapsuleDate: openTimeCapsuleDate,
+                        tagFriendUid: tagFriendName,
                         isOpened: isOpened
                     )
-                    tempCapsules.append(capsule)
+                    tempCapsules.append(timeBox)
                 }
                 self.capsules = tempCapsules
                 DispatchQueue.main.async {
@@ -128,6 +126,7 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
             }
         }
     }
+
 
     
     private func observeFriendRequests() {
@@ -231,7 +230,7 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
             return
         }
         
-        viewModel.acceptFriendRequest(fromUser: user.uid, forUser: currentUserID) { success, error in
+        viewModel.acceptFriendRequest(fromUser: user.uid!, forUser: currentUserID) { success, error in
             if success {
                 // Handle successful request
                 print("Friend request accepted successfully.")

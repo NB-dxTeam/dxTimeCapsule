@@ -2,6 +2,31 @@ import UIKit
 import FirebaseFirestore
 import FirebaseAuth
 
+
+//refactor(CapsuleTableViewCell.swift): improve code readability and add support for loading images using Kingfisher library
+//refactor(FriendRequestTableViewCell.swift): update property name from username to userName for better consistency
+//refactor(FriendsListViewController.swift): update property names and fix incorrect assignment of email and username values
+//refactor(FriendsRequestViewController.swift): update property names and fix incorrect assignment of values for TimeBox model
+//refactor(FriendsViewModel.swift): update property names and fix incorrect assignment of values for User model
+//refactor(PostUploadView.swift): remove unnecessary padding
+//refactor(TagFriendListViewController.swift): update property names and fix incorrect assignment of email and username values
+//refactor(SearchUserTableViewCell.swift): update property name from username to userName for better consistency
+//refactor(TagFriendListTableCell.swift): update property name from username to userName for better consistency
+//
+//fix(TagFriendListTableViewCell.swift): fix typo in userNameLabel text assignment, change user.username to user.userName
+//fix(TimeBox.swift): make id, uid, and userName optional in TimeBox struct to handle optional values
+//feat(TimeBox.swift): add support for userLocationTitle to be a non-optional value in TimeBox struct
+//feat(TimeBox.swift): change createTimeBoxDate and openTimeBoxDate types from Timestamp to Date in TimeBox struct
+//feat(TimeBox.swift): make isOpened property optional in TimeBox struct
+//feat(TimeBox.swift): add TimeBoxAnnotationData struct to hold TimeBox and friendsInfo data
+//feat(TimeBox.swift): add Emoji struct to hold emoji data
+//feat(TimeCapsuleCreationViewModel.swift): change parameter type in saveTimeCapsule method from TimeCapsule to TimeBox
+//feat(TimeCapsuleCreationViewModel.swift): update data dictionary in saveTimeCapsule method to match TimeBox properties
+//feat(TimeCapsuleCreationViewModel.swift): change createTimeCapsuleDate and openTimeCapsuleDate properties in data dictionary to match TimeBox properties
+//feat(TimeCapsuleCreationViewModel.swift): change tagFriends property in data dictionary to match TimeBox property
+//feat(TimeCapsuleCreationViewModel.swift): change isOpened property in data dictionary to match TimeBox property
+//feat(TimeCapsuleCreationViewModel.swift): add dDayCalculation struct to calculate D-day
+
 class FriendsListViewController: UIViewController {
     
     var tableView: UITableView!
@@ -41,8 +66,8 @@ class FriendsListViewController: UIViewController {
             guard let userData = document.data() else { return }
             self.currentUser = User(
                 uid: currentUserID,
-                email: userData["email"] as? String ?? "",
-                username: userData["username"] as? String ?? "",
+                userName: userData["email"] as? String ?? "",
+                email: userData["username"] as? String ?? "",
                 profileImageUrl: userData["profileImageUrl"] as? String
             )
             self.fetchFriends(forUserID: currentUserID)
@@ -52,7 +77,7 @@ class FriendsListViewController: UIViewController {
     private func fetchFriends(forUserID userID: String) {
         db.collection("friendships").whereField("userUids", arrayContains: userID).getDocuments { [weak self] snapshot, error in
             guard let self = self, let documents = snapshot?.documents, error == nil else {
-                print("Error fetching friends: \(error)")
+                print("Error fetching friends: \(String(describing: error))")
                 return
             }
             
@@ -83,7 +108,7 @@ class FriendsListViewController: UIViewController {
                         let email = friendData["email"] as? String,
                         let username = friendData["username"] as? String,
                        let imageUrl = friendData["profileImageUrl"] as? String {
-                         let friend = User(uid: uid, email: email, username: username, profileImageUrl: imageUrl)
+                        let friend = User(uid: uid, userName: email, email: username, profileImageUrl: imageUrl)
                          fetchedFriends.append(friend) // Append fetched friend to the temporary array
                     }
                 }

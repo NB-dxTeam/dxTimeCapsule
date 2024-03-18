@@ -20,10 +20,11 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
     
     private func setupTabs() {
         let homeViewController = UINavigationController(rootViewController: HomeViewController())
+        
         let searchModalTableViewController = UINavigationController(rootViewController: CapsuleMapViewController())
         
-        let postUploadViewHostingController = UIHostingController(rootView: PostUploadView())
-        let postUploadNavigationController = UINavigationController(rootViewController: postUploadViewHostingController)
+//        let postUploadViewHostingController = UIHostingController(rootView: PostUploadView())
+        let postUploadNavigationController = UINavigationController(rootViewController: LocationMapkitViewController())
 
         let notificationViewController = UINavigationController(rootViewController: FriendsRequestViewController())
         let profileViewController = UINavigationController(rootViewController: UserProfileViewController())
@@ -39,15 +40,17 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         self.tabBar.tintColor = UIColor(hex: "#C82D6B")
         self.tabBar.backgroundColor = .white
     }
-//    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-//        if viewController.tabBarItem.tag == 2 {
-//            let postUploadNavigationController = postUploadViewHostingController
-//            postUploadNavigationController.modalPresentationStyle = .fullScreen
-//            tabBarController.present(postUploadNavigationController, animated: true, completion: nil)
-//            return false
-//        }
-//        return true
-//    }
+    
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        if viewController.tabBarItem.tag == 2 {
+            let postUploadNavigationController = LocationMapkitViewController()
+            postUploadNavigationController.modalPresentationStyle = .fullScreen
+            tabBarController.present(postUploadNavigationController, animated: true, completion: nil)
+            return false
+        }
+        return true
+    }
+    
     func resizeImage(imageName: String, targetSize: CGSize) -> UIImage? {
         guard let image = UIImage(named: imageName) else { return nil }
         let renderer = UIGraphicsImageRenderer(size: targetSize)
@@ -56,9 +59,6 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         }
         return resizedImage
     }
-//    추가 우경
-//    deinit {
-//        NotificationCenter.default.removeObserver(self)
-//    }
+
 }
 

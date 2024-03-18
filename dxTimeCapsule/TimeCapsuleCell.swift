@@ -152,3 +152,9 @@ class TimeCapsuleCell: UITableViewCell {
         }
     }
 }
+import SwiftUI
+//struct PreVie10w: PreviewProvider {
+//    static var previews: some View {
+//        OpenedTCViewController().toPreview()
+//    }
+//}

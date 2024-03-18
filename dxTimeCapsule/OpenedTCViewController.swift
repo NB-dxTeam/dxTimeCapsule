@@ -85,6 +85,7 @@ class OpenedTCViewController: UITableViewController {
         cell.configure(with: tcInfo)
         return cell
     }
+<<<<<<< HEAD
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let openCapsuleVC = OpenCapsuleViewController()
@@ -138,3 +139,13 @@ class OpenedTCViewController: UITableViewController {
         }
     }
 }
+=======
+}
+
+//import SwiftUI
+//struct PreView5: PreviewProvider {
+//    static var previews: some View {
+//        OpenedTCViewController().toPreview()
+//    }
+//}
+>>>>>>> origin/dev-yeong3

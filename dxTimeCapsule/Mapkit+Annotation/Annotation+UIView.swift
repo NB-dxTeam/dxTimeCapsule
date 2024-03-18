@@ -11,13 +11,14 @@ import SnapKit
 class CustomCalloutView: UIView {
     
     // MARK: - UI Elements
-//    private let capsuleImageView: UIImageView = {
-//        let imageView = UIImageView()
-//        imageView.contentMode = .scaleAspectFit
-//        imageView.clipsToBounds = true
-//        // 여기에 더 많은 스타일 설정이 있을 수 있습니다.
-//        return imageView
-//    }()
+    private let profileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 30
+        // 여기에 더 많은 스타일 설정이 있을 수 있습니다.
+        return imageView
+    }()
     
     private let friendsLabel: UILabel = {
         let label = UILabel()
@@ -51,7 +52,7 @@ class CustomCalloutView: UIView {
     
     private func commonInit() {
         // Add subviews 하위 뷰 추가
-        [friendsLabel, dateLabel].forEach { addSubview($0) }
+        [profileImageView, friendsLabel, dateLabel].forEach { addSubview($0) }
         
         // Set up constraints 제약조건 설정
         setupCalloutViewSize()
@@ -60,6 +61,11 @@ class CustomCalloutView: UIView {
     }
     
     private func setupConstraints() {
+        profileImageView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(4)
+            make.leading.equalToSuperview().inset(8)
+            make.width.height.equalTo(30) // 프로필 이미지의 크기 설정
+        }
         friendsLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(4)
             make.leading.equalToSuperview().inset(8)
@@ -84,20 +90,27 @@ class CustomCalloutView: UIView {
         }
     }
     // MARK: - Configuration
-    func configure(with capsuleInfo: CapsuleInfo) {
-        // Assuming 'capsuleInfo.tcBoxImageURL' is a URL string to the image
-//        if let imageURLString = capsuleInfo.tcBoxImageURL, let imageURL = URL(string: imageURLString) {
-//            self.capsuleImageView.sd_setImage(with: imageURL, placeholderImage: UIImage(named: "placeholder"))
-//        } else {
-//            self.capsuleImageView.image = UIImage(named: "placeholder")
-//        }
-        friendsLabel.text = capsuleInfo.friendID ?? "😄"
+    func configure(with timeBox: TimeBox, friends: [Friend]?) {
+        // 프로필 이미지 설정
+        if let firstFriend = friends?.first, let profileImageUrl = URL(string: firstFriend.profileImageUrl ?? "") {
+            profileImageView.sd_setImage(with: profileImageUrl, placeholderImage: UIImage(named: "placeholder"))
+        } else {
+            profileImageView.image = UIImage(named: "placeholder")
+        }
         
-        // Date formatting
+        // 친구 이름을 라벨에 표시
+        if let friends = friends, !friends.isEmpty {
+            friendsLabel.text = friends.map { $0.username }.joined(separator: ", ")
+        } else {
+            friendsLabel.text = "친구 없음"
+        }
+        
+        // 날짜 포맷팅
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yy.MM.dd(E)"
-        dateFormatter.timeZone = TimeZone(identifier: "Asiz/Seoul") // 한국 시간대
+        dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul")
         dateFormatter.locale = Locale(identifier: "ko_KR")
-        dateLabel.text = "타임캡슐 생성일: \n \(dateFormatter.string(from: capsuleInfo.createTimeCapsuleDate))"
+        // TimeBox 구조체의 createTimeBoxDate 프로퍼티를 사용하여 생성일을 표시합니다.
+        dateLabel.text = "타임캡슐 생성일: \n \(dateFormatter.string(from: timeBox.createTimeBoxDate!.dateValue()))!"
     }
 }
