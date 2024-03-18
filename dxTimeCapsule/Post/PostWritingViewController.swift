@@ -16,12 +16,15 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
     
     
     // MARK: - UI Components
+    // Title Label
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "타임캡슐 생성 위치를 확인해주세요!"
-        label.font = UIFont.pretendardBold(ofSize: 22)
-        label.textColor = .black.withAlphaComponent(0.85)
+        label.font = UIFont.preferredFont(forTextStyle: .title1)
+        label.textColor = .label
         label.textAlignment = .center
+        label.numberOfLines = 0
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
@@ -34,14 +37,14 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
     }()
     
     private let descriptionTextView: UITextView = {
-        let textView = UITextView()
-        textView.font = .systemFont(ofSize: 16)
-        textView.layer.borderColor = UIColor.lightGray.cgColor
-        textView.layer.borderWidth = 1
-        textView.layer.cornerRadius = 8
-        textView.textColor = .lightGray
-        return textView
-    }()
+         let textView = UITextView()
+         textView.font = .systemFont(ofSize: 16)
+         textView.layer.borderColor = UIColor.lightGray.cgColor
+         textView.layer.borderWidth = 1
+         textView.layer.cornerRadius = 8
+         textView.textColor = .lightGray
+         return textView
+     }()
     
     private let openDateTitleLabel: UILabel = {
         let label = UILabel()
@@ -80,15 +83,16 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         let button = UIButton(type: .system)
         button.setTitle("타임박스 만들기", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = .pretendardSemiBold(ofSize: 16)
-        button.setInstagram()
+        button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
+        button.backgroundColor = UIColor.systemBlue
         button.layer.cornerRadius = 8
         button.layer.shadowOpacity = 0.3
         button.layer.shadowRadius = 5
         button.layer.shadowOffset = CGSize(width: 0, height: 5)
-        button.isEnabled = true // Enable the button or control this based on your logic
+        button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 20, bottom: 12, right: 20)
         return button
     }()
+    
     
     // MARK: - View Lifecycle
     override func viewDidLoad() {
@@ -108,12 +112,18 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
     
     // MARK: - UI Setup
     private func setupUI() {
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, descriptionTitleLabel, descriptionTextView, openDateTitleLabel, datePicker, tagFriendsButton, taggedFriendsLabel, createButton])
+        stackView.axis = .vertical
+        stackView.spacing = 20
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        view.addSubview(stackView)
         
-        let views = [descriptionTitleLabel, descriptionTextView, openDateTitleLabel, datePicker, tagFriendsButton, createButton, taggedFriendsLabel]
-        views.forEach(view.addSubview)
-        
-        setupConstraints()
-        setupButtonActions()
+        stackView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
+            make.bottom.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+        }
     }
     
     private func setupConstraints() {
@@ -224,7 +234,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         }))
         present(alert, animated: true, completion: nil)
     }
-
+    
     private func transitionToMainTabBar() {
         // Assuming `MainTabBarController` is your tab bar controller's class
         let mainTabBar = MainTabBarView()

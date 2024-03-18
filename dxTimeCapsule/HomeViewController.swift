@@ -10,7 +10,7 @@ import SwiftUI
 import SnapKit
 import FirebaseFirestore
 import FirebaseAuth
-import SwiftfulLoadingIndicators
+//import SwiftfulLoadingIndicators
 
 class HomeViewController: UIViewController {
     
@@ -428,9 +428,9 @@ class HomeViewController: UIViewController {
     
     func fetchTimeCapsuleData() {
         DispatchQueue.main.async {
-//            //            self.showLoadingIndicator()
-//        }
-//        DispatchQueue.global().async {
+//            self.showLoadingIndicator()
+        }
+        DispatchQueue.global().async {
             let db = Firestore.firestore()
             // 로그인한 사용자의 UID를 가져옵니다.
                 guard let userId = Auth.auth().currentUser?.uid else { return }
@@ -529,10 +529,12 @@ class HomeViewController: UIViewController {
                         }
                     }
                 }
+
         }
 //        DispatchQueue.main.async {
 ////            self.hideLoadingIndicator()
 //        }
+
     }
     
     // MARK: - Image Transition Animation
@@ -557,10 +559,11 @@ class HomeViewController: UIViewController {
         }
     }
     
-//    // MARK: - LoadingIndicator
+
+    // MARK: - LoadingIndicator
 //    private func showLoadingIndicator() {
 //        // SwiftUI 뷰를 UIKit에서 사용할 수 있도록 UIHostingController로 감싸줍니다.
-//        let hostingController = UIHostingController(rootView: loadingIndicator)
+////        let hostingController = UIHostingController(rootView: loadingIndicator)
 //        addChild(hostingController)
 //        view.addSubview(hostingController.view)
 //        hostingController.view.frame = view.bounds
@@ -568,7 +571,8 @@ class HomeViewController: UIViewController {
 //        hostingController.didMove(toParent: self)
 //        print("showLoadingIndicator가 실행되었습니다")
 //    }
-//    
+//
+    
 //    private func hideLoadingIndicator() {
 //        // 자식 뷰 컨트롤러들을 순회하면서 UIHostingController를 찾습니다.
 //        for child in children {

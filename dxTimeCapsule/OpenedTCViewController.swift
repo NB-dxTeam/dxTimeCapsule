@@ -129,3 +129,10 @@ extension OpenedTCViewController: UICollectionViewDataSource, UICollectionViewDe
         present(openCapsuleVC, animated: true, completion: nil)
     }
 }
+
+//import SwiftUI
+//struct PreView5: PreviewProvider {
+//    static var previews: some View {
+//        OpenedTCViewController().toPreview()
+//    }
+//}
