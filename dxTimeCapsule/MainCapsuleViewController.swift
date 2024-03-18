@@ -14,6 +14,8 @@ class MainCapsuleViewController: UIViewController {
     private var viewModel = MainCapsuleViewModel()
     var documentId: String?
     
+    private var stackView: UIStackView!
+    
     // 빨간색 배경 뷰 설정
     private lazy var dDayBackgroundView: UIView = {
         let view = UIView()
@@ -165,18 +167,19 @@ class MainCapsuleViewController: UIViewController {
         checkIfItsOpeningDay()
         fetchTimeCapsuleData()
         setupStackView()
+        setupDetailedLocationLabel()
     }
 
     private func setupStackView() {
         dDayBackgroundView.addSubview(dDayLabel)
         
         // dDayLabel의 레이아웃을 dDayBackgroundView 내부 중앙에 맞춤
-           dDayLabel.snp.makeConstraints { make in
-               make.center.equalToSuperview()
-               make.edges.equalToSuperview().inset(UIEdgeInsets(top: 2, left: 8, bottom: 2, right: 8)) // 여백 조정
-           }
-
-        let stackView = UIStackView(arrangedSubviews: [dDayBackgroundView, locationName])
+        dDayLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 2, left: 8, bottom: 2, right: 8)) // 여백 조정
+        }
+        
+        self.stackView = UIStackView(arrangedSubviews: [dDayBackgroundView, locationName])
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.distribution = .equalSpacing
@@ -189,6 +192,15 @@ class MainCapsuleViewController: UIViewController {
         }
     }
 
+    // 상세 주소 레이블 레이아웃 설정을 담당하는 별도의 메서드
+    private func setupDetailedLocationLabel() {
+        view.addSubview(detailedLocationLabel)
+        detailedLocationLabel.snp.makeConstraints { make in
+            make.top.equalTo(stackView.snp.bottom).offset(8)
+            make.centerX.equalToSuperview()
+        }
+    }
+    
 //    private func setupBackLightLayout() {
 //        view.addSubview(backLightImageView)
 //        backLightImageView.snp.makeConstraints { make in
@@ -230,18 +242,10 @@ class MainCapsuleViewController: UIViewController {
            // dDay 레이블과 locationName 레이블이 서로 가운데 정렬이 되도록 조정합니다.
            dDayLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
            locationName.setContentCompressionResistancePriority(.required, for: .horizontal)
-       
-        
-        // 상세 주소 레이블 레이아웃 설정
-        view.addSubview(detailedLocationLabel)
-        detailedLocationLabel.snp.makeConstraints { make in
-            make.top.equalTo(stackView.snp.bottom).offset(8) // locationName 아래에 위치
-            make.centerX.equalToSuperview()
-        }
         
         // 생성 날짜
         creationDateLabel.snp.makeConstraints { make in
-            make.top.equalTo(openCapsuleLabel.snp.bottom).offset(50) // 오픈캡슐 레이블 아래에 위치
+            make.top.equalTo(openCapsuleLabel.snp.bottom).offset(5) // 오픈캡슐 레이블 아래에 위치
             make.centerX.equalToSuperview()
         }
     }
