@@ -51,7 +51,7 @@ class FirestoreDataService {
                       let profileImageUrl = data["profileImageUrl"] as? String else {
                     return nil
                 }
-                return Friend(id: uid, name: username, profileImageUrl: profileImageUrl)
+                return Friend(uid: uid, username: username, profileImageUrl: profileImageUrl)
             }
             
             completion(friendsInfo)

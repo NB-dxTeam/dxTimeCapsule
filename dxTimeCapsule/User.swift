@@ -3,9 +3,9 @@ import FirebaseFirestore
 import FirebaseAuth
 
 struct User: Decodable {
-    var uid: String // uid
-    var userName: String // 닉네임
-    var email: String // 이메일
+    var uid: String? // uid
+    var userName: String? // 닉네임
+    var email: String? // 이메일
     var profileImageUrl: String? // 프로필 이미지 URL
     var friendsUid: [String]? // 친구 uid 목록
     var friendsUserName: [String]? // 친구 닉네임 목록

@@ -102,7 +102,7 @@ class SearchUserTableViewCell: UITableViewCell {
     
     // MARK: - Functions
     private func updateFriendshipStatusUI(user: User, currentUserID: String) {
-        friendsViewModel?.checkFriendshipStatus(forUser: user.uid) { status in
+        friendsViewModel?.checkFriendshipStatus(forUser: user.uid!) { status in
             DispatchQueue.main.async {
                 self.friendActionButton.isHidden = false
                 switch status {
@@ -156,11 +156,11 @@ class SearchUserTableViewCell: UITableViewCell {
               return
           }
           
-          friendsViewModel?.checkFriendshipStatus(forUser: user.uid) { status in
+        friendsViewModel?.checkFriendshipStatus(forUser: user.uid!) { status in
               DispatchQueue.main.async {
                   switch status {
                   case "요청 받음":
-                      self.friendsViewModel?.acceptFriendRequest(fromUser: user.uid, forUser: currentUserID) { success, error in
+                      self.friendsViewModel?.acceptFriendRequest(fromUser: user.uid!, forUser: currentUserID) { success, error in
                           if success {
                               self.updateUIAsAlreadyFriends()
                           } else {
@@ -168,7 +168,7 @@ class SearchUserTableViewCell: UITableViewCell {
                           }
                       }
                   case "친구 추가":
-                      self.friendsViewModel?.sendFriendRequest(toUser: user.uid, fromUser: currentUserID) { success, error in
+                      self.friendsViewModel?.sendFriendRequest(toUser: user.uid!, fromUser: currentUserID) { success, error in
                           if success {
                               self.updateFriendshipStatusUI(user: user, currentUserID: currentUserID)
                           } else {

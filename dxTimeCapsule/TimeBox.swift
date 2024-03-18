@@ -7,16 +7,14 @@ struct TimeBox {
     var userName : String? // 생성한 사용자의 닉네임
     var imageURL: [String]? // 타임박스 안의 사진들
     var userLocation: GeoPoint? // 사용자 위치
-    var userLocationTitle: String // 위치 타이틀
+    var userLocationTitle: String? // 위치 타이틀
     var description: String? // 타임박스 설명
     var tagFriendUid: [String]? // 친구 태그 uid 배열
-    var createTimeBoxDate: Date? // 생성일
-    var openTimeBoxDate: Date? // 개봉일
+    var createTimeBoxDate: Timestamp? // 생성일
+    var openTimeBoxDate: Timestamp? // 개봉일
     var isOpened: Bool? = false // 개봉여부
    
-    
 }
-
 
 struct TimeBoxAnnotationData {
     var timeBox: TimeBox

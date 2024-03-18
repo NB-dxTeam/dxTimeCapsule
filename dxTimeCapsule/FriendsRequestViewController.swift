@@ -115,8 +115,6 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
                         userLocationTitle: "", // You need to provide appropriate title for userLocation
                         description: description,
                         tagFriendUid: tagFriendName,
-                        createTimeBoxDate: createTimeCapsuleDate,
-                        openTimeBoxDate: openTimeCapsuleDate,
                         isOpened: isOpened
                     )
                     tempCapsules.append(timeBox)
@@ -232,7 +230,7 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
             return
         }
         
-        viewModel.acceptFriendRequest(fromUser: user.uid, forUser: currentUserID) { success, error in
+        viewModel.acceptFriendRequest(fromUser: user.uid!, forUser: currentUserID) { success, error in
             if success {
                 // Handle successful request
                 print("Friend request accepted successfully.")

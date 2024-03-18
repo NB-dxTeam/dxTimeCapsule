@@ -58,7 +58,14 @@ class CapsuleTableViewCell: UITableViewCell {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         if let openTimeBoxDate = timeBox.openTimeBoxDate {
+            /*
+             
+            // MARK: - 여기 수정해야됨. 기존 프로퍼티가 "Date -> TimeStamp 로 변경" 03/18 황주영
+             
             openDateLabel.text = "Open Date: \(dateFormatter.string(from: openTimeBoxDate))"
+             
+             */
+            
         } else {
             openDateLabel.text = "Open Date: N/A" // 개봉일이 없는 경우에 대한 처리
         }

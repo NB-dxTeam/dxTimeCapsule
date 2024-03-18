@@ -14,7 +14,7 @@ import FirebaseAuth
 
 class CustomModal: UIViewController {
     
-    var capsuleInfo = [CapsuleInfo]()
+    var timeBoxes = [TimeBox]()
     var onCapsuleSelected: ((Double, Double) -> Void)? //선택된 위치 정보를 받아 처리하는 클로저
     private var headerCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -28,7 +28,7 @@ class CustomModal: UIViewController {
     private var capsuleCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collection.backgroundColor = .red
+        collection.backgroundColor = .white
         //collection.layer.cornerRadius = 10
        // collection.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         collection.layer.masksToBounds = true
@@ -95,44 +95,57 @@ class CustomModal: UIViewController {
             layout.sectionHeadersPinToVisibleBounds = true
         }
     }
+                        // MARK: - 수정(03/18) 황주영
     // 데이터 정보 가져오기.
     private func fetchTimeCapsulesInfo() {
         let db = Firestore.firestore()
-        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // Example UID, replace with dynamic UID
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        //let userId = "FNZgZFdLTXXjOkbJY841BW1WhAB2" // 실제 애플리케이션에서는 동적인 UID 사용
+        
         db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
-            .whereField("isOpened", isEqualTo: false) // 아직 열리지 않은 타임캡슐만 선택
-            .order(by: "openDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
+            .order(by: "openTimeBoxDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
             .getDocuments { [weak self] (querySnapshot, err) in
-                if let documents = querySnapshot?.documents {
-                    print("documents 개수: \(documents.count)")
-                    self?.capsuleInfo = documents.compactMap { doc in
-                        let data = doc.data()
-                        let capsule = CapsuleInfo(
-                            TimeCapsuleId: doc.documentID,
-                            tcBoxImageURL: data["tcBoxImageURL"] as? String,
-                            latitude: data["latitude"] as? Double ?? 37.5115,
-                            longitude: data["longitude"] as? Double ?? 127.0986,
-                            userLocation: data["userLocation"] as? String,
-                            userComment: data["userComment"] as? String,
-                            createTimeCapsuleDate: (data["creationDate"] as? Timestamp)?.dateValue() ?? Date(),
-                            openTimeCapsuleDate: (data["openDate"] as? Timestamp)?.dateValue() ?? Date(),
-                            isOpened: data["isOpened"] as? Bool ?? false
-                        )
-                        print("매핑된 캡슐: \(capsule)")
-                        return capsule
-                    }
-                    print("Fetching time capsules for userID: \(userId)")
-                    print("Fetched \(self?.capsuleInfo.count ?? 0) timecapsules")
-                    
-                    DispatchQueue.main.async {
-                        print("collectionView reload.")
-                        self?.capsuleCollection.reloadData()
-                    }
-                } else if let err = err {
+                if let err = err {
                     print("Error getting documents: \(err)")
-                    DispatchQueue.main.async {
-                        self?.showLoadFailureAlert(withError: err)
+//                    DispatchQueue.main.async {
+//                        self?.showLoadFailureAlert(withError: err)
+//                    }
+                    return
+                }
+                
+                guard let documents = querySnapshot?.documents else {
+                    print("No documents found")
+                    return
+                }
+                
+                let timeBoxes = documents.compactMap { doc -> TimeBox? in
+                    let data = doc.data()
+                    guard let createTimeBoxDate = (data["createTimeBoxDate"] as? Timestamp)?.dateValue(),
+                          let openTimeBoxDate = (data["openTimeBoxDate"] as? Timestamp)?.dateValue(),
+                          let userLocation = data["userLocation"] as? GeoPoint? else {
+                        return nil
                     }
+                    return TimeBox(
+                        id: doc.documentID,
+                        uid: data["uid"] as? String ?? "",
+                        userName: data["userName"] as? String ?? "",
+                        imageURL: data["imageURL"] as? [String],
+                        userLocation: userLocation,
+                        userLocationTitle: data["userLocationTitle"] as? String ?? "",
+                        description: data["description"] as? String,
+                        tagFriendUid: data["tagFriendUid"] as? [String],
+                        createTimeBoxDate: Timestamp(date: (createTimeBoxDate)),
+                        openTimeBoxDate: Timestamp(date: (openTimeBoxDate)),
+                        isOpened: data["isOpened"] as? Bool ?? false
+                    )
+                }
+                
+                print("Fetched \(timeBoxes.count) timeboxes for userID: \(userId)")
+                
+                DispatchQueue.main.async {
+                    self?.timeBoxes = timeBoxes // 'self?.timeBoxes'는 TimeBox 객체들을 저장하는 프로퍼티
+                    print("collectionView reload.")
+                    self?.capsuleCollection.reloadData()
                 }
             }
     }
@@ -142,7 +155,7 @@ extension CustomModal: UICollectionViewDataSource, UICollectionViewDelegate {
     // MARK: - UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return capsuleInfo.count
+        return timeBoxes.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -150,16 +163,19 @@ extension CustomModal: UICollectionViewDataSource, UICollectionViewDelegate {
             fatalError("Unable to dequeue LockedCapsuleCell")
         }
         
-        let capsuleInfo = capsuleInfo[indexPath.row]
-        cell.configure(with: capsuleInfo)
+        let timeBoxes = timeBoxes[indexPath.row]
+        cell.configure(with: timeBoxes)
         return cell
     }
     
     
     // MARK: - UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedCapsule = capsuleInfo[indexPath.row]
-        onCapsuleSelected?(selectedCapsule.latitude, selectedCapsule.longitude)
+        let selectedCapsule = timeBoxes[indexPath.row]
+        // 'selectedCapsule.userLocation'이 'GeoPoint?' 타입이므로, 옵셔널 체이닝과 옵셔널 바인딩을 사용하여 안전하게 처리
+        if let latitude = selectedCapsule.userLocation?.latitude, let longitude = selectedCapsule.userLocation?.longitude {
+            onCapsuleSelected?(latitude, longitude)
+        }
     }
 }
 
