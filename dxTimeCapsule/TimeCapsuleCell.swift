@@ -9,11 +9,9 @@ import UIKit
 import SnapKit
 import FirebaseFirestoreInternal
 
-class TimeCapsuleCell: UICollectionViewCell {
+class TimeCapsuleCell: UITableViewCell {
     
     // MARK: - Properties
-    
-    // 셀 식별자
     static let identifier = "TimeCapsuleCell"
     
     // 캡슐 이미지를 표시하는 이미지 뷰
@@ -47,7 +45,6 @@ class TimeCapsuleCell: UICollectionViewCell {
         label.font = UIFont.boldSystemFont(ofSize: 60)
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.2
-       // label.backgroundColor = .red
         return label
     }()
     
@@ -59,20 +56,19 @@ class TimeCapsuleCell: UICollectionViewCell {
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.3
         label.textAlignment = .right
-      //  label.backgroundColor = .green
         return label
     }()
     
     // MARK: - Initialization
     
     // 초기화 메서드
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews() // 서브뷰들을 설정합니다.
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
         setupViews() // 서브뷰들을 설정합니다.
     }
     
@@ -118,7 +114,7 @@ class TimeCapsuleCell: UICollectionViewCell {
     
     // 서브뷰들을 추가하고 Auto Layout을 설정하는 메서드
     private func setupViews() {
-       // contentView.backgroundColor = .yellow
+        // contentView.backgroundColor = .yellow
         contentView.addSubview(registerImage)
         contentView.addSubview(dDay)
         contentView.addSubview(userLocation)
@@ -126,17 +122,15 @@ class TimeCapsuleCell: UICollectionViewCell {
         
         registerImage.snp.makeConstraints { make in
             make.height.equalTo(registerImage.snp.width).multipliedBy(9.0/16.0)
-            make.width.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(20)
             make.centerX.equalToSuperview()
         }
         
         dDay.snp.makeConstraints { make in
             let offset1 = UIScreen.main.bounds.height * (0.15/16.0)
             let offset2 = UIScreen.main.bounds.height * (0.35/16.0)
-            let offset3 = UIScreen.main.bounds.width * (0.05/2.0)
             make.top.equalTo(registerImage.snp.bottom).offset(offset1)
-            make.leading.equalToSuperview().inset(offset3)
-            make.width.equalTo(60)
+            make.leading.equalToSuperview().inset(30)
             make.width.equalTo(registerImage.snp.width).multipliedBy(0.17/1.0)
             make.height.equalTo(offset2)
         }
@@ -151,18 +145,10 @@ class TimeCapsuleCell: UICollectionViewCell {
         }
         
         creationDate.snp.makeConstraints { make in
-            let offset = UIScreen.main.bounds.width * (0.05/2.0)
-            let offset2 = UIScreen.main.bounds.height * (0.35/16.0)
-            make.trailing.equalToSuperview().inset(offset)
-            make.height.equalTo(offset2)
+            let offset = UIScreen.main.bounds.height * (0.35/16.0)
+            make.trailing.equalToSuperview().inset(30)
+            make.height.equalTo(offset)
             make.top.equalTo(userLocation.snp.bottom)
         }
     }
 }
-//
-//import SwiftUI
-//struct PreVie10w: PreviewProvider {
-//    static var previews: some View {
-//        UpcomingTCViewController().toPreview()
-//    }
-//}
