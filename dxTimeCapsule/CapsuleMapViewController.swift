@@ -492,11 +492,11 @@ import SwiftUI
 import FirebaseFirestoreInternal
 import FirebaseAuth
 
-struct Preview: PreviewProvider {
-    static var previews: some View {
-        CapsuleMapViewController().toPreview()
-    }
-}
+//struct Preview: PreviewProvider {
+//    static var previews: some View {
+//        CapsuleMapViewController().toPreview()
+//    }
+//}
 
 #if DEBUG
 extension UIViewController {

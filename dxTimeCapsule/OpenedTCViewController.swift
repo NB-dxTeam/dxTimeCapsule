@@ -70,7 +70,7 @@ class OpenedTCViewController: UIViewController {
     private func fetchTimeCapsulesInfo() {
         let db = Firestore.firestore()
         guard let userId = Auth.auth().currentUser?.uid else { return }
-//              let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" 
+        //              let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2"
         db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
             .whereField("isOpened", isEqualTo: true)
             .order(by: "openDate", descending: false)
@@ -129,3 +129,11 @@ extension OpenedTCViewController: UICollectionViewDataSource, UICollectionViewDe
         present(openCapsuleVC, animated: true, completion: nil)
     }
 }
+}
+
+//import SwiftUI
+//struct PreView5: PreviewProvider {
+//    static var previews: some View {
+//        OpenedTCViewController().toPreview()
+//    }
+//}

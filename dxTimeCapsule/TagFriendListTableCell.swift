@@ -73,7 +73,7 @@ class FriendListTableViewCell: UITableViewCell {
     // MARK: - Configuration
     private func configure() {
         guard let user = user else { return }
-        userNameLabel.text = user.username
+        userNameLabel.text = user.userName
         userProfileImageView.sd_setImage(with: URL(string: user.profileImageUrl ?? ""), placeholderImage: UIImage(named: "defaultProfileImage"))
         
         // viewModel을 사용하는 추가 구성 로직이 필요할 경우 여기에 추가합니다.

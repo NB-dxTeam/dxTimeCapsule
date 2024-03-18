@@ -63,7 +63,6 @@ struct PostUploadView: View {
                 }
                 .padding(.top, 50)
                 .padding(.bottom, 300)
-                .padding(.left, .right, 20)
                 .padding(.horizontal)
                 
             }
@@ -71,6 +70,7 @@ struct PostUploadView: View {
         }
     }
 }
+
 //    .navigationBarTitle("Create Post", displayMode: .large) // 네비게이션 타이틀 설정
 
 //{
@@ -83,7 +83,8 @@ struct PostUploadView: View {
 //               .cornerRadius(8) // 버튼을 둥글게 만듦
 //       }
 
-#Preview(body: {
-    PostUploadView()
-    //    MainTabBarView().toPreview()
-})
+//struct MainTabBarViewPreview221 : PreviewProvider {
+//    static var previews: some View {
+//        MainTabBarView().toPreview()
+//    }
+//}

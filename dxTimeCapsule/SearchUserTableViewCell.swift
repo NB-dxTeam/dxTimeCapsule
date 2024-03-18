@@ -86,7 +86,7 @@ class SearchUserTableViewCell: UITableViewCell {
     func configure(with user: User, viewModel: FriendsViewModel) {
         self.user = user
         self.friendsViewModel = viewModel
-        userNameLabel.text = user.username
+        userNameLabel.text = user.userName
         userProfileImageView.sd_setImage(with: URL(string: user.profileImageUrl ?? ""), placeholderImage: UIImage(named: "defaultProfileImage"))
         friendActionButton.isHidden = false // 버튼을 항상 보이게 설정
 
@@ -108,7 +108,7 @@ class SearchUserTableViewCell: UITableViewCell {
                 switch status {
                 case "요청 보냄":
                     self.friendActionButton.isHidden = true
-                    self.statusLabel.text = "Requested"
+                    self.statusLabel.text = "요청 보냄"
                     self.statusLabel.textColor = .systemGray
                     self.statusLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
                     self.statusLabel.isHidden = false
@@ -131,7 +131,7 @@ class SearchUserTableViewCell: UITableViewCell {
                     self.friendActionButton.setCustom1()
                     self.friendActionButton.setTitle("Friend Request", for: .normal)
                     self.friendActionButton.setTitleColor(.white, for: .normal)
-                    self.friendActionButton.titleLabel?.font = UIFont.pretendardRegular(ofSize: 14)
+                    self.friendActionButton.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 14)
                     self.statusLabel.isHidden = true
                 }
             }

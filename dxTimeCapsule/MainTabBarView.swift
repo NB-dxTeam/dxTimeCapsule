@@ -20,10 +20,12 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
     
     private func setupTabs() {
         let homeViewController = UINavigationController(rootViewController: HomeViewController())
+        
         let searchModalTableViewController = UINavigationController(rootViewController: CapsuleMapViewController())
         
 //        let postUploadViewHostingController = UIHostingController(rootView: PhotoUploadViewController())
         let postUploadNavigationController = UINavigationController(rootViewController: PhotoUploadViewController())
+
 
         let notificationViewController = UINavigationController(rootViewController: FriendsRequestViewController())
         let profileViewController = UINavigationController(rootViewController: UserProfileViewController())
@@ -39,9 +41,11 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         self.tabBar.tintColor = UIColor(hex: "#C82D6B")
         self.tabBar.backgroundColor = .white
     }
+
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         if viewController.tabBarItem.tag == 2 {
             let postUploadNavigationController = PhotoUploadViewController()
+
             postUploadNavigationController.modalPresentationStyle = .fullScreen
             tabBarController.present(postUploadNavigationController, animated: true, completion: nil)
             return false
@@ -57,9 +61,6 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         }
         return resizedImage
     }
-//    추가 우경
-//    deinit {
-//        NotificationCenter.default.removeObserver(self)
-//    }
+
 }
 
