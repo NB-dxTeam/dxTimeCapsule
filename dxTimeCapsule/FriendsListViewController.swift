@@ -77,7 +77,7 @@ class FriendsListViewController: UIViewController {
     private func fetchFriends(forUserID userID: String) {
         db.collection("friendships").whereField("userUids", arrayContains: userID).getDocuments { [weak self] snapshot, error in
             guard let self = self, let documents = snapshot?.documents, error == nil else {
-                print("Error fetching friends: \(error)")
+                print("Error fetching friends: \(String(describing: error))")
                 return
             }
             
