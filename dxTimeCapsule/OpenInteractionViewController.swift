@@ -26,7 +26,7 @@ class OpenInteractionViewController: UIViewController {
     // 사용자 안내 텍스트
     private let instructionLabel: UILabel = {
         let label = UILabel()
-        label.text = "화면이 차오를 때까지 스마트폰을 흔들어주세요!"
+        label.text = "스마트폰을 흔들어 게이지를 채워주세요!"
         label.textAlignment = .center
         label.numberOfLines = 0 // 여러 줄로 표시할 수 있도록 합니다.
         label.font = UIFont.systemFont(ofSize: 16) //
@@ -81,20 +81,20 @@ class OpenInteractionViewController: UIViewController {
         view.addSubview(openImageView)
         openImageView.snp.makeConstraints { make in
             make.center.equalToSuperview() // 화면 중앙
-            make.width.height.equalTo(200) // 너비와 높이 200
+            make.width.height.equalTo(300) // 너비와 높이 200
         }
         
         // 게이지 뷰
         view.addSubview(interactionGaugeView)
         interactionGaugeView.snp.makeConstraints { make in
             make.center.equalTo(openImageView.snp.center) // 이미지 뷰의 중앙
-            make.width.height.equalTo(220) // 이미지 뷰보다 약간 큰 크기
+            make.width.height.equalTo(350) // 이미지 뷰보다 약간 큰 크기
         }
         
         // 안내 텍스트 레이블
         view.addSubview(instructionLabel)
         instructionLabel.snp.makeConstraints { make in
-            make.top.equalTo(openImageView.snp.bottom).offset(20) // 이미지 뷰 아래
+            make.top.equalTo(interactionGaugeView.snp.bottom).offset(20) // 이미지 뷰 아래
             make.left.right.equalToSuperview().inset(20) // 좌우 여백을 20
         }
     }
@@ -108,7 +108,7 @@ class OpenInteractionViewController: UIViewController {
         
         skipButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-220)
+            make.top.equalTo(instructionLabel.snp.bottom).offset(20)
         }
     }
 
@@ -132,8 +132,8 @@ class OpenInteractionViewController: UIViewController {
         // 배경 게이지를 설정
         let backgroundLayer = CAShapeLayer()
         backgroundLayer.path = circlePath.cgPath
-        backgroundLayer.strokeColor = UIColor.lightGray.cgColor // 색상
-        backgroundLayer.lineWidth = 5 // 선의 굵기
+        backgroundLayer.strokeColor = UIColor.systemGray4.cgColor // 색상
+        backgroundLayer.lineWidth = 7 // 선의 굵기
         backgroundLayer.fillColor = UIColor.clear.cgColor // 내부를 채우지 않습니다.
         backgroundLayer.strokeEnd = 1 // 전체를 그립니다.
         interactionGaugeView.layer.addSublayer(backgroundLayer) // 레이어를 추가합니다.
@@ -141,8 +141,8 @@ class OpenInteractionViewController: UIViewController {
         // 진행 게이지를 설정합니다.
         progressLayer = CAShapeLayer()
         progressLayer.path = circlePath.cgPath
-        progressLayer.strokeColor = UIColor.blue.cgColor // 색상
-        progressLayer.lineWidth = 7 // 선의 굵기
+        progressLayer.strokeColor = UIColor.orange.cgColor // 색상
+        progressLayer.lineWidth = 8 // 선의 굵기
         progressLayer.fillColor = UIColor.clear.cgColor // 내부를 채우지 않습니다.
         progressLayer.strokeEnd = 0 // 초기값
         interactionGaugeView.layer.addSublayer(progressLayer) // 레이어를 추가합니다.
