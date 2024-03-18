@@ -14,18 +14,24 @@ class MainCapsuleViewController: UIViewController {
     private var viewModel = MainCapsuleViewModel()
     var documentId: String?
     
+    // 빨간색 배경 뷰 설정
+    private lazy var dDayBackgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .red // 배경색은 빨간색
+        view.layer.cornerRadius = 13 // 모서리 둥글기 반지름 설정
+        view.clipsToBounds = true // 모서리 둥글기 적용을 위해 필요
+        view.layer.borderWidth = 1 // 테두리 두께
+        view.layer.borderColor = UIColor.red.cgColor // 테두리 색상은 빨간색
+        return view
+    }()
+
     // D-day 레이블 설정
     private lazy var dDayLabel: UILabel = {
         let label = UILabel()
         label.text = "D-100" // 예시 텍스트
         label.textColor = .white // 텍스트 색상은 흰색
-        label.backgroundColor = .red // 배경색은 빨간색
-        label.font = .systemFont(ofSize: 14, weight: .bold) // 볼드체 폰트 사용
+        label.font = .systemFont(ofSize: 18, weight: .bold) // 폰트 크기 및 스타일 설정
         label.textAlignment = .center // 텍스트 가운데 정렬
-        label.layer.cornerRadius = 10 // 모서리 둥글기 반지름 설정
-        label.clipsToBounds = true // 모서리 둥글기 적용을 위해 필요
-        label.layer.borderWidth = 1 // 테두리 두께
-        label.layer.borderColor = UIColor.red.cgColor // 테두리 색상은 빨간색
         return label
     }()
     
@@ -158,8 +164,31 @@ class MainCapsuleViewController: UIViewController {
         // D-day 확인 후 레이블 표시 로직
         checkIfItsOpeningDay()
         fetchTimeCapsuleData()
+        setupStackView()
     }
-    
+
+    private func setupStackView() {
+        dDayBackgroundView.addSubview(dDayLabel)
+        
+        // dDayLabel의 레이아웃을 dDayBackgroundView 내부 중앙에 맞춤
+           dDayLabel.snp.makeConstraints { make in
+               make.center.equalToSuperview()
+               make.edges.equalToSuperview().inset(UIEdgeInsets(top: 2, left: 8, bottom: 2, right: 8)) // 여백 조정
+           }
+
+        let stackView = UIStackView(arrangedSubviews: [dDayBackgroundView, locationName])
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 8
+
+        view.addSubview(stackView)
+        stackView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(60)
+        }
+    }
+
 //    private func setupBackLightLayout() {
 //        view.addSubview(backLightImageView)
 //        backLightImageView.snp.makeConstraints { make in
@@ -171,8 +200,6 @@ class MainCapsuleViewController: UIViewController {
 //    }
     
     private func setupLayout() {
-        view.addSubview(dDayLabel)
-        view.addSubview(locationName)
         view.addSubview(capsuleImageView)
         view.addSubview(openCapsuleLabel)
         view.addSubview(creationDateLabel)
@@ -191,14 +218,6 @@ class MainCapsuleViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.top.equalTo(capsuleImageView.snp.bottom).offset(5) // 이미지 아래에 위치
         }
-
-        // dDay 레이블 레이아웃 설정
-           dDayLabel.snp.makeConstraints { make in
-               make.leading.greaterThanOrEqualToSuperview().offset(8) // 화면 왼쪽 가장자리로부터 최소 8포인트 간격을 줍니다.
-               make.trailing.lessThanOrEqualTo(locationName.snp.leading).offset(-8) // locationName과의 간격
-               // dDayLabel의 중심이 locationName과 동일한 세로 축을 공유하도록 설정
-               make.centerY.equalTo(locationName.snp.centerY)
-           }
            
            // locationName 레이블 레이아웃 설정
            locationName.snp.makeConstraints { make in
@@ -216,7 +235,7 @@ class MainCapsuleViewController: UIViewController {
         // 상세 주소 레이블 레이아웃 설정
         view.addSubview(detailedLocationLabel)
         detailedLocationLabel.snp.makeConstraints { make in
-            make.top.equalTo(locationName.snp.bottom).offset(8) // locationName 아래에 위치
+            make.top.equalTo(stackView.snp.bottom).offset(8) // locationName 아래에 위치
             make.centerX.equalToSuperview()
         }
         
@@ -242,6 +261,7 @@ class MainCapsuleViewController: UIViewController {
            dDayLabel.isHidden = true
            openCapsuleLabel.isHidden = true
            detailedLocationLabel.isHidden = true
+           dDayBackgroundView.isHidden = true
         
         addShakeAnimation()
         // 흔들림 애니메이션 총 지속 시간보다 약간 짧은 딜레이 후에 페이드아웃 및 확대 애니메이션 시작
