@@ -10,71 +10,40 @@ import SnapKit
 import FirebaseFirestore
 import FirebaseAuth
 
-//#Preview{
-//    MainTabBarView()
-//}
-
-class UpcomingTCViewController: UIViewController {
+class UpcomingTCViewController: UITableViewController {
     
     // MARK: - Properties
     
     var capsuleInfo = [TCInfo]()
     var onCapsuleSelected: ((Double, Double) -> Void)?
-    private var capsuleCollection: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collection.backgroundColor = .white
-        collection.layer.cornerRadius = 30
-        collection.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        collection.layer.masksToBounds = true
-        return collection
-    }()
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        configCollection()
         fetchTimeCapsulesInfo()
     }
     
     // MARK: - UI Setup
     
     private func setupUI() {
-        view.addSubview(capsuleCollection)
-        capsuleCollection.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
+        tableView.register(TimeCapsuleCell.self, forCellReuseIdentifier: TimeCapsuleCell.identifier)
+        tableView.separatorStyle = .none
     }
     
-    private func configCollection() {
-        capsuleCollection.delegate = self
-        capsuleCollection.dataSource = self
-        capsuleCollection.register(TimeCapsuleCell.self, forCellWithReuseIdentifier: TimeCapsuleCell.identifier)
-        capsuleCollection.isPagingEnabled = true
-        capsuleCollection.showsVerticalScrollIndicator = true
-        capsuleCollection.decelerationRate = .normal
-        capsuleCollection.alpha = 1
-        
-        if let layout = capsuleCollection.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.scrollDirection = .vertical
-            let screenWidth = UIScreen.main.bounds.width
-            let itemWidth = screenWidth * 0.9
-            let itemHeight: CGFloat = 250
-            layout.itemSize = CGSize(width: itemWidth, height: itemHeight)
-            let sectionInsetHorizontal = screenWidth * 0.05
-            layout.sectionInset = UIEdgeInsets(top: 24, left: sectionInsetHorizontal, bottom: 24, right: sectionInsetHorizontal)
-            let minimumLineSpacing = screenWidth * 0.1
-            layout.minimumLineSpacing = minimumLineSpacing
-        }
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let screenWidth = UIScreen.main.bounds.width
+        let itemHeight = screenWidth * (11 / 16)
+        return itemHeight
     }
     
     // MARK: - Data Fetching
     
     private func fetchTimeCapsulesInfo() {
         let db = Firestore.firestore()
-        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // Example UID, replace with dynamic UID
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        
         db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
             .whereField("isOpened", isEqualTo: false)
             .order(by: "openDate", descending: false)
@@ -84,6 +53,7 @@ class UpcomingTCViewController: UIViewController {
                     self?.capsuleInfo = documents.compactMap { doc in
                         let data = doc.data()
                         let capsule = TCInfo(
+                            id: doc.documentID,
                             tcBoxImageURL: data["tcBoxImageURL"] as? String,
                             userLocation: data["userLocation"] as? String,
                             createTimeCapsuleDate: (data["creationDate"] as? Timestamp)?.dateValue() ?? Date(),
@@ -96,26 +66,24 @@ class UpcomingTCViewController: UIViewController {
                     print("Fetched \(self?.capsuleInfo.count ?? 0) timecapsules")
                     
                     DispatchQueue.main.async {
-                        print("collectionView reload.")
-                        self?.capsuleCollection.reloadData()
+                        print("tableView reload.")
+                        self?.tableView.reloadData()
                     }
                 } else if let err = err {
                     print("Error getting documents: \(err)")
                 }
             }
     }
-}
-
-// MARK: - UICollectionViewDataSource, UICollectionViewDelegate
-
-extension UpcomingTCViewController: UICollectionViewDataSource, UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    
+    // MARK: - UITableViewDataSource, UITableViewDelegate
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return capsuleInfo.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TimeCapsuleCell.identifier, for: indexPath) as? TimeCapsuleCell else {
-            fatalError("Unable to dequeue OpendedCapsuleCell")
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TimeCapsuleCell.identifier, for: indexPath) as? TimeCapsuleCell else {
+            fatalError("Unable to dequeue TimeCapsuleCell")
         }
         
         let tcInfo = capsuleInfo[indexPath.row]

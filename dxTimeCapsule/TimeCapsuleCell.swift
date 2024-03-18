@@ -9,17 +9,15 @@ import UIKit
 import SnapKit
 import FirebaseFirestoreInternal
 
-class TimeCapsuleCell: UICollectionViewCell {
+class TimeCapsuleCell: UITableViewCell {
     
     // MARK: - Properties
-    
-    // 셀 식별자
     static let identifier = "TimeCapsuleCell"
     
     // 캡슐 이미지를 표시하는 이미지 뷰
     lazy var registerImage: UIImageView = {
         let image = UIImageView()
-        image.contentMode = .scaleToFill
+        image.contentMode = .scaleAspectFill
         image.clipsToBounds = true
         image.layer.cornerRadius = 10
         image.layer.masksToBounds = true
@@ -30,10 +28,12 @@ class TimeCapsuleCell: UICollectionViewCell {
     lazy var dDay: UILabel = {
         let label = UILabel()
         label.backgroundColor = .systemBlue
-        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.font = UIFont.boldSystemFont(ofSize: 44)
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.3
         label.textColor = .white
         label.textAlignment = .center
-        label.layer.cornerRadius = 14
+        label.layer.cornerRadius = 12
         label.layer.masksToBounds = true
         return label
     }()
@@ -42,8 +42,9 @@ class TimeCapsuleCell: UICollectionViewCell {
     lazy var userLocation: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = UIFont.boldSystemFont(ofSize: 23)
-        label.numberOfLines = 2
+        label.font = UIFont.boldSystemFont(ofSize: 60)
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.2
         return label
     }()
     
@@ -51,20 +52,23 @@ class TimeCapsuleCell: UICollectionViewCell {
     lazy var creationDate: UILabel = {
         let label = UILabel()
         label.textColor = .gray
-        label.font = UIFont.systemFont(ofSize: 16)
+        label.font = UIFont.systemFont(ofSize: 44)
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.3
+        label.textAlignment = .right
         return label
     }()
     
     // MARK: - Initialization
     
     // 초기화 메서드
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews() // 서브뷰들을 설정합니다.
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
         setupViews() // 서브뷰들을 설정합니다.
     }
     
@@ -89,10 +93,15 @@ class TimeCapsuleCell: UICollectionViewCell {
         let components = calendar.dateComponents([.day], from: today, to: capsuleInfo.openTimeCapsuleDate)
         
         if let daysUntilOpening = components.day {
-            let dDayPrefix = daysUntilOpening < 0 ? "D+" : "D-" // D-Day 표시
-            self.dDay.text = "\(dDayPrefix)\(abs(daysUntilOpening))"
+            if daysUntilOpening == 0 {
+                
+                // (수정) 오늘이 개봉일일 때 "D-day" 반환
+                self.dDay.text = "D-day"
+            } else {
+                let dDayPrefix = daysUntilOpening < 0 ? "D+" : "D-" // D-Day 표시
+                self.dDay.text = "\(dDayPrefix)\(abs(daysUntilOpening))"
+            }
         }
-        
         // 사용자 위치 설정
         self.userLocation.text = capsuleInfo.userLocation ?? "Unknown location"
         
@@ -105,43 +114,41 @@ class TimeCapsuleCell: UICollectionViewCell {
     
     // 서브뷰들을 추가하고 Auto Layout을 설정하는 메서드
     private func setupViews() {
-        contentView.backgroundColor = UIColor.yellow
+        // contentView.backgroundColor = .yellow
         contentView.addSubview(registerImage)
         contentView.addSubview(dDay)
         contentView.addSubview(userLocation)
         contentView.addSubview(creationDate)
         
         registerImage.snp.makeConstraints { make in
+            make.height.equalTo(registerImage.snp.width).multipliedBy(9.0/16.0)
+            make.leading.trailing.equalToSuperview().inset(20)
             make.centerX.equalToSuperview()
-            make.top.leading.equalToSuperview().offset(10)
-            make.width.equalToSuperview().multipliedBy(1.8/2.0)
-            make.height.equalToSuperview().multipliedBy(1.4/2.0)
         }
         
         dDay.snp.makeConstraints { make in
-            make.top.equalTo(registerImage.snp.bottom).offset(10)
-            make.leading.equalTo(registerImage.snp.leading)
-            make.width.equalTo(60)
-            make.height.equalTo(25)
+            let offset1 = UIScreen.main.bounds.height * (0.15/16.0)
+            let offset2 = UIScreen.main.bounds.height * (0.35/16.0)
+            make.top.equalTo(registerImage.snp.bottom).offset(offset1)
+            make.leading.equalToSuperview().inset(30)
+            make.width.equalTo(registerImage.snp.width).multipliedBy(0.17/1.0)
+            make.height.equalTo(offset2)
         }
         
         userLocation.snp.makeConstraints { make in
-            make.top.equalTo(registerImage.snp.bottom).offset(5)
-            make.leading.equalTo(dDay.snp.trailing).offset(10)
-            make.height.equalTo(70)
-            make.width.equalTo(190)
+            let offset1 = UIScreen.main.bounds.height * (0.3/16.0)
+            let offset2 = UIScreen.main.bounds.width * (0.05/2.0)
+            make.top.equalTo(registerImage.snp.bottom).offset(offset1)
+            make.leading.equalTo(dDay.snp.trailing).offset(offset2)
+            make.height.equalToSuperview().multipliedBy(1.3/16.0)
+            make.trailing.equalToSuperview().inset(offset2)
         }
         
         creationDate.snp.makeConstraints { make in
-            make.trailing.equalTo(registerImage.snp.trailing)
-            make.bottom.lessThanOrEqualToSuperview().inset(15)
+            let offset = UIScreen.main.bounds.height * (0.35/16.0)
+            make.trailing.equalToSuperview().inset(30)
+            make.height.equalTo(offset)
+            make.top.equalTo(userLocation.snp.bottom)
         }
     }
 }
-
-import SwiftUI
-//struct PreVie10w: PreviewProvider {
-//    static var previews: some View {
-//        OpenedTCViewController().toPreview()
-//    }
-//}

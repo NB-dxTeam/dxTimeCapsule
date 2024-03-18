@@ -6,10 +6,11 @@
 //
 
 import UIKit
+import SwiftUI
 import SnapKit
 import FirebaseFirestore
 import FirebaseAuth
-//import SwiftfulLoadingIndicators
+import SwiftfulLoadingIndicators
 
 class HomeViewController: UIViewController {
     
@@ -58,7 +59,9 @@ class HomeViewController: UIViewController {
         label.font = UIFont.boldSystemFont(ofSize: 30)
         label.numberOfLines = 0
         label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.3
         label.textColor = .black
+     //  label.backgroundColor = .cyan
         return label
     }()
     
@@ -69,6 +72,7 @@ class HomeViewController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 17)
         label.textColor = .black
         label.verticalAlignment = .top // 수직 정렬 설정
+     //   label.backgroundColor = .gray
         return label
     }()
     
@@ -79,6 +83,7 @@ class HomeViewController: UIViewController {
         label.font = UIFont.boldSystemFont(ofSize: 15)
         label.textColor = .red
         label.textAlignment = .right
+     //   label.backgroundColor = .yellow
         label.verticalAlignment = .top
         return label
     }()
@@ -113,24 +118,46 @@ class HomeViewController: UIViewController {
     
     // MARK: - No Main TC
     
-    // noMainTC 라벨
-    let noMainTCLabel: VerticallyAlignedLabel = {
-        let attributedString = NSMutableAttributedString(string: "더이상 열어볼 캡슐이 없어요😭\n", attributes: [
-            .font: UIFont.boldSystemFont(ofSize: 20)
-        ])
-        attributedString.append(NSAttributedString(string: "+를 눌러 계속해서 시간여행을 떠나보세요!", attributes: [
-            .font: UIFont.systemFont(ofSize: 15)
-        ]))
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 5 // 두줄 사이 간격 조절
-        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length)) // 간격 적용
-        
-        let label = VerticallyAlignedLabel()
-        label.numberOfLines = 2
+    let firstLineLabel: UILabel = {
+        let label = UILabel()
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.15
+        label.text = "더이상 열어볼 캡슐이 없어요😭"
+        label.font = UIFont.boldSystemFont(ofSize: 100)
         label.textColor = .black
-        label.attributedText = attributedString
-        label.verticalAlignment = .top
         return label
+    }()
+
+    let secondLineLabel: UILabel = {
+        let label = UILabel()
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.22
+        label.text = "+를 눌러 계속해서 시간여행을 떠나보세요!"
+        label.font = UIFont.systemFont(ofSize: 50)
+        label.textColor = .black
+        return label
+    }()
+    
+    let thirdLineLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 1
+        label.text = " "
+        label.font = UIFont.systemFont(ofSize: 40)
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.1
+        label.textColor = .black
+        return label
+    }()
+    
+    // noMainLabel 스택뷰
+    lazy var noMainLabelStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.distribution = .equalCentering
+        stackView.axis = .vertical
+        stackView.addArrangedSubview(self.firstLineLabel)
+        stackView.addArrangedSubview(self.secondLineLabel)
+        stackView.addArrangedSubview(self.thirdLineLabel)
+        return stackView
     }()
     
     // noMainTC 버튼
@@ -147,10 +174,9 @@ class HomeViewController: UIViewController {
     lazy var noMainTCStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.spacing = 10
-        stackView.addArrangedSubview(self.noMainTCLabel)
+        stackView.addArrangedSubview(self.noMainLabelStackView)
         stackView.addArrangedSubview(self.addTCButton)
+        stackView.spacing = 10
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(addNewTC))
         stackView.addGestureRecognizer(tapGesture)
         stackView.isUserInteractionEnabled = true
@@ -287,13 +313,11 @@ class HomeViewController: UIViewController {
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: containerView)
         
-        // Add a space before adding the addFriendsButton
         let space = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        space.width = 20 // Adjust the width of the space as needed
-        
+        space.width = 20
         navigationItem.rightBarButtonItems = [space, UIBarButtonItem(customView: addFriendsButton)]
     }
-
+    
     // MARK: - UI Configuration
     
     private func configureUI(){
@@ -325,23 +349,41 @@ class HomeViewController: UIViewController {
         
         view.addSubview(noMainTCStackView)
         noMainTCStackView.snp.makeConstraints { make in
-            let offset = UIScreen.main.bounds.height * (0.15/6.0)
-            make.top.equalTo(mainContainerView.snp.bottom).offset(offset)
+            make.top.equalTo(mainContainerView.snp.bottom)
             make.leading.trailing.equalToSuperview().inset(30)
-            make.height.equalToSuperview().multipliedBy(0.8/6.0)
+            make.height.equalToSuperview().multipliedBy(1.2/6.0)
         }
-        noMainTCStackView.addArrangedSubview(noMainTCLabel)
-        noMainTCLabel.snp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
+        noMainTCStackView.addSubview(noMainLabelStackView)
+        noMainLabelStackView.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(10)
+            make.trailing.equalTo(addTCButton.snp.leading)
+            make.leading.equalToSuperview()
         }
         
-        noMainTCStackView.addArrangedSubview(addTCButton)
-        addTCButton.snp.makeConstraints { make in
-            make.width.equalTo(addTCButton.snp.height)
-            make.height.equalTo(noMainTCStackView.snp.height).multipliedBy(1.6/3.0)
-            make.top.equalTo(noMainTCStackView.snp.top).inset(10)
-            make.trailing.equalTo(noMainTCStackView.snp.trailing)
+        firstLineLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
         }
+
+        secondLineLabel.snp.makeConstraints { make in
+            make.top.equalTo(firstLineLabel.snp.bottom)
+            make.leading.equalToSuperview()
+        }
+        thirdLineLabel.snp.makeConstraints { make in
+            make.top.equalTo(secondLineLabel.snp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(noMainTCStackView.snp.bottom)
+        }
+        noMainLabelStackView.addSubview(firstLineLabel)
+        noMainLabelStackView.addSubview(secondLineLabel)
+        noMainLabelStackView.addSubview(thirdLineLabel)
+        
+        addTCButton.snp.makeConstraints { make in
+            make.width.height.equalTo(noMainTCStackView.snp.height).multipliedBy(1.6/3.0)
+            make.top.equalToSuperview().inset(15)
+            make.trailing.equalTo(mainContainerView.snp.trailing).offset(10)
+        }
+        noMainTCStackView.addSubview(addTCButton)
         
         // 버튼 스택뷰에 버튼 추가
         openedButtonContainerView.addSubview(openedTCButton)
@@ -368,14 +410,14 @@ class HomeViewController: UIViewController {
     
     func fetchTimeCapsuleData() {
         DispatchQueue.main.async {
-//            self.showLoadingIndicator()
-        }
-        DispatchQueue.global().async {
+//            //            self.showLoadingIndicator()
+//        }
+//        DispatchQueue.global().async {
             let db = Firestore.firestore()
             // 로그인한 사용자의 UID를 가져옵니다.
-            //    guard let userId = Auth.auth().currentUser?.uid else { return }
+                guard let userId = Auth.auth().currentUser?.uid else { return }
             
-            let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // 테스트를 위한 임시 UID
+//            let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // 테스트를 위한 임시 UID
             
             // 사용자의 UID로 필터링하고, openDate 필드로 오름차순 정렬한 후, 최상위 1개 문서만 가져옵니다.
             db.collection("timeCapsules")
@@ -469,10 +511,10 @@ class HomeViewController: UIViewController {
                         }
                     }
                 }
-    }
-            DispatchQueue.main.async {
-//                self.hideLoadingIndicator()
-            }
+        }
+//        DispatchQueue.main.async {
+////            self.hideLoadingIndicator()
+//        }
     }
     
     // MARK: - Image Transition Animation
@@ -497,10 +539,10 @@ class HomeViewController: UIViewController {
         }
     }
     
-    // MARK: - LoadingIndicator
+//    // MARK: - LoadingIndicator
 //    private func showLoadingIndicator() {
 //        // SwiftUI 뷰를 UIKit에서 사용할 수 있도록 UIHostingController로 감싸줍니다.
-////        let hostingController = UIHostingController(rootView: loadingIndicator)
+//        let hostingController = UIHostingController(rootView: loadingIndicator)
 //        addChild(hostingController)
 //        view.addSubview(hostingController.view)
 //        hostingController.view.frame = view.bounds
@@ -508,7 +550,7 @@ class HomeViewController: UIViewController {
 //        hostingController.didMove(toParent: self)
 //        print("showLoadingIndicator가 실행되었습니다")
 //    }
-    
+//
 //    private func hideLoadingIndicator() {
 //        // 자식 뷰 컨트롤러들을 순회하면서 UIHostingController를 찾습니다.
 //        for child in children {
@@ -521,48 +563,8 @@ class HomeViewController: UIViewController {
 //            }
 //        }
 //    }
-    // MARK: - VerticalAlignment
-    enum VerticalAlignment {
-        case top
-        case middle
-        case bottom
-    }
 
-    class VerticallyAlignedLabel: UILabel {
-        var verticalAlignment: VerticalAlignment = .middle {
-            didSet {
-                setNeedsDisplay()
-            }
-        }
 
-        override func drawText(in rect: CGRect) {
-            guard let textString = text else {
-                super.drawText(in: rect)
-                return
-            }
-
-            let attributedText = NSAttributedString(string: textString, attributes: [
-                NSAttributedString.Key.font: font as Any,
-                NSAttributedString.Key.foregroundColor: textColor as Any
-            ])
-
-            var newRect = rect
-            let textSize = attributedText.boundingRect(with: rect.size, options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil).size
-
-            switch verticalAlignment {
-            case .top:
-                newRect.size.height = textSize.height
-            case .middle:
-                newRect.origin.y += (newRect.size.height - textSize.height) / 2
-                newRect.size.height = textSize.height
-            case .bottom:
-                newRect.origin.y += newRect.size.height - textSize.height
-                newRect.size.height = textSize.height
-            }
-
-            super.drawText(in: newRect)
-        }
-    }
 
     // MARK: - Actions
     
