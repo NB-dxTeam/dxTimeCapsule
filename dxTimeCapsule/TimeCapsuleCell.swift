@@ -140,8 +140,8 @@ class TimeCapsuleCell: UICollectionViewCell {
 }
 
 import SwiftUI
-struct PreVie10w: PreviewProvider {
-    static var previews: some View {
-        OpenedTCViewController().toPreview()
-    }
-}
+//struct PreVie10w: PreviewProvider {
+//    static var previews: some View {
+//        OpenedTCViewController().toPreview()
+//    }
+//}

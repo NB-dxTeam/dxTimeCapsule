@@ -123,9 +123,9 @@ extension OpenedTCViewController: UICollectionViewDataSource, UICollectionViewDe
     }
 }
 
-import SwiftUI
-struct PreView5: PreviewProvider {
-    static var previews: some View {
-        OpenedTCViewController().toPreview()
-    }
-}
+//import SwiftUI
+//struct PreView5: PreviewProvider {
+//    static var previews: some View {
+//        OpenedTCViewController().toPreview()
+//    }
+//}
