@@ -432,7 +432,6 @@
 			isa = PBXGroup;
 			children = (
 				1FBDDF762BA1D90200FCDE5A /* Location */,
-				1FAB4DF72B8C49590054618A /* User.swift */,
 				1FB3873F2B8881DB00054816 /* TimeCapsule.swift */,
 				D22B171B2B971599006CAEA6 /* FriendRequest.swift */,
 				D22B171D2B97163C006CAEA6 /* Friendship.swift */,
@@ -505,6 +504,7 @@
 		1FBDDF762BA1D90200FCDE5A /* Location */ = {
 			isa = PBXGroup;
 			children = (
+				1FAB4DF72B8C49590054618A /* User.swift */,
 				1FD2B7B62B96C04B00896F9C /* HorizontalSearchModel.swift */,
 				1FD2B7B72B96C04B00896F9C /* CarouselButtonModel.swift */,
 				1FD2B7B82B96C04B00896F9C /* CustomPresentationDetents.swift */,

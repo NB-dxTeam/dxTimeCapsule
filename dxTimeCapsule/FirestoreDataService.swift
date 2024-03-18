@@ -31,6 +31,13 @@ class FirestoreDataService {
     
     // 태그된 친구의 UID 배열을 기반으로 users 콜렉션에서 친구의 정보를 가져오는 함수
     func fetchFriendsInfo(byUIDs uids: [String], completion: @escaping ([Friend]?) -> Void) {
+        // uids 배열이 비어 있는지 확인
+        guard !uids.isEmpty else {
+            print("UIDs array is empty, skipping the query.")
+            completion(nil) // 빈 배열이면 콜백 함수를 nil과 함께 바로 호출
+            return
+        }
+        
         db.collection("users").whereField("uid", in: uids).getDocuments { (snapshot, error) in
             guard let documents = snapshot?.documents, error == nil else {
                 completion(nil)

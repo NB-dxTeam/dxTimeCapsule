@@ -101,29 +101,31 @@ class LockedCapsuleCell: UICollectionViewCell {
         contentView.addSubview(creationDate)
         
         registerImage.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(5)
-            make.leading.equalToSuperview().offset(10)
-            make.trailing.equalToSuperview().offset(-10)
-            make.height.equalTo(registerImage.snp.width).multipliedBy(1.2/2.0)
+            let offset = UIScreen.main.bounds.width * (0.05/2.0)
+            make.top.equalToSuperview().offset(offset)
+            make.height.equalToSuperview().multipliedBy(1.4/2.0)
+            make.width.equalToSuperview().multipliedBy(1.9/2.0)
+            make.centerX.equalToSuperview()
         }
         
         dDay.snp.makeConstraints { make in
-            make.top.equalTo(registerImage.snp.bottom).offset(5)
+            let offset = UIScreen.main.bounds.width * (0.05/2.0)
+            make.top.equalTo(registerImage.snp.bottom).offset(offset)
             make.leading.equalTo(registerImage.snp.leading)
-            make.width.equalTo(60)
+            make.width.equalTo(registerImage.snp.width).multipliedBy(0.23/1.0)
             make.height.equalTo(25)
         }
         
         userLocation.snp.makeConstraints { make in
             make.top.equalTo(registerImage.snp.bottom).offset(5)
-            make.leading.equalTo(dDay.snp.trailing).offset(30)
-            make.height.equalTo(30)
+            make.leading.equalTo(dDay.snp.trailing).offset(10)
+            make.height.equalTo(70)
             make.width.equalTo(190)
         }
         
         creationDate.snp.makeConstraints { make in
             make.trailing.equalTo(registerImage.snp.trailing)
-            make.bottom.lessThanOrEqualToSuperview().inset(15)
+            make.bottom.lessThanOrEqualToSuperview().multipliedBy(1.95/2.0)
         }
         
         contentView.backgroundColor = .white

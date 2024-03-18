@@ -102,14 +102,13 @@ class CustomModal: UIViewController {
         //let userId = "FNZgZFdLTXXjOkbJY841BW1WhAB2" // 실제 애플리케이션에서는 동적인 UID 사용
         
         db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
-            .whereField("isOpened", isEqualTo: false) // 아직 열리지 않은 타임캡슐만 선택
             .order(by: "openTimeBoxDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
             .getDocuments { [weak self] (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents: \(err)")
-                    DispatchQueue.main.async {
-                        self?.showLoadFailureAlert(withError: err)
-                    }
+//                    DispatchQueue.main.async {
+//                        self?.showLoadFailureAlert(withError: err)
+//                    }
                     return
                 }
                 

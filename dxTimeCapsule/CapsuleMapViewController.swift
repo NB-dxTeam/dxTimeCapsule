@@ -10,6 +10,7 @@ import MapKit
 import CoreLocation
 import SnapKit
 import FirebaseFirestore
+import FirebaseAuth
 
 class CapsuleMapViewController: UIViewController {
     
@@ -248,14 +249,13 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
         //let userId = "FNZgZFdLTXXjOkbJY841BW1WhAB2"
         print("Starting to load time capsule infos for user \(userId)") // 문서로드시작
         db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
-            .whereField("isOpened", isEqualTo: false) // 아직 열리지 않은 타임캡슐만 선택
-            .order(by: "openDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
-            .getDocuments { [weak self] (snapshot, error) in
-                guard let documents = snapshot?.documents else {
+            .order(by: "openDate", descending: true) // 가장 먼저 개봉될 타임캡슐부터 정렬
+            .getDocuments { [weak self] (querySnapshot, error) in
+                guard let documents = querySnapshot?.documents else {
                     print("Error fetching documents: \(error!)")
-                    DispatchQueue.main.async {
-                        self?.showLoadFailureAlert(withError: error!)
-                    }
+//                    DispatchQueue.main.async {
+//                        self?.showLoadFailureAlert(withError: error!)
+//                    }
                     return
                 }
                 print("Successfully fetched \(documents.count) documents") // 문서로드 성공 및 문서 수
@@ -265,7 +265,7 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
                 for doc in documents {
                     let data = doc.data()
                     let geoPoint = data["userLocation"] as? GeoPoint
-                    var timeBox = TimeBox(
+                    let timeBox = TimeBox(
                         id: doc.documentID,
                         uid: data["uid"] as? String ?? "",
                         userName: data["userName"] as? String ?? "",
