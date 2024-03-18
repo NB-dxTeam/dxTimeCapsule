@@ -22,20 +22,17 @@ class CapsuleAnnotationView: MKAnnotationView {
     override var isSelected: Bool {
         didSet {
             if isSelected {
-                if customCalloutView == nil, let capsuleAnnotation = annotation as? CapsuleAnnotationModel {
-                    // 콜아웃 초기화 및 구성
-                    customCalloutView = CustomCalloutView()
-                    if let calloutView = customCalloutView {
-                        calloutView.configure(with: capsuleAnnotation.info)
-                        addSubview(calloutView)
-                        // 콜아웃을 배치하고 필요에 따라 크기를 조정
-                        calloutView.translatesAutoresizingMaskIntoConstraints = false
-                        calloutView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-                        calloutView.bottomAnchor.constraint(equalTo: self.topAnchor).isActive = true
-                    }
-                }
+                guard customCalloutView == nil, let capsuleAnnotation = annotation as? CapsuleAnnotationModel else { return }
+                
+                let calloutView = CustomCalloutView()
+                // CapsuleAnnotationModel에서 TimeBox 정보와 친구 정보를 가져와 CustomCalloutView를 구성합니다.
+                calloutView.configure(with: capsuleAnnotation.info, friends: capsuleAnnotation.friends)
+                
+                self.addSubview(calloutView)
+                self.customCalloutView = calloutView
+                
             } else {
-                // 주석 선택 해제 시 맞춤 설명선 제거
+                // 어노테이션이 선택 해제되었을 때, 콜아웃 뷰를 제거합니다.
                 customCalloutView?.removeFromSuperview()
                 customCalloutView = nil
             }

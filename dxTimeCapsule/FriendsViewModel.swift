@@ -1,3 +1,4 @@
+import Foundation
 import FirebaseFirestore
 import FirebaseAuth
 
@@ -30,9 +31,9 @@ class FriendsViewModel: ObservableObject {
             }
             
             let users: [User] = documents.compactMap { doc in
-                var user = User(uid: doc.documentID, email: "", username: "", profileImageUrl: nil)
+                var user = User(uid: doc.documentID, userName: "", email: "", profileImageUrl: nil)
                 user.uid = doc.get("uid") as? String ?? ""
-                user.username = doc.get("username") as? String ?? ""
+                user.userName = doc.get("username") as? String ?? ""
                 user.profileImageUrl = doc.get("profileImageUrl") as? String
                 user.email = doc.get("email") as? String ?? ""
                 print("user: \(user)")
@@ -98,7 +99,7 @@ class FriendsViewModel: ObservableObject {
         }
     }
     
-    // 친구 요청 수락하기
+    // 친구 수락하기
     func acceptFriendRequest(fromUser targetUserId: String, forUser currentUserId: String, completion: @escaping (Bool, Error?) -> Void) {
         let batch = db.batch()
         
@@ -129,8 +130,8 @@ class FriendsViewModel: ObservableObject {
         }
     }
     
-    // 친구 목록 가져오기 및 정렬
-    func fetchFriendRequests(forUser userId: String, completion: @escaping ([User]?, Error?) -> Void) {
+    // 친구 요청 목록 가져오기
+    func friendRequestsList(forUser userId: String, completion: @escaping ([User]?, Error?) -> Void) {
         db.collection("friendRequests")
             .whereField("receiverUid", isEqualTo: userId)
             .getDocuments { snapshot, error in
@@ -156,57 +157,76 @@ class FriendsViewModel: ObservableObject {
             }
     }
     
-    func fetchFriends(forUser userId: String, completion: @escaping ([User]?, Error?) -> Void) {
-        db.collection("friendships")
-            .whereField("userUids", arrayContains: userId)
-            .getDocuments { snapshot, error in
-                if let error = error {
-                    completion(nil, error)
+    func fetchFriends() {
+           guard let currentUserID = Auth.auth().currentUser?.uid else {
+               print("Debug: Cannot fetch current user ID")
+               return
+           }
+           
+           db.collection("users").document(currentUserID).getDocument { [weak self] document, error in
+               if let error = error {
+                   print("Debug: Error fetching user data: \(error.localizedDescription)")
+                   return
+               }
+               guard let self = self, let document = document, document.exists else {
+                   print("Debug: Document does not exist")
+                   return
+               }
+               
+               // Firestore 문서에서 친구의 UID 목록과 이름 목록을 가져옵니다.
+               let friendUIDs = document.get("friendsUid") as? [String] ?? []
+               let friendNames = document.get("friendsName") as? [String] ?? []
+               
+               // 가져온 정보를 바탕으로 친구 목록을 업데이트합니다.
+               for (index, friendUID) in friendUIDs.enumerated() {
+                   db.collection("users").document(friendUID).getDocument { document, error in
+                       if let document = document, document.exists {
+                           let friend = Friend(
+                            uid: friendUID, // UID를 Friend의 id로 사용합니다.
+                               username: document.get("username") as? String ?? "Unknown",
+                               profileImageUrl: document.get("profileImageUrl") as? String
+                           )
+                           DispatchQueue.main.async {
+                               self.friends.append(friend)
+                           }
+                       } else {
+                           // 문서가 없는 경우, 이름을 사용하여 Friend 객체를 생성합니다.
+                           let friendName = index < friendNames.count ? friendNames[index] : "Unknown"
+                           let friend = Friend(
+                           uid: friendUID, // UID를 Friend의 id로 사용합니다.
+                               username: friendName,
+                               profileImageUrl: nil
+                           )
+                           DispatchQueue.main.async {
+                               self.friends.append(friend)
+                           }
+                       }
+                   }
+               }
+           }
+       }
+        
+        func fetchUser(with userId: String, completion: @escaping (User?) -> Void) {
+            db.collection("users").document(userId).getDocument { documentSnapshot, error in
+                guard let document = documentSnapshot, document.exists, error == nil else {
+                    completion(nil)
                     return
                 }
                 
-                var friends: [User] = []
-                if let documents = snapshot?.documents {
-                    for document in documents {
-                        let userUids = document.get("userUids") as? [String] ?? []
-                        let friendUserId = userUids.first(where: { $0 != userId })
-                        
-                        if let friendUserId = friendUserId {
-                            self.fetchUser(with: friendUserId) { user in
-                                if let user = user {
-                                    friends.append(user)
-                                }
-                                if friends.count == documents.count {
-                                    completion(friends, nil)
-                                }
-                            }
-                        }
-                    }
-                }
+                let data = document.data()
+                let user = User(
+                    uid: userId,
+                    userName: data?["email"] as? String ?? "",
+                    email: data?["username"] as? String ?? "",
+                    profileImageUrl: data?["profileImageUrl"] as? String
+                )
+                completion(user)
             }
-    }
-    
-    func fetchUser(with userId: String, completion: @escaping (User?) -> Void) {
-        db.collection("users").document(userId).getDocument { documentSnapshot, error in
-            guard let document = documentSnapshot, document.exists, error == nil else {
-                completion(nil)
-                return
-            }
-            
-            let data = document.data()
-            let user = User(
-                uid: userId,
-                email: data?["email"] as? String ?? "",
-                username: data?["username"] as? String ?? "",
-                profileImageUrl: data?["profileImageUrl"] as? String
-            )
-            completion(user)
         }
+        
+        func uploadPost(description: String, selectedImage: UIImage?, emoji: String, openDate: Date) {
+            // 게시물 업로드 로직 구현
+        }
+        
     }
     
-    func uploadPost(description: String, selectedImage: UIImage?, emoji: String, openDate: Date) {
-        // 게시물 업로드 로직 구현
-    }
-    
-}
-

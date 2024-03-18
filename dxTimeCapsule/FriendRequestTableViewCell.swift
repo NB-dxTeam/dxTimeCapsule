@@ -92,7 +92,7 @@ class FriendRequestTableViewCell: UITableViewCell {
     func configure(with user: User, viewModel: FriendsViewModel) {
         self.user = user
         self.friendsViewModel = viewModel
-        userNameLabel.text = user.username
+        userNameLabel.text = user.userName
         userProfileImageView.sd_setImage(with: URL(string: user.profileImageUrl ?? ""), placeholderImage: UIImage(named: "defaultProfileImage"))
         acceptButton.isHidden = false // 버튼을 항상 보이게 설정
 
@@ -109,7 +109,7 @@ class FriendRequestTableViewCell: UITableViewCell {
     
     // MARK: - Functions
     private func updateFriendshipStatusUI(user: User, currentUserID: String) {
-        friendsViewModel?.checkFriendshipStatus(forUser: user.uid) { status in
+        friendsViewModel?.checkFriendshipStatus(forUser: user.uid!) { status in
             DispatchQueue.main.async {
                 self.acceptButton.isHidden = false
                 switch status {
@@ -141,11 +141,11 @@ class FriendRequestTableViewCell: UITableViewCell {
             return
         }
         
-        friendsViewModel?.checkFriendshipStatus(forUser: user.uid) { status in
+        friendsViewModel?.checkFriendshipStatus(forUser: user.uid!) { status in
             DispatchQueue.main.async {
                 switch status {
                 case "요청 받음":
-                    self.friendsViewModel?.acceptFriendRequest(fromUser: user.uid, forUser: currentUserID) { success, error in
+                    self.friendsViewModel?.acceptFriendRequest(fromUser: user.uid!, forUser: currentUserID) { success, error in
                         if success {
                             self.updateUIAsAlreadyFriends()
                         } else {

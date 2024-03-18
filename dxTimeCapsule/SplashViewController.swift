@@ -30,7 +30,7 @@ class SplashViewController: UIViewController {
                 UIView.animate(withDuration: 2.0, delay: 1.0, options: .curveEaseInOut, animations: {
                     closedBoxImageView.alpha = 0.0 // 이미지 뷰를 서서히 투명하게 만들어 사라지도록 투명도를 0으로 변경
                 }) { _ in
-                    // 로그인 뷰 컨트롤러 대신 메인 탭바를 표시하도록 변경
+                    // 로그인 뷰 전환
                     guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                           let sceneDelegate = windowScene.delegate as? SceneDelegate else { return }
                     
