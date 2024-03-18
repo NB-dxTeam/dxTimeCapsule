@@ -1,6 +1,6 @@
 import Foundation
 import FirebaseFirestore
-
+//
 struct TimeCapsule {
     var id: String // 타임박스 고유 ID
     var uid: String // 타임박스를 생성한 사용자의 uid
