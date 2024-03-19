@@ -85,7 +85,7 @@ class MainCapsuleViewController: UIViewController {
     //개봉일이되었을때 생성되는 tap 안내문구
     private lazy var openCapsuleLabel: UILabel = {
         let label = UILabel()
-        label.text = "타임캡슐을 오픈하세요!"
+        label.text = "상자를 눌러 타임캡슐을 오픈하세요!"
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textColor = .systemBlue
         label.isHidden = true // D-day 전까지는 숨깁니다.
@@ -135,7 +135,7 @@ class MainCapsuleViewController: UIViewController {
                         self.dDayLabel.text = dDayString
                         
                         // 개봉일 당일에도 탭을 활성화하기 위한 조건 추가
-                        if startDate > endDate {
+                        if startDate < endDate {
                             // D-day 미도달: 오픈 불가능
                             self.openCapsuleLabel.isHidden = true
                             self.capsuleImageView.isUserInteractionEnabled = false
@@ -268,20 +268,18 @@ class MainCapsuleViewController: UIViewController {
             // 개봉일 정보가 없는 경우, 함수 실행 중지
             return
         }
-        
+
         let calendar = Calendar.current
         let startDate = calendar.startOfDay(for: Date()) // 현재 날짜의 자정
         let openDateStart = calendar.startOfDay(for: openDate) // 개봉일의 자정
-        
+
         if startDate >= openDateStart {
             // 개봉일 당일이거나 지난 경우, 타임캡슐 개봉 애니메이션 실행
-            // UI 요소 숨김 처리
-            hideUIComponentsForOpening()
+            hideUIComponentsForOpening() // UI 요소 숨김 처리
 
-            // 흔들림 및 페이드아웃 애니메이션 시작
-            addShakeAnimation()
+            addShakeAnimation() // 흔들림 애니메이션 시작
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                self.addFadeOutAndScaleAnimation()
+                self.addFadeOutAndScaleAnimation() // 페이드아웃 및 확대 애니메이션 시작
             }
         } else {
             // D-day 미도달: 아직 타임캡슐을 오픈할 수 없음
@@ -357,11 +355,6 @@ class MainCapsuleViewController: UIViewController {
             openCapsuleLabel.isHidden = false
         }
     }
-    
-//    @objc private func openTimeCapsule() {
-//        // 여기에 타임캡슐을 오픈할 때의 애니메이션과 로직을 구현
-//        print("타임캡슐 오픈 로직을 구현")
-//    }
 }
 
 extension MainCapsuleViewController: UIViewControllerTransitioningDelegate {

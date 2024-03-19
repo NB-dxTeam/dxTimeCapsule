@@ -102,6 +102,7 @@
 		4E2A09C82B8F755C00911390 /* OpenInteractionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */; };
 		4E2A09CA2B8F86C600911390 /* FadeInAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */; };
 		4E4F6CDB2B99C2B500154ED1 /* OpenCapsuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4F6CDA2B99C2B500154ED1 /* OpenCapsuleViewController.swift */; };
+		4EA223612BA9AE8A005181C7 /* MessageModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA223602BA9AE8A005181C7 /* MessageModalViewController.swift */; };
 		4EC308DE2B8A200300EEE54C /* MainCapsuleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC308DD2B8A200300EEE54C /* MainCapsuleViewModel.swift */; };
 		84DC88440CAE114A443E3790 /* Pods_dxTimeCapsule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B09206BD07C24C17A3CDE0B9 /* Pods_dxTimeCapsule.framework */; };
 		D20CDCCA2B957D5D00B93788 /* SearchUserTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20CDCC92B957D5D00B93788 /* SearchUserTableViewController.swift */; };
@@ -203,6 +204,7 @@
 		4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInteractionViewController.swift; sourceTree = "<group>"; };
 		4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeInAnimator.swift; sourceTree = "<group>"; };
 		4E4F6CDA2B99C2B500154ED1 /* OpenCapsuleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenCapsuleViewController.swift; sourceTree = "<group>"; };
+		4EA223602BA9AE8A005181C7 /* MessageModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModalViewController.swift; sourceTree = "<group>"; };
 		4EC308DD2B8A200300EEE54C /* MainCapsuleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCapsuleViewModel.swift; sourceTree = "<group>"; };
 		8B267DD244888742B1FC4EE8 /* Pods-dxTimeCapsule.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.debug.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.debug.xcconfig"; sourceTree = "<group>"; };
 		B09206BD07C24C17A3CDE0B9 /* Pods_dxTimeCapsule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dxTimeCapsule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -448,6 +450,7 @@
 			children = (
 				461D3C2D2BA17CB0009C8B6E /* Mapkit+Annotation */,
 				4E4F6CDA2B99C2B500154ED1 /* OpenCapsuleViewController.swift */,
+				4EA223602BA9AE8A005181C7 /* MessageModalViewController.swift */,
 				4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */,
 				460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */,
 				4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */,
@@ -792,6 +795,7 @@
 				1F8EA39A2B944054004856B7 /* UIViewController+Debugging.swift in Sources */,
 				1FA11BF22B8F8C440014002F /* UITextField+Padding.swift in Sources */,
 				27D241B22B8F33A5000F8F16 /* OpenedTCViewController.swift in Sources */,
+				4EA223612BA9AE8A005181C7 /* MessageModalViewController.swift in Sources */,
 				1F0B91392B9089BB0022EDD9 /* MainTabBarView.swift in Sources */,
 				1FAB4DF82B8C49590054618A /* User.swift in Sources */,
 				1FD2B7BA2B96C04B00896F9C /* HorizontalSearchModel.swift in Sources */,
