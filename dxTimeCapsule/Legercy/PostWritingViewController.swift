@@ -110,6 +110,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         
         createButton.snp.makeConstraints { make in
             make.width.equalTo(200)
+            make.height.equalTo(40)
         }
     }
     

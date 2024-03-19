@@ -132,10 +132,13 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     private func setupPlaceholderLabel() {
         view.addSubview(placeholderLabel)
         placeholderLabel.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.centerY.equalTo(imageView) // imageView의 centerY에 맞추도록 수정
             make.left.right.equalToSuperview().inset(20)
         }
     }
+
+
 
     // 사진 라이브러리 권한 요청
     private func requestPhotoLibraryPermission() {
