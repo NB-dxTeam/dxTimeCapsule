@@ -32,7 +32,7 @@ class LoginViewController: UIViewController {
     
     private let signUpButton : UIButton = {
         let button = UIButton(type: .system)
-        let title = "SignUp" // 버튼의 제목 설정
+        let title = "Sign up" // 버튼의 제목 설정
         button.setTitle(title, for: .normal)
         button.setTitleColor(UIColor(hex: "#C82D6B"), for: .normal)
         button.layer.cornerRadius = 16
@@ -42,6 +42,7 @@ class LoginViewController: UIViewController {
         
         return button
     }()
+    
     private let signUpLabel = UILabel()
     private let forgot = UIButton(type: .system)
     private let dividerView = UIView()
@@ -59,10 +60,8 @@ class LoginViewController: UIViewController {
         passwordTextField.delegate = self
         
         // Test 자동기입
-        
         emailTextField.text =  "test1@gmail.com"
         passwordTextField.text = "12345678"
-        
     }
     
     private func setupSignUpButtonAction() {

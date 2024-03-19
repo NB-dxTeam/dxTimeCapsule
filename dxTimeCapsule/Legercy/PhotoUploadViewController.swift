@@ -63,7 +63,6 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         requestPhotoLibraryPermission()
         setupBannerLabel()
         setupPlaceholderLabel()
-        setupImageView()
 
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
         view.addGestureRecognizer(panGesture)
@@ -93,26 +92,35 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
        private func setupUI() {
            view.backgroundColor = .white
 
-
-
+           // 이미지 뷰 설정
+           view.addSubview(imageView)
+           imageView.snp.makeConstraints { make in
+               make.top.equalTo(view.safeAreaLayoutGuide)
+               make.left.right.equalToSuperview().inset(5)
+               make.height.equalTo(view.snp.height).multipliedBy(0.5) // 전체 뷰의 높이의 50%
+               make.width.equalTo(imageView.snp.height).multipliedBy(0.8) // 4:5 비율 유지
+           }
+           
            // 컬렉션 뷰 설정
            view.addSubview(collectionView)
            collectionView.snp.makeConstraints { make in
                make.top.equalTo(imageView.snp.bottom).offset(5)
                make.left.right.equalToSuperview().inset(5)
-               make.bottom.equalTo(view.safeAreaLayoutGuide) // 필요에 따라 조정할 수 있음
+               make.bottom.equalTo(view.safeAreaLayoutGuide).inset(50) // 필요에 따라 조정
            }
+
            
            // 'Next' 버튼 설정
            view.addSubview(nextButton)
            nextButton.snp.makeConstraints { make in
                make.centerX.equalToSuperview()
-               make.bottom.equalTo(view.safeAreaLayoutGuide).inset(50)
+               make.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
                make.height.equalTo(40)
                make.width.equalTo(200)
            }
            nextButton.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
            
+           // 'Close' 버튼 설정
            view.addSubview(closeButton)
            closeButton.snp.makeConstraints { make in
                make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
@@ -151,14 +159,10 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         
-        // 이미지뷰 제약 설정
-        view.addSubview(imageView)
         imageView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(collectionView.snp.bottom).offset(5) // collectionView의 bottom에 대해 offset 설정
             make.left.right.equalToSuperview().inset(5)
-            make.height.equalTo(view.snp.height).multipliedBy(0.5) // 전체 뷰의 높이의 50%
-            make.width.equalTo(imageView.snp.height).multipliedBy(0.8) // 4:5 비율 유지
-
+            make.bottom.equalTo(nextButton.snp.top).offset(-5) // nextButton의 top에 대해 offset 설정
         }
     }
 
@@ -166,13 +170,13 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     private func setupBannerLabel() {
         view.addSubview(bannerLabel)
         bannerLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(80)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(70)
             make.leading.trailing.equalToSuperview().inset(30)
         }
         bannerLabel.sizeToFit() // 내용에 맞게 크기 조절
 
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
             UIView.animate(withDuration: 0.5) {
                 self.bannerLabel.alpha = 0
             } completion: { _ in
