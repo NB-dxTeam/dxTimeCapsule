@@ -5,28 +5,31 @@ import Photos
 
 class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate {
 
-    // MARK: - Properties
-    
+    // MARK: - 속성 선언부
     private var selectedImage: UIImage?
-     private let imageView = UIImageView()
-     private let nextButton = UIButton(type: .system)
-     private var assets: [PHAsset] = []
-     private var selectedAssets: [PHAsset] = []
-     private var imageManager = PHCachingImageManager()
-     
+    private let imageView = UIImageView()
+    private let nextButton = UIButton(type: .system)
+    private var assets: [PHAsset] = []
+    private var selectedAssets: [PHAsset] = []
+    private var imageManager = PHCachingImageManager()
+    private var closeButton: UIButton!
+
+    
+
     private let bannerLabel: UILabel = {
         let label = UILabel()
-        label.text = "타임박스에 들어갈 사진을 선택해주세요!"
-        label.font = .pretendardBold(ofSize: 16)
-        label.textColor = UIColor(hex: "#C82D6B")
-        label.backgroundColor = .white
+        label.text = "타임박스에 들어갈 사진을 선택해주세요! 첫번째 사진이 썸네일로 사용됩니다."
+        label.font = .systemFont(ofSize: 16, weight: .bold)
+        label.textColor = UIColor.white
+        label.backgroundColor = UIColor(hex: "#C82D6B").withAlphaComponent(0.8)
         label.textAlignment = .center
-        label.layer.cornerRadius = 8
+        label.layer.cornerRadius = 10
+        label.numberOfLines = 0 // 여러 줄 표시를 위해 설정
         label.clipsToBounds = true
         return label
     }()
-
-     private lazy var collectionView: UICollectionView = {
+    
+    private lazy var collectionView: UICollectionView = {
          let layout = UICollectionViewFlowLayout()
          layout.minimumInteritemSpacing = 3
          layout.minimumLineSpacing = 3
@@ -38,105 +41,115 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
          return cv
      }()
     
-    // MARK: - Lifecycle
-    
+    // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         setupProperties()
         setupUI()
         requestPhotoLibraryPermission()
         setupBannerLabel()
 
-        // Add pan gesture recognizer to detect downward drag
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
         view.addGestureRecognizer(panGesture)
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        nextButton.setInstagram()
-    }
-    
+    // UI 속성 설정
     private func setupProperties() {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         
         nextButton.setTitle("Next", for: .normal)
         nextButton.setTitleColor(.white, for: .normal)
-        nextButton.layer.cornerRadius = 8
-    }
-    
-    // MARK: - Setup UI
-    
-
-    private func setupUI() {
-        view.backgroundColor = .white
-
-        // 상단 이미지 뷰 설정 - 1:1 비율 유지
-        view.addSubview(imageView)
-        imageView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
-            make.left.right.equalToSuperview().inset(5)
-            make.height.equalTo(imageView.snp.width) // 이 부분을 수정하여 높이를 너비와 동일하게 설정
-        }
-
-
-        // 컬렉션 뷰 설정
-        view.addSubview(collectionView)
-        collectionView.snp.makeConstraints { make in
-            make.top.equalTo(imageView.snp.bottom).offset(5)
-            make.left.right.equalToSuperview().inset(5)
-            make.bottom.equalTo(view.safeAreaLayoutGuide) // 필요에 따라 조정할 수 있음
-        }
+        nextButton.backgroundColor = UIColor(hex: "#C82D6B")
+        nextButton.layer.cornerRadius = 16
+        nextButton.layer.shadowOpacity = 0.3
+        nextButton.layer.shadowRadius = 5
+        nextButton.layer.shadowOffset = CGSize(width: 0, height: 5)
         
-        // 'Next' 버튼 설정
-        view.addSubview(nextButton)
-        nextButton.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().inset(80)
-            make.height.equalTo(40)
-            make.width.equalTo(120)
-        }
-        nextButton.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
+        closeButton = UIButton(type: .system)
+        closeButton.setTitle("뒤로", for: .normal)
+        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
     }
+
+    // MARK: - Setup UI
+       private func setupUI() {
+           view.backgroundColor = .white
+
+           // 상단 이미지 뷰 설정
+           view.addSubview(imageView)
+           imageView.snp.makeConstraints { make in
+               make.top.equalTo(view.safeAreaLayoutGuide)
+               make.left.right.equalToSuperview().inset(5)
+               make.height.equalTo(view.snp.height).multipliedBy(0.5) // 전체 뷰의 높이의 50%
+               make.width.equalTo(imageView.snp.height).multipliedBy(0.8) // 4:5 비율 유지
+
+           }
+
+           // 컬렉션 뷰 설정
+           view.addSubview(collectionView)
+           collectionView.snp.makeConstraints { make in
+               make.top.equalTo(imageView.snp.bottom).offset(5)
+               make.left.right.equalToSuperview().inset(5)
+               make.bottom.equalTo(view.safeAreaLayoutGuide) // 필요에 따라 조정할 수 있음
+           }
+           
+           // 'Next' 버튼 설정
+           view.addSubview(nextButton)
+           nextButton.snp.makeConstraints { make in
+               make.centerX.equalToSuperview()
+               make.bottom.equalTo(view.safeAreaLayoutGuide).inset(50)
+               make.height.equalTo(50)
+               make.width.equalTo(200)
+           }
+           nextButton.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
+           
+           view.addSubview(closeButton)
+           closeButton.snp.makeConstraints { make in
+               make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
+               make.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
+               make.width.height.equalTo(40)
+           }
+       }
     
-    // MARK: - Other Methods
     
+
+    // 사진 라이브러리 권한 요청
     private func requestPhotoLibraryPermission() {
-        PHPhotoLibrary.requestAuthorization { status in
-            switch status {
-            case .authorized:
-                DispatchQueue.main.async {
-                    self.fetchPhotos()
-                }
-            case .denied, .restricted, .notDetermined:
-                // Handle denied or restricted
-                break
-            @unknown default:
-                break
-            }
-        }
-    }
-    
+         PHPhotoLibrary.requestAuthorization { status in
+             switch status {
+             case .authorized:
+                 DispatchQueue.main.async {
+                     self.fetchPhotos()
+                 }
+             case .denied, .restricted, .notDetermined:
+                 // Handle denied or restricted
+                 break
+             @unknown default:
+                 break
+             }
+         }
+     }
+
+    // 배너 라벨 설정 및 자동 숨김
     private func setupBannerLabel() {
         view.addSubview(bannerLabel)
         bannerLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(40)
             make.leading.trailing.equalToSuperview().inset(30)
-            make.height.equalTo(50)
         }
+        bannerLabel.sizeToFit() // 내용에 맞게 크기 조절
 
-        // Automatically hide the banner after 2 seconds
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             UIView.animate(withDuration: 0.5) {
                 self.bannerLabel.alpha = 0
-                
             } completion: { _ in
                 self.bannerLabel.removeFromSuperview()
             }
         }
     }
+
+    // 사진 데이터 가져오기
     private func fetchPhotos() {
         let allPhotosOptions = PHFetchOptions()
         allPhotosOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
@@ -156,20 +169,26 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
             }
         }
     }
+
+
     
+    // 선택된 사진을 imageView에 표시
     private func selectAndDisplayImage(for asset: PHAsset) {
         imageManager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .aspectFill, options: nil) { image, _ in
             DispatchQueue.main.async {
                 self.selectedImage = image
-                self.imageView.image = image // 첫 번째 사진을 이미지 뷰에 표시
+                self.imageView.image = image
             }
         }
     }
-    
-    // MARK: - Action
-    
+
+    // 'Next' 버튼 탭 시 동작
     @objc private func didTapNextButton() {
         let postWritingVC = PostWritingViewController()
+        // 모달 표시 전 설정
+        postWritingVC.modalPresentationStyle = .overFullScreen // 배경색이 보이지 않도록 설정
+        present(postWritingVC, animated: true, completion: nil)
+        
         if #available(iOS 15.0, *) {
             if let sheet = postWritingVC.sheetPresentationController {
                 sheet.detents = [.medium()] // Adjust to [.medium()] or create custom detent for desired height
@@ -183,26 +202,34 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         present(postWritingVC, animated: true, completion: nil)
     }
 
+    // 'Close' 버튼 탭 시 동작
+    @objc private func closeButtonTapped() {
+         dismiss(animated: true, completion: nil)
+     }
     
     // MARK: - UICollectionViewDataSource Methods
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print("Number of items in section: \(assets.count)")
         return assets.count
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.identifier, for: indexPath) as? PhotoCell else {
             fatalError("Unable to dequeue PhotoCell")
         }
         let asset = assets[indexPath.item]
-        cell.configure(with: asset, imageManager: imageManager)
 
-        // 선택된 아이템에 대해 시각적으로 표시 (예: 체크 마크 추가)
-        cell.updateSelectionState(isSelected: selectedAssets.contains(asset))
+        // 선택된 사진의 인덱스를 찾아 순서 번호를 계산합니다.
+        let selectionNumber: Int? = selectedAssets.firstIndex(of: asset).map { $0 + 1 }
+
+        // 선택된 사진의 순서 번호를 포함하여 셀을 구성합니다.
+        cell.configure(with: asset, imageManager: imageManager, selectionNumber: selectionNumber)
 
         return cell
     }
+
     
+    // UICollectionViewDelegateFlowLayout 메소드
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let itemsPerRow: CGFloat = 3
         let padding: CGFloat = 5 // 여백 값 설정
@@ -215,7 +242,7 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         return CGSize(width: widthPerItem, height: widthPerItem) // 1:1 비율로 셀 크기 설정
     }
 
-
+    // 사용자가 사진을 선택했을 때의 처리
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = assets[indexPath.item]
 
@@ -235,7 +262,6 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         collectionView.reloadItems(at: [indexPath]) // 선택 상태 변경으로 인한 셀 업데이트
     }
 
-
     private func updateImageView(with asset: PHAsset) {
         imageManager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .aspectFill, options: nil) { image, _ in
             DispatchQueue.main.async {
@@ -243,40 +269,41 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
             }
         }
     }
-    
-    // MARK: - Pan Gesture Handler
-    @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
-        let translation = gesture.translation(in: view)
-        let velocity = gesture.velocity(in: view)
-        
-        switch gesture.state {
-        case .changed:
-            if translation.y > 0 {
-                // Move the view down with the drag
-                view.frame.origin.y = translation.y
-            }
-        case .ended:
-            if velocity.y > 0 {
-                // Dismiss the modal if dragged downward with enough velocity
-                dismiss(animated: true, completion: nil)
-            } else {
-                // Reset the view position if drag distance is less than 100 points
-                UIView.animate(withDuration: 0.3) {
-                    self.view.frame.origin.y = 0
-                }
-            }
-        default:
-            break
-        }
-    }
 
+    // MARK: - Pan Gesture Handler
+     @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+         let translation = gesture.translation(in: view)
+         let velocity = gesture.velocity(in: view)
+         
+         switch gesture.state {
+         case .changed:
+             if translation.y > 0 {
+                 // Move the view down with the drag
+                 view.frame.origin.y = translation.y
+             }
+         case .ended:
+             if velocity.y > 0 {
+                 // Dismiss the modal if dragged downward with enough velocity
+                 dismiss(animated: true, completion: nil)
+             } else {
+                 // Reset the view position if drag distance is less than 100 points
+                 UIView.animate(withDuration: 0.3) {
+                     self.view.frame.origin.y = 0
+                 }
+             }
+         default:
+             break
+         }
+     }
 }
 
+
+
 // MARK: - SwiftUI Preview
-//import SwiftUI
-//
-//struct MainTabBarViewPreview5 : PreviewProvider {
-//    static var previews: some View {
-//        PhotoUploadViewController().toPreview()
-//    }
-//}
+import SwiftUI
+
+struct MainTabBarViewPreview22 : PreviewProvider {
+    static var previews: some View {
+        PhotoUploadViewController().toPreview()
+    }
+}

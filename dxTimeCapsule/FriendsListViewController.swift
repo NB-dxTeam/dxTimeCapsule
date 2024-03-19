@@ -1,34 +1,11 @@
 import UIKit
+import SnapKit
 import FirebaseFirestore
 import FirebaseAuth
 
-
-//refactor(CapsuleTableViewCell.swift): improve code readability and add support for loading images using Kingfisher library
-//refactor(FriendRequestTableViewCell.swift): update property name from username to userName for better consistency
-//refactor(FriendsListViewController.swift): update property names and fix incorrect assignment of email and username values
-//refactor(FriendsRequestViewController.swift): update property names and fix incorrect assignment of values for TimeBox model
-//refactor(FriendsViewModel.swift): update property names and fix incorrect assignment of values for User model
-//refactor(PostUploadView.swift): remove unnecessary padding
-//refactor(TagFriendListViewController.swift): update property names and fix incorrect assignment of email and username values
-//refactor(SearchUserTableViewCell.swift): update property name from username to userName for better consistency
-//refactor(TagFriendListTableCell.swift): update property name from username to userName for better consistency
-//
-//fix(TagFriendListTableViewCell.swift): fix typo in userNameLabel text assignment, change user.username to user.userName
-//fix(TimeBox.swift): make id, uid, and userName optional in TimeBox struct to handle optional values
-//feat(TimeBox.swift): add support for userLocationTitle to be a non-optional value in TimeBox struct
-//feat(TimeBox.swift): change createTimeBoxDate and openTimeBoxDate types from Timestamp to Date in TimeBox struct
-//feat(TimeBox.swift): make isOpened property optional in TimeBox struct
-//feat(TimeBox.swift): add TimeBoxAnnotationData struct to hold TimeBox and friendsInfo data
-//feat(TimeBox.swift): add Emoji struct to hold emoji data
-//feat(TimeCapsuleCreationViewModel.swift): change parameter type in saveTimeCapsule method from TimeCapsule to TimeBox
-//feat(TimeCapsuleCreationViewModel.swift): update data dictionary in saveTimeCapsule method to match TimeBox properties
-//feat(TimeCapsuleCreationViewModel.swift): change createTimeCapsuleDate and openTimeCapsuleDate properties in data dictionary to match TimeBox properties
-//feat(TimeCapsuleCreationViewModel.swift): change tagFriends property in data dictionary to match TimeBox property
-//feat(TimeCapsuleCreationViewModel.swift): change isOpened property in data dictionary to match TimeBox property
-//feat(TimeCapsuleCreationViewModel.swift): add dDayCalculation struct to calculate D-day
-
 class FriendsListViewController: UIViewController {
     
+    private var friendsListLabel: UILabel!
     var tableView: UITableView!
     let db = Firestore.firestore()
     var currentUser: User?
@@ -36,10 +13,37 @@ class FriendsListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupViews()
         setupTableView()
         fetchCurrentUser()
     }
+    
+    private func setupViews() {
+        let backgroundView = UIView()
+        backgroundView.backgroundColor = .white  // 배경색을 흰색으로 설정합니다.
+        view.addSubview(backgroundView)
+        
+        friendsListLabel = UILabel()
+        friendsListLabel.text = "Friends List"
+        friendsListLabel.font = UIFont.systemFont(ofSize: 26, weight: .bold)
+        friendsListLabel.textAlignment = .center
+        friendsListLabel.backgroundColor = .white  // 라벨의 배경색도 흰색으로 설정합니다.
+        backgroundView.addSubview(friendsListLabel)
+        
+        // 라벨의 배경 뷰 제약 조건을 설정합니다.
+        backgroundView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
+            make.left.right.equalToSuperview()
+            make.bottom.equalTo(friendsListLabel).offset(20) // 라벨 아래 여백을 추가합니다.
+        }
+        
+        // 라벨의 제약 조건을 설정합니다.
+        friendsListLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(10)
+            make.left.equalToSuperview().offset(16)
+        }
+    }
+
     
     private func setupTableView() {
         tableView = UITableView()
@@ -49,7 +53,8 @@ class FriendsListViewController: UIViewController {
         view.addSubview(tableView)
         
         tableView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalTo(friendsListLabel.snp.bottom).offset(20)
+            make.left.right.bottom.equalToSuperview()
         }
     }
     
@@ -77,7 +82,7 @@ class FriendsListViewController: UIViewController {
     private func fetchFriends(forUserID userID: String) {
         db.collection("friendships").whereField("userUids", arrayContains: userID).getDocuments { [weak self] snapshot, error in
             guard let self = self, let documents = snapshot?.documents, error == nil else {
-                print("Error fetching friends: \(String(describing: error))")
+                print("Error fetching friends: \(error)")
                 return
             }
             
@@ -140,3 +145,5 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
         return 80
     }
 }
+
+

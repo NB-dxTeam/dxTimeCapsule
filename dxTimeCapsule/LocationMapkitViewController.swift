@@ -15,14 +15,15 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     private var modifyLocationButton: UIButton!
     private var currentLocationBotton = UIButton()
 
-    
+
     private var centerView: UIView!
     private let centerViewHeight: CGFloat = 200
     
     private var isCenterViewPresented: Bool = false
     private var longPressMessageLabel: UILabel!
 
-    
+    private var closeButton: UIButton!
+
     // MARK: - Constants
     
     // MARK: - Initialization
@@ -36,6 +37,9 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         hideCenterView()
         isCenterViewPresented = false
 
+        let swipeDownGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeDown))
+          swipeDownGesture.direction = .down
+          view.addGestureRecognizer(swipeDownGesture)
     }
     
     override func viewDidLayoutSubviews() {
@@ -53,6 +57,10 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         locationManager = CLLocationManager()
         locationManager.delegate = self
         currentLocationButton = UIButton(type: .system)
+        
+        closeButton = UIButton(type: .system)
+          closeButton.setTitle("X", for: .normal)
+          closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
     }
     
     private func setupCenterView() {
@@ -77,6 +85,14 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         setupCurrentLocationButton()
         setupCenterView()
         hideCenterView()
+        
+        // 닫기 버튼 레이아웃 설정
+        view.addSubview(closeButton)
+        closeButton.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
+            make.width.height.equalTo(40)
+        }
     }
     
     private func setupMapView() {
@@ -260,6 +276,11 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
             showCenterView()
         }
     }
+    
+    
+    @objc private func closeButtonTapped() {
+         dismiss(animated: true, completion: nil)
+     }
 
     
     // MARK: - Gesture
@@ -285,6 +306,12 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
             mapView.addAnnotation(annotation)
             
             showCenterView()
+        }
+    }
+    
+    @objc private func handleSwipeDown(gesture: UISwipeGestureRecognizer) {
+        if gesture.direction == .down {
+            dismiss(animated: true, completion: nil)
         }
     }
     

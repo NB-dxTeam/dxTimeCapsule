@@ -10,7 +10,6 @@ class SignUpViewController: UIViewController  {
     
     
     private let profileImageView = UIImageView()
-    private let selectImageButton = UIButton()
     private let emailTextField = UITextField()
     private let passwordTextField = UITextField()
     private let confirmPasswordTextField = UITextField()
@@ -56,17 +55,15 @@ class SignUpViewController: UIViewController  {
         view.backgroundColor = .white
         
         // Configure the profileImageView
-        profileImageView.image = UIImage(named: "defaultProfileImage")
+        profileImageView.image = UIImage(named: "cameraIcon")
         profileImageView.layer.cornerRadius = profileImageView.frame.height / 2
         profileImageView.clipsToBounds = true
         profileImageView.isUserInteractionEnabled = true // if you want the image to be tappable
         profileImageView.setRoundedImage()
         view.addSubview(profileImageView)
         
-        // Configure the selectImageButton
-        selectImageButton.setImage(UIImage(named: "cameraIcon"), for: .normal)
-        selectImageButton.addTarget(self, action: #selector(selectImage), for: .touchUpInside)
-        view.addSubview(selectImageButton)
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(selectImage))
+        profileImageView.addGestureRecognizer(tapGestureRecognizer)
         
         // Configure the text fields
         configureTextField(emailTextField, placeholder: "Enter your email")
@@ -121,16 +118,8 @@ class SignUpViewController: UIViewController  {
             make.width.height.equalTo(180)
         }
         
-        selectImageButton.snp.makeConstraints { make in
-            make.top.equalTo(profileImageView.snp.bottom).offset(-37)
-            make.centerX.equalToSuperview()
-            make.width.equalTo(33.34)
-            make.height.equalTo(30.53) // 버튼의 높이
-
-        }
-
         emailTextField.snp.makeConstraints { make in
-            make.top.equalTo(selectImageButton.snp.bottom).offset(20)
+            make.top.equalTo(profileImageView.snp.bottom).offset(20)
             make.left.right.equalToSuperview().inset(50)
             make.height.equalTo(44)
         }
@@ -345,6 +334,29 @@ class SignUpViewController: UIViewController  {
             return
         }
         
+        let termsVC = TermsViewController()
+        
+        termsVC.email = email
+        termsVC.password = password
+        termsVC.username = username
+        termsVC.profileImage = profileImage
+        
+        termsVC.modalPresentationStyle = .formSheet // iPad에서 반 모달 스타일로 표시합니다.
+        termsVC.modalTransitionStyle = .coverVertical // 모달창이 아래에서 올라오는 효과
+        
+        termsVC.delegate = self
+
+        // iOS 15 이상에서는 반 모달 스타일을 지정할 수 있습니다.
+        if #available(iOS 15.0, *) {
+            if let sheet = termsVC.sheetPresentationController {
+                sheet.detents = [.medium()] // .medium() 또는 .large()로 설정할 수 있습니다.
+            }
+        }
+        
+        self.present(termsVC, animated: true, completion: nil)
+        
+        
+        /*
         // Firebase Authentication을 사용하여 사용자를 생성합니다.
         Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
             guard let self = self else { return }
@@ -400,8 +412,25 @@ class SignUpViewController: UIViewController  {
                 }
             }
         }
+        */
     }
 }
+
+// MARK: - TermsViewControllerDelegate
+extension SignUpViewController: TermsViewControllerDelegate {
+    func didCompleteSignUp() {
+        dismiss(animated: true) {
+            // 회원가입 성공 후 메인 화면으로 이동
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let sceneDelegate = windowScene.delegate as? SceneDelegate {
+                let mainTabBarController = MainTabBarView()
+                sceneDelegate.window?.rootViewController = mainTabBarController
+            }
+        }
+    }
+}
+
+
 
 // MARK: - Image Picker Delegate
 extension SignUpViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {

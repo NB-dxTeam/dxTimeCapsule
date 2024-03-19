@@ -14,27 +14,29 @@ import FirebaseAuth
 
 class CapsuleMapViewController: UIViewController {
     
-    private let capsuleMaps = MKMapView() // 지도 뷰
+    let capsuleMaps = MKMapView() // 지도 뷰
     var locationManager = CLLocationManager()
     var currentDetent: String? = nil
     // 타임박스 정보와 태그된 친구들의 정보를 담을 배열
     var timeBoxAnnotationsData = [TimeBoxAnnotationData]()
+    var selectedTimeBoxAnnotationData: TimeBoxAnnotationData?
+    var friendsCollectionView: UICollectionView?
     // 원래 지도의 중심 위치를 저장할 변수
     private var originalCenterCoordinate: CLLocationCoordinate2D?
     private var shouldShowModal = false
     
-    private lazy var aButton: UIButton = createRoundButton(title: "A")
-    private lazy var bButton: UIButton = createRoundButton(title: "B")
-    private lazy var cButton: UIButton = createRoundButton(title: "C")
+//    private lazy var aButton: UIButton = createRoundButton(title: "A")
+//    private lazy var bButton: UIButton = createRoundButton(title: "B")
+//    private lazy var cButton: UIButton = createRoundButton(title: "C")
     
-    private lazy var buttonsStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [aButton, bButton, cButton])
-        stackView.axis = .horizontal
-        stackView.distribution = .equalSpacing
-        stackView.alignment = .center
-        stackView.spacing = 10 // 버튼 사이의 간격을 설정합니다.
-        return stackView
-    }()
+//    private lazy var buttonsStackView: UIStackView = {
+//        let stackView = UIStackView(arrangedSubviews: [aButton, bButton, cButton])
+//        stackView.axis = .horizontal
+//        stackView.distribution = .equalSpacing
+//        stackView.alignment = .center
+//        stackView.spacing = 10 // 버튼 사이의 간격을 설정합니다.
+//        return stackView
+//    }()
     
     // 뒤로가기 버튼
     private lazy var backButton: UIButton = {
@@ -132,7 +134,7 @@ extension CapsuleMapViewController {
         self.view.addSubview(currentLocationButton)
         self.view.addSubview(zoomBackgroundView)
         view.addSubview(backButton)
-        view.addSubview(buttonsStackView)
+//        view.addSubview(buttonsStackView)
     }
     private func setupZoomControls() {
         view.addSubview(zoomBackgroundView)
@@ -145,10 +147,10 @@ extension CapsuleMapViewController {
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
         }
-        buttonsStackView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.centerX.equalToSuperview()
-        }
+//        buttonsStackView.snp.makeConstraints { make in
+//            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+//            make.centerX.equalToSuperview()
+//        }
         backButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.equalToSuperview().offset(10)
@@ -249,13 +251,10 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
         //let userId = "FNZgZFdLTXXjOkbJY841BW1WhAB2"
         print("Starting to load time capsule infos for user \(userId)") // 문서로드시작
         db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
-            .order(by: "openDate", descending: true) // 가장 먼저 개봉될 타임캡슐부터 정렬
+            .order(by: "openTimeBoxDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
             .getDocuments { [weak self] (querySnapshot, error) in
                 guard let documents = querySnapshot?.documents else {
                     print("Error fetching documents: \(error!)")
-//                    DispatchQueue.main.async {
-//                        self?.showLoadFailureAlert(withError: error!)
-//                    }
                     return
                 }
                 print("Successfully fetched \(documents.count) documents") // 문서로드 성공 및 문서 수
@@ -281,6 +280,7 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
                     print("TimeBox created with ID: \(timeBox.id) and userName: \(timeBox.userName)") // 각 TimeBox 객체 생성 시
                     if let tagFriendUids = timeBox.tagFriendUid, !tagFriendUids.isEmpty {
                         group.enter()
+                        print("tagFriendUis: \(tagFriendUids)")
                         FirestoreDataService().fetchFriendsInfo(byUIDs: tagFriendUids) { [weak self] friendsInfo in
                             guard let friendsInfo = friendsInfo else {
                                 group.leave()
@@ -305,41 +305,6 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
             }
     }
     
-    // 타임캡슐 정보를 기반으로 어노테이션 추가
-    func addAnnotations(from timeBoxes: [TimeBox]) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yy.MM.dd" // 날짜 형식 지정
-        dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul") // 한국 시간대 설정
-        dateFormatter.locale = Locale(identifier: "ko_KR") // 로케일을 한국어로 설정
-        
-        for timeBox in timeBoxes {
-            guard let userLocation = timeBox.userLocation else { continue }
-            let coordinate = CLLocationCoordinate2D(latitude: userLocation.latitude, longitude: userLocation.longitude)
-            
-            // Firestore에서 가져온 날짜를 한국 시간대에 맞춰 형식화
-            let formattedCreateDate = dateFormatter.string(from: (timeBox.createTimeBoxDate?.dateValue())!)
-            let weekday = Calendar.current.component(.weekday, from: (timeBox.createTimeBoxDate?.dateValue())!)
-            let weekdaySymbol = dateFormatter.weekdaySymbols[weekday - 1] // 요일 계산
-            
-            // FirestoreDataService 또는 비슷한 서비스를 사용하여 친구 정보 가져오기
-            FirestoreDataService().fetchFriendsInfo(byUIDs: timeBox.tagFriendUid ?? []) { [weak self] friends in
-                // 비동기적으로 친구 정보가 로드된 후에 어노테이션 생성
-                DispatchQueue.main.async {
-                    // 'friends' 배열을 직접 'CapsuleAnnotationModel'에 전달
-                    let annotation = CapsuleAnnotationModel(
-                        coordinate: coordinate,
-                        title: timeBox.userLocationTitle,
-                        subtitle: "등록한 날짜: \(formattedCreateDate) (\(weekdaySymbol))",
-                        info: timeBox, // 이 부분은 TimeBox 모델로 직접 관련 데이터를 넣어주거나 필요한 데이터만 넣어줄 수 있습니다.
-                        friends: friends // 여기에서 'friends' 타입이 [Friend]?와 일치하도록 수정됨
-                    )
-                    
-                    self?.capsuleMaps.addAnnotation(annotation)
-                }
-            }
-        }
-        print("지도에 \(timeBoxes.count)개의 어노테이션이 추가되었습니다.")
-    }
 }
 
 extension CapsuleMapViewController {
@@ -425,56 +390,90 @@ extension CapsuleMapViewController: MKMapViewDelegate {
         print("지도 위치 변경")
     }
     
-    // 어노테이션 설정
+//    // 어노테이션 설정
+//    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+//        // 사용자의 현재 위치 어노테이션은 기본 뷰를 사용
+//        if annotation is MKUserLocation {
+//            return nil
+//        }
+//
+//        let identifier = "CustomAnnotationView"
+//        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? CustomAnnotationView
+//
+//        if annotationView == nil {
+//            annotationView = CustomAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+//            // 커스텀 어노테이션 뷰를 위한 추가 설정은 여기서 구현
+//            annotationView?.annotation = annotation
+//            annotationView?.canShowCallout = false
+//        } else {
+//            annotationView?.annotation = annotation
+//            annotationView?.canShowCallout = false
+//        }
+//
+//        // 커스텀 어노테이션 데이터를 확인하고 구성
+//        if let customAnnotation = annotation as? CustomAnnotation {
+//            let annotationData = TimeBoxAnnotationData(timeBox: customAnnotation.timeBox, friendsInfo: customAnnotation.friendsInfo)
+//                annotationView?.configure(with: annotationData)
+//        }
+//
+//        return annotationView
+//    }
+    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        // 사용자의 현재 위치 어노테이션은 기본 뷰를 사용
-        if annotation is MKUserLocation {
-            return nil
-        }
-
-        let identifier = "CapsuleAnnotation"
-        var annotationView: MKAnnotationView
+        guard let timeBoxAnnotation = annotation as? TimeBoxAnnotation else { return nil }
+        
+        let identifier = "TimeBoxMarker"
+        var view: MKMarkerAnnotationView
         
         if let dequeuedView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView {
             dequeuedView.annotation = annotation
-            annotationView = dequeuedView
-            dequeuedView.canShowCallout = true
-            dequeuedView.animatesWhenAdded = true
-            dequeuedView.markerTintColor = .red
-            dequeuedView.glyphImage = UIImage(named: "boximage1")
-            //dequeuedView.glyphTintColor = .
+            view = dequeuedView
         } else {
-            let markerView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-            markerView.canShowCallout = true // 콜아웃 표시 설정
-            markerView.markerTintColor = .red // 마커 색상 설정
-            //markerView.glyphText = "🎁" // 마커 내 표시될 텍스트 설정
-            markerView.animatesWhenAdded = true
-            markerView.glyphImage = UIImage(named: "boximage1")
-            // 커스텀 콜아웃 뷰를 생성 및 설정
-            let calloutView = CustomCalloutView()
-            calloutView.translatesAutoresizingMaskIntoConstraints = false
-            markerView.detailCalloutAccessoryView = calloutView // 콜아웃 뷰 지정
-            
-//            // 오른쪽 액세서리 뷰에 버튼 추가
-//            let rightButton = UIButton(type: .detailDisclosure)
-//            markerView.rightCalloutAccessoryView = rightButton
-            
-            annotationView = markerView
+            view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            view.canShowCallout = true
+            view.calloutOffset = CGPoint(x: -5, y: 5)
+//            view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         }
-        return annotationView
+        
+        // Set the detailCalloutAccessoryView property with a custom view
+        view.detailCalloutAccessoryView = configureDetailView(for: timeBoxAnnotation)
+        
+        return view
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        guard let capsuleAnnotation = view.annotation as? CapsuleAnnotationModel else { return }
+        if let annotation = view.annotation as? TimeBoxAnnotation {
+            // Correctly access 'timeBoxAnnotationData' instead of 'data'
+            self.selectedTimeBoxAnnotationData = annotation.timeBoxAnnotationData
+            // Reload the collection view if it's already loaded
+            DispatchQueue.main.async {
+                self.friendsCollectionView?.reloadData()
+            }
+        }
+    }
+}
 
-        // 이전에 추가된 콜아웃 뷰를 제거
-       // view.subviews.forEach { $0.removeFromSuperview() }
-
-        let calloutView = CustomCalloutView()
-        calloutView.configure(with: capsuleAnnotation.info, friends: capsuleAnnotation.friends)
-        view.addSubview(calloutView)
-
-        mapView.setCenter((view.annotation?.coordinate)!, animated: true)
+extension CapsuleMapViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return selectedTimeBoxAnnotationData?.friendsInfo.count ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FriendCollectionViewCell", for: indexPath) as? FriendCollectionViewCell,
+              let friend = selectedTimeBoxAnnotationData?.friendsInfo[indexPath.row] else {
+            // Handle error state appropriately, possibly returning a default cell
+            return UICollectionViewCell()
+        }
+        
+        cell.configure(with: friend)
+        
+        return cell
+    }
+    
+    // Implement this method if you need to handle selection of a friend's cell.
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        // Handle the friend selection here if necessary.
     }
 }
 

@@ -2,8 +2,7 @@ import UIKit
 import SnapKit
 import FirebaseAuth
 import FirebaseCore
-import GoogleSignIn
-
+import FirebaseFirestore
 
 class LoginViewController: UIViewController {
     
@@ -15,14 +14,38 @@ class LoginViewController: UIViewController {
     private let appNameLabel = UILabel()
     private let emailTextField = UITextField()
     private let passwordTextField = UITextField()
-    private let loginButton = UIButton(type: .system)
-    private let socialLogin = UIButton(type: .system)
-    private let signUpLabel = UILabel()
-    private let signUpButton = UIButton(type: .system)
-    private let dividerView = UIView()
     
-    private let noAccountLabel = UILabel() // "계정이 없으신가요?" 라벨
-    private let signUpActionLabel = UILabel() // "회원가입" 액션 라벨
+    private let loginButton : UIButton = {
+        let button = UIButton(type: .system)
+        let title = "Log in" // 버튼의 제목 설정
+        button.setTitle(title, for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 16
+        button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 16)
+        // 그림자 설정
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowRadius = 6 // 그림자의 블러 정도 설정 (조금 더 부드럽게)
+        button.layer.shadowOpacity = 0.3 // 그림자의 투명도 설정 (적당한 농도로)
+        button.layer.shadowOffset =  CGSize(width: 0, height: 3) // 그림자
+        return button
+    }()
+    
+    private let signUpButton : UIButton = {
+        let button = UIButton(type: .system)
+        let title = "Sign up" // 버튼의 제목 설정
+        button.setTitle(title, for: .normal)
+        button.setTitleColor(UIColor(hex: "#C82D6B"), for: .normal)
+        button.layer.cornerRadius = 16
+        button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 16)
+        button.layer.borderWidth = 1.5 // 라인의 너비 설정
+        button.layer.borderColor = UIColor(hex: "#C82D6B").cgColor
+        
+        return button
+    }()
+    private let signUpLabel = UILabel()
+    private let forgot = UIButton(type: .system)
+    private let dividerView = UIView()
+    private let forgotPWLabel = UILabel() // "회원가입" 액션 라벨
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,27 +59,27 @@ class LoginViewController: UIViewController {
         passwordTextField.delegate = self
         
         // Test 자동기입
-
+        
         emailTextField.text =  "test1@gmail.com"
-        passwordTextField.text = "123456"
+        passwordTextField.text = "12345678"
         
     }
     
     private func setupSignUpButtonAction() {
         // 회원가입 버튼의 액션 설정
-        signUpActionLabel.isUserInteractionEnabled = true
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSignUpLabel))
-        signUpActionLabel.addGestureRecognizer(tapGesture)
+        forgotPWLabel.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapForgotPWLabel))
+        forgotPWLabel.addGestureRecognizer(tapGesture)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-//        loginButton.backgroundColor = UIColor(hex: "#FF3A4A")
-//        socialLogin.backgroundColor = UIColor(hex: "#FF3A4A")
+        //        loginButton.backgroundColor = UIColor(hex: "#FF3A4A")
+        //        socialLogin.backgroundColor = UIColor(hex: "#FF3A4A")
         loginButton.setInstagram()
-        socialLogin.setInstagram()
-
+        loginButton.layer.cornerRadius = 16
+ 
     }
     
     deinit {
@@ -74,12 +97,8 @@ class LoginViewController: UIViewController {
         view.addSubview(loginButton)
         view.addSubview(dividerView)
         view.addSubview(labelsContainerView)
-        view.addSubview(socialLogin)
-
-        
-        // labelsContainerView 내에 라벨들을 추가
-        labelsContainerView.addSubview(noAccountLabel)
-        labelsContainerView.addSubview(signUpActionLabel)
+        view.addSubview(signUpButton)
+        view.addSubview(forgotPWLabel)
         
         // 로그인 이미지 설정
         logoImageView.image = UIImage(named: "AppMainLogo")
@@ -98,23 +117,18 @@ class LoginViewController: UIViewController {
         
         // 로그인 버튼 설정 및 액션 연결ㅐ
         configureButton(loginButton, title: "Login")
-        configureButton(socialLogin, title: "Social Login")
+        configureButton(signUpButton, title: "Sign up")
         loginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
-        socialLogin.addTarget(self, action: #selector(handleGoogleSignIn), for: .touchUpInside)
-
-        // "계정이 없으신가요?" 라벨 설정
-        noAccountLabel.text = "Do not have an account?"
-        noAccountLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
-        noAccountLabel.textColor = .black
+        signUpButton.addTarget(self, action: #selector(didTapSignUpButton), for: .touchUpInside)
         
-        // "회원가입" 라벨 &설정
-        signUpActionLabel.text = "Sign up !"
-        signUpActionLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
-        signUpActionLabel.textColor = UIColor(hex: "#C82D6B")
-        signUpActionLabel.isUserInteractionEnabled = true
+        // "비밀번호 찾기" 라벨 &설정
+        forgotPWLabel.text = "Forgot Password? "
+        forgotPWLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
+        forgotPWLabel.textColor = .black
+        forgotPWLabel.isUserInteractionEnabled = true
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSignUpLabel))
-        signUpActionLabel.addGestureRecognizer(tapGesture)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapForgotPWLabel))
+        forgotPWLabel.addGestureRecognizer(tapGesture)
         
         // 디바이더 뷰 셋업
         dividerView.backgroundColor = .lightGray
@@ -124,9 +138,11 @@ class LoginViewController: UIViewController {
     // MARK: - Setup Layouts
     private func setupLayouts() {
         logoImageView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(40)
+            let offset = UIScreen.main.bounds.height * (0.25/6.0)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(offset)
             make.centerX.equalToSuperview()
-            make.width.height.equalTo(300)
+            make.width.equalTo(logoImageView.snp.height)
+            make.height.equalToSuperview().multipliedBy(2.15/6.0)
         }
         
         appNameLabel.snp.makeConstraints { make in
@@ -148,58 +164,38 @@ class LoginViewController: UIViewController {
         passwordTextField.isSecureTextEntry = true
         
         
-        // loginButton
+        // 로그인 버튼 레이아웃 설정
         loginButton.snp.makeConstraints { make in
             make.top.equalTo(passwordTextField.snp.bottom).offset(20)
             make.left.right.equalTo(passwordTextField)
             make.height.equalTo(44)
         }
         
-        // Google 로그인 버튼 레이아웃 설정
-        socialLogin.snp.makeConstraints { make in
+        // 회원가입 버튼 레이아웃 설정
+        signUpButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(loginButton.snp.bottom).offset(20)
             make.width.equalTo(loginButton.snp.width)
             make.height.equalTo(44)
         }
         
-        // Ensure dividerView is added to the view before setting constraints
+        // dividerView 레이아웃 설정
         dividerView.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-70)
+            let offset = UIScreen.main.bounds.height * (0.45/6.0)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(offset)
             make.left.right.equalToSuperview().inset(20)
             make.height.equalTo(1)
         }
         
         // labelsContainerView에 대한 높이 제약 조건 추가
-        labelsContainerView.snp.makeConstraints { make in
+        forgotPWLabel.snp.makeConstraints { make in
             make.top.equalTo(dividerView.snp.bottom).offset(15)
             make.centerX.equalToSuperview()
             // 높이를 명시적으로 설정
             make.height.equalTo(20)
         }
         
-        // noAccountLabel 및 signUpActionLabel에 대한 레이아웃 설정
-        noAccountLabel.snp.makeConstraints { make in
-            make.left.equalTo(labelsContainerView.snp.left)
-            make.centerY.equalTo(labelsContainerView.snp.centerY)
-        }
-        
-        signUpActionLabel.snp.makeConstraints { make in
-            make.right.equalTo(labelsContainerView.snp.right)
-            make.centerY.equalTo(labelsContainerView.snp.centerY)
-            make.left.equalTo(noAccountLabel.snp.right).offset(5)
-        }
-        
-        // 디버깅을 위한 배경색 설정
-        //        labelsContainerView.backgroundColor = .green // labelsContainerView의 배경색 설정
-        //        noAccountLabel.backgroundColor = .red // noAccountLabel의 배경색 설정
-        //        signUpActionLabel.backgroundColor = .blue // signUpActionLabel의 배경색 설정
-        
     }
-    
-    
-    
-    
     
     // MARK: - Actions
     // 로그인 버튼 탭 처리
@@ -226,7 +222,7 @@ class LoginViewController: UIViewController {
                     print("Login succeeded") // Debug print
                     let mainTabVC = MainTabBarView()
                     mainTabVC.modalPresentationStyle = .fullScreen
-                       self.present(mainTabVC, animated: true, completion: nil)
+                    self.present(mainTabVC, animated: true, completion: nil)
                 }
             }
         }
@@ -235,48 +231,105 @@ class LoginViewController: UIViewController {
     
     
     // 회원가입 버튼 탭 처리
-    @objc private func didTapSignUpLabel() {
+    @objc private func didTapSignUpButton() {
         let signUpViewController = SignUpViewController()
         self.present(signUpViewController, animated: true, completion: nil)
         print("Sign Up Button Tapped")
-        
     }
     
-    @objc private func handleGoogleSignIn() {
+    // 비밀번호 재설정 버튼 탭 처리
+    @objc private func didTapForgotPWLabel() {
+        // 팝업 창 생성
+        print("didTapForgotPWLabel")
+        let alertController = UIAlertController(title: "비밀번호 재설정", message: "이메일 주소를 입력하세요.", preferredStyle: .alert)
+        alertController.addTextField { textField in
+            textField.placeholder = "이메일"
+        }
         
+        // 확인 버튼 추가
+        let confirmAction = UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            // 사용자가 입력한 이메일 주소 가져오기
+            if let email = alertController.textFields?.first?.text {
+                // 이메일 주소가 비어있는지 확인
+                guard !email.isEmpty else {
+                    let alert = UIAlertController(title: "입력 오류", message: "이메일을 입력해주세요.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "확인", style: .default))
+                    self.present(alert, animated: true)
+                    return
+                }
+                // Firestore 데이터베이스에서 이메일 확인
+                let db = Firestore.firestore()
+                let usersRef = db.collection("users")
+                usersRef.whereField("email", isEqualTo: email).getDocuments { [weak self] (querySnapshot, error) in
+                    guard let self = self else { return }
+                    
+                    if let error = error {
+                        print("Error getting documents: \(error)")
+                        // 에러가 발생한 경우, 사용자에게 알림 표시
+                        let alert = UIAlertController(title: "에러", message: "이메일 확인 중 오류가 발생했습니다.", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "확인", style: .default))
+                        self.present(alert, animated: true)
+                    } else if querySnapshot?.documents.isEmpty == true {
+                        // 이메일이 존재하지 않는 경우
+                        let alert = UIAlertController(title: "이메일 없음", message: "해당하는 이메일이 존재하지 않습니다.", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "다시 시도", style: .default))
+                        alert.addAction(UIAlertAction(title: "가입하기", style: .default) { _ in
+                            // 가입하기 버튼을 누른 경우, 회원가입 화면으로 이동
+                            self.didTapSignUpButton()
+                        })
+                        self.present(alert, animated: true)
+                    } else {
+                        // 이메일이 존재하는 경우, 비밀번호 재설정 이메일 보내기
+                        Auth.auth().sendPasswordReset(withEmail: email) { [weak self] error in
+                            guard let self = self else { return }
+                            if let error = error {
+                                print("Error sending password reset email: \(error.localizedDescription)")
+                                // 에러가 발생한 경우, 사용자에게 알림 표시
+                                let alert = UIAlertController(title: "에러", message: "비밀번호 재설정 이메일 보내기 중 오류가 발생했습니다.", preferredStyle: .alert)
+                                alert.addAction(UIAlertAction(title: "확인", style: .default))
+                                self.present(alert, animated: true)
+                            } else {
+                                // 이메일이 성공적으로 보내진 경우, 사용자에게 알림 표시
+                                let alert = UIAlertController(title: "이메일 전송 완료", message: "비밀번호 재설정 이메일을 보냈습니다. 이메일을 확인해주세요.", preferredStyle: .alert)
+                                alert.addAction(UIAlertAction(title: "확인", style: .default))
+                                self.present(alert, animated: true)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        alertController.addAction(confirmAction) // 확인 액션 추가
+        alertController.addAction(UIAlertAction(title: "취소", style: .cancel)) // 취소 액션 추가
+        self.present(alertController, animated: true)
     }
-
-
 }
-
-
 // 텍스트 필드 스타일 설정 함수
 private extension LoginViewController {
     func configureTextField(_ textField: UITextField, placeholder: String) {
         textField.placeholder = placeholder
-        textField.borderStyle = .roundedRect
-        textField.layer.cornerRadius = 10
+        textField.layer.cornerRadius = 10 // 모서리를 둥글게 만듭니다.
         textField.layer.masksToBounds = true
-        textField.layer.backgroundColor = UIColor.systemGray6.cgColor
-        textField.font = UIFont.pretendardRegular(ofSize: 14)
+        textField.layer.borderWidth = 1 // 선의 너비를 설정합니다.
+        textField.layer.borderColor = UIColor.systemGray5.cgColor // 선의 색상을 설정합니다.
+        textField.font = UIFont.pretendardRegular(ofSize: 16)
         textField.snp.makeConstraints { make in
             make.height.equalTo(40)
         }
+        // 왼쪽 공백을 추가합니다.
+        let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 40))
+        textField.leftView = leftPaddingView
+        textField.leftViewMode = .always
+        
+        // 오른쪽 공백을 추가합니다.
+        let rightPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 40))
+        textField.rightView = rightPaddingView
+        textField.rightViewMode = .always
     }
     
     func configureButton(_ button: UIButton, title: String) {
-        button.setTitle(title, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 16
-        button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 16)
-        
-        // 그림자 설정
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowRadius = 6 // 그림자의 블러 정도 설정 (조금 더 부드럽게)
-        button.layer.shadowOpacity = 0.3 // 그림자의 투명도 설정 (적당한 농도로)
-        button.layer.shadowOffset =  CGSize(width: 0, height: 3) // 그림자 방향 설정 (아래로 조금 더 멀리)
-        
-        
         button.snp.makeConstraints { make in
             make.height.equalTo(40)
         }
@@ -304,9 +357,9 @@ extension LoginViewController: UITextFieldDelegate {
 }
 
 
-// MARK: - SwiftUI Preview
-import SwiftUI
-
+//// MARK: - SwiftUI Preview
+//import SwiftUI
+//
 //struct MainTabBarViewPreview22 : PreviewProvider {
 //    static var previews: some View {
 //        LoginViewController().toPreview()

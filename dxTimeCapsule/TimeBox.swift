@@ -5,6 +5,7 @@ struct TimeBox {
     var id: String? // 타임박스 고유 ID
     var uid: String? // 생성한 사용자의 uid
     var userName : String? // 생성한 사용자의 닉네임
+    var thumbnailURL: String? // 썸네일
     var imageURL: [String]? // 타임박스 안의 사진들
     var userLocation: GeoPoint? // 사용자 위치
     var userLocationTitle: String? // 위치 타이틀

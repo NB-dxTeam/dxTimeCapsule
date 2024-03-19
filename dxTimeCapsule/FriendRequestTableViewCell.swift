@@ -1,6 +1,6 @@
 import UIKit
 import SnapKit
-import SDWebImage
+//import SDWebImage
 import FirebaseAuth
 
 class FriendRequestTableViewCell: UITableViewCell {
@@ -17,7 +17,7 @@ class FriendRequestTableViewCell: UITableViewCell {
     
     private let userNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 24)
+        label.font = UIFont.pretendardRegular(ofSize: 20)
         return label
     }()
     

@@ -15,7 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         window.overrideUserInterfaceStyle = .light
         
-        let spalshVC = SplashViewController()
+        let spalshVC = MainTabBarView()
         window.rootViewController = spalshVC
         window.makeKeyAndVisible()
         
