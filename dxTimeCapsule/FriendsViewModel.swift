@@ -130,6 +130,41 @@ class FriendsViewModel: ObservableObject {
         }
     }
     
+    // 친구 요청 목록을 가져오는 함수 추가 240319 혜경
+    func fetchFriendRequests(forUser userId: String, completion: @escaping ([User]?, Error?) -> Void) {
+        db.collection("friendRequests")
+            .whereField("receiverUid", isEqualTo: userId)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    completion(nil, error)
+                    return
+                }
+
+                var requests: [User] = []
+                guard let documents = snapshot?.documents else {
+                    completion([], nil) // 빈 배열 반환
+                    return
+                }
+                
+                let group = DispatchGroup()
+                
+                for document in documents {
+                    group.enter() // 작업 시작을 그룹에 알림
+                    let senderId = document.get("senderUid") as? String ?? ""
+                    self.fetchUser(with: senderId) { user in
+                        if let user = user {
+                            requests.append(user)
+                        }
+                        group.leave() // 작업 완료를 그룹에 알림
+                    }
+                }
+                
+                group.notify(queue: .main) {
+                    completion(requests, nil) // 모든 사용자 정보를 성공적으로 가져온 후 완료 핸들러 호출
+                }
+            }
+    }
+    
     // 친구 요청 목록 가져오기
     func friendRequestsList(forUser userId: String, completion: @escaping ([User]?, Error?) -> Void) {
         db.collection("friendRequests")
@@ -216,8 +251,8 @@ class FriendsViewModel: ObservableObject {
                 let data = document.data()
                 let user = User(
                     uid: userId,
-                    userName: data?["email"] as? String ?? "",
-                    email: data?["username"] as? String ?? "",
+                    userName: data?["username"] as? String ?? "",
+                    email: data?["email"] as? String ?? "",
                     profileImageUrl: data?["profileImageUrl"] as? String
                 )
                 completion(user)

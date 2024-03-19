@@ -20,7 +20,7 @@ class FriendListTableViewCell: UITableViewCell {
     
     private var userNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 24)
+        label.font = UIFont.pretendardMedium(ofSize: 20)
         return label
     }()
     

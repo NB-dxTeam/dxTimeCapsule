@@ -6,6 +6,7 @@ import FirebaseAuth
 class FriendsListViewController: UIViewController {
     
     private var friendsListLabel: UILabel!
+    private let friendsCountLabel = UILabel()
     var tableView: UITableView!
     let db = Firestore.firestore()
     var currentUser: User?
@@ -30,11 +31,18 @@ class FriendsListViewController: UIViewController {
         friendsListLabel.backgroundColor = .white  // 라벨의 배경색도 흰색으로 설정합니다.
         backgroundView.addSubview(friendsListLabel)
         
+        // Friends Count Label Setup
+        friendsCountLabel.font = .pretendardRegular(ofSize: 14)
+        friendsCountLabel.textColor = .darkGray
+        friendsCountLabel.textAlignment = .center
+        view.addSubview(friendsCountLabel)
+
+        
         // 라벨의 배경 뷰 제약 조건을 설정합니다.
         backgroundView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
             make.left.right.equalToSuperview()
-            make.bottom.equalTo(friendsListLabel).offset(20) // 라벨 아래 여백을 추가합니다.
+            make.bottom.equalTo(friendsCountLabel).offset(20) // 라벨 아래 여백을 추가합니다.
         }
         
         // 라벨의 제약 조건을 설정합니다.
@@ -42,6 +50,13 @@ class FriendsListViewController: UIViewController {
             make.top.equalToSuperview().offset(10)
             make.left.equalToSuperview().offset(16)
         }
+        
+        // Friends Count Label Constraints
+        friendsCountLabel.snp.makeConstraints { make in
+            make.top.equalTo(friendsListLabel.snp.bottom).offset(10) // 수정할 부분
+            make.left.equalToSuperview().offset(16)
+        }
+
     }
 
     
@@ -53,7 +68,7 @@ class FriendsListViewController: UIViewController {
         view.addSubview(tableView)
         
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(friendsListLabel.snp.bottom).offset(20)
+            make.top.equalTo(friendsCountLabel.snp.bottom).offset(20)
             make.left.right.bottom.equalToSuperview()
         }
     }
@@ -71,8 +86,8 @@ class FriendsListViewController: UIViewController {
             guard let userData = document.data() else { return }
             self.currentUser = User(
                 uid: currentUserID,
-                userName: userData["email"] as? String ?? "",
-                email: userData["username"] as? String ?? "",
+                userName: userData["username"] as? String ?? "",
+                email: userData["email"] as? String ?? "",
                 profileImageUrl: userData["profileImageUrl"] as? String
             )
             self.fetchFriends(forUserID: currentUserID)
@@ -110,11 +125,11 @@ class FriendsListViewController: UIViewController {
                     }
                     if let friendData = friendSnapshot?.data(),
                         let uid = friendData["uid"] as? String,
-                        let email = friendData["email"] as? String,
-                        let username = friendData["username"] as? String,
-                       let imageUrl = friendData["profileImageUrl"] as? String {
-                        let friend = User(uid: uid, userName: email, email: username, profileImageUrl: imageUrl)
-                         fetchedFriends.append(friend) // Append fetched friend to the temporary array
+                        let username = friendData["username"] as? String, // 수정됨
+                        let email = friendData["email"] as? String, // 수정됨
+                        let imageUrl = friendData["profileImageUrl"] as? String {
+                        let friend = User(uid: uid, userName: username, email: email, profileImageUrl: imageUrl) // 수정됨
+                        fetchedFriends.append(friend) // Append fetched friend to the temporary array
                     }
                 }
             }
@@ -124,6 +139,9 @@ class FriendsListViewController: UIViewController {
                 // After that, update the friends array and reload tableView
                 self.friends = fetchedFriends // Update friends array with fetchedFriends
                 self.tableView.reloadData()
+                
+                // Update Friends Count Label
+                self.friendsCountLabel.text = "친구 \(self.friends.count)명"
             }
         }
     }

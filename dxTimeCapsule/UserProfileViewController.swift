@@ -403,6 +403,20 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     
     
     @objc private func deleteProfileTapped() {
+        let alertController = UIAlertController(title: "회원 탈퇴", message: "정말로 계정을 삭제하시겠습니까?\n 소중한 추억들이 영원히 사라집니다.", preferredStyle: .alert)
+
+        let deleteAction = UIAlertAction(title: "탈퇴하기", style: .destructive) { [weak self] _ in
+            self?.deleteAccount()
+        }
+        alertController.addAction(deleteAction)
+
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        alertController.addAction(cancelAction)
+
+        present(alertController, animated: true)
+    }
+
+    private func deleteAccount() {
         // 사용자 ID를 가져옵니다.
         guard let userId = Auth.auth().currentUser?.uid else { return }
         
