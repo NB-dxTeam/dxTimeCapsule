@@ -56,18 +56,7 @@ class PhotoCell: UICollectionViewCell {
         }
     }
     
-    override var isSelected: Bool {
-        didSet {
-            updateSelectionVisuals()
-        }
-    }
-    
-    private func updateSelectionVisuals() {
-        selectedIndicator.isHidden = !isSelected
-        selectionNumberLabel.isHidden = !isSelected
-    }
-    
-    func configure(with asset: PHAsset, imageManager: PHCachingImageManager, selectionNumber: Int? = nil) {
+    func configure(with asset: PHAsset, imageManager: PHCachingImageManager, isSelected: Bool, selectionNumber: Int?) {
         let options = PHImageRequestOptions()
         options.isNetworkAccessAllowed = true
         options.deliveryMode = .highQualityFormat
@@ -78,17 +67,21 @@ class PhotoCell: UICollectionViewCell {
             }
         }
         
-        if let number = selectionNumber {
+        updateSelectionState(isSelected: isSelected, selectionNumber: selectionNumber)
+    }
+    
+    func updateSelectionState(isSelected: Bool, selectionNumber: Int? = nil) {
+        selectedIndicator.isHidden = !isSelected
+        selectionNumberLabel.isHidden = !isSelected
+        if let number = selectionNumber, isSelected {
             selectionNumberLabel.text = "\(number)"
-            isSelected = true
-        } else {
-            isSelected = false
         }
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         photoImageView.image = nil
-        isSelected = false
+        selectedIndicator.isHidden = true
+        selectionNumberLabel.isHidden = true
     }
 }

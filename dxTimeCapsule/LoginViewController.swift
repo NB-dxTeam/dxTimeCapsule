@@ -17,7 +17,7 @@ class LoginViewController: UIViewController {
     
     private let loginButton : UIButton = {
         let button = UIButton(type: .system)
-        let title = "Log in" // 버튼의 제목 설정
+        let title = "Login" // 버튼의 제목 설정
         button.setTitle(title, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 16
@@ -32,7 +32,7 @@ class LoginViewController: UIViewController {
     
     private let signUpButton : UIButton = {
         let button = UIButton(type: .system)
-        let title = "Sign up" // 버튼의 제목 설정
+        let title = "SignUp" // 버튼의 제목 설정
         button.setTitle(title, for: .normal)
         button.setTitleColor(UIColor(hex: "#C82D6B"), for: .normal)
         button.layer.cornerRadius = 16

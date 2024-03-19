@@ -56,11 +56,13 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         
         locationManager = CLLocationManager()
         locationManager.delegate = self
+        
         currentLocationButton = UIButton(type: .system)
         
         closeButton = UIButton(type: .system)
-          closeButton.setTitle("X", for: .normal)
-          closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        closeButton.setTitle("뒤로", for: .normal)
+        closeButton.tintColor = UIColor(hex: "#C82D6B")
+        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
     }
     
     private func setupCenterView() {
