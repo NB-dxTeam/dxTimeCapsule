@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "cameraIcon.svg",
+      "filename" : "canmeraIcon.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "cameraIcon 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "cameraIcon 2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }

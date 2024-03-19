@@ -14,6 +14,25 @@ class PhotoCell: UICollectionViewCell {
         return imageView
     }()
     
+    private let selectedIndicator: UIView = {
+         let view = UIView()
+         view.backgroundColor = UIColor.clear // 선택되지 않은 상태의 배경색
+         view.layer.borderColor = UIColor.white.cgColor
+         view.layer.borderWidth = 2
+         view.layer.cornerRadius = 15 // 원형 표시를 위한 반경 설정
+         view.isHidden = true // 기본적으로 숨김 처리
+         return view
+     }()
+    
+    private let selectionNumberLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor.white
+        label.textAlignment = .center
+        label.isHidden = true // 기본적으로 숨김 처리
+        return label
+    }()
+    
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(photoImageView)
@@ -33,6 +52,17 @@ class PhotoCell: UICollectionViewCell {
              make.right.bottom.equalToSuperview().inset(8)
              make.width.height.equalTo(25)
          }
+        
+        addSubview(selectedIndicator)
+        selectedIndicator.snp.makeConstraints { make in
+            make.right.bottom.equalToSuperview().inset(8)
+            make.width.height.equalTo(30) // 체크 표시 크기
+        }
+        
+        selectedIndicator.addSubview(selectionNumberLabel)
+        selectionNumberLabel.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
      }
     
     override var isSelected: Bool {
@@ -68,10 +98,12 @@ class PhotoCell: UICollectionViewCell {
         
      }
     
-    func updateSelectionState(isSelected: Bool) {
-         // 선택 상태에 따라 체크 마크 표시 또는 숨김
-         checkmarkImageView.isHidden = !isSelected
-     }
-    
+    func updateSelectionState(isSelected: Bool, selectionNumber: Int = 0) {
+        selectedIndicator.isHidden = !isSelected
+        selectionNumberLabel.isHidden = !isSelected
+        if isSelected {
+            selectionNumberLabel.text = "\(selectionNumber)"
+        }
+    }
 
  }
