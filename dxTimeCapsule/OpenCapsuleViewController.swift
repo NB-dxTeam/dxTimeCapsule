@@ -222,12 +222,12 @@ class OpenCapsuleViewController: UIViewController {
                  dateFormatter.locale = Locale(identifier: "ko_KR")
                  
                 // 'creationDate' 필드 값
-                   let creationDateTimestamp = document.get("creationDate") as? Timestamp
+                   let creationDateTimestamp = document.get("createTimeBoxDate") as? Timestamp
                    self.creationDate = creationDateTimestamp?.dateValue()
                    let creationDateString = self.creationDate.map { dateFormatter.string(from: $0) } ?? "날짜 정보 없음"
                    
                  // 'openDate' 필드 값
-                   let openDateTimestamp = document.get("openDate") as? Timestamp
+                   let openDateTimestamp = document.get("openTimeBoxDate") as? Timestamp
                    self.openDate = openDateTimestamp?.dateValue()
                    let openDateString = self.openDate.map { dateFormatter.string(from: $0) } ?? "날짜 정보 없음"
             
@@ -235,24 +235,24 @@ class OpenCapsuleViewController: UIViewController {
                     self.userMessage = document.get("description") as? String
             
                  // 'username' 필드 값
-                 let username = document.get("userId") as? String ?? "사용자"
+                 let username = document.get("userName") as? String ?? "사용자"
             
                  // 'userLocation' 필드 값
-                 let userLocation = document.get("userLocation") as? String ?? "위치 정보 없음"
+                 let userLocation = document.get("addressTitle") as? String ?? "위치 정보 없음"
                     
                  // 'location' 필드 값
-                 let detailedLocation = document.get("location") as? String ?? "세부 주소 정보 없음"
+                 let detailedLocation = document.get("address") as? String ?? "세부 주소 정보 없음"
                     
                  // 'mood' 필드 값
                  let mood = document.get("mood") as? String ?? ""
                  
-                 // 이미지 URL 처리 및 표시
-                 if let imageUrlString = document.get("photoUrl") as? String, let imageUrl = URL(string: imageUrlString) {
-                     self.capsuleImageView.sd_setImage(with: imageUrl, placeholderImage: UIImage(named: "placeholder"))
-                 }
+            // 이미지 URL 배열 처리 및 표시
+            if let imageUrlStrings = document.get("imageURL") as? [String], !imageUrlStrings.isEmpty, let imageUrl = URL(string: imageUrlStrings[0]) {
+                self.capsuleImageView.sd_setImage(with: imageUrl, placeholderImage: UIImage(named: "placeholder"))
+            }
 
                  // 'friendID' 필드 값 처리
-                 let friendID = document.get("friendID") as? [String] ?? []
+                 let friendID = document.get("tagFriendName") as? [String] ?? []
                  let friendSentence: String
                  if friendID.isEmpty {
                      friendSentence = ""

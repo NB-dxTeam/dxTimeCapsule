@@ -103,7 +103,7 @@ class MainCapsuleViewController: UIViewController {
         db.collection("timeCapsules")
           .whereField("uid", isEqualTo: userId)
           .whereField("isOpened", isEqualTo: false) // 아직 열리지 않은 타임캡슐만 선택
-          .order(by: "openDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
+          .order(by: "openTimeBoxDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
           .limit(to: 1) // 가장 개봉일이 가까운 타임캡슐 1개만 선택
           .getDocuments { [weak self] (querySnapshot, err) in
             guard let self = self else { return }
@@ -113,9 +113,9 @@ class MainCapsuleViewController: UIViewController {
                 self.documentId = document.documentID
                 
                 // 문서에서 필드의 값을 가져옵니다.
-                let userLocation = document.get("userLocation") as? String ?? "Unknown Location"
-                let detailedLocation = document.get("location") as? String ?? "No detailed address available"
-                if let openDateTimestamp = document.get("openDate") as? Timestamp {
+                let userLocation = document.get("addressTitle") as? String ?? "Unknown Location"
+                let detailedLocation = document.get("address") as? String ?? "No detailed address available"
+                if let openDateTimestamp = document.get("openTimeBoxDate") as? Timestamp {
                     let openDate = openDateTimestamp.dateValue()
                     self.openDate = openDate // 전역 변수에 openDate 저장
                     
@@ -148,7 +148,7 @@ class MainCapsuleViewController: UIViewController {
                 }
                 
                 // 생성일 필드 값 가져오기
-                if let creationDate = document.get("creationDate") as? Timestamp {
+                if let creationDate = document.get("createTimeBoxDate") as? Timestamp {
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "yyyy-MM-dd"
                     let dateStr = dateFormatter.string(from: creationDate.dateValue())
