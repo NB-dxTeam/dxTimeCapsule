@@ -18,13 +18,11 @@ class TermsViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
     weak var delegate: TermsViewControllerDelegate?
     
-    // TermsViewController 내에 선언된 변수들
     var email: String?
     var password: String?
     var username: String?
     var profileImage: UIImage?
 
-    // UI 컴포넌트 선언
     private let headerLabel = UILabel()
     private let allAgreeCheckbox = UIButton()
     private let tableView = UITableView()
@@ -77,18 +75,14 @@ class TermsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         headerView.addSubview(headerLabel)
         
         let allAgreeView = UIView()
-        allAgreeView.isUserInteractionEnabled = true // 확실하게 상호작용 가능하게 설정
-        
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(toggleAllAgreeCheckbox))
-        allAgreeView.addGestureRecognizer(tapGestureRecognizer)
-        
-        allAgreeView.addSubview(allAgreeCheckbox)
-        
         let allAgreeLabel = UILabel()
         allAgreeLabel.text = "모두 동의합니다."
+        
         allAgreeView.addSubview(allAgreeLabel)
+        allAgreeView.addSubview(allAgreeCheckbox)
         
         headerView.addSubview(allAgreeView)
+        headerView.addSubview(allAgreeCheckbox) // allAgreeCheckbox를 headerView에 추가
         
         let separatorView = UIView()
         separatorView.backgroundColor = tableView.separatorColor
@@ -126,9 +120,10 @@ class TermsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         // 초기 상태 업데이트
         updateAllAgreeCheckboxAppearance(isSelected: termsAgreed.allSatisfy { $0 })
+        allAgreeCheckbox.addTarget(self, action: #selector(toggleAllAgreeCheckbox), for: .touchUpInside)
     }
 
-    
+
     private func setupTableViewFooter() {
         let footerHeight: CGFloat = 50
         let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: footerHeight))
@@ -151,11 +146,8 @@ class TermsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.tableFooterView = footerView
     }
 
-    
-    
-    // MARK: - Setup Join Button
     private func setupJoinButton() {
-        configureButton(joinButton, title: "Complete Sign Up")
+        self.configureButton(joinButton, "Complete Sign Up")
         joinButton.setInstagram()
         joinButton.layer.cornerRadius = 10
         joinButton.addTarget(self, action: #selector(completeSignUp), for: .touchUpInside)
@@ -169,14 +161,9 @@ class TermsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     
-    private func presentAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "가입 완료!", style: .default))
-        present(alert, animated: true)
-    }
-
     
-    // MARK: - Update Join Button State
+    // MARK: - Update UI State
+
     private func updateJoinButtonState() {
         // 모든 필수 체크박스가 선택되었는지 확인합니다.
         let isAllRequiredTermsAgreed = termsAgreed[0] && termsAgreed[1]
@@ -190,9 +177,63 @@ class TermsViewController: UIViewController, UITableViewDelegate, UITableViewDat
             joinButton.backgroundColor = .lightGray // 비활성화 상태의 버튼 스타일
         }
     }
+    
+    private func updateAllAgreeCheckboxAppearance(isSelected: Bool) {
+        let symbolName = isSelected ? "checkmark.circle.fill" : "circle"
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .regular)
+        let symbolImage = UIImage(systemName: symbolName, withConfiguration: symbolConfig)
+        allAgreeCheckbox.setImage(symbolImage, for: .normal)
+    }
+
+    // MARK: - Action Handlers
+    
+    @objc private func toggleAllAgreeCheckbox() {
+        let allAgreed = !termsAgreed.allSatisfy { $0 }
+        termsAgreed = [Bool](repeating: allAgreed, count: 3)
+        tableView.reloadData()
+        updateJoinButtonState()
+        updateAllAgreeCheckboxAppearance(isSelected: allAgreed) // 체크박스 외형 업데이트
+    }
+    
+    @objc private func openTermsWebPage() {
+        if let url = URL(string: "https://jooyeong.notion.site/816cf16c963b492b96436b21bdea743d") {
+            let safariViewController = SFSafariViewController(url: url)
+            present(safariViewController, animated: true)
+        }
+    }
+
+    @objc private func completeSignUp() {
+        guard let email = self.email, let password = self.password, let username = self.username, let profileImage = self.profileImage else {
+            self.presentAlert(title: "Error", message: "Missing information.")
+            return
+        }
+        
+        AuthService.shared.signUpWithEmail(email: email, password: password, username: username, profileImage: profileImage) { [weak self] result in
+            guard let strongSelf = self else { return }
+            switch result {
+            case .success(_):
+                // 회원가입 성공, 델리게이트를 통해 SignUpViewController에 알림
+                DispatchQueue.main.async {
+                    strongSelf.delegate?.didCompleteSignUp()
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    strongSelf.presentAlert(title: "Sign Up Error", message: error.localizedDescription)
+                }
+            }
+        }
+    }
+    
+    private func presentAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "가입 완료!", style: .default))
+        present(alert, animated: true)
+    }
 
 
     
+    // MARK: - UITableViewDelegate & UITableViewDataSource
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -227,55 +268,7 @@ class TermsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
 
-    
-    @objc private func openTermsWebPage() {
-        if let url = URL(string: "https://jooyeong.notion.site/816cf16c963b492b96436b21bdea743d") {
-            let safariViewController = SFSafariViewController(url: url)
-            present(safariViewController, animated: true)
-        }
-    }
-
-    
-    @objc private func completeSignUp() {
-        guard let email = self.email, let password = self.password, let username = self.username, let profileImage = self.profileImage else {
-            self.presentAlert(title: "Error", message: "Missing information.")
-            return
-        }
-        
-        AuthService.shared.signUpWithEmail(email: email, password: password, username: username, profileImage: profileImage) { [weak self] result in
-            guard let strongSelf = self else { return }
-            switch result {
-            case .success(_):
-                // 회원가입 성공, 델리게이트를 통해 SignUpViewController에 알림
-                DispatchQueue.main.async {
-                    strongSelf.delegate?.didCompleteSignUp()
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    strongSelf.presentAlert(title: "Sign Up Error", message: error.localizedDescription)
-                }
-            }
-        }
-    }
-    @objc private func toggleAllAgreeCheckbox() {
-        let allAgreed = !termsAgreed.allSatisfy { $0 }
-        termsAgreed = [Bool](repeating: allAgreed, count: 3)
-        tableView.reloadData()
-        updateJoinButtonState()
-        updateAllAgreeCheckboxAppearance(isSelected: allAgreed) // 체크박스 외형 업데이트
-    }
-
-    private func updateAllAgreeCheckboxAppearance(isSelected: Bool) {
-        let symbolName = isSelected ? "checkmark.circle.fill" : "circle"
-        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .regular)
-        let symbolImage = UIImage(systemName: symbolName, withConfiguration: symbolConfig)
-        allAgreeCheckbox.setImage(symbolImage, for: .normal)
-    }
-}
-
-
-private extension LoginViewController {
-    func configureButton(_ button: UIButton, title: String) {
+    private func configureButton(_ button: UIButton, _ title: String) {
         button.setTitle(title, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 16
@@ -292,3 +285,6 @@ private extension LoginViewController {
         }
     }
 }
+
+
+

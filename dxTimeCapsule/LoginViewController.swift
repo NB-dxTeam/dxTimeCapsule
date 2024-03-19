@@ -138,11 +138,11 @@ class LoginViewController: UIViewController {
     // MARK: - Setup Layouts
     private func setupLayouts() {
         logoImageView.snp.makeConstraints { make in
-            let offset = UIScreen.main.bounds.height * (0.25/6.0)
+            let offset = UIScreen.main.bounds.height * (0.45/6.0)
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(offset)
             make.centerX.equalToSuperview()
             make.width.equalTo(logoImageView.snp.height)
-            make.height.equalToSuperview().multipliedBy(2.15/6.0)
+            make.height.equalToSuperview().multipliedBy((2.15/6.0) * 0.7)
         }
         
         appNameLabel.snp.makeConstraints { make in
