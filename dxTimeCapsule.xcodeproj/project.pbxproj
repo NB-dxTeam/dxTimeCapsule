@@ -282,13 +282,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1F1071BA2B95D3E8009E201A /* MapLocaation */ = {
+		1F1071BA2B95D3E8009E201A /* MapLocation */ = {
 			isa = PBXGroup;
 			children = (
 				1FD2B7A72B96BF4A00896F9C /* BottomSheet */,
 				1FD2B79B2B96BD7300896F9C /* LocationMapkitViewController.swift */,
 			);
-			name = MapLocaation;
+			name = MapLocation;
 			sourceTree = "<group>";
 		};
 		1F16B8222BA9A32000753F82 /* Cell */ = {
@@ -536,7 +536,7 @@
 			isa = PBXGroup;
 			children = (
 				1FE768342BA9842400CC4A55 /* Legercy */,
-				1F1071BA2B95D3E8009E201A /* MapLocaation */,
+				1F1071BA2B95D3E8009E201A /* MapLocation */,
 				1F2450192B9B4F7B002C68BB /* Post */,
 			);
 			name = Upload;

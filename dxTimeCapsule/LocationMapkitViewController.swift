@@ -2,6 +2,7 @@ import UIKit
 import MapKit
 import CoreLocation
 import SnapKit
+import FirebaseFirestore
 
 class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate, UISearchBarDelegate {
     
@@ -10,6 +11,8 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     private var locationManager: CLLocationManager!
     private var currentLocationButton: UIButton!
     
+    private var selectedLocation: CLLocationCoordinate2D?
+
     private var titleLabel: UILabel!
     private var createCapsuleButton: UIButton!
     private var modifyLocationButton: UIButton!
@@ -56,11 +59,13 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         
         locationManager = CLLocationManager()
         locationManager.delegate = self
+        
         currentLocationButton = UIButton(type: .system)
         
         closeButton = UIButton(type: .system)
-          closeButton.setTitle("X", for: .normal)
-          closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        closeButton.setTitle("뒤로", for: .normal)
+        closeButton.tintColor = UIColor(hex: "#C82D6B")
+        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
     }
     
     private func setupCenterView() {
@@ -165,7 +170,6 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         createCapsuleButton.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 18)
         createCapsuleButton.layer.cornerRadius = 8
         createCapsuleButton.addTarget(self, action: #selector(handleCreateCapsuleTap), for: .touchUpInside)
-        // Ensure this line is reached during execution by adding a print statement or breakpoint here.
         
         centerView.addSubview(createCapsuleButton)
         createCapsuleButton.snp.makeConstraints { make in
@@ -262,10 +266,24 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     
     
     @objc private func handleCreateCapsuleTap() {
+        guard let selectedCoordinate = selectedLocation else {
+            // 선택된 위치가 없을 경우, 사용자에게 메시지 표시
+            showBannerMessage(message: "캡슐을 생성할 위치를 선택해주세요!")
+            return
+        }
+
+        let geoPoint = GeoPoint(latitude: selectedCoordinate.latitude, longitude: selectedCoordinate.longitude)
+
+        // TimeBox 객체 생성
+        var timeBox = TimeBox(
+            userLocation: geoPoint
+        )
+        
         let photoUploadVC = PhotoUploadViewController()
         photoUploadVC.modalPresentationStyle = .fullScreen // 또는 .overFullScreen
         present(photoUploadVC, animated: true, completion: nil)
     }
+
 
     @objc private func handleModifyLocationTap() {
         if isCenterViewPresented {
@@ -285,27 +303,33 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     
     // MARK: - Gesture
     private func setupLongPressGesture() {
-          mapView.gestureRecognizers?.forEach {
-              if $0 is UILongPressGestureRecognizer {
-                  mapView.removeGestureRecognizer($0)
-              }
-          }
-          let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
-          mapView.addGestureRecognizer(longPressGesture)
-      }
+        mapView.gestureRecognizers?.forEach {
+            if $0 is UILongPressGestureRecognizer {
+                mapView.removeGestureRecognizer($0)
+            }
+        }
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        mapView.addGestureRecognizer(longPressGesture)
+    }
     
     @objc private func handleLongPress(gesture: UILongPressGestureRecognizer) {
+        print("롱 프레스 감지됨")
+        
         if gesture.state == .began {
+            print("어노테이션 추가 시작")
             let point = gesture.location(in: mapView)
             let coordinate = mapView.convert(point, toCoordinateFrom: mapView)
+
+            selectedLocation = coordinate
             
             mapView.removeAnnotations(mapView.annotations)
-            
+
             let annotation = MKPointAnnotation()
             annotation.coordinate = coordinate
             mapView.addAnnotation(annotation)
-            
+
             showCenterView()
+            print("어노테이션 추가 완료")
         }
     }
     
@@ -318,19 +342,23 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     // MARK: - CLLocationManagerDelegate
     internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.first {
-            var coordinate = location.coordinate
-            // Adjusting latitude by adding 0.015 to slightly shift the map view up
-            coordinate.latitude -= 0.015
+            // 사용자의 현재 위치를 selectedLocation에 할당
+            selectedLocation = location.coordinate
 
-            let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 5000, longitudinalMeters: 5000)
+            // 맵 뷰를 사용자의 현재 위치로 이동
+            let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 5000, longitudinalMeters: 5000)
             mapView.setRegion(region, animated: true)
 
-            // Optionally, you might want to add an annotation at the user's actual location
+            // 사용자의 현재 위치에 핀 추가 (선택적)
             let annotation = MKPointAnnotation()
-            annotation.coordinate = location.coordinate // Use the original coordinate here
+            annotation.coordinate = location.coordinate
             mapView.addAnnotation(annotation)
+
+            // 더 이상 위치 업데이트가 필요하지 않으면 위치 업데이트 중지
+            manager.stopUpdatingLocation()
         }
     }
+
 
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
@@ -379,4 +407,3 @@ extension MKMapView {
 //        LocationMapkitViewController().toPreview()
 //    }
 //}
-

@@ -109,7 +109,7 @@ class SearchUserTableViewCell: UITableViewCell {
                 case "요청 보냄":
                     self.friendActionButton.isHidden = true
                     self.statusLabel.text = "요청 보냄"
-                    self.statusLabel.textColor = .systemGray
+                    self.statusLabel.textColor = UIColor(hex: "#FF3A4A")
                     self.statusLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
                     self.statusLabel.isHidden = false
                     

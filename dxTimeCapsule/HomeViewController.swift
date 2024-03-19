@@ -298,7 +298,7 @@ class HomeViewController: UIViewController {
             let image = UIImage(systemName: "person.badge.plus")?.withRenderingMode(.alwaysTemplate) // 이미지를 템플릿 모드로 설정
             button.setBackgroundImage(image, for: .normal)
             button.clipsToBounds = true
-            button.tintColor = UIColor.systemGray
+            button.tintColor = UIColor(hex: "#C82D68")
             button.addTarget(self, action: #selector(addFriendsButtonTapped), for: .touchUpInside)
             button.isUserInteractionEnabled = true
             button.frame = CGRect(x: 0, y: 0, width: 30, height: 30)

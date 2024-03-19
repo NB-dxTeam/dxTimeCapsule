@@ -64,7 +64,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline) // Dynamic type support
         button.backgroundColor = UIColor(hex: "#C82D6B")
         button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 8
+        button.layer.cornerRadius = 16
         button.layer.shadowOpacity = 0.3
         button.layer.shadowRadius = 5
         button.layer.shadowOffset = CGSize(width: 0, height: 5)
@@ -110,6 +110,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         
         createButton.snp.makeConstraints { make in
             make.width.equalTo(200)
+            make.height.equalTo(40)
         }
     }
     
