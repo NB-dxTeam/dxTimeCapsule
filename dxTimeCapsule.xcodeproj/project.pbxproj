@@ -53,6 +53,7 @@
 		1FB387392B8863DE00054816 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB387382B8863DE00054816 /* HomeViewController.swift */; };
 		1FB3873E2B88791A00054816 /* TimeCapsuleCreationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB3873D2B88791A00054816 /* TimeCapsuleCreationViewModel.swift */; };
 		1FB387402B8881DB00054816 /* TimeBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB3873F2B8881DB00054816 /* TimeBox.swift */; };
+		1FB3F4E92BAB04C10019416B /* MessageModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB3F4E82BAB04C10019416B /* MessageModalViewController.swift */; };
 		1FB791F82BA758F10069563D /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 1FB791F72BA758F10069563D /* SDWebImage */; };
 		1FB791FA2BA758F10069563D /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1FB791F92BA758F10069563D /* SDWebImageMapKit */; };
 		1FB791FD2BA759060069563D /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1FB791FC2BA759060069563D /* FirebaseAnalytics */; };
@@ -184,6 +185,7 @@
 		1FB387382B8863DE00054816 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		1FB3873D2B88791A00054816 /* TimeCapsuleCreationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCapsuleCreationViewModel.swift; sourceTree = "<group>"; };
 		1FB3873F2B8881DB00054816 /* TimeBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBox.swift; sourceTree = "<group>"; };
+		1FB3F4E82BAB04C10019416B /* MessageModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageModalViewController.swift; sourceTree = "<group>"; };
 		1FBDDF782BA1DA3F00FCDE5A /* PostUploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostUploadView.swift; sourceTree = "<group>"; };
 		1FBDDF7B2BA1DCDB00FCDE5A /* PhotoPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPicker.swift; sourceTree = "<group>"; };
 		1FC44EEE2B90C490002A75AF /* ProximaNova-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNova-Semibold.ttf"; sourceTree = "<group>"; };
@@ -649,6 +651,7 @@
 		461D3C2D2BA17CB0009C8B6E /* Mapkit+Annotation */ = {
 			isa = PBXGroup;
 			children = (
+				1FB3F4E82BAB04C10019416B /* MessageModalViewController.swift */,
 				1F0854312B8F254B00711660 /* MainCapsuleViewController.swift */,
 				1F16B8282BA9ABE200753F82 /* FriendCollectionViewCell.swift */,
 				1F16B8272BA9ABE200753F82 /* TimeBoxAnnotation.swift */,
@@ -845,6 +848,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FB3F4E92BAB04C10019416B /* MessageModalViewController.swift in Sources */,
 				FFC457642B8F0F36000761E9 /* UserProfileViewModel.swift in Sources */,
 				1F52F8B92B9CDADC00974F0B /* TagFriendListTableCell.swift in Sources */,
 				FFC457662B8F0F74000761E9 /* UserProfileViewController.swift in Sources */,

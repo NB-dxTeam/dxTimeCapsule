@@ -1,6 +1,7 @@
 import Foundation
 import FirebaseFirestore
 
+// 구조체 아직 업데이트 안함. 03/20 20:51 황주영
 struct TimeBox {
     var id: String? // 타임박스 고유 ID
     var uid: String? // 생성한 사용자의 uid

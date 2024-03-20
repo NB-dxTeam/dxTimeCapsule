@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SnapKit
 import FirebaseFirestore
-import SDWebImage
+//import SDWebImage
 
 class OpenCapsuleViewController: UIViewController {
     var documentId: String?
@@ -24,6 +24,9 @@ class OpenCapsuleViewController: UIViewController {
     private var capsuleImageView: UIImageView!
     private var memoryTextView: UITextView!
     private var messageButton: UIButton!
+    var creationDate: Date? // 타임캡슐이 생성된 날짜
+    var openDate: Date? // 타임캡슐이 열린 날짜
+    var userMessage: String? // 사용자 메시지
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -180,8 +183,26 @@ class OpenCapsuleViewController: UIViewController {
         messageButton.addTarget(self, action: #selector(messageButtonTapped), for: .touchUpInside)
     }
     
+    //그날의 메시지 탭
     @objc private func messageButtonTapped() {
-        print("메시지 확인하기 버튼이 탭되었습니다.")
+        let messageModalVC = MessageModalViewController()
+        
+        // Firestore에서 가져온 Date 타입의 날짜 데이터를 사용하도록 설정합니다.
+        messageModalVC.creationDate = self.creationDate // 가정: self.creationDate는 Date 타입
+        messageModalVC.openDate = self.openDate // 가정: self.openDate는 Date 타입
+        // descriptionText 대신 userMessage를 사용합니다.
+        messageModalVC.userMessage = self.userMessage // 가정: self.userMessage는 String 타입
+        // 모달 프레젠테이션 스타일 설정
+        messageModalVC.modalPresentationStyle = .pageSheet // 또는 .formSheet
+        
+        // iOS 15 이상에서의 추가 설정
+        if let presentationController = messageModalVC.presentationController as? UISheetPresentationController {
+            presentationController.detents = [.medium()] // 원하는 높이 설정
+            // 더 많은 설정을 할 수 있습니다.
+        }
+
+        // 모달 표시
+        self.present(messageModalVC, animated: true, completion: nil)
     }
     
     private func loadTimeCapsuleData() {
@@ -200,29 +221,38 @@ class OpenCapsuleViewController: UIViewController {
                  dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul")
                  dateFormatter.locale = Locale(identifier: "ko_KR")
                  
-                 // 'creationDate' 필드 값
-                 let creationDate = (document.get("creationDate") as? Timestamp)?.dateValue()
-                 let creationDateString = creationDate.map { dateFormatter.string(from: $0) } ?? "날짜 정보 없음"
+                // 'creationDate' 필드 값
+                   let creationDateTimestamp = document.get("createTimeBoxDate") as? Timestamp
+                   self.creationDate = creationDateTimestamp?.dateValue()
+                   let creationDateString = self.creationDate.map { dateFormatter.string(from: $0) } ?? "날짜 정보 없음"
+                   
+                 // 'openDate' 필드 값
+                   let openDateTimestamp = document.get("openTimeBoxDate") as? Timestamp
+                   self.openDate = openDateTimestamp?.dateValue()
+                   let openDateString = self.openDate.map { dateFormatter.string(from: $0) } ?? "날짜 정보 없음"
+            
+            // 'description' 필드 값
+                    self.userMessage = document.get("description") as? String
             
                  // 'username' 필드 값
-                 let username = document.get("userId") as? String ?? "사용자"
+                 let username = document.get("userName") as? String ?? "사용자"
             
                  // 'userLocation' 필드 값
-                 let userLocation = document.get("userLocation") as? String ?? "위치 정보 없음"
+                 let userLocation = document.get("addressTitle") as? String ?? "위치 정보 없음"
                     
                  // 'location' 필드 값
-                 let detailedLocation = document.get("location") as? String ?? "세부 주소 정보 없음"
+                 let detailedLocation = document.get("address") as? String ?? "세부 주소 정보 없음"
                     
                  // 'mood' 필드 값
                  let mood = document.get("mood") as? String ?? ""
                  
-                 // 이미지 URL 처리 및 표시
-                 if let imageUrlString = document.get("photoUrl") as? String, let imageUrl = URL(string: imageUrlString) {
-                     self.capsuleImageView.sd_setImage(with: imageUrl, placeholderImage: UIImage(named: "placeholder"))
-                 }
+            // 이미지 URL 배열 처리 및 표시
+            if let imageUrlStrings = document.get("imageURL") as? [String], !imageUrlStrings.isEmpty, let imageUrl = URL(string: imageUrlStrings[0]) {
+                self.capsuleImageView.sd_setImage(with: imageUrl, placeholderImage: UIImage(named: "placeholder"))
+            }
 
                  // 'friendID' 필드 값 처리
-                 let friendID = document.get("friendID") as? [String] ?? []
+                 let friendID = document.get("tagFriendName") as? [String] ?? []
                  let friendSentence: String
                  if friendID.isEmpty {
                      friendSentence = ""

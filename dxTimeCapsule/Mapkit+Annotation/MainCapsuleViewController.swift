@@ -13,12 +13,46 @@ import FirebaseAuth
 class MainCapsuleViewController: UIViewController {
     private var viewModel = MainCapsuleViewModel()
     var documentId: String?
+    
+    private var openDate: Date?
+    
+    private var stackView: UIStackView!
+    
+    // 빨간색 배경 뷰 설정
+    private lazy var dDayBackgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .red // 배경색은 빨간색
+        view.layer.cornerRadius = 13 // 모서리 둥글기 반지름 설정
+        view.clipsToBounds = true // 모서리 둥글기 적용을 위해 필요
+        view.layer.borderWidth = 1 // 테두리 두께
+        view.layer.borderColor = UIColor.red.cgColor // 테두리 색상은 빨간색
+        return view
+    }()
 
+    // D-day 레이블 설정
+    private lazy var dDayLabel: UILabel = {
+        let label = UILabel()
+        label.text = "D-100" // 예시 텍스트
+        label.textColor = .white // 텍스트 색상은 흰색
+        label.font = .systemFont(ofSize: 18, weight: .bold) // 폰트 크기 및 스타일 설정
+        label.textAlignment = .center // 텍스트 가운데 정렬
+        return label
+    }()
+    
     //장소명
     private lazy var locationName: UILabel = {
         let label = UILabel()
         label.text = "제주 국제 공항"
         label.font = .systemFont(ofSize: 24, weight: .bold)
+        return label
+    }()
+    
+    //상세주소
+    private lazy var detailedLocationLabel: UILabel = {
+        let label = UILabel()
+        label.text = "상세 주소 정보 로딩 중..."
+        label.font = .systemFont(ofSize: 14)
+        label.textColor = .systemGray
         return label
     }()
     
@@ -28,13 +62,6 @@ class MainCapsuleViewController: UIViewController {
         label.text = "생성일: "
         label.font = .systemFont(ofSize: 14)
         label.textColor = .darkGray
-        return label
-    }()
-    
-    //D-day
-    private lazy var daysLabel: UILabel = {
-        let label = UILabel()
-        label.text = viewModel.daysUntilOpening
         return label
     }()
     
@@ -58,7 +85,7 @@ class MainCapsuleViewController: UIViewController {
     //개봉일이되었을때 생성되는 tap 안내문구
     private lazy var openCapsuleLabel: UILabel = {
         let label = UILabel()
-        label.text = "타임캡슐을 오픈하세요!"
+        label.text = "상자를 눌러 타임캡슐을 오픈하세요!"
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textColor = .systemBlue
         label.isHidden = true // D-day 전까지는 숨깁니다.
@@ -72,57 +99,69 @@ class MainCapsuleViewController: UIViewController {
         // 로그인한 사용자의 UID를 가져옵니다.
         guard let userId = Auth.auth().currentUser?.uid else { return }
         
-//        let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // 테스트를 위한 임시 UID
-
         // 사용자의 UID로 필터링하고, openDate 필드로 오름차순 정렬한 후, 최상위 1개 문서만 가져옵니다.
-           db.collection("timeCapsules")
-             .whereField("uid", isEqualTo: userId)
-             .whereField("isOpened", isEqualTo: false) // 아직 열리지 않은 타임캡슐만 선택
-             .order(by: "openDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
-             .limit(to: 1) // 가장 개봉일이 가까운 타임캡슐 1개만 선택
-             .getDocuments { [weak self] (querySnapshot, err) in
-                           guard let self = self else { return }
-                           if let err = err {
-                               print("Error getting documents: \(err)")
-                     
-                 } else if let document = querySnapshot?.documents.first { // 첫 번째 문서만 사용
-                     self.documentId = document.documentID // documentId 업데이트
-                    
-                     // 문서에서 "userLocation" 필드의 값을 가져옵니다.
-                     let userLocation = document.get("userLocation") as? String ?? "Unknown Location"
-                     print("Fetched location: \(userLocation)")
-                     
-                     // 메인 스레드에서 UI 업데이트를 수행합니다.
-                     DispatchQueue.main.async {
-                         self.locationName.text = userLocation
-                     }
-                     
-                // 'openDate' 필드 값 가져오기 및 D-day 계산
-                if let openDateTimestamp = document.get("openDate") as? Timestamp {
+        db.collection("timeCapsules")
+          .whereField("uid", isEqualTo: userId)
+          .whereField("isOpened", isEqualTo: false) // 아직 열리지 않은 타임캡슐만 선택
+          .order(by: "openTimeBoxDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
+          .limit(to: 1) // 가장 개봉일이 가까운 타임캡슐 1개만 선택
+          .getDocuments { [weak self] (querySnapshot, err) in
+            guard let self = self else { return }
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else if let document = querySnapshot?.documents.first {
+                self.documentId = document.documentID
+                
+                // 문서에서 필드의 값을 가져옵니다.
+                let userLocation = document.get("addressTitle") as? String ?? "Unknown Location"
+                let detailedLocation = document.get("address") as? String ?? "No detailed address available"
+                if let openDateTimestamp = document.get("openTimeBoxDate") as? Timestamp {
                     let openDate = openDateTimestamp.dateValue()
-                    let dDayCalculation = dDayCalculation(openDate: openDate)
-                    let dDayString = dDayCalculation.dDay()
-                         
+                    self.openDate = openDate // 전역 변수에 openDate 저장
+                    
+                    // D-day 계산 로직을 위해 dDayCalculation 구조체의 인스턴스를 생성합니다.
+                    let dDayCalculator = dDayCalculation(openDate: openDate)
+                    
                     DispatchQueue.main.async {
-                        self.daysLabel.text = dDayString // D-day 표시 업데이트
+                        self.locationName.text = userLocation
+                        self.detailedLocationLabel.text = detailedLocation
+                     
+                        let calendar = Calendar.current
+                        let startDate = calendar.startOfDay(for: Date()) // 오늘 날짜의 자정
+                        let endDate = calendar.startOfDay(for: openDate) // 개봉일 날짜의 자정
+
+                        // D-day 문자열 계산
+                        let dDayString = dDayCalculator.dDay()
+                        self.dDayLabel.text = dDayString
+                        
+                        // 개봉일 당일에도 탭을 활성화하기 위한 조건 추가
+                        if startDate < endDate {
+                            // D-day 미도달: 오픈 불가능
+                            self.openCapsuleLabel.isHidden = true
+                            self.capsuleImageView.isUserInteractionEnabled = false
+                        } else {
+                            // D-day 도달or지남: 오픈 가능
+                            self.openCapsuleLabel.isHidden = false
+                            self.capsuleImageView.isUserInteractionEnabled = true
+                        }
                     }
                 }
-                     
+                
                 // 생성일 필드 값 가져오기
-                if let creationDate = document.get("creationDate") as? Timestamp {
+                if let creationDate = document.get("createTimeBoxDate") as? Timestamp {
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "yyyy-MM-dd"
                     let dateStr = dateFormatter.string(from: creationDate.dateValue())
                     DispatchQueue.main.async {
                         self.creationDateLabel.text = "\(dateStr) 생성된 캡슐"
-                        }
                     }
-                 } else {
-                               print("No documents found") // 문서가 없는 경우 로그 추가
-                           }
-                 }
-             }
-       
+                }
+            } else {
+                print("No documents found")
+            }
+        }
+    }
+
 
     
     override func viewDidLoad() {
@@ -131,9 +170,41 @@ class MainCapsuleViewController: UIViewController {
 //        setupBackLightLayout()
         setupLayout()
         addTapGestureToCapsuleImageView()
-        // D-day 확인 후 레이블 표시 로직
         checkIfItsOpeningDay()
         fetchTimeCapsuleData()
+        setupStackView()
+        setupDetailedLocationLabel()
+    }
+
+    private func setupStackView() {
+        dDayBackgroundView.addSubview(dDayLabel)
+        
+        // dDayLabel의 레이아웃을 dDayBackgroundView 내부 중앙에 맞춤
+        dDayLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 2, left: 8, bottom: 2, right: 8)) // 여백 조정
+        }
+        
+        self.stackView = UIStackView(arrangedSubviews: [dDayBackgroundView, locationName])
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 8
+
+        view.addSubview(stackView)
+        stackView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(60)
+        }
+    }
+
+    // 상세 주소 레이블 레이아웃 설정을 담당하는 별도의 메서드
+    private func setupDetailedLocationLabel() {
+        view.addSubview(detailedLocationLabel)
+        detailedLocationLabel.snp.makeConstraints { make in
+            make.top.equalTo(stackView.snp.bottom).offset(8)
+            make.centerX.equalToSuperview()
+        }
     }
     
 //    private func setupBackLightLayout() {
@@ -150,7 +221,7 @@ class MainCapsuleViewController: UIViewController {
         view.addSubview(capsuleImageView)
         view.addSubview(openCapsuleLabel)
         view.addSubview(creationDateLabel)
-        [locationName, daysLabel,].forEach { view.addSubview($0) }
+        [locationName, dDayLabel,].forEach { view.addSubview($0) }
         
         // 캡슐 이미지
         capsuleImageView.snp.makeConstraints { make in
@@ -160,29 +231,30 @@ class MainCapsuleViewController: UIViewController {
             make.height.equalTo(400)
         }
         
+        // 생성 날짜
+        creationDateLabel.snp.makeConstraints { make in
+            make.top.equalTo(capsuleImageView.snp.bottom).offset(1) // 이미지 아래에 위치
+            make.centerX.equalToSuperview()
+        }
+        
         // "타임캡슐을 오픈하세요!"
         openCapsuleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(capsuleImageView.snp.bottom).offset(5) // 이미지 아래에 위치
+            make.top.equalTo(creationDateLabel.snp.bottom).offset(5) // 오픈캡슐 레이블 아래에 위치
         }
         
-        // 장소명
-        locationName.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(80)
-            make.centerX.equalToSuperview()
-        }
+           // locationName 레이블 레이아웃 설정
+           locationName.snp.makeConstraints { make in
+               make.trailing.lessThanOrEqualToSuperview().offset(-8) // 화면 오른쪽 가장자리로부터 최소 8포인트 간격을 줍니다.
+               // locationName 레이블의 중앙이 뷰의 중앙에 오도록 설정합니다.
+               make.centerX.equalToSuperview()
+               make.centerY.equalToSuperview().offset(-40) // 원하는 y축 위치로 조정
+           }
+           
+           // dDay 레이블과 locationName 레이블이 서로 가운데 정렬이 되도록 조정합니다.
+           dDayLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+           locationName.setContentCompressionResistancePriority(.required, for: .horizontal)
         
-        // D-day
-        daysLabel.snp.makeConstraints { make in
-            make.top.equalTo(locationName.snp.bottom).offset(460)
-            make.centerX.equalToSuperview()
-        }
-        
-        // 생성 날짜
-        creationDateLabel.snp.makeConstraints { make in
-            make.top.equalTo(daysLabel.snp.bottom).offset(5) // D-day 레이블 아래에 위치
-            make.centerX.equalToSuperview()
-        }
     }
     
     //탭 제스처 인식기 추가
@@ -192,20 +264,36 @@ class MainCapsuleViewController: UIViewController {
     }
 
     @objc private func handleTapOnCapsule() {
-        
-        // 애니메이션 동작시 다른 UI 요소 숨기기
-//           backLightImageView.isHidden = true
-           creationDateLabel.isHidden = true
-           locationName.isHidden = true
-           daysLabel.isHidden = true
-           openCapsuleLabel.isHidden = true
-        
-        addShakeAnimation()
-        // 흔들림 애니메이션 총 지속 시간보다 약간 짧은 딜레이 후에 페이드아웃 및 확대 애니메이션 시작
-        // 예시) 흔들림 애니메이션 지속 시간이 0.5초라면, 0.4초 후에 시작하도록 설정
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-            self.addFadeOutAndScaleAnimation()
+        guard let openDate = self.openDate else {
+            // 개봉일 정보가 없는 경우, 함수 실행 중지
+            return
         }
+
+        let calendar = Calendar.current
+        let startDate = calendar.startOfDay(for: Date()) // 현재 날짜의 자정
+        let openDateStart = calendar.startOfDay(for: openDate) // 개봉일의 자정
+
+        if startDate >= openDateStart {
+            // 개봉일 당일이거나 지난 경우, 타임캡슐 개봉 애니메이션 실행
+            hideUIComponentsForOpening() // UI 요소 숨김 처리
+
+            addShakeAnimation() // 흔들림 애니메이션 시작
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                self.addFadeOutAndScaleAnimation() // 페이드아웃 및 확대 애니메이션 시작
+            }
+        } else {
+            // D-day 미도달: 아직 타임캡슐을 오픈할 수 없음
+        }
+    }
+
+    private func hideUIComponentsForOpening() {
+        // backLightImageView.isHidden = true // 필요하다면 주석 해제
+        creationDateLabel.isHidden = true
+        locationName.isHidden = true
+        dDayLabel.isHidden = true
+        openCapsuleLabel.isHidden = true
+        detailedLocationLabel.isHidden = true
+        dDayBackgroundView.isHidden = true
     }
 
     private func addShakeAnimation() {
@@ -267,11 +355,6 @@ class MainCapsuleViewController: UIViewController {
             openCapsuleLabel.isHidden = false
         }
     }
-    
-//    @objc private func openTimeCapsule() {
-//        // 여기에 타임캡슐을 오픈할 때의 애니메이션과 로직을 구현
-//        print("타임캡슐 오픈 로직을 구현")
-//    }
 }
 
 extension MainCapsuleViewController: UIViewControllerTransitioningDelegate {
