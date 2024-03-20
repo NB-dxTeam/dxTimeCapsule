@@ -37,13 +37,13 @@ class OpenInteractionViewController: UIViewController {
         labelContainer.clipsToBounds = true
         labelContainer.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(view.snp.top).offset(130) // 시작 위치 조정 가능
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(60) // 상단 safe area 아래로
             make.height.equalTo(48) // 컨테이너 높이 설정
-            make.left.right.equalToSuperview().inset(48) // 좌우 여백 조정
+            make.left.right.equalToSuperview().inset(46) // 좌우 여백 조정
         }
         
         let floatingLabel = UILabel()
-        floatingLabel.text = "스마트폰을 흔들어 게이지를 채워주세요!"
+        floatingLabel.text = "스마트폰을 흔들어 게이지를 채우세요!"
         floatingLabel.textColor = .darkGray
         floatingLabel.textAlignment = .center
         floatingLabel.font = UIFont.systemFont(ofSize: 16, weight: .heavy) // 더 굵은 폰트로 설정 .semibold, .heavy, .black
@@ -64,7 +64,7 @@ class OpenInteractionViewController: UIViewController {
     private let instructionLabel: UILabel = {
         let label = UILabel()
         label.text = """
-축하합니다!
+🎉 축하합니다! 🎉
 당신이 남긴 소중한 추억을 만나볼 시간입니다.
 """
         label.textAlignment = .center
@@ -128,20 +128,20 @@ class OpenInteractionViewController: UIViewController {
         view.addSubview(openImageView)
         openImageView.snp.makeConstraints { make in
             make.center.equalToSuperview() // 화면 중앙
-            make.width.height.equalTo(300) // 너비와 높이 200
+            make.width.height.equalTo(220) // 너비와 높이 200
         }
         
         // 게이지 뷰
         view.addSubview(interactionGaugeView)
         interactionGaugeView.snp.makeConstraints { make in
             make.center.equalTo(openImageView.snp.center) // 이미지 뷰의 중앙
-            make.width.height.equalTo(350) // 이미지 뷰보다 약간 큰 크기
+            make.width.height.equalTo(310) // 이미지 뷰보다 약간 큰 크기
         }
         
         // 안내 텍스트 레이블
         view.addSubview(instructionLabel)
         instructionLabel.snp.makeConstraints { make in
-            make.top.equalTo(interactionGaugeView.snp.bottom).offset(40) // 이미지 뷰 아래
+            make.top.equalTo(interactionGaugeView.snp.bottom).offset(30) // 이미지 뷰 아래
             make.left.right.equalToSuperview().inset(20) // 좌우 여백을 20
         }
     }
@@ -156,10 +156,10 @@ class OpenInteractionViewController: UIViewController {
         view.addSubview(skipButton)
         
         skipButton.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(instructionLabel.snp.bottom).offset(50)
+                make.centerX.equalToSuperview()
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(50) // 하단 safe area로부터 20포인트 위에 위치
+            }
         }
-    }
 
     // 스킵 버튼 탭
     @objc private func skipButtonTapped() {
@@ -182,7 +182,7 @@ class OpenInteractionViewController: UIViewController {
         let backgroundLayer = CAShapeLayer()
         backgroundLayer.path = circlePath.cgPath
         backgroundLayer.strokeColor = UIColor.systemGray5.cgColor // 색상
-        backgroundLayer.lineWidth = 8 // 선의 굵기
+        backgroundLayer.lineWidth = 9 // 선의 굵기
         backgroundLayer.fillColor = UIColor.clear.cgColor // 내부를 채우지 않습니다.
         backgroundLayer.strokeEnd = 1 // 전체를 그립니다.
         interactionGaugeView.layer.addSublayer(backgroundLayer) // 레이어를 추가합니다.
@@ -220,7 +220,7 @@ class OpenInteractionViewController: UIViewController {
         // 진행률을 표시할 CAShapeLayer 생성 및 설정
         let progressLayer = CAShapeLayer()
         progressLayer.path = circlePath?.cgPath
-        progressLayer.lineWidth = 8
+        progressLayer.lineWidth = 9
         progressLayer.fillColor = UIColor.clear.cgColor
         progressLayer.strokeColor = UIColor.black.cgColor // 마스크로 사용되므로 실제 색상은 중요하지 않음
         progressLayer.strokeEnd = 0.0
