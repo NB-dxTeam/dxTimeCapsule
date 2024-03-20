@@ -35,6 +35,7 @@ class TimeCapsuleCell: UITableViewCell {
         label.textAlignment = .center
         label.layer.cornerRadius = 10
         label.layer.masksToBounds = true
+//        label.backgroundColor = .systemGray
         return label
     }()
     
@@ -45,6 +46,7 @@ class TimeCapsuleCell: UITableViewCell {
         label.font = UIFont.boldSystemFont(ofSize: 60)
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.2
+//        label.backgroundColor = .systemGreen
         return label
     }()
     
@@ -56,6 +58,7 @@ class TimeCapsuleCell: UITableViewCell {
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.3
         label.textAlignment = .right
+//        label.backgroundColor = .systemCyan
         return label
     }()
     
@@ -123,13 +126,16 @@ class TimeCapsuleCell: UITableViewCell {
     
     // 서브뷰들을 추가하고 Auto Layout을 설정하는 메서드
     private func setupViews() {
-        // contentView.backgroundColor = .yellow
+//        contentView.backgroundColor = .yellow
         contentView.addSubview(registerImage)
         contentView.addSubview(dDay)
         contentView.addSubview(userLocation)
         contentView.addSubview(creationDate)
+    
         
         registerImage.snp.makeConstraints { make in
+            let offset = UIScreen.main.bounds.height * (0.15/16.0)
+            make.top.equalToSuperview().inset(offset)
             make.height.equalTo(registerImage.snp.width).multipliedBy(9.0/16.0)
             make.leading.trailing.equalToSuperview().inset(20)
             make.centerX.equalToSuperview()
