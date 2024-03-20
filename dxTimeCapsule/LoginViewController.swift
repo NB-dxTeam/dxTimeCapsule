@@ -60,7 +60,7 @@ class LoginViewController: UIViewController {
         passwordTextField.delegate = self
         
         // Test 자동기입
-        emailTextField.text =  "test1@gmail.com"
+        emailTextField.text =  "test2@gmail.com"
         passwordTextField.text = "12345678"
     }
     
@@ -122,7 +122,7 @@ class LoginViewController: UIViewController {
         
         // "비밀번호 찾기" 라벨 &설정
         forgotPWLabel.text = "Forgot Password? "
-        forgotPWLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
+        forgotPWLabel.font = UIFont.pretendardMedium(ofSize: 14)
         forgotPWLabel.textColor = .black
         forgotPWLabel.isUserInteractionEnabled = true
         
@@ -150,7 +150,8 @@ class LoginViewController: UIViewController {
         }
         
         emailTextField.snp.makeConstraints { make in
-            make.top.equalTo(appNameLabel.snp.bottom).offset(20)
+            let offset = UIScreen.main.bounds.height * (0.6/6.0)
+            make.top.equalTo(appNameLabel.snp.bottom).offset(offset)
             make.left.right.equalToSuperview().inset(50)
             make.height.equalTo(44)
         }
@@ -183,7 +184,7 @@ class LoginViewController: UIViewController {
             let offset = UIScreen.main.bounds.height * (0.45/6.0)
             make.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(offset)
             make.left.right.equalToSuperview().inset(20)
-            make.height.equalTo(1)
+            make.height.equalTo(0.5)
         }
         
         // labelsContainerView에 대한 높이 제약 조건 추가
@@ -356,11 +357,11 @@ extension LoginViewController: UITextFieldDelegate {
 }
 
 
-//// MARK: - SwiftUI Preview
-//import SwiftUI
-//
-//struct MainTabBarViewPreview22 : PreviewProvider {
-//    static var previews: some View {
-//        LoginViewController().toPreview()
-//    }
-//}
+// MARK: - SwiftUI Preview
+import SwiftUI
+
+struct MainTabBarViewPreview : PreviewProvider {
+    static var previews: some View {
+        LoginViewController().toPreview()
+    }
+}
