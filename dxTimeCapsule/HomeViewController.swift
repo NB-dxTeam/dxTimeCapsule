@@ -14,9 +14,9 @@ import SwiftfulLoadingIndicators
 
 class HomeViewController: UIViewController {
     
-//    private var loadingIndicator: some View {
-//        LoadingIndicator(animation: .text, size: .large, speed: .normal)
-//    }
+    private var loadingIndicator: some View {
+        LoadingIndicator(animation: .text, size: .large, speed: .normal)
+    }
     
     // MARK: - Properties
     var documentId: String?
@@ -415,14 +415,14 @@ class HomeViewController: UIViewController {
     
     func fetchTimeCapsuleData() {
         DispatchQueue.main.async {
-//            //            self.showLoadingIndicator()
-//        }
-//        DispatchQueue.global().async {
+            self.showLoadingIndicator()
+        }
+        DispatchQueue.global().async {
             let db = Firestore.firestore()
             // 로그인한 사용자의 UID를 가져옵니다.
-                guard let userId = Auth.auth().currentUser?.uid else { return }
+            guard let userId = Auth.auth().currentUser?.uid else { return }
             
-//            let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // 테스트를 위한 임시 UID
+            //            let userId = "Lgz9S3d11EcFzQ5xYwP8p0Bar2z2" // 테스트를 위한 임시 UID
             
             // 사용자의 UID로 필터링하고, openDate 필드로 오름차순 정렬한 후, 최상위 1개 문서만 가져옵니다.
             db.collection("timeCapsules")
@@ -487,6 +487,7 @@ class HomeViewController: UIViewController {
                                         
                                         DispatchQueue.main.async {
                                             self.mainTCImageView.image = UIImage(data: data)
+                                            self.hideLoadingIndicator()
                                         }
                                     }.resume()
                                 }
@@ -513,13 +514,14 @@ class HomeViewController: UIViewController {
                                 }
                             }
                         }
+                        DispatchQueue.main.async {
+                            self.hideLoadingIndicator()
+                        }
                     }
                 }
         }
-//        DispatchQueue.main.async {
-////            self.hideLoadingIndicator()
-//        }
     }
+    
     
     // MARK: - Image Transition Animation
     
@@ -543,30 +545,30 @@ class HomeViewController: UIViewController {
         }
     }
     
-//    // MARK: - LoadingIndicator
-//    private func showLoadingIndicator() {
-//        // SwiftUI 뷰를 UIKit에서 사용할 수 있도록 UIHostingController로 감싸줍니다.
-//        let hostingController = UIHostingController(rootView: loadingIndicator)
-//        addChild(hostingController)
-//        view.addSubview(hostingController.view)
-//        hostingController.view.frame = view.bounds
-//        hostingController.view.backgroundColor = UIColor.white.withAlphaComponent(1.0)
-//        hostingController.didMove(toParent: self)
-//        print("showLoadingIndicator가 실행되었습니다")
-//    }
-//
-//    private func hideLoadingIndicator() {
-//        // 자식 뷰 컨트롤러들을 순회하면서 UIHostingController를 찾습니다.
-//        for child in children {
-//            if let hostingController = child as? UIHostingController<LoadingIndicator> {
-//                hostingController.willMove(toParent: nil)
-//                hostingController.view.removeFromSuperview()
-//                hostingController.removeFromParent()
-//                print("hideLoadingIndicator가 실행되었습니다")
-//                break
-//            }
-//        }
-//    }
+    // MARK: - LoadingIndicator
+    private func showLoadingIndicator() {
+        // SwiftUI 뷰를 UIKit에서 사용할 수 있도록 UIHostingController로 감싸줍니다.
+        let hostingController = UIHostingController(rootView: loadingIndicator)
+        addChild(hostingController)
+        view.addSubview(hostingController.view)
+        hostingController.view.frame = view.bounds
+        hostingController.view.backgroundColor = UIColor.white.withAlphaComponent(1.0)
+        hostingController.didMove(toParent: self)
+        print("showLoadingIndicator가 실행되었습니다")
+    }
+
+    private func hideLoadingIndicator() {
+        // 자식 뷰 컨트롤러들을 순회하면서 UIHostingController를 찾습니다.
+        for child in children {
+            if let hostingController = child as? UIHostingController<LoadingIndicator> {
+                hostingController.willMove(toParent: nil)
+                hostingController.view.removeFromSuperview()
+                hostingController.removeFromParent()
+                print("hideLoadingIndicator가 실행되었습니다")
+                break
+            }
+        }
+    }
 
 
 
