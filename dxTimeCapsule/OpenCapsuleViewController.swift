@@ -46,7 +46,7 @@ class OpenCapsuleViewController: UIViewController {
         homeButton = UIButton(type: .system)
         let homeImage = UIImage(systemName: "chevron.left") // SF Symbols에서 "house.fill" 이미지 사용
         homeButton.setImage(homeImage, for: .normal)
-        homeButton.tintColor = UIColor(red: 209/255.0, green: 94/255.0, blue: 107/255.0, alpha: 1) // 버튼 색상 설정
+        homeButton.tintColor = UIColor(hex: "#C82D6B") // 버튼 색상 설정
         homeButton.addTarget(self, action: #selector(homeButtonTapped), for: .touchUpInside)
         
         topBarView.addSubview(homeButton) // topBarView에 버튼 추가
