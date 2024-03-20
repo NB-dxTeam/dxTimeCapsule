@@ -81,7 +81,7 @@ class HomeViewController: UIViewController {
         let label = VerticallyAlignedLabel()
         label.text = "D-DAY"
         label.font = UIFont.boldSystemFont(ofSize: 15)
-        label.textColor = .red
+        label.textColor = UIColor(hex: "#C82D68")
         label.textAlignment = .right
      //   label.backgroundColor = .yellow
         label.verticalAlignment = .top
@@ -146,6 +146,7 @@ class HomeViewController: UIViewController {
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.1
         label.textColor = .black
+
         return label
     }()
     
@@ -164,7 +165,7 @@ class HomeViewController: UIViewController {
     let addTCButton: UIButton = {
         let button = UIButton(type: .system)
         let image = UIImage(systemName: "plus.app")?.withRenderingMode(.alwaysTemplate)
-        button.tintColor = UIColor(red: 213/255.0, green: 51/255.0, blue: 105/255.0, alpha: 1.0)
+        button.tintColor = UIColor(hex: "#C82D6B")
         button.setBackgroundImage(image, for: .normal)
         button.isUserInteractionEnabled = false
         return button
@@ -356,17 +357,21 @@ class HomeViewController: UIViewController {
         noMainTCStackView.addSubview(noMainLabelStackView)
         noMainLabelStackView.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(10)
-            make.trailing.equalTo(addTCButton.snp.leading)
-            make.leading.equalToSuperview()
+            make.leading.equalToSuperview().inset(10)
         }
         
         firstLineLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.leading.trailing.equalToSuperview()
+            let offset = UIScreen.main.bounds.height * (0.15/6.0)
+            make.top.equalToSuperview().offset(offset)
+            make.height.equalToSuperview().multipliedBy(1.5/6.0)
+            make.trailing.equalTo(addTCButton.snp.leading)
+            make.leading.equalToSuperview()
         }
 
         secondLineLabel.snp.makeConstraints { make in
             make.top.equalTo(firstLineLabel.snp.bottom)
+            make.height.equalToSuperview().multipliedBy(1.0/6.0)
+            make.trailing.equalTo(addTCButton.snp.leading)
             make.leading.equalToSuperview()
         }
         thirdLineLabel.snp.makeConstraints { make in
@@ -379,9 +384,9 @@ class HomeViewController: UIViewController {
         noMainLabelStackView.addSubview(thirdLineLabel)
         
         addTCButton.snp.makeConstraints { make in
-            make.width.height.equalTo(noMainTCStackView.snp.height).multipliedBy(1.6/3.0)
-            make.top.equalToSuperview().inset(15)
-            make.trailing.equalTo(mainContainerView.snp.trailing).offset(10)
+            make.width.height.equalTo(noMainTCStackView.snp.height).multipliedBy(1.0/3.0)
+            make.top.equalToSuperview().offset(35)
+            make.trailing.equalTo(mainContainerView.snp.trailing).inset(10)
         }
         noMainTCStackView.addSubview(addTCButton)
         
@@ -423,7 +428,7 @@ class HomeViewController: UIViewController {
             db.collection("timeCapsules")
                 .whereField("uid", isEqualTo: userId)
                 .whereField("isOpened", isEqualTo: false) // isOpened가 false인 경우 필터링
-                .order(by: "openDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
+                .order(by: "openTimeBoxDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
                 .limit(to: 1) // 가장 개봉일이 가까운 타임캡슐 1개만 선택
                 .getDocuments { [weak self] (querySnapshot, err) in
                     guard let self = self else { return }
@@ -447,12 +452,11 @@ class HomeViewController: UIViewController {
                             }
                         } else if let document = querySnapshot?.documents.first {
                             self.documentId = document.documentID // documentId 업데이트
-                            let userLocation = document.get("userLocation") as? String ?? "Unknown Location"
-                            let location = document.get("location") as? String ?? "Unknown address"
-                            let tcBoxImageURL = document.get("tcBoxImageURL") as? String ?? ""
-                            let openDateTimestamp = document.get("openDate") as? Timestamp
+                            let userLocation = document.get("addressTitle") as? String ?? "Unknown Location"
+                            let location = document.get("address") as? String ?? "Unknown address"
+                            let thumbnailURL = document.get("thumbnailURL") as? String ?? ""
+                            let openDateTimestamp = document.get("openTimeBoxDate") as? Timestamp
                             let openDate = openDateTimestamp?.dateValue()
-                            
                             // 메인 스레드에서 UI 업데이트를 수행합니다.
                             DispatchQueue.main.async {
                                 self.locationNameLabel.text = userLocation
@@ -464,8 +468,8 @@ class HomeViewController: UIViewController {
                                     self.dDayLabel.text = timeCapsule.dDay()
                                 }
                                 
-                                if !tcBoxImageURL.isEmpty {
-                                    guard let url = URL(string: tcBoxImageURL) else {
+                                if !thumbnailURL.isEmpty {
+                                    guard let url = URL(string: thumbnailURL) else {
                                         print("Invalid photo URL")
                                         return
                                     }
@@ -607,10 +611,4 @@ class HomeViewController: UIViewController {
         navigationController?.pushViewController(upcomingTCVC, animated: true)
     }
 }
-//
-//import SwiftUI
-//struct PreVie11w: PreviewProvider {
-//    static var previews: some View {
-//        MainTabBarView().toPreview()
-//    }
-//}
+

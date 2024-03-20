@@ -9,6 +9,9 @@ struct TimeBox {
     var thumbnailURL: String? // 썸네일
     var imageURL: [String]? // 타임박스 안의 사진들
     var userLocation: GeoPoint? // 사용자 위치
+    var location: GeoPoint?
+    var address: String? // 상세 주소
+    var addressTitle: String?
     var userLocationTitle: String? // 위치 타이틀
     var description: String? // 타임박스 설명
     var tagFriendUid: [String]? // 친구 태그 uid 배열
@@ -44,27 +47,5 @@ struct Emoji: Identifiable, Hashable {
     ]
 }
 
-// 테스트 모델 코드 //
-
-struct CapsuleInfo {
-    var TimeCapsuleId: String
-    var tcBoxImageURL: String?
-    var latitude: Double // 위도
-    var longitude: Double // 경도
-    var userLocation: String?
-    var userComment: String?
-    var createTimeCapsuleDate: Date // 생성일
-    var openTimeCapsuleDate: Date // 개봉일
-    var isOpened: Bool //개봉여부
-    var friendID: String?
-}
-
-struct TCInfo {
-    var id: String? //document ID
-    var tcBoxImageURL: String?
-    var userLocation: String?
-    var createTimeCapsuleDate: Date // 생성일
-    var openTimeCapsuleDate: Date // 개봉일
-}
     
 

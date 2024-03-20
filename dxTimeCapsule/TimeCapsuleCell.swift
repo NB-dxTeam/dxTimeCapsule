@@ -33,7 +33,7 @@ class TimeCapsuleCell: UITableViewCell {
         label.minimumScaleFactor = 0.3
         label.textColor = .white
         label.textAlignment = .center
-        label.layer.cornerRadius = 12
+        label.layer.cornerRadius = 10
         label.layer.masksToBounds = true
         return label
     }()
@@ -75,9 +75,9 @@ class TimeCapsuleCell: UITableViewCell {
     // MARK: - Configuration
     
     // 셀을 구성하는 메서드
-    func configure(with capsuleInfo: TCInfo) {
+    func configure(with timeBox: TimeBox) {
         // 이미지 설정
-        if let imageUrl = capsuleInfo.tcBoxImageURL, let url = URL(string: imageUrl) {
+        if let imageUrl = timeBox.thumbnailURL ?? timeBox.imageURL?.first, let url = URL(string: imageUrl) {
             self.registerImage.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder"))
         } else {
             self.registerImage.image = UIImage(named: "placeholder")
@@ -90,25 +90,34 @@ class TimeCapsuleCell: UITableViewCell {
         
         let today = Date()
         let calendar = Calendar.current
-        let components = calendar.dateComponents([.day], from: today, to: capsuleInfo.openTimeCapsuleDate)
         
-        if let daysUntilOpening = components.day {
-            if daysUntilOpening == 0 {
-                
-                // (수정) 오늘이 개봉일일 때 "D-day" 반환
-                self.dDay.text = "D-day"
-            } else {
-                let dDayPrefix = daysUntilOpening < 0 ? "D+" : "D-" // D-Day 표시
-                self.dDay.text = "\(dDayPrefix)\(abs(daysUntilOpening))"
+        if let openTimeBoxDate = timeBox.openTimeBoxDate?.dateValue() {
+            let components = calendar.dateComponents([.day], from: today, to: openTimeBoxDate)
+            
+            if let daysUntilOpening = components.day {
+                if daysUntilOpening == 0 {
+                    
+                    // (수정) 오늘이 개봉일일 때 "D-day" 반환
+                    self.dDay.text = "D-day"
+                    self.dDay.backgroundColor = UIColor(hex: "#C82D68")
+                } else {
+                    let dDayPrefix = daysUntilOpening < 0 ? "D+" : "D-" 
+                    self.dDay.text = "\(dDayPrefix)\(abs(daysUntilOpening))"
+                    self.dDay.backgroundColor = daysUntilOpening < 0 ? UIColor.systemGray : UIColor(hex: "#C82D68")
+                }
             }
         }
+        
         // 사용자 위치 설정
-        self.userLocation.text = capsuleInfo.userLocation ?? "Unknown location"
+        self.userLocation.text = timeBox.addressTitle ?? "Unknown location"
         
         // 생성 날짜 설정
-        let dateStr = dateFormatter.string(from: capsuleInfo.createTimeCapsuleDate)
-        self.creationDate.text = dateStr
+        if let createTimeBoxDate = timeBox.createTimeBoxDate?.dateValue() {
+            let dateStr = dateFormatter.string(from: createTimeBoxDate)
+            self.creationDate.text = dateStr
+        }
     }
+
     
     // MARK: - Setup
     
