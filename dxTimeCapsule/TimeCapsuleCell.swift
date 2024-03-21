@@ -35,7 +35,6 @@ class TimeCapsuleCell: UITableViewCell {
         label.textAlignment = .center
         label.layer.cornerRadius = 10
         label.layer.masksToBounds = true
-//        label.backgroundColor = .systemGray
         return label
     }()
     
@@ -46,7 +45,6 @@ class TimeCapsuleCell: UITableViewCell {
         label.font = UIFont.boldSystemFont(ofSize: 60)
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.2
-//        label.backgroundColor = .systemGreen
         return label
     }()
     
@@ -58,7 +56,6 @@ class TimeCapsuleCell: UITableViewCell {
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.3
         label.textAlignment = .right
-//        label.backgroundColor = .systemCyan
         return label
     }()
     
@@ -78,7 +75,7 @@ class TimeCapsuleCell: UITableViewCell {
     // MARK: - Configuration
     
     // 셀을 구성하는 메서드
-    func configure(with timeBox: TimeBox) {
+    func configure(with timeBox: TimeBox, dDayColor: UIColor) {
         // 이미지 설정
         if let imageUrl = timeBox.thumbnailURL ?? timeBox.imageURL?.first, let url = URL(string: imageUrl) {
             self.registerImage.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder"))
@@ -102,12 +99,11 @@ class TimeCapsuleCell: UITableViewCell {
                     
                     // (수정) 오늘이 개봉일일 때 "D-day" 반환
                     self.dDay.text = "D-day"
-                    self.dDay.backgroundColor = UIColor(hex: "#C82D68")
                 } else {
-                    let dDayPrefix = daysUntilOpening < 0 ? "D+" : "D-" 
+                    let dDayPrefix = daysUntilOpening < 0 ? "D+" : "D-"
                     self.dDay.text = "\(dDayPrefix)\(abs(daysUntilOpening))"
-                    self.dDay.backgroundColor = daysUntilOpening < 0 ? UIColor.systemGray : UIColor(hex: "#C82D68")
                 }
+                self.dDay.backgroundColor = dDayColor
             }
         }
         
@@ -142,9 +138,10 @@ class TimeCapsuleCell: UITableViewCell {
         }
         
         dDay.snp.makeConstraints { make in
-            let offset1 = UIScreen.main.bounds.height * (0.15/16.0)
+            let offset1 = UIScreen.main.bounds.height * (0.3/16.0)
             let offset2 = UIScreen.main.bounds.height * (0.35/16.0)
             make.top.equalTo(registerImage.snp.bottom).offset(offset1)
+            make.bottom.equalTo(userLocation.snp.bottom)
             make.leading.equalToSuperview().inset(30)
             make.width.equalTo(registerImage.snp.width).multipliedBy(0.17/1.0)
             make.height.equalTo(offset2)
@@ -152,18 +149,19 @@ class TimeCapsuleCell: UITableViewCell {
         
         userLocation.snp.makeConstraints { make in
             let offset1 = UIScreen.main.bounds.height * (0.3/16.0)
-            let offset2 = UIScreen.main.bounds.width * (0.05/2.0)
+            let offset2 = UIScreen.main.bounds.width * (0.10/2.0)
             make.top.equalTo(registerImage.snp.bottom).offset(offset1)
             make.leading.equalTo(dDay.snp.trailing).offset(offset2)
             make.height.equalToSuperview().multipliedBy(1.3/16.0)
-            make.trailing.equalToSuperview().inset(offset2)
+            make.trailing.equalTo(creationDate.snp.leading)
         }
         
         creationDate.snp.makeConstraints { make in
             let offset = UIScreen.main.bounds.height * (0.35/16.0)
             make.trailing.equalToSuperview().inset(30)
             make.height.equalTo(offset)
-            make.top.equalTo(userLocation.snp.bottom)
+            make.width.equalTo(registerImage.snp.width).multipliedBy(0.26/1.0)
+            make.bottom.equalTo(userLocation.snp.bottom)
         }
     }
 }

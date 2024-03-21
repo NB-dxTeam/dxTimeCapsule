@@ -118,7 +118,7 @@ class OpenedTCViewController: UITableViewController {
         }
         
         let timeBox = timeBoxes[indexPath.row]
-        cell.configure(with: timeBox)
+        cell.configure(with: timeBox, dDayColor: UIColor.systemGray4)
         return cell
     }
     
