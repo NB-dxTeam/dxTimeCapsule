@@ -4,7 +4,7 @@
     친구 관련 데이터 처리를 담당하는 ViewModel입니다.
     Firebase Firestore를 사용하여 친구 관련 기능을 수행합니다.
 
-- 사용자 검색(searchUsersByUsername): 사용자의 닉네임을 기준으로 검색하여 해당하는 사용자를 가져옵니다.
+- 사용자 검색(searchUsersByUserName): 사용자의 닉네임을 기준으로 검색하여 해당하는 사용자를 가져옵니다.
 - 친구 상태 확인(checkFriendshipStatus): 두 사용자 간의 친구 관계 상태를 확인합니다.
 - 친구 요청 보내기(sendFriendRequest): 한 사용자가 다른 사용자에게 친구 요청을 보냅니다.
 - 친구 요청 수락하기(acceptFriendRequest): 친구 요청을 받은 사용자가 해당 요청을 수락합니다.
@@ -26,16 +26,16 @@ class FriendsViewModel: ObservableObject {
     
     
     // 친구 검색 (닉네임 기준 영어 2글자만 입력해도 검색되게)
-    func searchUsersByUsername(username: String, completion: @escaping ([User]?, Error?) -> Void) {
+    func searchUsersByUserName(userName: String, completion: @escaping ([User]?, Error?) -> Void) {
         
         // 검색어의 첫 글자를 대문자로 변환합니다.
-        let firstLetter = username.prefix(1).uppercased()
-        let remainingString = username.dropFirst().lowercased()
+        let firstLetter = userName.prefix(1).uppercased()
+        let remainingString = userName.dropFirst().lowercased()
         let searchQuery = firstLetter + remainingString
         
         let query = db.collection("users")
-            .whereField("username", isGreaterThanOrEqualTo: searchQuery)
-            .whereField("username", isLessThan: searchQuery + "\u{f8ff}")
+            .whereField("userName", isGreaterThanOrEqualTo: searchQuery)
+            .whereField("userName", isLessThan: searchQuery + "\u{f8ff}")
         
         query.getDocuments { (snapshot, error) in
             if let error = error {
@@ -140,38 +140,48 @@ class FriendsViewModel: ObservableObject {
     
     // 친구 수락하기
     func acceptFriendRequest(fromUser targetUserId: String, forUser currentUserId: String, completion: @escaping (Bool, Error?) -> Void) {
+        print("디버깅: 친구 요청 수락 시작")
         let acceptedDate = Timestamp(date: Date())
         let currentUserRef = db.collection("users").document(currentUserId)
         let targetUserRef = db.collection("users").document(targetUserId)
         
         let batch = db.batch()
         
+        print("디버깅: 서로의 친구 목록에 추가하는 작업 추가")
         // 서로의 친구 목록에 추가
         batch.updateData([
             "friends.\(targetUserId)": acceptedDate
         ], forDocument: currentUserRef)
+        
         batch.updateData([
             "friends.\(currentUserId)": acceptedDate
         ], forDocument: targetUserRef)
         
-        // 친구 요청 정보 삭제 -> 요청 정보 삭제가 안되고 있음.. 왜지???
+        print("디버깅: 친구 요청 정보 삭제 작업 추가")
+        // 친구 요청 정보 삭제
+        
         batch.updateData([
-            "friendRequestsSent.\(targetUserId)": FieldValue.delete(),
-            "friendRequestsReceived.\(currentUserId)": FieldValue.delete()
+            "friendRequestsSent.\(currentUserId)": FieldValue.delete(),
+            "friendRequestsReceived.\(targetUserId)": FieldValue.delete()
         ], forDocument: currentUserRef)
+
         batch.updateData([
-            "friendRequestsReceived.\(currentUserId)": FieldValue.delete(),
-            "friendRequestsSent.\(targetUserId)": FieldValue.delete()
+            "friendRequestsReceived.\(targetUserId)": FieldValue.delete(),
+            "friendRequestsSent.\(currentUserId)": FieldValue.delete()
         ], forDocument: targetUserRef)
         
+        print("디버깅: 배치 작업 커밋")
         batch.commit { error in
             if let error = error {
+                print("디버깅: 배치 작업 실패 - \(error.localizedDescription)")
                 completion(false, error)
             } else {
+                print("디버깅: 배치 작업 성공")
                 completion(true, nil)
             }
         }
     }
+
     
     // 친구 요청 관찰하기
     func observeFriendRequestsChanges(forUser userId: String, completion: @escaping ([String: Timestamp]?) -> Void) {

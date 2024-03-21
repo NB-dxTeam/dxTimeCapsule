@@ -47,11 +47,11 @@ class FirestoreDataService {
             let friendsInfo = documents.compactMap { document -> User? in
                 let data = document.data()
                 guard let uid = data["uid"] as? String,
-                      let username = data["username"] as? String,
+                      let userName = data["userName"] as? String,
                       let profileImageUrl = data["profileImageUrl"] as? String else {
                     return nil
                 }
-                return User(uid: uid, userName: username, profileImageUrl: profileImageUrl)
+                return User(uid: uid, userName: userName, profileImageUrl: profileImageUrl)
             }
             
             completion(friendsInfo)

@@ -234,8 +234,8 @@ class OpenCapsuleViewController: UIViewController {
             // 'description' 필드 값
                     self.userMessage = document.get("description") as? String
             
-                 // 'username' 필드 값
-                 let username = document.get("userName") as? String ?? "사용자"
+                 // 'userName' 필드 값
+                 let userName = document.get("userName") as? String ?? "사용자"
             
                  // 'userLocation' 필드 값
                  let userLocation = document.get("addressTitle") as? String ?? "위치 정보 없음"
@@ -264,11 +264,11 @@ class OpenCapsuleViewController: UIViewController {
             
             // 메모리 텍스트뷰에 표시할 문자열을 설정
             DispatchQueue.main.async {
-                     self.updateTitleLabel(with: username)
+                     self.updateTitleLabel(with: userName)
                      self.locationLabel.text = userLocation
                      self.detailedAddressLabel.text = detailedLocation
                      self.memoryTextView.text = """
-                     \(username)님의 지난 \(creationDateString)은
+                     \(userName)님의 지난 \(creationDateString)은
                      \(friendSentence)
                      굉장히 행복했던 날이에요\(mood).
                      """

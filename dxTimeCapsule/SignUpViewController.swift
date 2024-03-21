@@ -13,7 +13,7 @@ class SignUpViewController: UIViewController  {
     private let emailTextField = UITextField()
     private let passwordTextField = UITextField()
     private let confirmPasswordTextField = UITextField()
-    private let usernameTextField = UITextField()
+    private let userNameTextField = UITextField()
     private let signUpButton = UIButton(type: .system)
     
     
@@ -21,7 +21,7 @@ class SignUpViewController: UIViewController  {
     private let emailValidationLabel = UILabel()
     private let passwordValidationLabel = UILabel()
     private let confirmPasswordValidationLabel = UILabel()
-    private let usernameValidationLabel = UILabel()
+    private let userNameValidationLabel = UILabel()
 
     
     private let labelsContainerView = UIView()
@@ -69,17 +69,17 @@ class SignUpViewController: UIViewController  {
         configureTextField(emailTextField, placeholder: "Enter your email")
         configureTextField(passwordTextField, placeholder: "Enter your password", isSecure: true)
         configureTextField(confirmPasswordTextField, placeholder: "Confirm your password", isSecure: true)
-        configureTextField(usernameTextField, placeholder: "Enter your username")
+        configureTextField(userNameTextField, placeholder: "Enter your userName")
         
         // configure the validationLabel
         configureValidationLabel(emailValidationLabel)
         configureValidationLabel(passwordValidationLabel)
         configureValidationLabel(confirmPasswordValidationLabel)
-        configureValidationLabel(usernameValidationLabel)
+        configureValidationLabel(userNameValidationLabel)
         view.addSubview(emailValidationLabel)
         view.addSubview(passwordValidationLabel)
         view.addSubview(confirmPasswordValidationLabel)
-        view.addSubview(usernameValidationLabel)
+        view.addSubview(userNameValidationLabel)
         
         // Configure the signUpButton
         configureButton(signUpButton, title: "Sign Up")
@@ -151,15 +151,15 @@ class SignUpViewController: UIViewController  {
             make.left.right.equalTo(confirmPasswordTextField)
         }
         
-        usernameTextField.snp.makeConstraints { make in
+        userNameTextField.snp.makeConstraints { make in
             make.top.equalTo(confirmPasswordValidationLabel.snp.bottom).offset(10)
             make.left.right.equalTo(passwordTextField)
             make.height.equalTo(44)
         }
         
         signUpButton.snp.makeConstraints { make in
-            make.top.equalTo(usernameTextField.snp.bottom).offset(20)
-            make.left.right.equalTo(usernameTextField)
+            make.top.equalTo(userNameTextField.snp.bottom).offset(20)
+            make.left.right.equalTo(userNameTextField)
             make.height.equalTo(50)
         }
         
@@ -328,7 +328,7 @@ class SignUpViewController: UIViewController  {
     @objc private func signUpButtonPressed() {
         guard let email = emailTextField.text, !email.isEmpty,
               let password = passwordTextField.text, !password.isEmpty,
-              let username = usernameTextField.text, !username.isEmpty,
+              let userName = userNameTextField.text, !userName.isEmpty,
               let profileImage = profileImageView.image else {
             presentAlert(title: "입력 오류", message: "모든 필드를 채워주세요.")
             return
@@ -338,7 +338,7 @@ class SignUpViewController: UIViewController  {
         
         termsVC.email = email
         termsVC.password = password
-        termsVC.username = username
+        termsVC.userName = userName
         termsVC.profileImage = profileImage
         
         termsVC.modalPresentationStyle = .formSheet // iPad에서 반 모달 스타일로 표시합니다.
@@ -385,7 +385,7 @@ class SignUpViewController: UIViewController  {
                     let userData: [String: Any] = [
                         "uid": uid,
                         "email": email,
-                        "username": username,
+                        "userName": userName,
                         "profileImageUrl": downloadURL.absoluteString,
                         "friends": [],
                         "friendRequestsSent": [],

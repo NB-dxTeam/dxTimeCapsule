@@ -15,14 +15,14 @@ class UserProfileViewModel {
     // Properties to hold the user data
     var uid: String?
     var email: String?
-    var nickname: String?
+    var userName: String?
     var profileImageUrl: String?
     
     // Initialization with default values
-    init(uid: String? = nil, email: String? = nil, nickname: String? = nil, profileImageUrl: String? = nil) {
+    init(uid: String? = nil, email: String? = nil, usernName: String? = nil, profileImageUrl: String? = nil) {
         self.uid = uid
         self.email = email
-        self.nickname = nickname
+        self.userName = usernName
         self.profileImageUrl = profileImageUrl
     }
     
@@ -41,7 +41,7 @@ class UserProfileViewModel {
                 if let document = document, document.exists, let data = document.data() {
                     self?.uid = data["uid"] as? String
                     self?.email = data["email"] as? String
-                    self?.nickname = data["userName"] as? String  // userName으로 필드 이름이 변경된 것을 반영
+                    self?.userName = data["userName"] as? String  // userName으로 필드 이름이 변경된 것을 반영
                     self?.profileImageUrl = data["profileImageUrl"] as? String
                     
                     // 여기서는 추가된 필드들을 직접 사용하지 않지만, 필요에 따라 사용할 수 있음
@@ -52,7 +52,7 @@ class UserProfileViewModel {
                     // 실패 혹은 사용자 데이터가 없는 경우에 대한 처리
                     self?.uid = "123456"
                     self?.email = "nouser@example.com"
-                    self?.nickname = "NO USER"
+                    self?.userName = "NO USER"
                     self?.profileImageUrl = "https://example.com/profile/pandaruss.jpg"
                     print("User data not found")
                     print("User data not found, or error fetching user data")

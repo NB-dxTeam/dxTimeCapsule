@@ -20,7 +20,7 @@ class TermsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     var email: String?
     var password: String?
-    var username: String?
+    var userName: String?
     var profileImage: UIImage?
 
     private let headerLabel = UILabel()
@@ -203,12 +203,12 @@ class TermsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
 
     @objc private func completeSignUp() {
-        guard let email = self.email, let password = self.password, let username = self.username, let profileImage = self.profileImage else {
+        guard let email = self.email, let password = self.password, let userName = self.userName, let profileImage = self.profileImage else {
             self.presentAlert(title: "Error", message: "Missing information.")
             return
         }
         
-        AuthService.shared.signUpWithEmail(email: email, password: password, username: username, profileImage: profileImage) { [weak self] result in
+        AuthService.shared.signUpWithEmail(email: email, password: password, userName: userName, profileImage: profileImage) { [weak self] result in
             guard let strongSelf = self else { return }
             switch result {
             case .success(_):

@@ -72,7 +72,7 @@ class TagFriendsListViewController: UIViewController {
             guard let userData = document.data() else { return }
             self.currentUser = User(
                 uid: currentUserID,
-                userName: userData["username"] as? String ?? "",
+                userName: userData["userName"] as? String ?? "",
                 email: userData["email"] as? String ?? "",
                 profileImageUrl: userData["profileImageUrl"] as? String
             )
@@ -112,9 +112,9 @@ class TagFriendsListViewController: UIViewController {
                     if let friendData = friendSnapshot?.data(),
                         let uid = friendData["uid"] as? String,
                         let email = friendData["email"] as? String,
-                        let username = friendData["username"] as? String,
+                        let userName = friendData["userName"] as? String,
                         let imageUrl = friendData["profileImageUrl"] as? String {
-                        let friend = User(uid: uid, userName: email, email: username, profileImageUrl: imageUrl)
+                        let friend = User(uid: uid, userName: email, email: userName, profileImageUrl: imageUrl)
                          fetchedFriends.append(friend) // Append fetched friend to the temporary array
                     }
                 }

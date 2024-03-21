@@ -21,8 +21,8 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     // MARK: - UI Components
     private let labelsContainerView = UIView()
     private let profileImageView = UIImageView()
-    private let nicknameLabel = UILabel()
-    private let editUsernameButton = UIButton()
+    private let usreNameLabel = UILabel()
+    private let editUserNameButton = UIButton()
     private let emailLabel = UILabel()
 //    private let selectImageLabel = UILabel()
     private let logoutButton = UIButton()
@@ -58,8 +58,8 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     private func setupViews() {
         view.backgroundColor = .white
         view.addSubview(profileImageView)
-        view.addSubview(nicknameLabel)
-        view.addSubview(editUsernameButton)
+        view.addSubview(usreNameLabel)
+        view.addSubview(editUserNameButton)
         view.addSubview(logoutButton)
         view.addSubview(dividerView)
         view.addSubview(emailLabel)
@@ -100,14 +100,14 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         }
         
         // Nickname Label Setup
-        nicknameLabel.font = .pretendardSemiBold(ofSize: 24)
-        nicknameLabel.textAlignment = .center
+        usreNameLabel.font = .pretendardSemiBold(ofSize: 24)
+        usreNameLabel.textAlignment = .center
         
         // Edit Nickname Button Setup
-        editUsernameButton.setTitle("Edit", for: .normal)
-        editUsernameButton.titleLabel?.font = .pretendardSemiBold(ofSize: 15)
-        editUsernameButton.setTitleColor(.darkGray, for: .normal)
-        editUsernameButton.addTarget(self, action: #selector(editUsernameTapped), for: .touchUpInside)
+        editUserNameButton.setTitle("Edit", for: .normal)
+        editUserNameButton.titleLabel?.font = .pretendardSemiBold(ofSize: 15)
+        editUserNameButton.setTitleColor(.darkGray, for: .normal)
+        editUserNameButton.addTarget(self, action: #selector(editUserNameTapped), for: .touchUpInside)
 
         // Email Label Setup
         logoutButton.titleLabel?.font = .pretendardSemiBold(ofSize: 24)
@@ -171,22 +171,22 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         }
         
         // Nickname Label Constraints
-        nicknameLabel.snp.makeConstraints { make in
+        usreNameLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(profileImageView.snp.bottom).offset(20) // 수정된 부분
             make.left.right.equalToSuperview().inset(20)
         }
 
-        editUsernameButton.snp.makeConstraints { make in
-            make.centerY.equalTo(nicknameLabel)
-            make.leading.equalTo(nicknameLabel.snp.trailing).offset(-30)
+        editUserNameButton.snp.makeConstraints { make in
+            make.centerY.equalTo(usreNameLabel)
+            make.leading.equalTo(usreNameLabel.snp.trailing).offset(-30)
             make.width.height.equalTo(20) // Adjust the size as needed
         }
         
         // Email Label Constraints
         emailLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(nicknameLabel.snp.bottom).offset(10)
+            make.top.equalTo(usreNameLabel.snp.bottom).offset(10)
             make.left.right.equalToSuperview().inset(20)
         }
         
@@ -243,7 +243,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
       private func showLoadingIndicator() {
           loadingIndicator.startAnimating()
           profileImageView.isHidden = true // 로딩 중에는 프로필 이미지 숨김
-          nicknameLabel.isHidden = true // 로딩 중에는 닉네임 레이블 숨김
+          usreNameLabel.isHidden = true // 로딩 중에는 닉네임 레이블 숨김
           emailLabel.isHidden = true // 로딩 중에는 이메일 레이블 숨김
       }
       
@@ -251,7 +251,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
           loadingIndicator.stopAnimating()
           loadingIndicator.isHidden = true
           profileImageView.isHidden = false // 로딩 완료 후 프로필 이미지 표시
-          nicknameLabel.isHidden = false // 로딩 완료 후 닉네임 레이블 표시
+          usreNameLabel.isHidden = false // 로딩 완료 후 닉네임 레이블 표시
           emailLabel.isHidden = false // 로딩 완료 후 이메일 레이블 표시
       }
     
@@ -266,7 +266,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         }
         
         // 닉네임 설정
-        nicknameLabel.text = userProfileViewModel.nickname
+        usreNameLabel.text = userProfileViewModel.userName
         
         // 이메일 설정
         emailLabel.text = userProfileViewModel.email
@@ -303,7 +303,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     
     // MARK: - Actions
     
-    @objc private func editUsernameTapped() {
+    @objc private func editUserNameTapped() {
         let alertController = UIAlertController(title: "닉네임 수정", message: "새로운 닉네임을 입력하세요.", preferredStyle: .alert)
         
         alertController.addTextField { textField in
@@ -312,9 +312,9 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         
         let saveAction = UIAlertAction(title: "저장", style: .default) { [weak self] _ in
             if let newNickname = alertController.textFields?.first?.text, !newNickname.isEmpty {
-                self?.updateUsername(newNickname)
+                self?.updateUserName(newNickname)
             } else {
-                // Show an error message if the new username is empty
+                // Show an error message if the new userName is empty
                 self?.showErrorMessage("닉네임을 입력하세요.")
             }
         }
@@ -326,20 +326,20 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         present(alertController, animated: true, completion: nil)
     }
 
-    private func updateUsername(_ newUsername: String) {
+    private func updateUserName(_ newUserName: String) {
         // Update locally
-        nicknameLabel.text = newUsername
+        usreNameLabel.text = newUserName
         
         // Update on server (Firestore)
         guard let userId = Auth.auth().currentUser?.uid else { return }
         let userRef = Firestore.firestore().collection("users").document(userId)
-        userRef.setData(["username": newUsername], merge: true) { error in
+        userRef.setData(["userName": newUserName], merge: true) { error in
             if let error = error {
-                print("Error updating username in Firestore: \(error.localizedDescription)")
-                // If update fails, revert back the username locally
-                self.nicknameLabel.text = self.userProfileViewModel.nickname
+                print("Error updating userName in Firestore: \(error.localizedDescription)")
+                // If update fails, revert back the userName locally
+                self.usreNameLabel.text = self.userProfileViewModel.userName
             } else {
-                print("Username updated successfully")
+                print("UserName updated successfully")
             }
         }
     }
