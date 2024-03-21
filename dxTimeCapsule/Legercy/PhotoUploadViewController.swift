@@ -2,12 +2,9 @@ import UIKit
 import SnapKit
 import PhotosUI
 import Photos
-import FirebaseStorage
-import FirebaseAuth
-import FirebaseFirestore
 
-class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate {
-
+class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
+    
     // MARK: - 속성 선언부
     
     var selectedLocation: CLLocationCoordinate2D?
@@ -40,7 +37,7 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     private let bannerLabel: UILabel = {
         let label = UILabel()
         label.text = "타임박스에 들어갈 사진을 선택해주세요! 첫번째 사진이 썸네일로 사용됩니다."
-        label.font = .systemFont(ofSize: 16, weight: .bold)
+        label.font = .pretendardBold(ofSize: 16)
         label.textColor = UIColor.white
         label.backgroundColor = UIColor(hex: "#C82D6B").withAlphaComponent(0.8)
         label.textAlignment = .center
@@ -51,16 +48,27 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     }()
     
     private lazy var collectionView: UICollectionView = {
-         let layout = UICollectionViewFlowLayout()
-         layout.minimumInteritemSpacing = 3
-         layout.minimumLineSpacing = 3
-         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-         cv.backgroundColor = .white
-         cv.register(PhotoCell.self, forCellWithReuseIdentifier: PhotoCell.identifier)
-         cv.dataSource = self
-         cv.delegate = self
-         return cv
-     }()
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumInteritemSpacing = 3
+        layout.minimumLineSpacing = 3
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.backgroundColor = .white
+        cv.register(PhotoCell.self, forCellWithReuseIdentifier: PhotoCell.identifier)
+        cv.dataSource = self
+        cv.delegate = self
+        return cv
+    }()
+    
+    private let moodPickerView = UIPickerView()
+    
+    private let friendsCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: 50, height: 50) // Adjust size as needed
+        return UICollectionView(frame: .zero, collectionViewLayout: layout)
+    }()
+    
+    
     
     // MARK: - LifeCycle
     override func viewDidLoad() {
@@ -89,52 +97,54 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         nextButton.layer.shadowRadius = 5
         nextButton.layer.shadowOffset = CGSize(width: 0, height: 5)
         
-        closeButton = UIButton(type: .system)
-        closeButton.setTitle("뒤로", for: .normal)
-        closeButton.tintColor = UIColor(hex: "#C82D6B")
-        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        backButton.tintColor = UIColor(hex: "#C82D6B")
+        backButton.contentEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5) // Optional: Adjust padding
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        
     }
 
     // MARK: - Setup UI
-       private func setupUI() {
-           view.backgroundColor = .white
-
-           // 이미지 뷰 설정
-           view.addSubview(imageView)
-           imageView.snp.makeConstraints { make in
-               make.top.equalTo(view.safeAreaLayoutGuide)
-               make.left.right.equalToSuperview().inset(5)
-               make.height.equalTo(view.snp.height).multipliedBy(0.5) // 전체 뷰의 높이의 50%
-               make.width.equalTo(imageView.snp.height).multipliedBy(0.8) // 4:5 비율 유지
-           }
-           
-           // 컬렉션 뷰 설정
-           view.addSubview(collectionView)
-           collectionView.snp.makeConstraints { make in
-               make.top.equalTo(imageView.snp.bottom).offset(5)
-               make.left.right.equalToSuperview().inset(5)
-               make.bottom.equalTo(view.safeAreaLayoutGuide).inset(50) // 필요에 따라 조정
-           }
-
-           
-           // 'Next' 버튼 설정
-           view.addSubview(nextButton)
-           nextButton.snp.makeConstraints { make in
-               make.centerX.equalToSuperview()
-               make.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
-               make.height.equalTo(40)
-               make.width.equalTo(200)
-           }
-           nextButton.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
-           
-           // 'Close' 버튼 설정
-           view.addSubview(closeButton)
-           closeButton.snp.makeConstraints { make in
-               make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
-               make.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
-               make.width.height.equalTo(40)
-           }
-       }
+    private func setupUI() {
+        view.backgroundColor = .white
+        
+        // 이미지 뷰 설정
+        view.addSubview(imageView)
+        imageView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top) // 네비게이션 바 아래에 배치되도록 수정
+            make.left.right.equalToSuperview().inset(5)
+            make.height.equalTo(view.snp.height).multipliedBy(0.5) // 전체 뷰의 높이의 50%
+            make.width.equalTo(imageView.snp.height).multipliedBy(0.8) // 4:5 비율 유지
+        }
+        
+        // 컬렉션 뷰 설정
+        view.addSubview(collectionView)
+        collectionView.snp.makeConstraints { make in
+            make.top.equalTo(imageView.snp.bottom).offset(5)
+            make.left.right.equalToSuperview().inset(5)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        
+        // 'Next' 버튼 설정
+        view.addSubview(nextButton)
+        nextButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
+            make.height.equalTo(40)
+            make.width.equalTo(200)
+        }
+        nextButton.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
+        
+        view.addSubview(backButton)
+        backButton.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)  // Adjust these values as needed
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(10) // Adjust for padding from the left edge
+            make.width.height.equalTo(40)  // Adjust based on your design
+        }
+        
+    }
     
     private func setupPlaceholderLabel() {
         view.addSubview(placeholderLabel)
@@ -149,21 +159,36 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
 
     // 사진 라이브러리 권한 요청
     private func requestPhotoLibraryPermission() {
-         PHPhotoLibrary.requestAuthorization { status in
-             switch status {
-             case .authorized:
-                 DispatchQueue.main.async {
-                     self.fetchPhotos()
-                 }
-             case .denied, .restricted, .notDetermined:
-                 // Handle denied or restricted
-                 break
-             @unknown default:
-                 break
-             }
-         }
-     }
-
+        PHPhotoLibrary.requestAuthorization { status in
+            switch status {
+            case .authorized:
+                DispatchQueue.main.async {
+                    self.fetchPhotos()
+                }
+            case .denied:
+                // 거부된 경우 처리
+                // 사용자에게 앱 권한을 얻을 수 있는 방법을 안내하거나 적절한 경고를 표시합니다.
+                break
+            case .restricted:
+                // 제한된 경우 처리
+                // 사용자가 사진 라이브러리에 접근할 수 없는 경우에 대한 처리를 수행합니다.
+                break
+            case .limited:
+                // 제한된 권한으로 제한된 경우 처리
+                // 사용자에게 제한된 권한으로 앱을 사용하는 방법을 안내하거나 해당 제한사항을 고려합니다.
+                break
+            case .notDetermined:
+                break
+            @unknown default:
+                // 알려지지 않은 다른 경우 처리
+                // 앱에서 알 수 없는 새로운 권한 상태가 추가되면 해당 처리를 수행합니다.
+                break
+            }
+        }
+    }
+    
+    
+    //
     private func setupImageView() {
         view.addSubview(imageView)
         imageView.contentMode = .scaleAspectFill
@@ -183,9 +208,22 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(70)
             make.leading.trailing.equalToSuperview().inset(30)
         }
-        bannerLabel.sizeToFit() // 내용에 맞게 크기 조절
-
-
+        
+        // 텍스트 스타일 설정
+        let attributedText = NSMutableAttributedString(string: "타임박스에 들어갈 사진을 선택해주세요!\n", attributes: [
+            .font: UIFont.pretendardBold(ofSize: 16)!,
+            .foregroundColor: UIColor.white
+        ])
+        
+        attributedText.append(NSAttributedString(string: "첫번째 사진이 썸네일로 사용됩니다.", attributes: [
+            .font: UIFont.pretendardBold(ofSize: 16)!,
+            .foregroundColor: UIColor.white
+        ]))
+        
+        bannerLabel.attributedText = attributedText
+        bannerLabel.numberOfLines = 0 // 여러 줄 허용
+        bannerLabel.textAlignment = .center // 가운데 정렬
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
             UIView.animate(withDuration: 0.5) {
                 self.bannerLabel.alpha = 0
@@ -264,10 +302,6 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     }
 
     
-    // 'Close' 버튼 탭 시 동작
-    @objc private func closeButtonTapped() {
-         dismiss(animated: true, completion: nil)
-     }
     
     // MARK: - UICollectionViewDataSource Methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -276,30 +310,43 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.identifier, for: indexPath) as? PhotoCell else {
-             fatalError("Unable to dequeue PhotoCell")
-         }
-         let asset = assets[indexPath.item]
-
-         // 선택 상태 확인
-         let isSelected = selectedAssets.contains(where: { $0 == asset })
-
-         // 선택 순서 번호 계산
-         let selectionNumber = isSelected ? selectedAssets.firstIndex(of: asset).map { $0 + 1 } : nil
-
-         // 셀 크기 계산
-         let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout
-         let cellSize = layout?.itemSize ?? CGSize(width: 100, height: 100) // 기본 크기
-         let scale = UIScreen.main.scale // 화면의 스케일
-         let targetSize = CGSize(width: cellSize.width * scale, height: cellSize.height * scale)
-
-         // 사진, 선택 상태, 선택 순서 번호, 타겟 크기로 셀 구성
-         cell.configure(with: asset, imageManager: imageManager, isSelected: isSelected, selectionNumber: selectionNumber, targetSize: targetSize)
-
-         return cell
-     }
-
-
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.identifier, for: indexPath) as? PhotoCell else {
+            fatalError("Unable to dequeue PhotoCell")
+        }
+        let asset = assets[indexPath.item]
+        
+        // 선택 상태 확인
+        let isSelected = selectedAssets.contains(where: { $0 == asset })
+        
+        // 선택 순서 번호 계산
+        let selectionNumber = isSelected ? selectedAssets.firstIndex(of: asset).map { $0 + 1 } : nil
+        
+        // 셀 크기 계산
+        let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout
+        let cellSize = layout?.itemSize ?? CGSize(width: 100, height: 100) // 기본 크기
+        let scale = UIScreen.main.scale // 화면의 스케일
+        let targetSize = CGSize(width: cellSize.width * scale, height: cellSize.height * scale)
+        
+        // 사진, 선택 상태, 선택 순서 번호, 타겟 크기로 셀 구성
+        cell.configure(with: asset, imageManager: imageManager, isSelected: isSelected, selectionNumber: selectionNumber, targetSize: targetSize)
+        
+        return cell
+    }
+    
+    // MARK: - UIPickerViewDataSource and UIPickerViewDelegate
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return Emoji.emojis.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return Emoji.emojis[row].description
+    }
+    
+    
     
     // UICollectionViewDelegateFlowLayout 메소드
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -392,10 +439,10 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
 
 
 // MARK: - SwiftUI Preview
-//import SwiftUI
-//
-//struct MainTabBarViewPreview22 : PreviewProvider {
-//    static var previews: some View {
-//        PhotoUploadViewController().toPreview()
-//    }
-//}
+import SwiftUI
+
+struct MainTabBarViewPreview22 : PreviewProvider {
+    static var previews: some View {
+        PhotoUploadViewController().toPreview()
+    }
+}

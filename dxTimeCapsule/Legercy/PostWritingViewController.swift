@@ -5,7 +5,6 @@ import FirebaseStorage
 import SnapKit
 import CoreLocation
 
-
 class PostWritingViewController: UIViewController, UITextViewDelegate {
     // MARK: - Properties
     var viewModel = FriendsViewModel()
@@ -18,7 +17,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
     var selectedFriends: [User] = []
     var selectedMood: String = ""
     var selectedMoodDescription: String = ""
-    
+
     private let moodPickerDelegate = MoodPickerDelegate()
     
     private lazy var descriptionTitleLabel: UILabel = {
