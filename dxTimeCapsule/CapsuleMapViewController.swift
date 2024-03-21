@@ -19,7 +19,9 @@ class CapsuleMapViewController: UIViewController {
     var currentDetent: String? = nil
     // 타임박스 정보와 태그된 친구들의 정보를 담을 배열
     var timeBoxAnnotationsData = [TimeBoxAnnotationData]()
+    var timeBoxes: [TimeBox] = []
     var selectedTimeBoxAnnotationData: TimeBoxAnnotationData?
+    private var selectedButton: UIButton?
     lazy var friendsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -35,15 +37,15 @@ class CapsuleMapViewController: UIViewController {
     // 원래 지도의 중심 위치를 저장할 변수
     private var originalCenterCoordinate: CLLocationCoordinate2D?
     private var shouldShowModal = false
-    
-    private lazy var aButton: UIButton = createRoundButton(title: "A")
-    private lazy var bButton: UIButton = createRoundButton(title: "B")
-    private lazy var cButton: UIButton = createRoundButton(title: "C")
+    // 버튼을 생성하고 설정하는 클로저
+    private lazy var allButton: UIButton = createRoundButton(named: "all", title: "All")
+    private lazy var lockedButton: UIButton = createRoundButton(named: "locked", title: "Locked")
+    private lazy var openedButton: UIButton = createRoundButton(named: "opened", title: "Opened")
     
     private lazy var buttonsStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [aButton, bButton, cButton])
+        let stackView = UIStackView(arrangedSubviews: [allButton, lockedButton, openedButton])
         stackView.axis = .horizontal
-        stackView.distribution = .equalSpacing
+        stackView.distribution = .fillEqually
         stackView.alignment = .center
         stackView.spacing = 10 // 버튼 사이의 간격을 설정합니다.
         return stackView
@@ -106,7 +108,9 @@ class CapsuleMapViewController: UIViewController {
         locationSetting()
         setupMapView()
         buttons()
-        loadCapsuleInfos()
+        updateButtonSelection(allButton)
+        selectedButton = allButton
+        loadCapsuleInfos(button: .all)
         navigationController?.isNavigationBarHidden = true
 
     }
@@ -117,11 +121,6 @@ class CapsuleMapViewController: UIViewController {
             showModalVC()
         }
     }
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
-    }
-    
     
 }
 
@@ -206,15 +205,18 @@ extension CapsuleMapViewController {
         let zoomedRegion = capsuleMaps.regionThatFits(MKCoordinateRegion(center: region.center, span: MKCoordinateSpan(latitudeDelta: newLatitudeDelta, longitudeDelta: newLongitudeDelta)))
         capsuleMaps.setRegion(zoomedRegion, animated: true)
     }
-    private func createRoundButton(title: String) -> UIButton {
+    private func createRoundButton(named name: String, title: String) -> UIButton {
         let button = UIButton()
         button.setTitle(title, for: .normal)
+        button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .white.withAlphaComponent(0.8) // 배경색을 설정합니다.
         button.layer.cornerRadius = 20 // 모서리를 둥글게 합니다.
         button.snp.makeConstraints { make in // SnapKit을 사용하여 제약조건을 설정합니다.
             make.size.equalTo(CGSize(width: 80, height: 40))
         }
-        // 버튼의 동작은 사용자가 정의할 수 있습니다.
+        button.addAction(UIAction { [weak self] _ in
+            self?.buttonTapped(name: name)
+        }, for: .touchUpInside)
         return button
     }
     // 뒤로가기 버튼 동작
@@ -226,6 +228,42 @@ extension CapsuleMapViewController {
         } else {
             self.tabBarController?.selectedIndex = 0
         }
+    }
+    
+    // 버튼이 눌렸을 때 호출되는 메서드
+    private func buttonTapped(name: String) {
+        let buttonToSelect: UIButton
+        switch name {
+        case "all":
+            // 'All' 버튼 로직
+            loadCapsuleInfos(button: .all)
+            buttonToSelect = allButton
+        case "locked":
+            // 'Locked' 버튼 로직
+            loadCapsuleInfos(button: .locked)
+            buttonToSelect = lockedButton
+        case "opened":
+            // 'Opened' 버튼 로직
+            loadCapsuleInfos(button: .opened)
+            buttonToSelect = openedButton
+        default:
+            return
+        }
+        // 버튼의 선택 상태 업데이트
+        updateButtonSelection(buttonToSelect)
+        // 현재 선택된 버튼을 저장
+        selectedButton = buttonToSelect
+    }
+    private func updateButtonSelection(_ selectedButton: UIButton) {
+        // 모든 버튼을 기본 상태로 리셋
+        [allButton, lockedButton, openedButton].forEach {
+            $0.backgroundColor = .white.withAlphaComponent(0.8)
+            $0.setTitleColor(.black, for: .normal)
+        }
+        
+        // 선택된 버튼의 스타일을 변경
+        selectedButton.backgroundColor = .systemBlue
+        selectedButton.setTitleColor(.white, for: .normal)
     }
 }
 
@@ -242,67 +280,79 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
         
     }
     
-    // 데이터 정보 불러오기
-    func loadCapsuleInfos() {
-        let db =  Firestore.firestore()
+    // Firestore 쿼리 결과를 처리하는 함수
+    func dataCapsule(documents: [QueryDocumentSnapshot]) {
+        let group = DispatchGroup()
         
-        // 로그인한 사용자의 UID를 가져옵니다.
-        guard let userId = Auth.auth().currentUser?.uid else { return }
-        //let userId = "FNZgZFdLTXXjOkbJY841BW1WhAB2"
-        print("Starting to load time capsule infos for user \(userId)") // 문서로드시작
-        db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
-            .order(by: "openTimeBoxDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
-            .getDocuments { [weak self] (querySnapshot, error) in
+        for doc in documents {
+            let data = doc.data()
+            let geoPoint = data["location"] as? GeoPoint
+            var timeBox = TimeBox(
+                id: doc.documentID,
+                uid: data["uid"] as? String ?? "",
+                userName: data["userName"] as? String ?? "",
+                imageURL: data["imageURL"] as? [String],
+                location: geoPoint,
+                addressTitle: data["addressTitle"] as? String ?? "",
+                address: data["address"] as? String ?? "",
+                description: data["description"] as? String,
+                tagFriendUid: data["tagFriendUid"] as? [String],
+                createTimeBoxDate: Timestamp(date: (data["createTimeBoxDate"] as? Timestamp)?.dateValue() ?? Date()),
+                openTimeBoxDate: Timestamp(date: (data["openTimeBoxDate"] as? Timestamp)?.dateValue() ?? Date()),
+                isOpened: data["isOpened"] as? Bool ?? false
+            )
+            
+            if let tagFriendUids = timeBox.tagFriendUid, !tagFriendUids.isEmpty {
+                group.enter()
+                FirestoreDataService().fetchFriendsInfo(byUIDs: tagFriendUids) { [weak self] friendsInfo in
+                    guard let friendsInfo = friendsInfo else {
+                        group.leave()
+                        return
+                    }
+                    
+                    // 타임박스와 관련된 친구 정보를 포함하는 어노테이션 데이터를 생성
+                    let annotationData = TimeBoxAnnotationData(timeBox: timeBox, friendsInfo: friendsInfo)
+                    self?.timeBoxAnnotationsData.append(annotationData)
+                    group.leave()
+                }
+            }
+            self.timeBoxes.append(timeBox)
+        }
+        
+        group.notify(queue: .main) {
+            print("데이터 전달. Total count: \(self.timeBoxes.count)")
+            // 모든 타임박스 데이터 처리 완료 후 UI 업데이트
+            self.addAnnotations(from: self.timeBoxes)
+        }
+    }
+    // 데이터 정보 불러오기
+    func loadCapsuleInfos(button: CapsuleFilterButtons) {
+            let db = Firestore.firestore()
+            guard let userId = Auth.auth().currentUser?.uid else { return }
+            
+            var query: Query
+            switch button {
+            case .all:
+                query = db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
+                    .order(by: "openTimeBoxDate", descending: false)
+            case .locked:
+                query = db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
+                    .whereField("isOpened", isEqualTo: false)
+                    .order(by: "openTimeBoxDate", descending: false)
+            case .opened:
+                query = db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
+                    .whereField("isOpened", isEqualTo: true)
+                    .order(by: "openTimeBoxDate", descending: false)
+            }
+
+            query.getDocuments { [weak self] (querySnapshot, error) in
                 guard let documents = querySnapshot?.documents else {
                     print("Error fetching documents: \(error!)")
                     return
                 }
-                print("Successfully fetched \(documents.count) documents") // 문서로드 성공 및 문서 수
-                var timeBoxes = [TimeBox]()
-                let group = DispatchGroup()
-                
-                for doc in documents {
-                    let data = doc.data()
-                    let geoPoint = data["location"] as? GeoPoint
-                    let timeBox = TimeBox(
-                        id: doc.documentID,
-                        uid: data["uid"] as? String ?? "",
-                        userName: data["userName"] as? String ?? "",
-                        imageURL: data["imageURL"] as? [String],
-                        location: geoPoint,
-                        addressTitle: data["addressTitle"] as? String ?? "",
-                        address: data["address"] as? String ?? "",
-                        description: data["description"] as? String,
-                        tagFriendUid: data["tagFriendUid"] as? [String],
-                        createTimeBoxDate: Timestamp(date: (data["createTimeBoxDate"] as? Timestamp)?.dateValue() ?? Date()),
-                        openTimeBoxDate: Timestamp(date: (data["openTimeBoxDate"] as? Timestamp)?.dateValue() ?? Date()),
-                        isOpened: data["isOpened"] as? Bool ?? false
-                    )
-                    print("TimeBox created with ID: \(timeBox.id) and userName: \(timeBox.userName)") // 각 TimeBox 객체 생성 시
-                    if let tagFriendUids = timeBox.tagFriendUid, !tagFriendUids.isEmpty {
-                        group.enter()
-                        print("tagFriendUis: \(tagFriendUids)")
-                        FirestoreDataService().fetchFriendsInfo(byUIDs: tagFriendUids) { [weak self] friendsInfo in
-                            guard let friendsInfo = friendsInfo else {
-                                group.leave()
-                                return
-                            }
-                            
-                            // 타임박스와 관련된 친구 정보를 포함하는 어노테이션 데이터를 생성
-                            let annotationData = TimeBoxAnnotationData(timeBox: timeBox, friendsInfo: friendsInfo)
-                            self?.timeBoxAnnotationsData.append(annotationData)
-                            group.leave()
-                        }
-                    }
-                    timeBoxes.append(timeBox)
-                }
-                group.notify(queue: .main) {
-                    print("All time boxes are processed. Total: \(timeBoxes.count)") // 모든 타임박스 데이터 처리 완료 후
-                    // 모든 타임박스 데이터 처리 완료 후 UI 업데이트 로직 구현 필요
-                    self?.addAnnotations(from: timeBoxes)
-                }
+                self?.dataCapsule(documents: documents)
             }
-    }
+        }
     
 }
 
@@ -401,8 +451,6 @@ extension CapsuleMapViewController: MKMapViewDelegate {
             annotationView?.glyphImage = UIImage(named: "boximage1")
             annotationView?.glyphTintColor = .white
             annotationView?.markerTintColor = .red
-            // Uncomment the line below if you want to add a right callout accessory view
-            annotationView?.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         } else {
             print("Reusing MKMarkerAnnotationView")
         }
@@ -467,6 +515,10 @@ extension CapsuleMapViewController: UISheetPresentationControllerDelegate {
         }
        
     }
+}
+
+enum CapsuleFilterButtons {
+    case all, locked, opened
 }
 // MARK: - Preview
 import SwiftUI

@@ -85,6 +85,7 @@ extension CapsuleMapViewController {
     }
     
     func addAnnotations(from timeBoxes: [TimeBox]) {
+        print("Adding annotations for \(timeBoxes.count) timeBoxes.")
         // 모든 TimeBox에서 고유한 tagFriendUid 값을 모두 수집
         let allTaggedFriendUids = Set(timeBoxes.compactMap({ $0.tagFriendUid }).flatMap({ $0 }))
         
@@ -98,6 +99,7 @@ extension CapsuleMapViewController {
             DispatchQueue.main.async {
                 for timeBox in timeBoxes {
                     guard let location = timeBox.location else { continue }
+                    print("Creating annotation for TimeBox with ID: \(timeBox.tagFriendUid ?? []) at location: \(location.latitude), \(location.longitude)")
                     let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
                     
                     // Fetch friends information for the current TimeBox
