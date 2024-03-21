@@ -22,7 +22,7 @@ class UploadPostViewModel {
     }
     
     // 타임박스 데이터를 Firestore에 업로드합니다.
-    func uploadTimeBox(uid: String, userName: String, imageURL: [UIImage], location: GeoPoint, addressTitle: String, address: String, description: String, tagFriendUid: [String], tagFriendUserName: [String], createTimeBoxDate: Timestamp, openTimeBoxDate: Timestamp, isOpened: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
+    func uploadTimeBox(id: String, uid: String, userName: String, imageURL: [UIImage], location: GeoPoint, addressTitle: String, address: String, description: String, tagFriendUid: [String], tagFriendUserName: [String], createTimeBoxDate: Timestamp, openTimeBoxDate: Timestamp, isOpened: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
         var imageURLs: [String] = []
         let uploadGroup = DispatchGroup()
         
@@ -41,7 +41,7 @@ class UploadPostViewModel {
         }
         
         uploadGroup.notify(queue: .main) {
-            let timeCapsuleData = TimeBox(uid: uid, userName: userName, thumbnailURL: imageURLs.first ?? "", imageURL: imageURLs, location: location, addressTitle: addressTitle, address: address, description: description, createTimeBoxDate: createTimeBoxDate, openTimeBoxDate: openTimeBoxDate, isOpened: isOpened)
+            let timeCapsuleData = TimeBox(id: id, uid: uid, userName: userName, thumbnailURL: imageURLs.first ?? "", imageURL: imageURLs, location: location, addressTitle: addressTitle, address: address, description: description, createTimeBoxDate: createTimeBoxDate, openTimeBoxDate: openTimeBoxDate, isOpened: isOpened)
             self.saveTimeBoxData(TimeBox: timeCapsuleData, completion: completion)
         }
     }

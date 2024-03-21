@@ -253,16 +253,6 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         }
     }
 
-    private func presentBottomSheetModally() {
-        let bottomSheetController = BottomSheetViewController() // Assign to class property
-        if let sheetController = bottomSheetController.presentationController as? UISheetPresentationController {
-            sheetController.detents = [.small, .medium(), .large()]
-            sheetController.prefersEdgeAttachedInCompactHeight = true
-            sheetController.largestUndimmedDetentIdentifier = .medium
-            sheetController.selectedDetentIdentifier = .small
-        }
-        present(bottomSheetController, animated: true, completion: nil)
-    }
     
     @objc func currentLocationButtonTapped() {
         mapView.showsUserLocation = true

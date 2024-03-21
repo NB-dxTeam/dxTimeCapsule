@@ -368,8 +368,9 @@ extension CapsuleMapViewController {
             if let sheet = vc.sheetPresentationController {
                 DispatchQueue.main.async {
                     sheet.animateChanges {
-                        sheet.detents = [.half, .large()]
-                        sheet.selectedDetentIdentifier = .half
+                        
+                        sheet.detents = [/*.half,*/ .large()]  // 03/22 황주영
+                        sheet.selectedDetentIdentifier = .large // '.half'<- 기존코드. 03/22 황주영
                         sheet.largestUndimmedDetentIdentifier = .large
                     }
                 }
@@ -377,7 +378,8 @@ extension CapsuleMapViewController {
         }
         
         if let sheet = vc.sheetPresentationController {
-            sheet.detents = [.half, .large()] // 크기 옵션
+            // 03/22 황주영.
+            sheet.detents = [/*.half,*/ .large()] // 크기 옵션 // 03/22 황주영
             sheet.prefersGrabberVisible = true // 모달의 상단 그랩 핸들러 표시 여부
             // 스크롤 가능한 내영이 모달 끝에 도달했을 때 스크롤 확장 여부
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false

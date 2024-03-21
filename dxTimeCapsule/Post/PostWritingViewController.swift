@@ -6,10 +6,11 @@ import SnapKit
 import CoreLocation
 
 
-class PostWritingViewController: UIViewController, UITextViewDelegate {
+class PostWritingViewController: UIViewController, UITextViewDelegate, UICollectionViewDelegate {
     
     // MARK: - Properties
     var viewModel = UploadPostViewModel() // 뷰 모델 추가
+    let emojiPickerViewModel = EmojiPickerViewModel()
     var selectedImage: [UIImage] = [] // 사용자가 선택한 이미지들
     var thumnailImage: UIImage?
     var timeBoxDescription: String? // 사용자가 입력한 타임박스 설명
@@ -17,7 +18,8 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
     var addressTitle: String? // 사용자 지정 장소명
     var address: String? // 상세주소
     var openTimeBoxDate: Timestamp? // 개봉일
-    
+    private let emojiPickerView = EmojiPickerView()
+ 
 
     private let descriptionTitleLabel: UILabel = {
         let label = UILabel()
@@ -62,6 +64,10 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         return dp
     }()
     
+    private var taggedFriends: [User] = []
+
+    private let friendsViewModel = FriendsViewModel() // Assume initialized properly
+
     private let createButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("타임박스 만들기", for: .normal)
@@ -80,8 +86,10 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupUI()
-        descriptionTextView.delegate = self
         setupGestures()
+        
+        descriptionTextView.delegate = self
+
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
         
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged) // 데이터 피커의 값을 변경할 때마다 호출될 메서드를 설정합니다.
@@ -94,13 +102,25 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
         view.addGestureRecognizer(panGesture)
         
-        // 뷰 모델 설정
-        viewModel = UploadPostViewModel()
     }
     
     // MARK: - UI Setup
     private func setupUI() {
-        let stackView = UIStackView(arrangedSubviews: [descriptionTitleLabel, descriptionTextView, addressTitleTextField, openDateTitleLabel, datePicker, createButton])
+        
+        emojiPickerView.viewModel = emojiPickerViewModel
+        emojiPickerView.loadEmojis() // Ensure this method is designed to reload the picker view
+
+        
+        let stackView = UIStackView(arrangedSubviews: [
+            descriptionTitleLabel,
+            descriptionTextView,
+            addressTitleTextField,
+            openDateTitleLabel,
+            datePicker,
+            emojiPickerView,
+            createButton
+        ])
+        
         stackView.axis = .vertical
         stackView.spacing = 20
         stackView.alignment = .fill
@@ -120,13 +140,16 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         datePicker.snp.makeConstraints { make in
             make.height.equalTo(100)
         }
+        
+        emojiPickerView.snp.makeConstraints { make in
+            make.height.equalTo(100)
+        }
 
         createButton.snp.makeConstraints { make in
             make.width.equalTo(200)
             make.height.equalTo(40)
         }
     }
-
 
     func uploadLocation() {
         // GeoPoint로 변환
@@ -237,6 +260,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
 
                             // 상세 주소와 사용자가 입력한 주소명을 사용하여 타임캡슐 업로드
                             self.viewModel.uploadTimeBox(
+                                id: id,
                                 uid: currentUser.uid, // 사용자의 UID를 직접 전달
                                 userName: userName, // Firestore에서 가져온 사용자 이름 전달
                                 imageURL: self.selectedImage, // 이미지 배열 전달
