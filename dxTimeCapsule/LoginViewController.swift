@@ -219,7 +219,7 @@ class LoginViewController: UIViewController {
                     alert.addAction(UIAlertAction(title: "확인", style: .default))
                     self.present(alert, animated: true)
                 } else {
-                    print("Login succeeded") // Debug print
+                    print("Login succeeded")
                     let mainTabVC = MainTabBarView()
                     mainTabVC.modalPresentationStyle = .fullScreen
                     self.present(mainTabVC, animated: true, completion: nil)

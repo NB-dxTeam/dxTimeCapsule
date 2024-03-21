@@ -26,14 +26,13 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     private var assets: [PHAsset] = []
     private var selectedAssets: [PHAsset] = []
     private var imageManager = PHCachingImageManager()
-    private var closeButton: UIButton!
-
+//    private var closeButton: UIButton!
     
 
     private let bannerLabel: UILabel = {
         let label = UILabel()
         label.text = "타임박스에 들어갈 사진을 선택해주세요! 첫번째 사진이 썸네일로 사용됩니다."
-        label.font = .systemFont(ofSize: 16, weight: .bold)
+        label.font = .pretendardBold(ofSize: 16)
         label.textColor = UIColor.white
         label.backgroundColor = UIColor(hex: "#C82D6B").withAlphaComponent(0.8)
         label.textAlignment = .center
@@ -63,6 +62,7 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         requestPhotoLibraryPermission()
         setupBannerLabel()
         setupPlaceholderLabel()
+        setupBackButton()
 
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
         view.addGestureRecognizer(panGesture)
@@ -81,11 +81,13 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         nextButton.layer.shadowOpacity = 0.3
         nextButton.layer.shadowRadius = 5
         nextButton.layer.shadowOffset = CGSize(width: 0, height: 5)
-        
-        closeButton = UIButton(type: .system)
-        closeButton.setTitle("뒤로", for: .normal)
-        closeButton.tintColor = UIColor(hex: "#C82D6B")
-        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+//        
+//        closeButton = UIButton(type: .system)
+//        closeButton.setTitle("뒤로", for: .normal)
+//        closeButton.tintColor = UIColor(hex: "#C82D6B")
+//        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+//        
+//        
     }
 
     // MARK: - Setup UI
@@ -121,12 +123,12 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
            nextButton.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
            
            // 'Close' 버튼 설정
-           view.addSubview(closeButton)
-           closeButton.snp.makeConstraints { make in
-               make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
-               make.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
-               make.width.height.equalTo(40)
-           }
+//           view.addSubview(closeButton)
+//           closeButton.snp.makeConstraints { make in
+//               make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
+//               make.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
+//               make.width.height.equalTo(40)
+//           }
        }
     
     private func setupPlaceholderLabel() {
@@ -138,25 +140,38 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         }
     }
 
-
-
     // 사진 라이브러리 권한 요청
     private func requestPhotoLibraryPermission() {
-         PHPhotoLibrary.requestAuthorization { status in
-             switch status {
-             case .authorized:
-                 DispatchQueue.main.async {
-                     self.fetchPhotos()
-                 }
-             case .denied, .restricted, .notDetermined:
-                 // Handle denied or restricted
-                 break
-             @unknown default:
-                 break
-             }
-         }
-     }
+        PHPhotoLibrary.requestAuthorization { status in
+            switch status {
+            case .authorized:
+                DispatchQueue.main.async {
+                    self.fetchPhotos()
+                }
+            case .denied:
+                // 거부된 경우 처리
+                // 사용자에게 앱 권한을 얻을 수 있는 방법을 안내하거나 적절한 경고를 표시합니다.
+                break
+            case .restricted:
+                // 제한된 경우 처리
+                // 사용자가 사진 라이브러리에 접근할 수 없는 경우에 대한 처리를 수행합니다.
+                break
+            case .limited:
+                // 제한된 권한으로 제한된 경우 처리
+                // 사용자에게 제한된 권한으로 앱을 사용하는 방법을 안내하거나 해당 제한사항을 고려합니다.
+                break
+            case .notDetermined:
+                break
+            @unknown default:
+                // 알려지지 않은 다른 경우 처리
+                // 앱에서 알 수 없는 새로운 권한 상태가 추가되면 해당 처리를 수행합니다.
+                break
+            }
+        }
+    }
 
+
+    //
     private func setupImageView() {
         view.addSubview(imageView)
         imageView.contentMode = .scaleAspectFill
@@ -176,9 +191,22 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(70)
             make.leading.trailing.equalToSuperview().inset(30)
         }
-        bannerLabel.sizeToFit() // 내용에 맞게 크기 조절
-
-
+        
+        // 텍스트 스타일 설정
+        let attributedText = NSMutableAttributedString(string: "타임박스에 들어갈 사진을 선택해주세요!\n", attributes: [
+            .font: UIFont.pretendardBold(ofSize: 16)!,
+            .foregroundColor: UIColor.white
+        ])
+        
+        attributedText.append(NSAttributedString(string: "첫번째 사진이 썸네일로 사용됩니다.", attributes: [
+            .font: UIFont.pretendardBold(ofSize: 16)!,
+            .foregroundColor: UIColor.white
+        ]))
+        
+        bannerLabel.attributedText = attributedText
+        bannerLabel.numberOfLines = 0 // 여러 줄 허용
+        bannerLabel.textAlignment = .center // 가운데 정렬
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
             UIView.animate(withDuration: 0.5) {
                 self.bannerLabel.alpha = 0
@@ -187,6 +215,7 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
             }
         }
     }
+
 
     // 사진 데이터 가져오기
     private func fetchPhotos() {
@@ -209,8 +238,6 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         }
     }
 
-
-    
     // 선택된 사진을 imageView에 표시
     private func selectAndDisplayImage(for asset: PHAsset) {
         imageManager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .aspectFill, options: nil) { image, _ in
@@ -224,25 +251,52 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     // 'Next' 버튼 탭 시 동작
     @objc private func didTapNextButton() {
         let postWritingVC = PostWritingViewController()
-        // iOS 15 이상에서 모달의 부분적인 높이 조절
-        if #available(iOS 15.0, *) {
-            postWritingVC.modalPresentationStyle = .pageSheet
-            if let sheet = postWritingVC.sheetPresentationController {
-                sheet.detents = [.medium()] // 모달 높이를 중간 크기로 설정
+
+        // 뷰 컨트롤러를 모달 형식으로 표시합니다.
+        if let sheet = postWritingVC.sheetPresentationController {
+            if #available(iOS 15.0, *) {
+                // 중간 높이를 지정하는 사용자 정의 detent를 정의합니다.
+                let mediumDetent = UISheetPresentationController.Detent.custom { context in
+                    // 중간 크기에 원하는 높이를 계산하고 반환합니다.
+                    // 원하는 중간 높이를 얻기 위해 필요에 따라 배수를 조정하세요.
+                    let mediumHeight = context.maximumDetentValue * 0.8
+                    return mediumHeight
+                }
+                
+                // detents를 기본 큰 크기와 사용자 정의 중간 크기를 포함하도록 설정합니다.
+                sheet.detents = [.large(), mediumDetent]
+
+                // 시트 프레젠테이션 컨트롤러에 대한 추가 구성이 여기에 들어갈 수 있습니다.
+            } else {
+                // 필요한 경우 이전 버전에 대한 대체 조치를 취합니다.
             }
-        } else {
-            // iOS 15 미만에서는 기본 modalPresentationStyle 사용
-            postWritingVC.modalPresentationStyle = .automatic
         }
-        // 모달 표시 중복 방지를 위해 현재 표시 중인 ViewController 확인
-        if self.presentedViewController == nil {
-            self.present(postWritingVC, animated: true, completion: nil)
-        }
+
+        // 구성된 시트 프레젠테이션 컨트롤러로 뷰 컨트롤러를 표시합니다.
+        present(postWritingVC, animated: true, completion: nil)
     }
+
+
     // 'Close' 버튼 탭 시 동작
-    @objc private func closeButtonTapped() {
-         dismiss(animated: true, completion: nil)
-     }
+//    @objc private func closeButtonTapped() {
+//         dismiss(animated: true, completion: nil)
+//     }
+    
+    //왼쪽 'backButton' 설정
+    private func setupBackButton() {
+        let backButton = UIButton(type: .system)
+        let image = UIImage(systemName: "chevron.left")
+        backButton.setBackgroundImage(image, for: .normal)
+        backButton.tintColor = UIColor(hex: "#C82D6B")
+        
+        // 네비게이션 아이템에 backButton 설정
+        let backButtonBarItem = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = backButtonBarItem
+        
+        dismiss(animated: true, completion: nil)
+
+    }
+    
     
     // MARK: - UICollectionViewDataSource Methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

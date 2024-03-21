@@ -25,7 +25,7 @@ class FriendsListViewController: UIViewController {
         view.addSubview(backgroundView)
         
         friendsListLabel = UILabel()
-        friendsListLabel.text = "Friends List"
+        friendsListLabel.text = "친구 목록"
         friendsListLabel.font = UIFont.systemFont(ofSize: 26, weight: .bold)
         friendsListLabel.textAlignment = .center
         friendsListLabel.backgroundColor = .white  // 라벨의 배경색도 흰색으로 설정합니다.
