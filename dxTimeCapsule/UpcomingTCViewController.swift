@@ -14,7 +14,7 @@ class UpcomingTCViewController: UITableViewController {
     
     // MARK: - Properties
     
-    var capsuleInfo = [TCInfo]()
+    private var timeBoxes: [TimeBox] = []
     var onCapsuleSelected: ((Double, Double) -> Void)?
     
     // MARK: - Lifecycle
@@ -22,7 +22,13 @@ class UpcomingTCViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        fetchTimeCapsulesInfo()
+        fetchTimeBoxesInfo()
+        // 네비게이션 바 스타일 설정
+        setupNavigationBarAppearance()
+        // 왼쪽 backButton 설정
+        setupBackButton()
+        // 타이틀 설정
+        navigationItem.title = "Upcoming memories"
     }
     
     // MARK: - UI Setup
@@ -38,32 +44,56 @@ class UpcomingTCViewController: UITableViewController {
         return itemHeight
     }
     
+    // 네비게이션 바 스타일 설정 메서드
+    private func setupNavigationBarAppearance() {
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.barTintColor = .white
+        navigationController?.navigationBar.shadowImage = UIImage(named: "gray_line")
+    }
+    
+    // 왼쪽 backButton 설정 메서드
+    private func setupBackButton() {
+        let backButton = UIButton(type: .system)
+        let image = UIImage(systemName: "chevron.left")
+        backButton.setBackgroundImage(image, for: .normal)
+        backButton.tintColor = UIColor(red: 209/255.0, green: 94/255.0, blue: 107/255.0, alpha: 1)
+        backButton.addTarget(self, action: #selector(homeButtonTapped), for: .touchUpInside)
+        
+        // backButton 위치 설정
+        backButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
+        
+        // 네비게이션 아이템에 backButton 설정
+        let backButtonBarItem = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = backButtonBarItem
+    }
+    
     // MARK: - Data Fetching
     
-    private func fetchTimeCapsulesInfo() {
+    private func fetchTimeBoxesInfo() {
         let db = Firestore.firestore()
         guard let userId = Auth.auth().currentUser?.uid else { return }
         
-        db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
+        db.collection("timeCapsules")
+            .whereField("uid", isEqualTo: userId)
             .whereField("isOpened", isEqualTo: false)
-            .order(by: "openDate", descending: false)
+            .order(by: "openTimeBoxDate", descending: false)
             .getDocuments { [weak self] (querySnapshot, err) in
                 if let documents = querySnapshot?.documents {
                     print("documents 개수: \(documents.count)")
-                    self?.capsuleInfo = documents.compactMap { doc in
+                    self?.timeBoxes = documents.compactMap { doc in
                         let data = doc.data()
-                        let capsule = TCInfo(
+                        let timeBox = TimeBox(
                             id: doc.documentID,
-                            tcBoxImageURL: data["tcBoxImageURL"] as? String,
-                            userLocation: data["userLocation"] as? String,
-                            createTimeCapsuleDate: (data["creationDate"] as? Timestamp)?.dateValue() ?? Date(),
-                            openTimeCapsuleDate: (data["openDate"] as? Timestamp)?.dateValue() ?? Date()
+                            thumbnailURL: data["thumbnailURL"] as? String,
+                            addressTitle: data["addressTitle"] as? String,
+                            createTimeBoxDate: data["createTimeBoxDate"] as? Timestamp,
+                            openTimeBoxDate: data["openTimeBoxDate"] as? Timestamp
                         )
-                        print("매핑된 캡슐: \(capsule)")
-                        return capsule
+                        print("매핑된 타임박스: \(timeBox)")
+                        return timeBox
                     }
-                    print("Fetching time capsules for userID: \(userId)")
-                    print("Fetched \(self?.capsuleInfo.count ?? 0) timecapsules")
+                    print("Fetching time boxes for userID: \(userId)")
+                    print("Fetched \(self?.timeBoxes.count ?? 0) time boxes")
                     
                     DispatchQueue.main.async {
                         print("tableView reload.")
@@ -75,10 +105,11 @@ class UpcomingTCViewController: UITableViewController {
             }
     }
     
+    
     // MARK: - UITableViewDataSource, UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return capsuleInfo.count
+        return timeBoxes.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -86,8 +117,24 @@ class UpcomingTCViewController: UITableViewController {
             fatalError("Unable to dequeue TimeCapsuleCell")
         }
         
-        let tcInfo = capsuleInfo[indexPath.row]
-        cell.configure(with: tcInfo)
+        let timeBox = timeBoxes[indexPath.row]
+        cell.configure(with: timeBox)
         return cell
     }
-}
+    
+    // MARK: - Actions
+        
+    @objc private func homeButtonTapped() {
+           let tabBarController = MainTabBarView()
+           tabBarController.modalPresentationStyle = .fullScreen
+           present(tabBarController, animated: true, completion: nil)
+       }
+    }
+
+
+//import SwiftUI
+//struct PreVie11w: PreviewProvider {
+//    static var previews: some View {
+//        MainTabBarView().toPreview()
+//    }
+//}

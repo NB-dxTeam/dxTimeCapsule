@@ -22,7 +22,6 @@ struct TimeBoxAnnotationData {
     var friendsInfo: [Friend]
 }
 
-
 struct Emoji: Identifiable, Hashable {
     let id: String
     let symbol: String
@@ -43,27 +42,5 @@ struct Emoji: Identifiable, Hashable {
     ]
 }
 
-// 테스트 모델 코드 //
-
-struct CapsuleInfo {
-    var TimeCapsuleId: String
-    var tcBoxImageURL: String?
-    var latitude: Double // 위도
-    var longitude: Double // 경도
-    var userLocation: String?
-    var userComment: String?
-    var createTimeCapsuleDate: Date // 생성일
-    var openTimeCapsuleDate: Date // 개봉일
-    var isOpened: Bool //개봉여부
-    var friendID: String?
-}
-
-struct TCInfo {
-    var id: String? //document ID
-    var tcBoxImageURL: String?
-    var userLocation: String?
-    var createTimeCapsuleDate: Date // 생성일
-    var openTimeCapsuleDate: Date // 개봉일
-}
     
 

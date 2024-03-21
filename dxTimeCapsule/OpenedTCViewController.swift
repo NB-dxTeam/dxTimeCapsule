@@ -14,7 +14,7 @@ class OpenedTCViewController: UITableViewController {
     
     // MARK: - Properties
     var documentId: String?
-    var capsuleInfo = [TCInfo]()
+    private var timeBoxes: [TimeBox] = []
     var onCapsuleSelected: ((Double, Double) -> Void)?
     
     // MARK: - Lifecycle
@@ -22,7 +22,13 @@ class OpenedTCViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        fetchTimeCapsulesInfo()
+        fetchTimeBoxesInfo()
+        // 네비게이션 바 스타일 설정
+        setupNavigationBarAppearance()
+        // 왼쪽 backButton 설정
+        setupBackButton()
+        // 타이틀 설정
+        navigationItem.title = "Saved memories"
     }
     
     // MARK: - UI Setup
@@ -38,30 +44,59 @@ class OpenedTCViewController: UITableViewController {
         return itemHeight
     }
     
+    // 네비게이션 바 스타일 설정 메서드
+    private func setupNavigationBarAppearance() {
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.barTintColor = .white
+        navigationController?.navigationBar.shadowImage = UIImage(named: "gray_line")
+    }
+    
+    // 왼쪽 backButton 설정 메서드
+    private func setupBackButton() {
+        let backButton = UIButton(type: .system)
+        let image = UIImage(systemName: "chevron.left")
+        backButton.setBackgroundImage(image, for: .normal)
+        backButton.tintColor = UIColor(red: 209/255.0, green: 94/255.0, blue: 107/255.0, alpha: 1)
+        backButton.addTarget(self, action: #selector(homeButtonTapped), for: .touchUpInside)
+        
+        // backButton 위치 설정
+        backButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
+        
+        // 네비게이션 아이템에 backButton 설정
+        let backButtonBarItem = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = backButtonBarItem
+    }
+
     // MARK: - Data Fetching
     
-    private func fetchTimeCapsulesInfo() {
+    private func fetchTimeBoxesInfo() {
         let db = Firestore.firestore()
         guard let userId = Auth.auth().currentUser?.uid else { return }
         
-        db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
+        db.collection("timeCapsules")
+            .whereField("uid", isEqualTo: userId)
             .whereField("isOpened", isEqualTo: true)
-            .order(by: "openDate", descending: false)
+            .order(by: "openTimeBoxDate", descending: false)
             .getDocuments { [weak self] (querySnapshot, err) in
                 if let documents = querySnapshot?.documents {
-                    self?.capsuleInfo = documents.compactMap { doc in
+                    print("documents 개수: \(documents.count)")
+                    self?.timeBoxes = documents.compactMap { doc in
                         let data = doc.data()
-                        let capsule = TCInfo(
+                        let timeBox = TimeBox(
                             id: doc.documentID,
-                            tcBoxImageURL: data["photoUrl"] as? String,
-                            userLocation: data["userLocation"] as? String,
-                            createTimeCapsuleDate: (data["creationDate"] as? Timestamp)?.dateValue() ?? Date(),
-                            openTimeCapsuleDate: (data["openDate"] as? Timestamp)?.dateValue() ?? Date()
+                            imageURL: (data["imageURL"] as? [String]),
+                            addressTitle: data["addressTitle"] as? String,
+                            createTimeBoxDate: data["createTimeBoxDate"] as? Timestamp,
+                            openTimeBoxDate: data["openTimeBoxDate"] as? Timestamp
                         )
-                        return capsule
+                        print("매핑된 타임박스: \(timeBox)")
+                        return timeBox
                     }
+                    print("Fetching time boxes for userID: \(userId)")
+                    print("Fetched \(self?.timeBoxes.count ?? 0) time boxes")
                     
                     DispatchQueue.main.async {
+                        print("tableView reload.")
                         self?.tableView.reloadData()
                     }
                 } else if let err = err {
@@ -70,10 +105,11 @@ class OpenedTCViewController: UITableViewController {
             }
     }
     
+    
     // MARK: - UITableViewDataSource, UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return capsuleInfo.count
+        return timeBoxes.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -81,14 +117,14 @@ class OpenedTCViewController: UITableViewController {
             fatalError("Unable to dequeue TimeCapsuleCell")
         }
         
-        let tcInfo = capsuleInfo[indexPath.row]
-        cell.configure(with: tcInfo)
+        let timeBox = timeBoxes[indexPath.row]
+        cell.configure(with: timeBox)
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let openCapsuleVC = OpenCapsuleViewController()
-        let documentId = capsuleInfo[indexPath.row].id
+        let documentId = timeBoxes[indexPath.row].id
         openCapsuleVC.documentId = documentId
         openCapsuleVC.modalPresentationStyle = .fullScreen
         present(openCapsuleVC, animated: true, completion: nil)
@@ -119,7 +155,7 @@ class OpenedTCViewController: UITableViewController {
     }
     
     private func deleteCapsule(at indexPath: IndexPath) {
-        guard let deletedId = capsuleInfo[indexPath.row].id else {
+        guard let deletedId = timeBoxes[indexPath.row].id else {
             // 캡슐 정보가 올바르지 않음
             return
         }
@@ -132,9 +168,17 @@ class OpenedTCViewController: UITableViewController {
             } else {
                 print("Capsule deleted successfully")
                 // 데이터 소스에서 삭제된 캡슐 제거 및 UI 업데이트
-                self?.capsuleInfo.remove(at: indexPath.row)
+                self?.timeBoxes.remove(at: indexPath.row)
                 self?.tableView.deleteRows(at: [indexPath], with: .automatic)
             }
         }
     }
+
+// MARK: - Actions
+    
+@objc private func homeButtonTapped() {
+       let tabBarController = MainTabBarView()
+       tabBarController.modalPresentationStyle = .fullScreen
+       present(tabBarController, animated: true, completion: nil)
+   }
 }
