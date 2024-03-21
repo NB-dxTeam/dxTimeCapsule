@@ -287,7 +287,7 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
         for doc in documents {
             let data = doc.data()
             let geoPoint = data["location"] as? GeoPoint
-            var timeBox = TimeBox(
+            let timeBox = TimeBox(
                 id: doc.documentID,
                 uid: data["uid"] as? String ?? "",
                 userName: data["userName"] as? String ?? "",
@@ -438,7 +438,7 @@ extension CapsuleMapViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        guard let timeBoxAnnotation = annotation as? TimeBoxAnnotation else { return nil }
+        guard annotation is TimeBoxAnnotation else { return nil }
         print("mapView:viewForAnnotation: called")
         
         let identifier = "CustomAnnotationView"
