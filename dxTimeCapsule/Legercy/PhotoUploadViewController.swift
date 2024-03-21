@@ -8,13 +8,12 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     // MARK: - 속성 선언부
     
     var selectedLocation: CLLocationCoordinate2D?
-    var selectedImage: [UIImage]? = []
-
-    var thumnailImage: UIImage? {
+    var selectedImage: [UIImage]? = [] {
         didSet {
             updateImageView()
         }
     }
+    var thumnailImage: UIImage?
     
     private let placeholderLabel: UILabel = {
          let label = UILabel()
@@ -30,7 +29,7 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     private var assets: [PHAsset] = []
     private var selectedAssets: [PHAsset] = []
     private var imageManager = PHCachingImageManager()
-    private var closeButton: UIButton!
+    private var backButton: UIButton!
 
     
 
@@ -78,7 +77,8 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         requestPhotoLibraryPermission()
         setupBannerLabel()
         setupPlaceholderLabel()
-
+        fetchPhotos()
+        updateNextButtonState()
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
         view.addGestureRecognizer(panGesture)
     }
@@ -100,15 +100,22 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         backButton = UIButton(type: .system)
         backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
         backButton.tintColor = UIColor(hex: "#C82D6B")
-        backButton.contentEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5) // Optional: Adjust padding
+        backButton.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        
     }
 
     // MARK: - Setup UI
     private func setupUI() {
         view.backgroundColor = .white
-        
+        setupImageView()
+        setupCollectionView()
+        setupNextButton()
+        setupBackButton()
+    }
+    
+    private func setupImageView() {
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         // 이미지 뷰 설정
         view.addSubview(imageView)
         imageView.snp.makeConstraints { make in
@@ -117,34 +124,41 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
             make.height.equalTo(view.snp.height).multipliedBy(0.5) // 전체 뷰의 높이의 50%
             make.width.equalTo(imageView.snp.height).multipliedBy(0.8) // 4:5 비율 유지
         }
+    }
         
-        // 컬렉션 뷰 설정
-        view.addSubview(collectionView)
-        collectionView.snp.makeConstraints { make in
-            make.top.equalTo(imageView.snp.bottom).offset(5)
-            make.left.right.equalToSuperview().inset(5)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
-        }
+    private func setupCollectionView() {
+         // 컬렉션 뷰 설정
+         view.addSubview(collectionView)
+         collectionView.snp.makeConstraints { make in
+             make.top.equalTo(imageView.snp.bottom).offset(5)
+             make.left.right.equalToSuperview().inset(5)
+             make.bottom.equalTo(view.safeAreaLayoutGuide)
+         }
+     }
         
+    private func setupNextButton() {
+         // 'Next' 버튼 설정
+         view.addSubview(nextButton)
+         nextButton.snp.makeConstraints { make in
+             make.centerX.equalToSuperview()
+             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
+             make.height.equalTo(40)
+             make.width.equalTo(200)
+         }
+         nextButton.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
+     }
         
-        // 'Next' 버튼 설정
-        view.addSubview(nextButton)
-        nextButton.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
-            make.height.equalTo(40)
-            make.width.equalTo(200)
-        }
-        nextButton.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
-        
+    private func setupBackButton() {
+        // 'Back' 버튼 설정
         view.addSubview(backButton)
         backButton.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)  // Adjust these values as needed
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(10) // Adjust for padding from the left edge
-            make.width.height.equalTo(40)  // Adjust based on your design
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.width.height.equalTo(40)
         }
-        
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
     }
+    
     
     private func setupPlaceholderLabel() {
         view.addSubview(placeholderLabel)
@@ -186,20 +200,6 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
             }
         }
     }
-    
-    
-    //
-    private func setupImageView() {
-        view.addSubview(imageView)
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        
-        imageView.snp.makeConstraints { make in
-            make.top.equalTo(collectionView.snp.bottom).offset(5) // collectionView의 bottom에 대해 offset 설정
-            make.left.right.equalToSuperview().inset(5)
-            make.bottom.equalTo(nextButton.snp.top).offset(-5) // nextButton의 top에 대해 offset 설정
-        }
-    }
 
     // 배너 라벨 설정 및 자동 숨김
     private func setupBannerLabel() {
@@ -234,44 +234,83 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     }
 
     // 사진 데이터 가져오기
-    private func fetchPhotos() {
-        let allPhotosOptions = PHFetchOptions()
-        allPhotosOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        let allPhotos = PHAsset.fetchAssets(with: .image, options: allPhotosOptions)
+     private func fetchPhotos() {
+         let allPhotosOptions = PHFetchOptions()
+         allPhotosOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+         let allPhotos = PHAsset.fetchAssets(with: .image, options: allPhotosOptions)
 
-        assets = []
-        allPhotos.enumerateObjects { (asset, _, _) in
-            self.assets.append(asset)
-        }
+         assets = []
+         allPhotos.enumerateObjects { (asset, _, _) in
+             self.assets.append(asset)
+         }
 
-        DispatchQueue.main.async {
-            self.collectionView.reloadData()
-            // 뷰 로드 시 첫 번째 사진을 이미지 뷰에 자동으로 표시
-            if let firstAsset = self.assets.first {
-                self.selectedAssets.append(firstAsset) // 첫 번째 사진을 선택된 상태로 추가
-                self.selectAndDisplayImage(for: firstAsset)
+         DispatchQueue.main.async {
+             self.collectionView.reloadData()
+             // 뷰 로드 시 첫 번째 사진을 이미지 뷰에 자동으로 표시
+             if let firstAsset = self.assets.first {
+                 self.selectedAssets.append(firstAsset) // 첫 번째 사진을 선택된 상태로 추가
+                 self.selectAndDisplayImage(for: firstAsset)
+             }
+         }
+     }
+    
+    // 선택된 사진을 imageView에 표시
+    private func selectAndDisplayImage(for asset: PHAsset) {
+        imageManager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .aspectFill, options: nil) { image, _ in
+            DispatchQueue.main.async {
+                if let image = image {
+                    // 이미지가 유효한 경우에만 selectedImage 배열에 추가
+                    self.selectedImage = [image]
+                    self.imageView.image = image
+                    // 썸네일 이미지 업데이트
+                    self.thumnailImage = image
+                }
             }
         }
     }
 
-    // 선택된 사진을 imageView에 표시하고, selectedImages 배열에 추가합니다.
-    private func selectAndDisplayImage(for asset: PHAsset) {
-        imageManager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .aspectFill, options: nil) { image, _ in
+    
+    private func updateSelectedImage() {
+        guard let firstSelectedAsset = selectedAssets.first else {
+            self.selectedImage = nil
+            return
+        }
+
+        let targetSize = CGSize(width: imageView.frame.width * UIScreen.main.scale, height: imageView.frame.height * UIScreen.main.scale) // 화면의 해상도에 맞게 조정
+        imageManager.requestImage(for: firstSelectedAsset, targetSize: targetSize, contentMode: .aspectFill, options: nil) { image, _ in
             DispatchQueue.main.async {
-                // 단일 이미지를 selectedImages 배열에 추가합니다.
                 if let image = image {
-                    self.selectedImage!.append(image)
-                    // 첫 번째 선택된 이미지를 thumnailImage로 설정합니다.
-                    self.thumnailImage = self.selectedImage?.first
-                    self.imageView.image = self.thumnailImage // imageView를 업데이트합니다.
+                    self.selectedImage = [image]
+                } else {
+                    self.selectedImage = nil // 이미지가 없는 경우 selectedImage를 nil로 설정
                 }
             }
         }
     }
 
 
+    private func updateImageView() {
+        if let firstImage = selectedImage?.first {
+            imageView.image = firstImage
+            imageView.isHidden = false
+            placeholderLabel.isHidden = true
+        } else {
+            imageView.isHidden = true
+            placeholderLabel.isHidden = false
+        }
+    }
+
+    // MARK: - Button Actions
+
     // 'Next' 버튼 탭 시 동작
     @objc private func didTapNextButton() {
+        
+        guard let _ = selectedImage else {
+            // 이미지가 선택되지 않은 경우 알림 표시
+            showAlert(message: "사진을 선택해주세요!")
+            return
+        }
+        
         let postWritingVC = PostWritingViewController()
         
         // 이미지를 선택한 경우에만 처리
@@ -300,7 +339,19 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
             self.present(postWritingVC, animated: true, completion: nil)
         }
     }
+    
+    // MARK: - Helper Methods
 
+    private func updateNextButtonState() {
+        // 이미지가 선택되었는지 여부에 따라 'Next' 버튼 활성화/비활성화
+        nextButton.isEnabled = selectedImage != nil
+    }
+    
+    private func showAlert(message: String) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
     
     
     // MARK: - UICollectionViewDataSource Methods
@@ -314,24 +365,25 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
             fatalError("Unable to dequeue PhotoCell")
         }
         let asset = assets[indexPath.item]
-        
+
         // 선택 상태 확인
         let isSelected = selectedAssets.contains(where: { $0 == asset })
-        
+
         // 선택 순서 번호 계산
         let selectionNumber = isSelected ? selectedAssets.firstIndex(of: asset).map { $0 + 1 } : nil
-        
+
         // 셀 크기 계산
         let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout
         let cellSize = layout?.itemSize ?? CGSize(width: 100, height: 100) // 기본 크기
         let scale = UIScreen.main.scale // 화면의 스케일
         let targetSize = CGSize(width: cellSize.width * scale, height: cellSize.height * scale)
-        
+
         // 사진, 선택 상태, 선택 순서 번호, 타겟 크기로 셀 구성
         cell.configure(with: asset, imageManager: imageManager, isSelected: isSelected, selectionNumber: selectionNumber, targetSize: targetSize)
-        
+
         return cell
     }
+
     
     // MARK: - UIPickerViewDataSource and UIPickerViewDelegate
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -348,7 +400,7 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     
     
     
-    // UICollectionViewDelegateFlowLayout 메소드
+    // UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let itemsPerRow: CGFloat = 3
         let padding: CGFloat = 5 // 여백 값 설정
@@ -364,47 +416,13 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     // 사용자가 사진을 선택했을 때의 처리
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = assets[indexPath.item]
-    
         if let selectedIndex = selectedAssets.firstIndex(of: asset) {
-            // 이미 선택된 사진을 취소하는 경우
             selectedAssets.remove(at: selectedIndex)
         } else {
-            // 새로운 사진을 선택하는 경우
             selectedAssets.append(asset)
         }
-    
-        // 선택된 사진 배열의 첫 번째 항목을 사용하여 selectedImage 업데이트
         updateSelectedImage()
-    
-        // 선택 상태가 변경된 후 전체 콜렉션 뷰를 갱신
-        collectionView.reloadData()
-    }
-
-    private func updateSelectedImage() {
-        guard let firstSelectedAsset = selectedAssets.first else {
-            self.selectedImage = nil
-            return
-        }
-
-        let targetSize = CGSize(width: imageView.frame.width * UIScreen.main.scale, height: imageView.frame.height * UIScreen.main.scale) // 화면의 해상도에 맞게 조정
-        imageManager.requestImage(for: firstSelectedAsset, targetSize: targetSize, contentMode: .aspectFill, options: nil) { image, _ in
-            DispatchQueue.main.async {
-                if let image = image { // 이미지가 있을 경우에만 배열에 추가
-                    self.selectedImage = [image] // 배열 형태로 설정
-                }
-            }
-        }
-    }
-
-    private func updateImageView() {
-        if let firstImage = selectedImage?.first {
-            imageView.image = firstImage
-            imageView.isHidden = false
-            placeholderLabel.isHidden = true
-        } else {
-            imageView.isHidden = true
-            placeholderLabel.isHidden = false
-        }
+        collectionView.reloadData() // 콜렉션 뷰 갱신
     }
 
 
@@ -434,7 +452,12 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
              break
          }
      }
+    
+    @objc private func backButtonTapped() {
+         dismiss(animated: true, completion: nil)
+     }
 }
+
 
 
 

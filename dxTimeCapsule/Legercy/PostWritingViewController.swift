@@ -106,6 +106,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         setupUI()
         descriptionTextView.delegate = self
         setupGestures()
+        
         createButton.addTarget(self, action: #selector(createTimeCapsule), for: .touchUpInside)
         
         // Add pan gesture recognizer to detect downward drag

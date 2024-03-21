@@ -2,6 +2,7 @@ import UIKit
 import Photos
 
 class PhotoCell: UICollectionViewCell {
+    private var assetIdentifier: String?
     static let identifier = "PhotoCell"
     
     private let photoImageView: UIImageView = {
@@ -56,27 +57,44 @@ class PhotoCell: UICollectionViewCell {
         }
     }
     
+    
     func configure(with asset: PHAsset, imageManager: PHCachingImageManager, isSelected: Bool, selectionNumber: Int?, targetSize: CGSize) {
+        self.assetIdentifier = asset.localIdentifier // 현재 셀에 로드해야 할 이미지 식별자 저장
+        
         let options = PHImageRequestOptions()
         options.isNetworkAccessAllowed = true
         options.deliveryMode = .highQualityFormat
-
-        imageManager.requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: options) { image, _ in
+        
+        // Adjust targetSize to match the imageView's size or the screen resolution
+        let adjustedTargetSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height) // Adjust appropriately
+        
+        imageManager.requestImage(for: asset, targetSize: adjustedTargetSize, contentMode: .aspectFill, options: options) { [weak self] image, _ in
             DispatchQueue.main.async {
-                self.photoImageView.image = image
+                // 이미지 로딩 완료 시 현재 셀이 로드해야 할 이미지인지 확인
+                if self?.assetIdentifier == asset.localIdentifier {
+                    self?.photoImageView.image = image
+                }
             }
         }
         
+        // Update selection state
         updateSelectionState(isSelected: isSelected, selectionNumber: selectionNumber)
+        
+        // Show selection number label
+        selectionNumberLabel.isHidden = !isSelected // 숨김 처리 해제
+        selectionNumberLabel.text = isSelected ? "\(selectionNumber ?? 0)" : nil // 선택된 경우 숫자 표시
     }
 
-    func updateSelectionState(isSelected: Bool, selectionNumber: Int? = nil) {
+    func updateSelectionState(isSelected: Bool, selectionNumber: Int?) {
         selectedIndicator.isHidden = !isSelected
         selectionNumberLabel.isHidden = !isSelected
-        if let number = selectionNumber, isSelected {
+        if let number = selectionNumber {
             selectionNumberLabel.text = "\(number)"
+        } else {
+            selectionNumberLabel.text = nil
         }
     }
+    
     
     override func prepareForReuse() {
         super.prepareForReuse()
