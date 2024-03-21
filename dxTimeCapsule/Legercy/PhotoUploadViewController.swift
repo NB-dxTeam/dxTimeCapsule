@@ -257,16 +257,23 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         let asset = assets[indexPath.item]
 
         // 선택 상태 확인
-        let isSelected = selectedAssets.contains(asset)
+        let isSelected = selectedAssets.contains(where: { $0 == asset })
 
         // 선택 순서 번호 계산
         let selectionNumber = isSelected ? selectedAssets.firstIndex(of: asset).map { $0 + 1 } : nil
 
-        // 사진, 선택 상태, 선택 순서 번호로 셀 구성
-        cell.configure(with: asset, imageManager: imageManager, isSelected: isSelected, selectionNumber: selectionNumber)
+        // 셀 크기 계산
+        let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout
+        let cellSize = layout?.itemSize ?? CGSize(width: 100, height: 100) // 기본 크기
+        let scale = UIScreen.main.scale // 화면의 스케일
+        let targetSize = CGSize(width: cellSize.width * scale, height: cellSize.height * scale)
+
+        // 사진, 선택 상태, 선택 순서 번호, 타겟 크기로 셀 구성
+        cell.configure(with: asset, imageManager: imageManager, isSelected: isSelected, selectionNumber: selectionNumber, targetSize: targetSize)
 
         return cell
     }
+
 
     
     // UICollectionViewDelegateFlowLayout 메소드
@@ -301,20 +308,20 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         collectionView.reloadData()
     }
 
-    func updateSelectedImage() {
+    private func updateSelectedImage() {
         guard let firstSelectedAsset = selectedAssets.first else {
-            // 선택된 사진이 없는 경우
             self.selectedImage = nil
             return
         }
-    
-        // 선택된 첫 번째 사진을 사용하여 selectedImage 업데이트
-        imageManager.requestImage(for: firstSelectedAsset, targetSize: PHImageManagerMaximumSize, contentMode: .aspectFill, options: nil) { image, _ in
+
+        let targetSize = CGSize(width: imageView.frame.width * UIScreen.main.scale, height: imageView.frame.height * UIScreen.main.scale) // 화면의 해상도에 맞게 조정
+        imageManager.requestImage(for: firstSelectedAsset, targetSize: targetSize, contentMode: .aspectFill, options: nil) { image, _ in
             DispatchQueue.main.async {
                 self.selectedImage = image
             }
         }
     }
+
     
     private func updateImageView() {
         if let selectedImage = selectedImage {

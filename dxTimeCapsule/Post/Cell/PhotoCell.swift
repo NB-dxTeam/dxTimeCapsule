@@ -56,12 +56,12 @@ class PhotoCell: UICollectionViewCell {
         }
     }
     
-    func configure(with asset: PHAsset, imageManager: PHCachingImageManager, isSelected: Bool, selectionNumber: Int?) {
+    func configure(with asset: PHAsset, imageManager: PHCachingImageManager, isSelected: Bool, selectionNumber: Int?, targetSize: CGSize){
         let options = PHImageRequestOptions()
         options.isNetworkAccessAllowed = true
         options.deliveryMode = .highQualityFormat
-        
-        imageManager.requestImage(for: asset, targetSize: CGSize(width: frame.size.width, height: frame.size.height), contentMode: .aspectFill, options: options) { image, _ in
+
+        imageManager.requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: options) { image, _ in
             DispatchQueue.main.async {
                 self.photoImageView.image = image
             }
@@ -69,7 +69,7 @@ class PhotoCell: UICollectionViewCell {
         
         updateSelectionState(isSelected: isSelected, selectionNumber: selectionNumber)
     }
-    
+
     func updateSelectionState(isSelected: Bool, selectionNumber: Int? = nil) {
         selectedIndicator.isHidden = !isSelected
         selectionNumberLabel.isHidden = !isSelected
