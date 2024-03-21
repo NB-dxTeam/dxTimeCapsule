@@ -4,25 +4,30 @@ import FirebaseFirestore
 import FirebaseStorage
 import SnapKit
 
-class PostWritingViewController: UIViewController, UITextViewDelegate {
+class PostWritingViewController: UIViewController, UITextViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
     
     // MARK: - Properties
+    var viewModel = FriendsViewModel()
     var selectedImage: UIImage?
     var userProfileImageView: UIImageView!
     var userNameLabel: UILabel!
     var friends: [User] = []
+    var selectedFriends: [User] = []
+    var selectedMood: String = ""
+    private let moodPickerDelegate = MoodPickerDelegate()
+    
     
     // MARK: - UI Components
-//    private let titleLabel: UILabel = {
-//        let label = UILabel()
-//        label.text = "타임캡슐 생성 위치를 확인해주세요!"
-//        label.font = UIFont.preferredFont(forTextStyle: .headline) // Dynamic type support
-//        label.textColor = .black.withAlphaComponent(0.9)
-//        label.textAlignment = .center
-//        label.numberOfLines = 0
-//        label.adjustsFontSizeToFitWidth = true
-//        return label
-//    }()
+    //    private let titleLabel: UILabel = {
+    //        let label = UILabel()
+    //        label.text = "타임캡슐 생성 위치를 확인해주세요!"
+    //        label.font = UIFont.preferredFont(forTextStyle: .headline) // Dynamic type support
+    //        label.textColor = .black.withAlphaComponent(0.9)
+    //        label.textAlignment = .center
+    //        label.numberOfLines = 0
+    //        label.adjustsFontSizeToFitWidth = true
+    //        return label
+    //    }()
     
     private let descriptionTitleLabel: UILabel = {
         let label = UILabel()
@@ -71,6 +76,39 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         return button
     }()
     
+    private let friendTagTitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.text = "친구 태그"
+        label.textColor = UIColor(hex: "#C82D6B")
+        return label
+        
+    }()
+    
+    private lazy var friendTagButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("친구 태그하기", for: .normal)
+        button.addTarget(self, action: #selector(tagFriends), for: .touchUpInside)
+        return button
+    }()
+    
+    private let moodPickerTitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.text = "그날의 기분"
+        label.textColor = UIColor(hex: "#C82D6B")
+        return label
+        
+    }()
+    private lazy var moodPicker: UIPickerView = {
+        let picker = UIPickerView()
+        // Set the delegate and data source for the picker
+        picker.delegate = moodPickerDelegate
+        picker.dataSource = moodPickerDelegate
+        return picker
+    }()
+    
+    
     // MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,11 +121,21 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         // Add pan gesture recognizer to detect downward drag
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
         view.addGestureRecognizer(panGesture)
+        
+        
+        // FriendsViewModel의 인스턴스 생성
+        let friendsViewModel = FriendsViewModel()
+        // fetchFriends 메서드 호출
+        friendsViewModel.fetchFriends()
+        
+        // Set the delegate and dataSource of moodPicker
+        moodPicker.delegate = moodPickerDelegate
+        moodPicker.dataSource = moodPickerDelegate
     }
     
     // MARK: - UI Setup
     private func setupUI() {
-        let stackView = UIStackView(arrangedSubviews: [ descriptionTitleLabel, descriptionTextView, openDateTitleLabel, datePicker, createButton])
+        let stackView = UIStackView(arrangedSubviews: [ descriptionTitleLabel, descriptionTextView, openDateTitleLabel, datePicker, friendTagTitleLabel, friendTagButton, moodPickerTitleLabel, moodPicker, createButton])
         stackView.axis = .vertical
         stackView.spacing = 20
         stackView.alignment = .fill
@@ -108,11 +156,35 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
             make.height.equalTo(100)
         }
         
+        friendTagButton.snp.makeConstraints { make in
+            make.height.equalTo(20)
+        }
+        
+        moodPicker.snp.makeConstraints { make in
+            make.height.equalTo(40)
+        }
+        
         createButton.snp.makeConstraints { make in
             make.width.equalTo(200)
             make.height.equalTo(40)
         }
+        
+        
     }
+    
+    private func setupGestures() {
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        view.addGestureRecognizer(panGesture)
+    }
+    
+    private func transitionToMainTabBar() {
+        if let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) {
+            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                window.rootViewController = MainTabBarView()
+            })
+        }
+    }
+
     
     // MARK: - UITextViewDelegate
     func textViewDidBeginEditing(_ textView: UITextView) {
@@ -127,12 +199,6 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
             textView.text = "타임박스에 들어갈 편지를 쓰세요!"
             textView.textColor = .lightGray
         }
-    }
-    
-    // MARK: - Gestures
-    private func setupGestures() {
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-        view.addGestureRecognizer(panGesture)
     }
     
     // MARK: - Button Actions
@@ -156,12 +222,8 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         present(alert, animated: true, completion: nil)
     }
     
-    private func transitionToMainTabBar() {
-        if let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) {
-            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                window.rootViewController = MainTabBarView()
-            })
-        }
+    @objc private func tagFriends() {
+        
     }
     
     // MARK: - Pan Gesture Handler
@@ -190,6 +252,70 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         }
     }
 }
+
+
+// MARK: - UIPickerViewDelegate, UIPickerViewDataSource
+extension PostWritingViewController {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return Emoji.emojis.count
+    }
+}
+
+class MoodPickerDelegate: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
+    // 이모지 배열 정의
+    let emojis = Emoji.emojis // 이 배열은 Emoji 클래스에서 정의되어 있어야 합니다.
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return emojis.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        // 각 행에 대한 컨테이너 뷰 생성
+        let emojiContainerView = UIView()
+        emojiContainerView.layer.cornerRadius = 10 // 모서리 둥글게
+        emojiContainerView.layer.masksToBounds = true
+        emojiContainerView.backgroundColor = UIColor.systemGray5 // 파일 첨부처럼 보이는 배경색
+        
+        // 이모지를 위한 레이블 생성
+        let emojiLabel = UILabel()
+        emojiLabel.font = UIFont.systemFont(ofSize: 24) // 필요에 따라 폰트 크기 조정
+        emojiLabel.text = self.emojis[row].symbol // self를 사용하여 현재 인스턴스의 emojis 배열에 접근
+        emojiLabel.textAlignment = .center
+        
+        // 이모지 레이블을 컨테이너 뷰에 추가
+        emojiContainerView.addSubview(emojiLabel)
+        emojiLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            emojiLabel.centerXAnchor.constraint(equalTo: emojiContainerView.centerXAnchor),
+            emojiLabel.centerYAnchor.constraint(equalTo: emojiContainerView.centerYAnchor)
+        ])
+        
+        return emojiContainerView
+    }
+    
+    
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return 50
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        // 기분 선택 처리
+        if let viewController = pickerView.delegate as? PostWritingViewController {
+            viewController.selectedMood = emojis[row].symbol
+        }
+    }
+}
+
+
+
 
 // MARK: - SwiftUI Preview
 import SwiftUI

@@ -30,7 +30,7 @@ class FirestoreDataService {
     }
     
     // 태그된 친구의 UID 배열을 기반으로 users 콜렉션에서 친구의 정보를 가져오는 함수
-    func fetchFriendsInfo(byUIDs uids: [String], completion: @escaping ([Friend]?) -> Void) {
+    func fetchFriendsInfo(byUIDs uids: [String], completion: @escaping ([User]?) -> Void) {
         // uids 배열이 비어 있는지 확인
         guard !uids.isEmpty else {
             print("UIDs array is empty, skipping the query.")
@@ -44,14 +44,14 @@ class FirestoreDataService {
                 return
             }
             
-            let friendsInfo = documents.compactMap { document -> Friend? in
+            let friendsInfo = documents.compactMap { document -> User? in
                 let data = document.data()
                 guard let uid = data["uid"] as? String,
                       let username = data["username"] as? String,
                       let profileImageUrl = data["profileImageUrl"] as? String else {
                     return nil
                 }
-                return Friend(uid: uid, username: username, profileImageUrl: profileImageUrl)
+                return User(uid: uid, userName: username, profileImageUrl: profileImageUrl)
             }
             
             completion(friendsInfo)

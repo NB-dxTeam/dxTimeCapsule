@@ -3,11 +3,9 @@ import FirebaseFirestore
 import FirebaseAuth
 
 class FriendsViewModel: ObservableObject {
-    @Published var friends: [Friend] = []
+    @Published var friends: [User] = []
     let db = Firestore.firestore()
-    
-    
-    // 친구 검색 (닉네임 기준 영어 2글자만 입력해도 검색되게)
+
     func searchUsersByUsername(username: String, completion: @escaping ([User]?, Error?) -> Void) {
         
         // 검색어의 첫 글자를 대문자로 변환합니다.
@@ -216,9 +214,9 @@ class FriendsViewModel: ObservableObject {
                for (index, friendUID) in friendUIDs.enumerated() {
                    db.collection("users").document(friendUID).getDocument { document, error in
                        if let document = document, document.exists {
-                           let friend = Friend(
+                           let friend = User(
                             uid: friendUID, // UID를 Friend의 id로 사용합니다.
-                               username: document.get("username") as? String ?? "Unknown",
+                            userName: document.get("username") as? String ?? "Unknown",
                                profileImageUrl: document.get("profileImageUrl") as? String
                            )
                            DispatchQueue.main.async {
@@ -227,9 +225,9 @@ class FriendsViewModel: ObservableObject {
                        } else {
                            // 문서가 없는 경우, 이름을 사용하여 Friend 객체를 생성합니다.
                            let friendName = index < friendNames.count ? friendNames[index] : "Unknown"
-                           let friend = Friend(
+                           let friend = User(
                            uid: friendUID, // UID를 Friend의 id로 사용합니다.
-                               username: friendName,
+                           userName: friendName,
                                profileImageUrl: nil
                            )
                            DispatchQueue.main.async {
@@ -257,10 +255,6 @@ class FriendsViewModel: ObservableObject {
                 )
                 completion(user)
             }
-        }
-        
-        func uploadPost(description: String, selectedImage: UIImage?, emoji: String, openDate: Date) {
-            // 게시물 업로드 로직 구현
         }
         
     }

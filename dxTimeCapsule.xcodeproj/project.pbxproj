@@ -31,7 +31,6 @@
 		1F52F8B62B9CD69F00974F0B /* TagFriendListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F52F8B52B9CD69F00974F0B /* TagFriendListViewController.swift */; };
 		1F52F8B92B9CDADC00974F0B /* TagFriendListTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F52F8B82B9CDADC00974F0B /* TagFriendListTableCell.swift */; };
 		1F53E50A2BA20A8C004141C7 /* Button+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F53E5092BA20A8C004141C7 /* Button+Custom.swift */; };
-		1F53E50D2BA222A2004141C7 /* FriendsPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F53E50C2BA222A2004141C7 /* FriendsPickerView.swift */; };
 		1F53E5112BA27D5D004141C7 /* UploadPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F53E5102BA27D5D004141C7 /* UploadPostViewModel.swift */; };
 		1F53E5132BA2C35B004141C7 /* SwiftfulLoadingIndicators in Frameworks */ = {isa = PBXBuildFile; productRef = 1F53E5122BA2C35B004141C7 /* SwiftfulLoadingIndicators */; };
 		1F53E5162BA2F73A004141C7 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F53E5152BA2F73A004141C7 /* Color+Extensions.swift */; };
@@ -163,7 +162,6 @@
 		1F52F8B52B9CD69F00974F0B /* TagFriendListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFriendListViewController.swift; sourceTree = "<group>"; };
 		1F52F8B82B9CDADC00974F0B /* TagFriendListTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFriendListTableCell.swift; sourceTree = "<group>"; };
 		1F53E5092BA20A8C004141C7 /* Button+Custom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Button+Custom.swift"; sourceTree = "<group>"; };
-		1F53E50C2BA222A2004141C7 /* FriendsPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsPickerView.swift; sourceTree = "<group>"; };
 		1F53E5102BA27D5D004141C7 /* UploadPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPostViewModel.swift; sourceTree = "<group>"; };
 		1F53E5152BA2F73A004141C7 /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
 		1F5786D52B849AF800C40B08 /* dxTimeCapsule.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dxTimeCapsule.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -310,7 +308,6 @@
 				1F24501C2B9B5942002C68BB /* Cell */,
 				1FBDDF782BA1DA3F00FCDE5A /* PostUploadView.swift */,
 				1FBDDF7B2BA1DCDB00FCDE5A /* PhotoPicker.swift */,
-				1F53E50C2BA222A2004141C7 /* FriendsPickerView.swift */,
 			);
 			path = Post;
 			sourceTree = "<group>";
@@ -904,7 +901,6 @@
 				D20CDCCF2B96D86100B93788 /* FriendRequestTableViewCell.swift in Sources */,
 				1F52DE1D2B972C9000EE2E1E /* CustomModal.swift in Sources */,
 				1F24501F2B9B82D3002C68BB /* HalfModalPresentationController.swift in Sources */,
-				1F53E50D2BA222A2004141C7 /* FriendsPickerView.swift in Sources */,
 				1F52F8B62B9CD69F00974F0B /* TagFriendListViewController.swift in Sources */,
 				1F5786F22B849CA900C40B08 /* AuthenticationViewModel.swift in Sources */,
 				1F16B8292BA9ABE200753F82 /* TimeBoxAnnotation.swift in Sources */,

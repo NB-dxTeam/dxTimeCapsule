@@ -25,7 +25,7 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     private var isCenterViewPresented: Bool = false
     private var longPressMessageLabel: UILabel!
 
-    private var closeButton: UIButton!
+    private var backButton: UIButton!
 
     // MARK: - Constants
     
@@ -62,11 +62,14 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         
         currentLocationButton = UIButton(type: .system)
         
-        closeButton = UIButton(type: .system)
-        closeButton.setTitle("뒤로", for: .normal)
-        closeButton.tintColor = UIColor(hex: "#C82D6B")
-        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
-    }
+        backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        backButton.tintColor = UIColor(hex: "#C82D6B")
+        backButton.contentEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5) // Optional: Adjust padding
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+  }
+
+
     
     private func setupCenterView() {
         centerView.backgroundColor = UIColor.white.withAlphaComponent(0.6)
@@ -91,13 +94,13 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         setupCenterView()
         hideCenterView()
         
-        // 닫기 버튼 레이아웃 설정
-        view.addSubview(closeButton)
-        closeButton.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
-            make.width.height.equalTo(40)
+        view.addSubview(backButton)
+        backButton.snp.makeConstraints { make in
+        make.top.equalTo(view.safeAreaLayoutGuide).offset(10)  // Adjust these values as needed
+        make.leading.equalTo(view.safeAreaLayoutGuide).offset(10) // Adjust for padding from the left edge
+        make.width.height.equalTo(40)  // Adjust based on your design
         }
+
     }
     
     private func setupMapView() {
@@ -112,8 +115,7 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     private func configureLocationServices() {
         locationManager = CLLocationManager()
         locationManager.delegate = self
-        mapView.showsUserLocation = true // Make sure the map view shows the user location
-        
+        mapView.showsUserLocation = true
         if CLLocationManager.locationServicesEnabled() {
             switch locationManager.authorizationStatus {
             case .notDetermined:
@@ -275,17 +277,22 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         let geoPoint = GeoPoint(latitude: selectedCoordinate.latitude, longitude: selectedCoordinate.longitude)
 
         // TimeBox 객체 생성
-        var timeBox = TimeBox(
+        let timeBox = TimeBox(
             location: geoPoint
         )
-        
+
         let photoUploadVC = PhotoUploadViewController()
-        photoUploadVC.modalPresentationStyle = .fullScreen // 또는 .overFullScreen
+        
+        photoUploadVC.modalPresentationStyle = .overFullScreen // 혹은 .overFullScreen로 설정
         present(photoUploadVC, animated: true, completion: nil)
     }
 
 
-    @objc private func handleModifyLocationTap() {
+    @objc private func backButtonTapped() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func handleModifyLocationTap() {
         if isCenterViewPresented {
             hideCenterView()
         } else {
@@ -294,7 +301,6 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
             showCenterView()
         }
     }
-    
     
     @objc private func closeButtonTapped() {
          dismiss(animated: true, completion: nil)
@@ -375,7 +381,6 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         setupTitleLabelAndButtons()
     
     }
-    
 }
 func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
     // Handle annotation deselection

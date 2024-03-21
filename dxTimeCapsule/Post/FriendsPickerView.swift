@@ -9,13 +9,13 @@ import SwiftUI
 
 struct FriendsPickerView: View {
     @Binding var selectedFriends: [String]
-    @State var friends: [Friend]
+    @State var friends: [User]
     
     var body: some View {
         List {
             ForEach(friends, id: \.uid) { friend in
-                MultipleSelectionRow(title: friend.username, isSelected: selectedFriends.contains(friend.uid)) {
-                    if let index = selectedFriends.firstIndex(of: friend.uid) {
+                MultipleSelectionRow(title: $friends.username, isSelected: selectedFriends.contains(friend.uid!)) {
+                    if let index = selectedFriends.firstIndex(of: friend.uid!) {
                         selectedFriends.remove(at: index)
                     } else {
                         selectedFriends.append(friend.uid)
