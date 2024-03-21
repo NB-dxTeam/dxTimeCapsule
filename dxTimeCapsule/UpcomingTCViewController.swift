@@ -118,7 +118,7 @@ class UpcomingTCViewController: UITableViewController {
         }
         
         let timeBox = timeBoxes[indexPath.row]
-        cell.configure(with: timeBox)
+        cell.configure(with: timeBox, dDayColor: UIColor(.red))
         return cell
     }
     

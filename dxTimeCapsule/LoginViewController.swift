@@ -232,7 +232,7 @@ class LoginViewController: UIViewController {
     
     // 회원가입 버튼 탭 처리
     @objc private func didTapSignUpButton() {
-        let signUpViewController = SignUpOptionViewController()
+        let signUpViewController = SignUpViewController()
         self.present(signUpViewController, animated: true, completion: nil)
         print("Sign Up Button Tapped")
     }
