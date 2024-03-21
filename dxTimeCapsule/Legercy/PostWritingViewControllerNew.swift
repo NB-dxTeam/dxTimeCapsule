@@ -4,7 +4,8 @@ import FirebaseFirestore
 import FirebaseStorage
 import SnapKit
 
-class PostWritingViewController: UIViewController, UITextViewDelegate {
+class PostWritingViewControllerNew: UIViewController, UITextViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
+    
     // MARK: - Properties
     var viewModel = FriendsViewModel()
     var selectedImage: UIImage?
@@ -15,9 +16,9 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
     var selectedMood: String = ""
     var selectedMoodDescription: String = ""
     
-    private let moodPickerDelegate = MoodPickerDelegate()
+    private let moodPickerDelegateNew = MoodPickerDelegateNew()
     
-    private lazy var descriptionTitleLabel: UILabel = {
+    private let descriptionTitleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.text = "내용"
@@ -25,7 +26,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         return label
     }()
     
-    private lazy var descriptionTextView: UITextView = {
+    private let descriptionTextView: UITextView = {
         let textView = UITextView()
         textView.font = UIFont.preferredFont(forTextStyle: .body) // Dynamic type support
         textView.layer.borderColor = UIColor.lightGray.cgColor
@@ -36,7 +37,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         return textView
     }()
     
-    private lazy var openDateTitleLabel: UILabel = {
+    private let openDateTitleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.text = "박스 개봉 날짜"
@@ -44,14 +45,14 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         return label
     }()
     
-    private lazy var datePicker: UIDatePicker = {
+    private let datePicker: UIDatePicker = {
         let dp = UIDatePicker()
         dp.datePickerMode = .date
         dp.preferredDatePickerStyle = .wheels
         return dp
     }()
     
-    private lazy var createButton: UIButton = {
+    private let createButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("타임박스 만들기", for: .normal)
         button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline) // Dynamic type support
@@ -64,12 +65,13 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         return button
     }()
     
-    private lazy var friendTagTitleLabel: UILabel = {
+    private let friendTagTitleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.text = "친구 태그"
         label.textColor = UIColor(hex: "#C82D6B")
         return label
+        
     }()
     
     private lazy var friendTagButton: UIButton = {
@@ -79,19 +81,20 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         return button
     }()
     
-    private lazy var moodPickerTitleLabel: UILabel = {
+    private let moodPickerTitleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.text = "그날의 기분"
         label.textColor = UIColor(hex: "#C82D6B")
         return label
+        
     }()
     
     private lazy var moodPicker: UIPickerView = {
         let picker = UIPickerView()
         // Set the delegate and data source for the picker
-        picker.delegate = moodPickerDelegate
-        picker.dataSource = moodPickerDelegate
+        picker.delegate = moodPickerDelegateNew
+        picker.dataSource = moodPickerDelegateNew
         return picker
     }()
     
@@ -112,13 +115,12 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         
         // FriendsViewModel의 인스턴스 생성
         let friendsViewModel = FriendsViewModel()
-        
         // fetchFriends 메서드 호출
         friendsViewModel.fetchFriends()
         
         // Set the delegate and dataSource of moodPicker
-        moodPicker.delegate = moodPickerDelegate
-        moodPicker.dataSource = moodPickerDelegate
+        moodPicker.delegate = moodPickerDelegateNew
+        moodPicker.dataSource = moodPickerDelegateNew
         
         // 기분 레이블 탭 인식기 추가
         let moodTapGesture = UITapGestureRecognizer(target: self, action: #selector(showMoodPicker))
@@ -129,7 +131,6 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
     // MARK: - UI Setup
     private func setupUI() {
         let stackView = UIStackView(arrangedSubviews: [ descriptionTitleLabel, descriptionTextView, openDateTitleLabel, datePicker, friendTagTitleLabel, friendTagButton, moodPickerTitleLabel, moodPicker, createButton])
-        
         stackView.axis = .vertical
         stackView.spacing = 20
         stackView.alignment = .fill
@@ -162,6 +163,8 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
             make.width.equalTo(200)
             make.height.equalTo(40)
         }
+        
+        
     }
     
     private func setupGestures() {
@@ -176,7 +179,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
             })
         }
     }
-    
+
     
     // MARK: - UITextViewDelegate
     func textViewDidBeginEditing(_ textView: UITextView) {
@@ -195,9 +198,9 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
     
     // MARK: - Button Actions
     @objc private func createTimeCapsule() {
-        // 타임박스 생성 로직 구현
+        // Your logic to create the time capsule
         
-        // 생성 버튼에 대한 애니메이션
+        // Animation for the create button
         let animator = UIViewPropertyAnimator(duration: 0.2, curve: .easeInOut) {
             self.createButton.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
         }
@@ -206,7 +209,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         }, delayFactor: 0.2)
         animator.startAnimation()
         
-        // 생성 성공 알림
+        // Success alert
         let alert = UIAlertController(title: "완료되었습니다", message: "타임박스가 성공적으로 생성되었습니다!", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { _ in
             self.transitionToMainTabBar()
@@ -215,11 +218,11 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
     }
     
     @objc private func tagFriends() {
-        // 친구 태그하기 액션 구현
+        
     }
     
     @objc func showMoodPicker() {
-        // 기분 선택을 위한 피커 뷰 표시
+        // 피커 뷰를 포함하는 뷰 컨트롤러 생성
         let moodPickerVC = UIViewController()
         moodPickerVC.preferredContentSize = CGSize(width: self.view.frame.width, height: 250)
         moodPickerVC.view.addSubview(moodPicker)
@@ -236,7 +239,6 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
     }
     
     
-    
     // MARK: - Pan Gesture Handler
     @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: view)
@@ -245,15 +247,15 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
         switch gesture.state {
         case .changed:
             if translation.y > 0 {
-                // 아래로 드래그할 때 뷰 이동
+                // Move the view down with the drag
                 view.frame.origin.y = translation.y
             }
         case .ended:
             if velocity.y > 0 {
-                // 충분한 속도로 아래로 드래그하면 모달 닫기
+                // Dismiss the modal if dragged downward with enough velocity
                 dismiss(animated: true, completion: nil)
             } else {
-                // 드래그 거리가 100 포인트 미만이면 뷰 위치 재설정
+                // Reset the view position if drag distance is less than 100 points
                 UIView.animate(withDuration: 0.3) {
                     self.view.frame.origin.y = 0
                 }
@@ -264,24 +266,30 @@ class PostWritingViewController: UIViewController, UITextViewDelegate {
     }
 }
 
+
 // MARK: - UIPickerViewDelegate, UIPickerViewDataSource
-extension PostWritingViewController {
+extension PostWritingViewControllerNew {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return Emoji.emojis.count
     }
 }
-    
-class MoodPickerDelegate: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
-    let emojis = Emoji.emojis
 
+class MoodPickerDelegateNew: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
+    // 이모지 배열 정의
+    let emojis = Emoji.emojis // 이 배열은 Emoji 클래스에서 정의되어 있어야 합니다.
+    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
-
+    
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return emojis.count
     }
-
+    
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         // 각 행에 대한 컨테이너 뷰 생성
         let emojiContainerView = UIView()
@@ -305,24 +313,24 @@ class MoodPickerDelegate: NSObject, UIPickerViewDelegate, UIPickerViewDataSource
         
         return emojiContainerView
     }
-
+    
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-        return 40
-    }
-
+        return 200    }
+    
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         // 기분 선택 처리
-        if let viewController = pickerView.delegate as? PostWritingViewController {
-                viewController.selectedMood = emojis[row].symbol
-                viewController.selectedMoodDescription = emojis[row].description
-            }
+        if let viewController = pickerView.delegate as? PostWritingViewControllerNew {
+            viewController.selectedMood = emojis[row].symbol
+            viewController.selectedMoodDescription = emojis[row].description // 이모지 설명을 selectedMoodDescription에 대입
         }
     }
+}
+
 
 // MARK: - SwiftUI Preview
 import SwiftUI
-struct PostWritingViewControllerPreview1: PreviewProvider {
+struct PostWritingViewControllerPreview2: PreviewProvider {
     static var previews: some View {
-        PostWritingViewController().toPreview()
+        PostWritingViewControllerNew().toPreview()
     }
 }

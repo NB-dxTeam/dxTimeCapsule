@@ -5,7 +5,6 @@ import Photos
 
 class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
     
-    
     // MARK: - 속성 선언부
     private var selectedImage: UIImage? {
         didSet {
@@ -90,9 +89,6 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         view.addGestureRecognizer(panGesture)
     }
     
-
-    
-    
     // UI 속성 설정
     private func setupProperties() {
         imageView.contentMode = .scaleAspectFill
@@ -120,9 +116,6 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     private func setupUI() {
         view.backgroundColor = .white
         
-        // 네비게이션 바의 투명도 설정
-//        navigationController?.navigationBar.isTranslucent = false // 네비게이션 바 투명도 해제
-            
         // 이미지 뷰 설정
         view.addSubview(imageView)
         imageView.snp.makeConstraints { make in

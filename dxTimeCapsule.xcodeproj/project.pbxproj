@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1B5287D4E4C9FEEC72B631CD /* Pods_dxTimeCapsule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B7158E13240DE5CE715E16 /* Pods_dxTimeCapsule.framework */; };
+		1F019A402BAC620F00F727D2 /* EmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F019A3F2BAC620F00F727D2 /* EmojiCell.swift */; };
 		1F0854152B8EF4F400711660 /* TestLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0854142B8EF4F400711660 /* TestLoginViewController.swift */; };
 		1F0854322B8F254B00711660 /* MainCapsuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0854312B8F254B00711660 /* MainCapsuleViewController.swift */; };
 		1F0B91062B901D170022EDD9 /* Etc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0B91052B901D170022EDD9 /* Etc.swift */; };
@@ -97,6 +98,7 @@
 		1FC44EFB2B90C491002A75AF /* ProximaNova-Extrabld.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1FC44EF42B90C491002A75AF /* ProximaNova-Extrabld.ttf */; };
 		1FC44F042B90C87F002A75AF /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1FC44EFE2B90C87E002A75AF /* Pretendard-Regular.otf */; };
 		1FC44F052B90C87F002A75AF /* Pretendard-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1FC44F002B90C87E002A75AF /* Pretendard-SemiBold.otf */; };
+		1FC8F4A62BAC5E3D00BC7BF8 /* PostWritingViewControllerNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC8F4A52BAC5E3D00BC7BF8 /* PostWritingViewControllerNew.swift */; };
 		1FD2B79C2B96BD7300896F9C /* LocationMapkitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B79B2B96BD7300896F9C /* LocationMapkitViewController.swift */; };
 		1FD2B7A42B96BEFE00896F9C /* NotificationName+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7A12B96BEFE00896F9C /* NotificationName+Extension.swift */; };
 		1FD2B7A52B96BEFE00896F9C /* UIStackView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD2B7A22B96BEFE00896F9C /* UIStackView+Extensions.swift */; };
@@ -138,6 +140,7 @@
 
 /* Begin PBXFileReference section */
 		04EFA52A53A71177B62D1D49 /* Pods-dxTimeCapsule.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.debug.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.debug.xcconfig"; sourceTree = "<group>"; };
+		1F019A3F2BAC620F00F727D2 /* EmojiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCell.swift; sourceTree = "<group>"; };
 		1F0854142B8EF4F400711660 /* TestLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestLoginViewController.swift; sourceTree = "<group>"; };
 		1F0854162B8F091500711660 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1F0854312B8F254B00711660 /* MainCapsuleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCapsuleViewController.swift; sourceTree = "<group>"; };
@@ -197,6 +200,7 @@
 		1FC44EFE2B90C87E002A75AF /* Pretendard-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Regular.otf"; sourceTree = "<group>"; };
 		1FC44F002B90C87E002A75AF /* Pretendard-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-SemiBold.otf"; sourceTree = "<group>"; };
 		1FC44F0C2B933568002A75AF /* Firebase-ErrorMessages.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Firebase-ErrorMessages.json"; sourceTree = "<group>"; };
+		1FC8F4A52BAC5E3D00BC7BF8 /* PostWritingViewControllerNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostWritingViewControllerNew.swift; sourceTree = "<group>"; };
 		1FD2B79B2B96BD7300896F9C /* LocationMapkitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMapkitViewController.swift; sourceTree = "<group>"; };
 		1FD2B7A12B96BEFE00896F9C /* NotificationName+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NotificationName+Extension.swift"; sourceTree = "<group>"; };
 		1FD2B7A22B96BEFE00896F9C /* UIStackView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extensions.swift"; sourceTree = "<group>"; };
@@ -316,6 +320,7 @@
 			isa = PBXGroup;
 			children = (
 				1F24501A2B9B4F85002C68BB /* PhotoCell.swift */,
+				1F019A3F2BAC620F00F727D2 /* EmojiCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -567,6 +572,7 @@
 				1F0D3B2B2B89AA2B00A31E82 /* PhotoUploadViewController.swift */,
 				1F2450172B9B4D74002C68BB /* PostWritingViewController.swift */,
 				1F52F8B52B9CD69F00974F0B /* TagFriendListViewController.swift */,
+				1FC8F4A52BAC5E3D00BC7BF8 /* PostWritingViewControllerNew.swift */,
 			);
 			path = Legercy;
 			sourceTree = "<group>";
@@ -868,6 +874,7 @@
 				4E4F6CDB2B99C2B500154ED1 /* OpenCapsuleViewController.swift in Sources */,
 				4E2A09CA2B8F86C600911390 /* FadeInAnimator.swift in Sources */,
 				1F5786D92B849AF800C40B08 /* AppDelegate.swift in Sources */,
+				1FC8F4A62BAC5E3D00BC7BF8 /* PostWritingViewControllerNew.swift in Sources */,
 				1F8EA39E2B9538DD004856B7 /* UIFont+CustomFont.swift in Sources */,
 				1FB387352B87A0B300054816 /* SignUpViewController.swift in Sources */,
 				1F367EA62B8F803A00563908 /* UIColor+Hex.swift in Sources */,
@@ -909,6 +916,7 @@
 				D274E0202B9CD36500FAF849 /* CapsuleTableViewCell.swift in Sources */,
 				27FC128B2B9A64E5008CBEB8 /* UpcomingTCViewController.swift in Sources */,
 				1FBDDF7C2BA1DCDB00FCDE5A /* PhotoPicker.swift in Sources */,
+				1F019A402BAC620F00F727D2 /* EmojiCell.swift in Sources */,
 				1F0854152B8EF4F400711660 /* TestLoginViewController.swift in Sources */,
 				4E2A09C82B8F755C00911390 /* OpenInteractionViewController.swift in Sources */,
 				1FD2B7A42B96BEFE00896F9C /* NotificationName+Extension.swift in Sources */,
