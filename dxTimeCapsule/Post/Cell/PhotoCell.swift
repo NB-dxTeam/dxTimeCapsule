@@ -56,7 +56,7 @@ class PhotoCell: UICollectionViewCell {
         }
     }
     
-    func configure(with asset: PHAsset, imageManager: PHCachingImageManager, isSelected: Bool, selectionNumber: Int?, targetSize: CGSize){
+    func configure(with asset: PHAsset, imageManager: PHCachingImageManager, isSelected: Bool, selectionNumber: Int?, targetSize: CGSize) {
         let options = PHImageRequestOptions()
         options.isNetworkAccessAllowed = true
         options.deliveryMode = .highQualityFormat
