@@ -96,12 +96,12 @@ class MessageModalViewController: UIViewController {
         let creationDateString = creationDate.map { dateFormatter.string(from: $0) } ?? "날짜 정보 없음"
         let openDateString = openDate.map { dateFormatter.string(from: $0) } ?? "날짜 정보 없음"
         
-        dateLabel.text = "\(creationDateString) -> \(openDateString)"
+        dateLabel.text = "\(creationDateString) → \(openDateString)"
         messageTextView.text = userMessage ?? "메시지가 없습니다."
         
         if let creationDate = creationDate {
             let daysAgo = Calendar.current.dateComponents([.day], from: creationDate, to: Date()).day ?? 0
-            daysAgoLabel.text = "\(daysAgo)일 전의 기억입니다."
+            daysAgoLabel.text = "\(daysAgo)일 전 기억입니다."
         }
     }
 }

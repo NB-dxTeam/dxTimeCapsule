@@ -227,8 +227,8 @@ class MainCapsuleViewController: UIViewController {
         capsuleImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview().offset(10)
-            make.width.equalTo(400)
-            make.height.equalTo(400)
+            make.width.equalTo(350)
+            make.height.equalTo(350)
         }
         
         // 생성 날짜
@@ -240,7 +240,7 @@ class MainCapsuleViewController: UIViewController {
         // "타임캡슐을 오픈하세요!"
         openCapsuleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(creationDateLabel.snp.bottom).offset(5) // 오픈캡슐 레이블 아래에 위치
+            make.top.equalTo(creationDateLabel.snp.bottom).offset(40) // 오픈캡슐 레이블 아래에 위치
         }
         
            // locationName 레이블 레이아웃 설정
