@@ -38,9 +38,32 @@ class CapsuleMapViewController: UIViewController {
     private var originalCenterCoordinate: CLLocationCoordinate2D?
     private var shouldShowModal = false
     // 버튼을 생성하고 설정하는 클로저
-    private lazy var allButton: UIButton = createRoundButton(named: "all", title: "All")
-    private lazy var lockedButton: UIButton = createRoundButton(named: "locked", title: "Locked")
-    private lazy var openedButton: UIButton = createRoundButton(named: "opened", title: "Opened")
+    private lazy var allButton: UIButton = createRoundButton(named: "all", title: "전체보기")
+
+    private lazy var lockedButton: UIButton = {
+        let button = UIButton()
+        // "AdobeBox_Close" 이미지를 lockedButton에 설정합니다.
+        if let image = UIImage(named: "AdobeBox_Close")?.resizedImage(newSize: CGSize(width: 35, height: 35)) {
+            button.setImage(image, for: .normal)
+        }
+        configureButtonAppearance(button: button)
+        button.addAction(UIAction { [weak self] _ in
+            self?.buttonTapped(name: "locked")
+        }, for: .touchUpInside)
+        return button
+    }()
+    private lazy var openedButton: UIButton = {
+        let button = UIButton()
+        // "AdobeBox_Open" 이미지를 openedButton에 설정합니다.
+        if let image = UIImage(named: "AdobeBox_Open")?.resizedImage(newSize: CGSize(width: 35, height: 35)) {
+            button.setImage(image, for: .normal)
+        }
+        configureButtonAppearance(button: button)
+        button.addAction(UIAction { [weak self] _ in
+            self?.buttonTapped(name: "opened")
+        }, for: .touchUpInside)
+        return button
+    }()
     
     private lazy var buttonsStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [allButton, lockedButton, openedButton])
@@ -54,7 +77,10 @@ class CapsuleMapViewController: UIViewController {
     // 뒤로가기 버튼
     private lazy var backButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "arrowLeft"), for: .normal) // 시스템 아이콘을 사용합니다.
+        if let image = UIImage(systemName: "chevron.left")?.resizedImage(newSize: CGSize(width: 15, height: 20)) {
+            button.setImage(image, for: .normal)
+        }
+        button.tintColor = UIColor(hex: "#C82D6B")
         return button
     }()
     // 하프모달 버튼
@@ -209,9 +235,10 @@ extension CapsuleMapViewController {
         let button = UIButton()
         button.setTitle(title, for: .normal)
         button.setTitleColor(.black, for: .normal)
-        button.backgroundColor = .white.withAlphaComponent(0.8) // 배경색을 설정합니다.
-        button.layer.cornerRadius = 20 // 모서리를 둥글게 합니다.
-        button.snp.makeConstraints { make in // SnapKit을 사용하여 제약조건을 설정합니다.
+        button.titleLabel?.font = UIFont.proximaNovaRegular(ofSize: 14)
+        button.backgroundColor = .white.withAlphaComponent(0.8)
+        button.layer.cornerRadius = 20
+        button.snp.makeConstraints { make in
             make.size.equalTo(CGSize(width: 80, height: 40))
         }
         button.addAction(UIAction { [weak self] _ in
@@ -233,6 +260,7 @@ extension CapsuleMapViewController {
     // 버튼이 눌렸을 때 호출되는 메서드
     private func buttonTapped(name: String) {
         let buttonToSelect: UIButton
+        capsuleMaps.removeAnnotations(capsuleMaps.annotations)
         switch name {
         case "all":
             // 'All' 버튼 로직
@@ -258,12 +286,21 @@ extension CapsuleMapViewController {
         // 모든 버튼을 기본 상태로 리셋
         [allButton, lockedButton, openedButton].forEach {
             $0.backgroundColor = .white.withAlphaComponent(0.8)
-            $0.setTitleColor(.black, for: .normal)
+            $0.setTitleColor(UIColor(hex: "#C82D6B"), for: .normal) // 필터 "전체보기" 색상
         }
         
         // 선택된 버튼의 스타일을 변경
-        selectedButton.backgroundColor = .systemBlue
+        selectedButton.backgroundColor = UIColor(hex: "#C82D6B")// 필터 선택 시 배경 색상
         selectedButton.setTitleColor(.white, for: .normal)
+    }
+    // 버튼의 공통된 외형을 설정하는 함수
+    private func configureButtonAppearance(button: UIButton) {
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = .white.withAlphaComponent(0.8)
+        button.layer.cornerRadius = 20
+        button.snp.makeConstraints { make in
+            make.size.equalTo(CGSize(width: 80, height: 40))
+        }
     }
 }
 
@@ -284,6 +321,9 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
     func dataCapsule(documents: [QueryDocumentSnapshot]) {
         let group = DispatchGroup()
         
+        var tempTimeBoxes = [TimeBox]()
+        var tempAnnotationsData = [TimeBoxAnnotationData]()
+        
         for doc in documents {
             let data = doc.data()
             let geoPoint = data["location"] as? GeoPoint
@@ -302,54 +342,62 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
                 isOpened: data["isOpened"] as? Bool ?? false
             )
             
+            tempTimeBoxes.append(timeBox)
+            
             if let tagFriendUids = timeBox.tagFriendUid, !tagFriendUids.isEmpty {
                 group.enter()
                 FirestoreDataService().fetchFriendsInfo(byUIDs: tagFriendUids) { [weak self] friendsInfo in
-                    guard let friendsInfo = friendsInfo else {
+                    guard let self = self else {
+                        print("fetchFriendsInfo: weak self is no longer available")
                         group.leave()
                         return
                     }
-                    
-                    // 타임박스와 관련된 친구 정보를 포함하는 어노테이션 데이터를 생성
+                    guard let friendsInfo = friendsInfo else {
+                        print("fetchFriendsInfo: returned nil for UIDs: \(tagFriendUids)")
+                        group.leave()
+                        return
+                    }
+                    // 여기서 friendsInfo가 비어있지 않은지 확인
+                    print("fetchFriendsInfo: retrieved \(friendsInfo.count) friends for UIDs: \(tagFriendUids)")
                     let annotationData = TimeBoxAnnotationData(timeBox: timeBox, friendsInfo: friendsInfo)
-                    self?.timeBoxAnnotationsData.append(annotationData)
+                    tempAnnotationsData.append(annotationData)
                     group.leave()
                 }
             }
-            self.timeBoxes.append(timeBox)
         }
         
         group.notify(queue: .main) {
-            print("데이터 전달. Total count: \(self.timeBoxes.count)")
-            // 모든 타임박스 데이터 처리 완료 후 UI 업데이트
+            self.timeBoxes = tempTimeBoxes
+            print("Data processing completed. Total count: \(self.timeBoxes.count)")
             self.addAnnotations(from: self.timeBoxes)
         }
     }
     // 데이터 정보 불러오기
     func loadCapsuleInfos(button: CapsuleFilterButtons) {
-            let db = Firestore.firestore()
-            guard let userId = Auth.auth().currentUser?.uid else { return }
+        let db = Firestore.firestore()
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        
+        var query: Query
+        switch button {
+        case .all:
+            query = db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
+                .order(by: "openTimeBoxDate", descending: false)
             
-            var query: Query
-            switch button {
-            case .all:
-                query = db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
-                    .order(by: "openTimeBoxDate", descending: false)
-            case .locked:
-                query = db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
-                    .whereField("isOpened", isEqualTo: false)
-                    .order(by: "openTimeBoxDate", descending: false)
-            case .opened:
-                query = db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
-                    .whereField("isOpened", isEqualTo: true)
-                    .order(by: "openTimeBoxDate", descending: false)
-            }
+        case .locked:
+            query = db.collection("timeCapsules")
+                .whereField("uid", isEqualTo: userId)
+                .whereField("isOpened", isEqualTo: false)
+        case .opened:
+            query = db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
+                .whereField("isOpened", isEqualTo: true)
+        }
 
-            query.getDocuments { [weak self] (querySnapshot, error) in
+        query.getDocuments { [weak self] (querySnapshot, error) in
                 guard let documents = querySnapshot?.documents else {
                     print("Error fetching documents: \(error!)")
                     return
                 }
+                print("문서 데이터 가져옴: \(button)")
                 self?.dataCapsule(documents: documents)
             }
         }
@@ -445,6 +493,7 @@ extension CapsuleMapViewController: MKMapViewDelegate {
         var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView
         
         if annotationView == nil {
+            print("새 MKMarkerAnnotationView 생성")
             annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             annotationView?.canShowCallout = true
             annotationView?.animatesWhenAdded = true
@@ -452,12 +501,16 @@ extension CapsuleMapViewController: MKMapViewDelegate {
             annotationView?.glyphTintColor = .white
             annotationView?.markerTintColor = .red
         } else {
-            print("Reusing MKMarkerAnnotationView")
+            print("MKMarkerAnnotationView 재사용")
         }
         
         // Ensure the annotationView's annotation is set correctly
         annotationView?.annotation = annotation
-        
+        annotationView?.canShowCallout = true
+        annotationView?.animatesWhenAdded = true
+        annotationView?.glyphImage = UIImage(named: "boximage1")
+        annotationView?.glyphTintColor = .white
+        annotationView?.markerTintColor = .red
         // Configure the detailCalloutAccessoryView
         if let timeBoxAnnotation = annotation as? TimeBoxAnnotation {
             print("Configuring detailCalloutAccessoryView for timeBoxAnnotation")
@@ -471,14 +524,15 @@ extension CapsuleMapViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-
         if let annotation = view.annotation as? TimeBoxAnnotation {
             self.selectedTimeBoxAnnotationData = annotation.timeBoxAnnotationData
             print("selectedTimeBoxAnnotationData is now set with \(self.selectedTimeBoxAnnotationData?.friendsInfo.count ?? 0) friend(s)")
             DispatchQueue.main.async {
                 self.friendsCollectionView.reloadData()
+                print("어노테이션이 선택됨: \(annotation)")
             }
         }
+        
     }
 }
 
@@ -522,10 +576,12 @@ enum CapsuleFilterButtons {
 }
 // MARK: - Preview
 import SwiftUI
-import FirebaseFirestoreInternal
-import FirebaseAuth
 
-
+struct PreView: PreviewProvider {
+    static var previews: some View {
+        CapsuleMapViewController().toPreview()
+    }
+}
 #if DEBUG
 extension UIViewController {
     private struct Preview: UIViewControllerRepresentable {

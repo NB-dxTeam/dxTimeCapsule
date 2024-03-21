@@ -102,6 +102,7 @@ class CustomModal: UIViewController {
         guard let userId = Auth.auth().currentUser?.uid else { return }
         
         db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
+            .whereField("isOpened", isEqualTo: false)
             .order(by: "openTimeBoxDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
             .getDocuments { [weak self] (querySnapshot, err) in
                 if let err = err {
@@ -178,10 +179,4 @@ extension CustomModal: UICollectionViewDataSource, UICollectionViewDelegate {
 }
 
 
-//import SwiftUI
-//
-//struct PreView: PreviewProvider {
-//    static var previews: some View {
-//        CustomModal().toPreview()
-//    }
-//}
+
