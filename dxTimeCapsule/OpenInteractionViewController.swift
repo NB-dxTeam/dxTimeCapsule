@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import CoreMotion
+import FirebaseFirestore
 
 class OpenInteractionViewController: UIViewController {
     var documentId: String?
@@ -94,10 +95,30 @@ class OpenInteractionViewController: UIViewController {
     
     // OpenCapsuleViewController로 네비게이션하는 메소드
     private func navigateToOpenCapsuleViewController() {
-        let openCapsuleVC = OpenCapsuleViewController()
-        openCapsuleVC.documentId = documentId // documentId 전달
-        openCapsuleVC.modalPresentationStyle = .fullScreen // 전체 화면
-        present(openCapsuleVC, animated: true, completion: nil) // 모달
+        guard let docId = documentId else { return } // documentId가 nil이면 함수를 종료합니다.
+
+        let db = Firestore.firestore() // Firestore 인스턴스를 가져옵니다.
+
+        // 파이어베이스의 "timeCapsules" 컬렉션에서 documentId에 해당하는 문서를 찾아
+        // isOpened 필드를 true로 업데이트합니다.
+        db.collection("timeCapsules").document(docId).updateData([
+            "isOpened": true
+        ]) { error in
+            if let error = error {
+                // 문서 업데이트에 실패한 경우 에러를 콘솔에 출력합니다.
+                print("Error updating document: \(error)")
+            } else {
+                // 문서 업데이트에 성공한 경우 콘솔에 성공 메시지를 출력하고,
+                // OpenCapsuleViewController로 화면 전환을 준비합니다.
+                print("Document successfully updated")
+                DispatchQueue.main.async { [weak self] in
+                    let openCapsuleVC = OpenCapsuleViewController()
+                    openCapsuleVC.documentId = self?.documentId // documentId를 전달합니다.
+                    openCapsuleVC.modalPresentationStyle = .fullScreen // 전체 화면 모달 스타일로 설정합니다.
+                    self?.present(openCapsuleVC, animated: true, completion: nil) // 모달을 표시합니다.
+                }
+            }
+        }
     }
     
     override func viewDidLoad() {
