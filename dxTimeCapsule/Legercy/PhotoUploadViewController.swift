@@ -79,6 +79,8 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         setupPlaceholderLabel()
         fetchPhotos()
         updateNextButtonState()
+        print("selectedLocation: \(String(describing: selectedLocation))")
+
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
         view.addGestureRecognizer(panGesture)
     }
@@ -234,26 +236,28 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     }
 
     // 사진 데이터 가져오기
-     private func fetchPhotos() {
-         let allPhotosOptions = PHFetchOptions()
-         allPhotosOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-         let allPhotos = PHAsset.fetchAssets(with: .image, options: allPhotosOptions)
+    private func fetchPhotos() {
+        let allPhotosOptions = PHFetchOptions()
+        allPhotosOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        let allPhotos = PHAsset.fetchAssets(with: .image, options: allPhotosOptions)
 
-         assets = []
-         allPhotos.enumerateObjects { (asset, _, _) in
-             self.assets.append(asset)
-         }
+        assets = []
 
-         DispatchQueue.main.async {
-             self.collectionView.reloadData()
-             // 뷰 로드 시 첫 번째 사진을 이미지 뷰에 자동으로 표시
-             if let firstAsset = self.assets.first {
-                 self.selectedAssets.append(firstAsset) // 첫 번째 사진을 선택된 상태로 추가
-                 self.selectAndDisplayImage(for: firstAsset)
-             }
-         }
-     }
-    
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+            self.placeholderLabel.isHidden = false 
+        }
+
+        allPhotos.enumerateObjects { (asset, index, _) in
+            print("Photo at index \(index): \(asset.localIdentifier)")
+            self.assets.append(asset)
+        }
+
+    }
+
+
+
+
     // 선택된 사진을 imageView에 표시
     private func selectAndDisplayImage(for asset: PHAsset) {
         imageManager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .aspectFill, options: nil) { image, _ in
@@ -320,7 +324,7 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         }
         
         // selectedImage 배열을 PostWritingViewController로 전달
-        postWritingVC.selectedImage = self.selectedImage
+        postWritingVC.selectedImage = self.selectedImage!
         postWritingVC.thumnailImage = self.thumnailImage
         postWritingVC.selectedLocation = self.selectedLocation
         
@@ -383,6 +387,7 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
 
         return cell
     }
+
 
     
     // MARK: - UIPickerViewDataSource and UIPickerViewDelegate

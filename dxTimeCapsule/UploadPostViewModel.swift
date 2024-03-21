@@ -8,12 +8,12 @@ import CoreLocation
 class UploadPostViewModel {
     
     // 이미지를 Firebase Storage에 업로드하고, 업로드된 이미지 URL을 반환합니다.
-    func uploadPostImage(image: UIImage, uid: String, completion: @escaping (Result<String, Error>) -> Void) {
+    func uploadPostImage(imageURL: UIImage, uid: String, completion: @escaping (Result<String, Error>) -> Void) {
         let timestamp = generateTimestamp()
         let uniqueImageName = "image_\(UUID().uuidString)_\(timestamp)"
         let imagePath = constructImagePath(uid: uid, imageName: uniqueImageName)
         
-        guard let imageData = image.jpegData(compressionQuality: 0.75) else {
+        guard let imageData = imageURL.jpegData(compressionQuality: 0.75) else {
             completion(.failure(NSError(domain: "PostService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to compress image"])))
             return
         }
@@ -22,13 +22,13 @@ class UploadPostViewModel {
     }
     
     // 타임박스 데이터를 Firestore에 업로드합니다.
-    func uploadTimeBox(uid: String, userName: String, images: [UIImage], location: GeoPoint, addressTitle: String, address: String, description: String, tagFriendUid: [String], tagFriendUserName: [String], createTimeBoxDate: Timestamp, openTimeBoxDate: Timestamp, isOpened: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
+    func uploadTimeBox(uid: String, userName: String, imageURL: [UIImage], location: GeoPoint, addressTitle: String, address: String, description: String, tagFriendUid: [String], tagFriendUserName: [String], createTimeBoxDate: Timestamp, openTimeBoxDate: Timestamp, isOpened: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
         var imageURLs: [String] = []
         let uploadGroup = DispatchGroup()
         
-        for image in images {
+        for imageUrl in imageURL {
             uploadGroup.enter()
-            uploadPostImage(image: image, uid: uid) { result in
+            uploadPostImage(imageURL: imageUrl, uid: uid) { result in
                 switch result {
                 case .success(let imageURL):
                     imageURLs.append(imageURL)
@@ -93,7 +93,7 @@ class UploadPostViewModel {
             "isOpened": TimeBox.isOpened!
         ]
         
-        Firestore.firestore().collection("timeCapsuleTest").addDocument(data: timeCapsuleDataDict) { error in
+        Firestore.firestore().collection("timeCapsules").addDocument(data: timeCapsuleDataDict) { error in
             if let error = error {
                 completion(.failure(error))
             } else {

@@ -43,6 +43,9 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         let swipeDownGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeDown))
           swipeDownGesture.direction = .down
           view.addGestureRecognizer(swipeDownGesture)
+        
+        // 디버깅 포인트 추가
+        print("selectedLocation: \(String(describing: selectedLocation))")
     }
     
     override func viewDidLayoutSubviews() {
@@ -274,15 +277,10 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
             return
         }
 
-        let geoPoint = GeoPoint(latitude: selectedCoordinate.latitude, longitude: selectedCoordinate.longitude)
-
-        // TimeBox 객체 생성
-        let timeBox = TimeBox(
-            location: geoPoint
-        )
-
-        let photoUploadVC = PhotoUploadViewController()
+        let selectedLocation = selectedCoordinate
         
+        let photoUploadVC = PhotoUploadViewController()
+        photoUploadVC.selectedLocation = selectedLocation // Assuming there's a property in PhotoUploadViewController to hold this
         photoUploadVC.modalPresentationStyle = .overFullScreen // 혹은 .overFullScreen로 설정
         present(photoUploadVC, animated: true, completion: nil)
     }
@@ -336,6 +334,9 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
 
             showCenterView()
             print("어노테이션 추가 완료")
+            
+            // 위치가 선택되었음을 알리는 메시지를 출력합니다.
+            print("Selected Location: \(coordinate)")
         }
     }
     
@@ -346,30 +347,55 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     }
     
     // MARK: - CLLocationManagerDelegate
-    internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.first {
-            // 사용자의 현재 위치를 selectedLocation에 할당
-            selectedLocation = location.coordinate
+    
+    // 위치 업데이트 시 사용자의 현재 위치 정보를 처리합니다.
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        // 위치 정보 배열에서 최근 위치를 가져옵니다.
+        guard let location = locations.last else { return }
+        
+        // 사용자의 현재 위치를 selectedLocation에 할당합니다.
+        selectedLocation = location.coordinate
 
-            // 맵 뷰를 사용자의 현재 위치로 이동
-            let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 5000, longitudinalMeters: 5000)
-            mapView.setRegion(region, animated: true)
+        // 맵 뷰를 사용자의 현재 위치로 이동합니다.
+        let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 5000, longitudinalMeters: 5000)
+        mapView.setRegion(region, animated: true)
 
-            // 사용자의 현재 위치에 핀 추가 (선택적)
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = location.coordinate
-            mapView.addAnnotation(annotation)
+        // 사용자의 현재 위치에 핀을 추가합니다. (선택적)
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = location.coordinate
+        mapView.addAnnotation(annotation)
 
-            // 더 이상 위치 업데이트가 필요하지 않으면 위치 업데이트 중지
-            manager.stopUpdatingLocation()
+        // 더 이상 위치 업데이트가 필요하지 않으면 위치 업데이트를 중지합니다.
+        manager.stopUpdatingLocation()
+
+        // 사용자의 현재 위치가 업데이트되었으므로 UI를 업데이트합니다.
+        updateUIWithCurrentLocation()
+    }
+
+    // 위치 권한 변경 시 UI를 업데이트합니다.
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {
+            // 위치 권한이 허용되었을 때의 처리
+            DispatchQueue.main.async {
+                // UI 업데이트 코드 작성
+                self.updateUIWithCurrentLocation()
+            }
         }
     }
 
 
-    
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        // Handle authorization status changes
+    // 사용자의 현재 위치를 기반으로 UI를 업데이트합니다.
+    private func updateUIWithCurrentLocation() {
+        // 선택된 위치가 있으면 해당 위치를 사용하여 UI를 업데이트합니다.
+        if let selectedLocation = selectedLocation {
+            // 이곳에서 UI를 업데이트하는 코드를 작성합니다.
+            print("Selected Location: \(selectedLocation)")
+        } else {
+            // 선택된 위치가 없는 경우 사용자에게 메시지를 표시할 수 있습니다.
+            print("No selected location.")
+        }
     }
+
     
     // MARK: - MKMapViewDelegate
     
