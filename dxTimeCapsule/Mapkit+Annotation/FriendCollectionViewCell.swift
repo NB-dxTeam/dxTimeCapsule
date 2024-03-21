@@ -57,8 +57,8 @@ class FriendCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func configure(with friend: Friend) {
-        usernameLabel.text = friend.username
+    func configure(with friend: User) {
+        usernameLabel.text = friend.userName
         if let profileImageUrlString = friend.profileImageUrl, let profileImageUrl = URL(string: profileImageUrlString) {
             profileImageView.sd_setImage(with: profileImageUrl, placeholderImage: UIImage(named: "defaultProfileImage"))
         } else {

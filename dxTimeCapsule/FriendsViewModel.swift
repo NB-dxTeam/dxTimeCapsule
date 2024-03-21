@@ -21,7 +21,7 @@ import FirebaseFirestore
 import FirebaseAuth
 
 class FriendsViewModel: ObservableObject {
-    @Published var friends: [Friend] = []
+    @Published var friends: [User] = []
     let db = Firestore.firestore()
     
     
@@ -154,7 +154,7 @@ class FriendsViewModel: ObservableObject {
             "friends.\(currentUserId)": acceptedDate
         ], forDocument: targetUserRef)
         
-        // 친구 요청 정보 삭제
+        // 친구 요청 정보 삭제 -> 요청 정보 삭제가 안되고 있음.. 왜지???
         batch.updateData([
             "friendRequestsSent.\(targetUserId)": FieldValue.delete(),
             "friendRequestsReceived.\(currentUserId)": FieldValue.delete()

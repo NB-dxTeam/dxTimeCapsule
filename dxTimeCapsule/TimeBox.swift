@@ -19,7 +19,7 @@ struct TimeBox {
 
 struct TimeBoxAnnotationData {
     var timeBox: TimeBox
-    var friendsInfo: [Friend]
+    var friendsInfo: [User]
 }
 
 struct Emoji: Identifiable, Hashable {

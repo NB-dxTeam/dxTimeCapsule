@@ -17,7 +17,7 @@ struct PostUploadView: View {
     @Environment(\.dismiss) var dismiss
     @State private var showPhotoPicker: Bool = false
     @State private var currentUser: User?
-    @State private var friends: [Friend] = []
+    @State private var friends: [User] = []
     private var viewModel = FriendsViewModel()
     
     

@@ -16,7 +16,7 @@ class FriendsListViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         setupTableView()
-        fetchCurrentUser()
+        fetchFriendsUids()
     }
     
     private func setupViews() {
@@ -72,26 +72,67 @@ class FriendsListViewController: UIViewController {
         }
     }
     
-    private func fetchCurrentUser() {
+    private func fetchFriendsUids() {
+        print("*************1*************")
+
         guard let currentUserID = Auth.auth().currentUser?.uid else { return }
-        
+
         db.collection("users").document(currentUserID).getDocument { [weak self] snapshot, error in
             guard let self = self, let document = snapshot, document.exists, error == nil else {
-                print("Error fetching current user: \(String(describing: error))")
+                print("Error fetching user's friends UIDs: \(String(describing: error))")
+                print("*************2*************")
                 return
             }
             
-            guard let userData = document.data() else { return }
-            self.currentUser = User(
-                uid: currentUserID,
-                userName: userData["username"] as? String ?? "",
-                email: userData["email"] as? String ?? "",
-                profileImageUrl: userData["profileImageUrl"] as? String
-            )
-            // 현재 사용자 정보를 성공적으로 가져온 후 친구 목록 조회
-            self.fetchFriends()
+            guard let userData = document.data(),
+                  let friendsData = userData["friends"] as? [String: Any] else { return }
+            
+            let friendUids = Array(friendsData.keys) // 친구들의 UID 목록을 추출합니다.
+            print("Friends UIDs: \(friendUids)")
+            print("*************3*************")
+
+            //
+            var fetchedFriends: [User] = [] // 임시 배열에 친구 정보 저장
+            let dispatchGroup = DispatchGroup()
+            
+            for friendUid in friendUids { // 변수 이름을 변경했습니다.
+                dispatchGroup.enter()
+                self.db.collection("users").document(friendUid).getDocument { friendSnapshot, friendError in
+                    defer { dispatchGroup.leave() }
+                    if let error = friendError {
+                        print("Error fetching friend: \(error)")
+                        print("*************4*************")
+
+                        return
+                    }
+                    if let friendData = friendSnapshot?.data(),
+                       let uid = friendSnapshot?.documentID, // UID를 직접 가져옵니다.
+                       let userName = friendData["userName"] as? String,
+                       let email = friendData["email"] as? String,
+                       let profileImageUrl = friendData["profileImageUrl"] as? String {
+                        let friend = User(uid: uid, userName: userName, email: email, profileImageUrl: profileImageUrl)
+                        fetchedFriends.append(friend) // 임시 배열에 친구 정보 추가
+                        print("fetched friend: \(friend)")
+                        print("*************5*************")
+
+                    }
+                }
+            }
+            dispatchGroup.notify(queue: .main) {
+                // 모든 비동기 작업 완료 후, 친구 배열 업데이트 및 테이블 뷰 리로드
+                self.friends = fetchedFriends
+                self.tableView.reloadData() // 주석 제거
+                
+                // 친구 수 라벨 업데이트
+                self.friendsCountLabel.text = "친구 \(self.friends.count)명"
+                print("*************6*************")
+
+                print("*************6*************")
+            }
         }
     }
+
+
 
     private func fetchFriends() {
         guard let currentUserID = Auth.auth().currentUser?.uid else { return }
@@ -128,15 +169,7 @@ class FriendsListViewController: UIViewController {
                     }
                 }
             }
-            
-            dispatchGroup.notify(queue: .main) {
-                // 모든 비동기 작업 완료 후, 친구 배열 업데이트 및 테이블 뷰 리로드
-                self.friends = fetchedFriends
-                self.tableView.reloadData()
-                
-                // 친구 수 라벨 업데이트
-                self.friendsCountLabel.text = "친구 \(self.friends.count)명"
-            }
+
         }
     }
 
