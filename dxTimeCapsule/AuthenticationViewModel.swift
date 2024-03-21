@@ -1,7 +1,7 @@
 import Foundation
 import FirebaseAuth
 import FirebaseFirestore
-import ColorizeSwift
+//import ColorizeSwift
 
 class AuthenticationViewModel {
     private let db = Firestore.firestore()
