@@ -161,7 +161,6 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         deleteAccountLabel.addGestureRecognizer(tapGesture)
     }
 
-
     private func setupConstraints() {
         // Profile Image View Constraints
         profileImageView.snp.makeConstraints { make in

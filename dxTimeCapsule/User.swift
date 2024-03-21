@@ -7,11 +7,9 @@ struct User: Decodable {
     var userName: String? // 닉네임
     var email: String? // 이메일
     var profileImageUrl: String? // 프로필 이미지 URL
-    var friendsUid: [String]? // 친구 uid 목록
-    var friendsUserName: [String]? // 친구 닉네임 목록
-    var friendRequestsSent: [String]? // 친구 요청이 전송된 사용자 ID 배열
-    var friendRequestsReceived: [String]? // 친구 요청을 받은 사용자 ID 배열
-    var friendRequestAcceptedDate: Date? // 친구 요청 수락 날짜
+    var friends: [String: Date]? // [uid: acceptedDate]
+    var friendRequestsSent: [String: Date]? // [receiverUid: sentDate]
+    var friendRequestsReceived: [String: Date]? // [senderUid: receivedDate]
 }
 
 struct Friend {

@@ -59,7 +59,6 @@ class FriendsListViewController: UIViewController {
 
     }
 
-    
     private func setupTableView() {
         tableView = UITableView()
         tableView.delegate = self
@@ -74,7 +73,6 @@ class FriendsListViewController: UIViewController {
     }
     
     private func fetchCurrentUser() {
-        // Fetch current user data from Firebase
         guard let currentUserID = Auth.auth().currentUser?.uid else { return }
         
         db.collection("users").document(currentUserID).getDocument { [weak self] snapshot, error in
@@ -90,61 +88,58 @@ class FriendsListViewController: UIViewController {
                 email: userData["email"] as? String ?? "",
                 profileImageUrl: userData["profileImageUrl"] as? String
             )
-            self.fetchFriends(forUserID: currentUserID)
+            // 현재 사용자 정보를 성공적으로 가져온 후 친구 목록 조회
+            self.fetchFriends()
         }
     }
-    
-    private func fetchFriends(forUserID userID: String) {
-        db.collection("friendships").whereField("userUids", arrayContains: userID).getDocuments { [weak self] snapshot, error in
-            guard let self = self, let documents = snapshot?.documents, error == nil else {
-                print("Error fetching friends: \(error)")
+
+    private func fetchFriends() {
+        guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+        
+        // 현재 사용자의 친구 목록 조회
+        db.collection("users").document(currentUserID).getDocument { [weak self] snapshot, error in
+            guard let self = self, let document = snapshot, document.exists, error == nil else {
+                print("Error fetching current user: \(String(describing: error))")
                 return
             }
             
-            var friendIDs: [String] = []
-            for document in documents {
-                let userUids = document.get("userUids") as? [String] ?? []
-                if let friendID = userUids.first(where: { $0 != userID }) {
-                    friendIDs.append(friendID)
-                }
-            }
+            // 'friends' 필드에서 친구 ID 목록을 가져옵니다.
+            guard let friendsDict = document.get("friends") as? [String: Any] else { return }
+            let friendIDs = Array(friendsDict.keys)
             
-            var fetchedFriends: [User] = [] // Use a temporary array to store fetched friends
-            
+            var fetchedFriends: [User] = [] // 임시 배열에 친구 정보 저장
             let dispatchGroup = DispatchGroup()
             
             for friendID in friendIDs {
                 dispatchGroup.enter()
                 self.db.collection("users").document(friendID).getDocument { friendSnapshot, friendError in
-                    defer {
-                        dispatchGroup.leave()
-                    }
+                    defer { dispatchGroup.leave() }
                     if let error = friendError {
                         print("Error fetching friend: \(error)")
                         return
                     }
                     if let friendData = friendSnapshot?.data(),
-                        let uid = friendData["uid"] as? String,
-                        let username = friendData["username"] as? String, // 수정됨
-                        let email = friendData["email"] as? String, // 수정됨
-                        let imageUrl = friendData["profileImageUrl"] as? String {
-                        let friend = User(uid: uid, userName: username, email: email, profileImageUrl: imageUrl) // 수정됨
-                        fetchedFriends.append(friend) // Append fetched friend to the temporary array
+                       let uid = friendData["uid"] as? String,
+                       let userName = friendData["userName"] as? String,
+                       let email = friendData["email"] as? String,
+                       let profileImageUrl = friendData["profileImageUrl"] as? String {
+                        let friend = User(uid: uid, userName: userName, email: email, profileImageUrl: profileImageUrl)
+                        fetchedFriends.append(friend) // 임시 배열에 친구 정보 추가
                     }
                 }
             }
             
             dispatchGroup.notify(queue: .main) {
-                // Wait for all asynchronous tasks to complete
-                // After that, update the friends array and reload tableView
-                self.friends = fetchedFriends // Update friends array with fetchedFriends
+                // 모든 비동기 작업 완료 후, 친구 배열 업데이트 및 테이블 뷰 리로드
+                self.friends = fetchedFriends
                 self.tableView.reloadData()
                 
-                // Update Friends Count Label
+                // 친구 수 라벨 업데이트
                 self.friendsCountLabel.text = "친구 \(self.friends.count)명"
             }
         }
     }
+
 
 }
 
