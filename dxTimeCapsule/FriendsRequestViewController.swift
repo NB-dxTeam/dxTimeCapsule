@@ -111,8 +111,10 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
                         userName: userName,
                         thumbnailURL: nil, // Adjusted according to your TimeBox struct
                         imageURL: imageURL,
-                        userLocation: nil, // Placeholder for the actual location processing
-                        userLocationTitle: nil, // Adjusted according to your TimeBox struct
+                        
+                        // 구조체 수정해야함 03/21 황주영
+//                        userLocation: nil, // Placeholder for the actual location processing
+//                        userLocationTitle: nil, // Adjusted according to your TimeBox struct
                         description: description,
                         tagFriendUid: tagFriendName, // Adjust the property name if necessary
                         createTimeBoxDate: createTimeCapsuleDate,

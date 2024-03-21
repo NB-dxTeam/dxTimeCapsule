@@ -19,7 +19,7 @@ class TimeBoxAnnotation: NSObject, MKAnnotation {
         init(coordinate: CLLocationCoordinate2D, timeBoxAnnotationData: TimeBoxAnnotationData) {
             self.coordinate = coordinate
             self.timeBoxAnnotationData = timeBoxAnnotationData
-            //self.title = timeBoxAnnotationData.timeBox.userLocationTitle
+            //self.title = timeBoxAnnotationData.timeBox.addressTitle
             super.init()
             self.subtitle = createSubtitle()
         }

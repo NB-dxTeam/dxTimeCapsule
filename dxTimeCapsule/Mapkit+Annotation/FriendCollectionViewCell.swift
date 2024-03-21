@@ -8,55 +8,62 @@
 import UIKit
 
 class FriendCollectionViewCell: UICollectionViewCell {
+    
     private let profileImageView: UIImageView = {
-            let imageView = UIImageView()
-            imageView.contentMode = .scaleAspectFill
-            imageView.clipsToBounds = true
-            imageView.layer.cornerRadius = 25
-            return imageView
-        }()
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 25
+        imageView.backgroundColor = .brown
+        return imageView
+    }()
+    
+    private let usernameLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textAlignment = .center
+        label.backgroundColor = .yellow
+        return label
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupViews()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupViews() {
+        let stackView = UIStackView(arrangedSubviews: [profileImageView, usernameLabel])
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.distribution = .fill
+        stackView.backgroundColor = .purple
+        stackView.spacing = 5
         
-        private let usernameLabel: UILabel = {
-            let label = UILabel()
-            label.font = UIFont.systemFont(ofSize: 14)
-            label.textAlignment = .center
-            return label
-        }()
+        addSubview(stackView)
         
-        override init(frame: CGRect) {
-            super.init(frame: frame)
-            setupViews()
+        stackView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview()
+            make.left.greaterThanOrEqualToSuperview().offset(5)
+            make.right.lessThanOrEqualToSuperview().offset(-5)
         }
         
-        required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
+        profileImageView.snp.makeConstraints { make in
+            make.width.height.equalTo(50)
         }
-        
-        private func setupViews() {
-            addSubview(profileImageView)
-            addSubview(usernameLabel)
-            
-            profileImageView.snp.makeConstraints { make in
-                make.top.equalToSuperview().offset(10)
-                make.centerX.equalToSuperview()
-                make.width.equalTo(50)
-                make.height.equalTo(50)
-            }
-
-            usernameLabel.snp.makeConstraints { make in
-                make.top.equalTo(profileImageView.snp.bottom).offset(5)
-                make.leading.equalToSuperview().offset(5)
-                make.trailing.equalToSuperview().offset(-5)
-                make.bottom.equalToSuperview().offset(-10)
-            }
+    }
+    
+    func configure(with friend: Friend) {
+        usernameLabel.text = friend.username
+        if let profileImageUrlString = friend.profileImageUrl, let profileImageUrl = URL(string: profileImageUrlString) {
+            profileImageView.sd_setImage(with: profileImageUrl, placeholderImage: UIImage(named: "defaultProfileImage"))
+        } else {
+            profileImageView.image = UIImage(named: "defaultProfileImage") // Use a default image if no URL is provided
         }
-        
-        func configure(with friend: Friend) {
-            usernameLabel.text = friend.username
-            if let profileImageUrlString = friend.profileImageUrl, let profileImageUrl = URL(string: profileImageUrlString) {
-                profileImageView.sd_setImage(with: profileImageUrl, placeholderImage: UIImage(named: "defaultProfileImage"))
-            } else {
-                profileImageView.image = UIImage(named: "defaultProfileImage") // Use a default image if no URL is provided
-            }
-        }
+    }
 }
+

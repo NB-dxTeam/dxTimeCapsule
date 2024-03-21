@@ -276,7 +276,7 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
 
         // TimeBox 객체 생성
         var timeBox = TimeBox(
-            userLocation: geoPoint
+            location: geoPoint
         )
         
         let photoUploadVC = PhotoUploadViewController()
