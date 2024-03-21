@@ -100,16 +100,12 @@ class CustomModal: UIViewController {
     private func fetchTimeCapsulesInfo() {
         let db = Firestore.firestore()
         guard let userId = Auth.auth().currentUser?.uid else { return }
-        //let userId = "FNZgZFdLTXXjOkbJY841BW1WhAB2" // 실제 애플리케이션에서는 동적인 UID 사용
         
         db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
             .order(by: "openTimeBoxDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
             .getDocuments { [weak self] (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents: \(err)")
-//                    DispatchQueue.main.async {
-//                        self?.showLoadFailureAlert(withError: err)
-//                    }
                     return
                 }
                 
@@ -122,16 +118,18 @@ class CustomModal: UIViewController {
                     let data = doc.data()
                     guard let createTimeBoxDate = (data["createTimeBoxDate"] as? Timestamp)?.dateValue(),
                           let openTimeBoxDate = (data["openTimeBoxDate"] as? Timestamp)?.dateValue(),
-                          let userLocation = data["userLocation"] as? GeoPoint? else {
+                          let location = data["location"] as? GeoPoint? else {
                         return nil
                     }
                     return TimeBox(
                         id: doc.documentID,
                         uid: data["uid"] as? String ?? "",
                         userName: data["userName"] as? String ?? "",
+                        thumbnailURL: data["thumbnailURL"] as? String,
                         imageURL: data["imageURL"] as? [String],
-                        userLocation: userLocation,
-                        userLocationTitle: data["userLocationTitle"] as? String ?? "",
+                        location: location,
+                        addressTitle: data["addressTitle"] as? String ?? "",
+                        address: data["address"] as? String ?? "",
                         description: data["description"] as? String,
                         tagFriendUid: data["tagFriendUid"] as? [String],
                         createTimeBoxDate: Timestamp(date: (createTimeBoxDate)),
@@ -173,7 +171,7 @@ extension CustomModal: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedCapsule = timeBoxes[indexPath.row]
         // 'selectedCapsule.userLocation'이 'GeoPoint?' 타입이므로, 옵셔널 체이닝과 옵셔널 바인딩을 사용하여 안전하게 처리
-        if let latitude = selectedCapsule.userLocation?.latitude, let longitude = selectedCapsule.userLocation?.longitude {
+        if let latitude = selectedCapsule.location?.latitude, let longitude = selectedCapsule.location?.longitude {
             onCapsuleSelected?(latitude, longitude)
         }
     }

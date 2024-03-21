@@ -20,23 +20,34 @@ class CapsuleMapViewController: UIViewController {
     // 타임박스 정보와 태그된 친구들의 정보를 담을 배열
     var timeBoxAnnotationsData = [TimeBoxAnnotationData]()
     var selectedTimeBoxAnnotationData: TimeBoxAnnotationData?
-    var friendsCollectionView: UICollectionView?
+    lazy var friendsCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: 60, height: 80)
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(FriendCollectionViewCell.self, forCellWithReuseIdentifier: "FriendCollectionViewCell")
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.backgroundColor = .clear
+        return collectionView
+    }()
     // 원래 지도의 중심 위치를 저장할 변수
     private var originalCenterCoordinate: CLLocationCoordinate2D?
     private var shouldShowModal = false
     
-//    private lazy var aButton: UIButton = createRoundButton(title: "A")
-//    private lazy var bButton: UIButton = createRoundButton(title: "B")
-//    private lazy var cButton: UIButton = createRoundButton(title: "C")
+    private lazy var aButton: UIButton = createRoundButton(title: "A")
+    private lazy var bButton: UIButton = createRoundButton(title: "B")
+    private lazy var cButton: UIButton = createRoundButton(title: "C")
     
-//    private lazy var buttonsStackView: UIStackView = {
-//        let stackView = UIStackView(arrangedSubviews: [aButton, bButton, cButton])
-//        stackView.axis = .horizontal
-//        stackView.distribution = .equalSpacing
-//        stackView.alignment = .center
-//        stackView.spacing = 10 // 버튼 사이의 간격을 설정합니다.
-//        return stackView
-//    }()
+    private lazy var buttonsStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [aButton, bButton, cButton])
+        stackView.axis = .horizontal
+        stackView.distribution = .equalSpacing
+        stackView.alignment = .center
+        stackView.spacing = 10 // 버튼 사이의 간격을 설정합니다.
+        return stackView
+    }()
     
     // 뒤로가기 버튼
     private lazy var backButton: UIButton = {
@@ -47,10 +58,12 @@ class CapsuleMapViewController: UIViewController {
     // 하프모달 버튼
     private lazy var tapDidModal: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "list"), for: .normal)
+        if let image = UIImage(named: "list")?.resizedImage(newSize: CGSize(width: 25, height: 25)) {
+            button.setImage(image, for: .normal)
+        }
         button.backgroundColor = UIColor.white.withAlphaComponent(1.0)
         button.layer.masksToBounds = true
-        button.layer.cornerRadius = 35
+        button.layer.cornerRadius = 25
         return button
     }()
     // 현재 위치 버튼
@@ -94,7 +107,8 @@ class CapsuleMapViewController: UIViewController {
         setupMapView()
         buttons()
         loadCapsuleInfos()
-//        addLogoToNavigationBar()
+        navigationController?.isNavigationBarHidden = true
+
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -105,25 +119,9 @@ class CapsuleMapViewController: UIViewController {
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-//        tapDidModal.setBlurryBeach()
-//        currentLocationBotton.setBlurryBeach()
+
     }
     
-    private func addLogoToNavigationBar() {
-        // 로고 이미지 설정
-        let logoImage = UIImage(named: "App_Logo")
-        let imageView = UIImageView(image: logoImage)
-        imageView.contentMode = .scaleAspectFit
-        
-        // 이미지 뷰의 크기 설정
-        let imageSize = CGSize(width: 120, height: 40) // 원하는 크기로 조절
-        imageView.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: imageSize) // x값을 0으로 변경하여 왼쪽 상단에 위치하도록 설정
-        
-        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height))
-        containerView.addSubview(imageView)
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: containerView)
-    }
     
 }
 
@@ -134,7 +132,7 @@ extension CapsuleMapViewController {
         self.view.addSubview(currentLocationButton)
         self.view.addSubview(zoomBackgroundView)
         view.addSubview(backButton)
-//        view.addSubview(buttonsStackView)
+        view.addSubview(buttonsStackView)
     }
     private func setupZoomControls() {
         view.addSubview(zoomBackgroundView)
@@ -147,10 +145,10 @@ extension CapsuleMapViewController {
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
         }
-//        buttonsStackView.snp.makeConstraints { make in
-//            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-//            make.centerX.equalToSuperview()
-//        }
+        buttonsStackView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.centerX.equalToSuperview()
+        }
         backButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.equalToSuperview().offset(10)
@@ -159,7 +157,7 @@ extension CapsuleMapViewController {
         tapDidModal.snp.makeConstraints { make in
             make.bottom.equalTo(capsuleMaps.snp.bottom).offset(-20)
             make.trailing.equalTo(capsuleMaps.snp.trailing).offset(-20)
-            make.size.equalTo(CGSize(width: 70, height: 70))
+            make.size.equalTo(CGSize(width: 50, height: 50))
         }
         currentLocationButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -203,7 +201,9 @@ extension CapsuleMapViewController {
     
     @objc private func zoomOut() {
         let region = MKCoordinateRegion(center: capsuleMaps.centerCoordinate, span: capsuleMaps.region.span)
-        let zoomedRegion = capsuleMaps.regionThatFits(MKCoordinateRegion(center: region.center, span: MKCoordinateSpan(latitudeDelta: region.span.latitudeDelta * 2, longitudeDelta: region.span.longitudeDelta * 2)))
+        let newLatitudeDelta = min(region.span.latitudeDelta * 2, 180.0)
+        let newLongitudeDelta = min(region.span.longitudeDelta * 2, 180.0)
+        let zoomedRegion = capsuleMaps.regionThatFits(MKCoordinateRegion(center: region.center, span: MKCoordinateSpan(latitudeDelta: newLatitudeDelta, longitudeDelta: newLongitudeDelta)))
         capsuleMaps.setRegion(zoomedRegion, animated: true)
     }
     private func createRoundButton(title: String) -> UIButton {
@@ -263,14 +263,15 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
                 
                 for doc in documents {
                     let data = doc.data()
-                    let geoPoint = data["userLocation"] as? GeoPoint
+                    let geoPoint = data["location"] as? GeoPoint
                     let timeBox = TimeBox(
                         id: doc.documentID,
                         uid: data["uid"] as? String ?? "",
                         userName: data["userName"] as? String ?? "",
                         imageURL: data["imageURL"] as? [String],
-                        userLocation: geoPoint,
-                        userLocationTitle: data["userLocationTitle"] as? String ?? "",
+                        location: geoPoint,
+                        addressTitle: data["addressTitle"] as? String ?? "",
+                        address: data["address"] as? String ?? "",
                         description: data["description"] as? String,
                         tagFriendUid: data["tagFriendUid"] as? [String],
                         createTimeBoxDate: Timestamp(date: (data["createTimeBoxDate"] as? Timestamp)?.dateValue() ?? Date()),
@@ -290,13 +291,11 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
                             // 타임박스와 관련된 친구 정보를 포함하는 어노테이션 데이터를 생성
                             let annotationData = TimeBoxAnnotationData(timeBox: timeBox, friendsInfo: friendsInfo)
                             self?.timeBoxAnnotationsData.append(annotationData)
-                            
                             group.leave()
                         }
                     }
                     timeBoxes.append(timeBox)
                 }
-                
                 group.notify(queue: .main) {
                     print("All time boxes are processed. Total: \(timeBoxes.count)") // 모든 타임박스 데이터 처리 완료 후
                     // 모든 타임박스 데이터 처리 완료 후 UI 업데이트 로직 구현 필요
@@ -316,7 +315,6 @@ extension CapsuleMapViewController {
         vc.onCapsuleSelected = { [weak self] latitude, longitude in
             // 지도의 위치를 업데이트하는 메소드 호출
             self?.moveToLocation(latitude: latitude, longitude: longitude)
-            
             if let sheet = vc.sheetPresentationController {
                 DispatchQueue.main.async {
                     sheet.animateChanges {
@@ -326,7 +324,6 @@ extension CapsuleMapViewController {
                     }
                 }
             }
-            
         }
         
         if let sheet = vc.sheetPresentationController {
@@ -390,64 +387,48 @@ extension CapsuleMapViewController: MKMapViewDelegate {
         print("지도 위치 변경")
     }
     
-//    // 어노테이션 설정
-//    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-//        // 사용자의 현재 위치 어노테이션은 기본 뷰를 사용
-//        if annotation is MKUserLocation {
-//            return nil
-//        }
-//
-//        let identifier = "CustomAnnotationView"
-//        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? CustomAnnotationView
-//
-//        if annotationView == nil {
-//            annotationView = CustomAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-//            // 커스텀 어노테이션 뷰를 위한 추가 설정은 여기서 구현
-//            annotationView?.annotation = annotation
-//            annotationView?.canShowCallout = false
-//        } else {
-//            annotationView?.annotation = annotation
-//            annotationView?.canShowCallout = false
-//        }
-//
-//        // 커스텀 어노테이션 데이터를 확인하고 구성
-//        if let customAnnotation = annotation as? CustomAnnotation {
-//            let annotationData = TimeBoxAnnotationData(timeBox: customAnnotation.timeBox, friendsInfo: customAnnotation.friendsInfo)
-//                annotationView?.configure(with: annotationData)
-//        }
-//
-//        return annotationView
-//    }
-    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard let timeBoxAnnotation = annotation as? TimeBoxAnnotation else { return nil }
+        print("mapView:viewForAnnotation: called")
         
-        let identifier = "TimeBoxMarker"
-        var view: MKMarkerAnnotationView
+        let identifier = "CustomAnnotationView"
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView
         
-        if let dequeuedView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView {
-            dequeuedView.annotation = annotation
-            view = dequeuedView
+        if annotationView == nil {
+            annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true
+            annotationView?.animatesWhenAdded = true
+            annotationView?.glyphImage = UIImage(named: "boximage1")
+            annotationView?.glyphTintColor = .white
+            annotationView?.markerTintColor = .red
+            // Uncomment the line below if you want to add a right callout accessory view
+            annotationView?.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         } else {
-            view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-            view.canShowCallout = true
-            view.calloutOffset = CGPoint(x: -5, y: 5)
-//            view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+            print("Reusing MKMarkerAnnotationView")
         }
         
-        // Set the detailCalloutAccessoryView property with a custom view
-        view.detailCalloutAccessoryView = configureDetailView(for: timeBoxAnnotation)
+        // Ensure the annotationView's annotation is set correctly
+        annotationView?.annotation = annotation
         
-        return view
+        // Configure the detailCalloutAccessoryView
+        if let timeBoxAnnotation = annotation as? TimeBoxAnnotation {
+            print("Configuring detailCalloutAccessoryView for timeBoxAnnotation")
+            annotationView?.detailCalloutAccessoryView = configureDetailView(for: timeBoxAnnotation)
+        } else {
+            print("Annotation is not of type TimeBoxAnnotation")
+        }
+        
+        return annotationView
+        
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+
         if let annotation = view.annotation as? TimeBoxAnnotation {
-            // Correctly access 'timeBoxAnnotationData' instead of 'data'
             self.selectedTimeBoxAnnotationData = annotation.timeBoxAnnotationData
-            // Reload the collection view if it's already loaded
+            print("selectedTimeBoxAnnotationData is now set with \(self.selectedTimeBoxAnnotationData?.friendsInfo.count ?? 0) friend(s)")
             DispatchQueue.main.async {
-                self.friendsCollectionView?.reloadData()
+                self.friendsCollectionView.reloadData()
             }
         }
     }
@@ -456,16 +437,17 @@ extension CapsuleMapViewController: MKMapViewDelegate {
 extension CapsuleMapViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return selectedTimeBoxAnnotationData?.friendsInfo.count ?? 0
+        let count = selectedTimeBoxAnnotationData?.friendsInfo.count ?? 0
+        print("collectionView:numberOfItemsInSection: \(count) items")
+        return count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FriendCollectionViewCell", for: indexPath) as? FriendCollectionViewCell,
               let friend = selectedTimeBoxAnnotationData?.friendsInfo[indexPath.row] else {
-            // Handle error state appropriately, possibly returning a default cell
+            print("Error: Unable to dequeue FriendCollectionViewCell or no friend data available")
             return UICollectionViewCell()
         }
-        
         cell.configure(with: friend)
         
         return cell
@@ -491,11 +473,6 @@ import SwiftUI
 import FirebaseFirestoreInternal
 import FirebaseAuth
 
-struct Preview: PreviewProvider {
-    static var previews: some View {
-        CapsuleMapViewController().toPreview()
-    }
-}
 
 #if DEBUG
 extension UIViewController {
