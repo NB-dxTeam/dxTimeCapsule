@@ -7,7 +7,6 @@
 
 import FirebaseFirestore
 
-
 class FirestoreDataService {
     
     private let db = Firestore.firestore()

@@ -6,11 +6,10 @@ import SnapKit
 import CoreLocation
 
 
-class PostWritingViewController: UIViewController, UITextViewDelegate, UICollectionViewDelegate {
+class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
     
     // MARK: - Properties
     var viewModel = UploadPostViewModel() // 뷰 모델 추가
-    let emojiPickerViewModel = EmojiPickerViewModel()
     var selectedImage: [UIImage] = [] // 사용자가 선택한 이미지들
     var thumnailImage: UIImage?
     var timeBoxDescription: String? // 사용자가 입력한 타임박스 설명
@@ -18,9 +17,16 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UICollect
     var addressTitle: String? // 사용자 지정 장소명
     var address: String? // 상세주소
     var openTimeBoxDate: Timestamp? // 개봉일
-    private let emojiPickerView = EmojiPickerView()
- 
-
+    
+    
+    private let mainTitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.pretendardBold(ofSize: 28)
+        label.text = "New TimeBox"
+        label.textColor = .black.withAlphaComponent(0.85)
+        return label
+    }()
+    
     private let descriptionTitleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
@@ -40,14 +46,22 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UICollect
         return textView
     }()
     
+    private let addressTitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.text = "장소명"
+        label.textColor = UIColor(hex: "#C82D6B")
+        return label
+    }()
+    
     private let addressTitleTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "주소명을 입력하세요"
+        textField.placeholder = "임의의 장소명을 입력하세요. ex)'영희와 처음 만난곳 🤗🧡'"
         textField.borderStyle = .roundedRect
-        textField.font = UIFont.systemFont(ofSize: 16)
+        textField.font = UIFont.systemFont(ofSize: 14)
         return textField
     }()
-
+    
     
     private let openDateTitleLabel: UILabel = {
         let label = UILabel()
@@ -65,14 +79,42 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UICollect
     }()
     
     private var taggedFriends: [User] = []
-
+    
     private let friendsViewModel = FriendsViewModel() // Assume initialized properly
+    
+    private let tagFriendsLabel: UILabel = {
+        let label = UILabel()
+        label.text = "친구 태그"
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.textColor = UIColor(hex: "#C82D6B")
+        return label
+    }()
+    
+    private var taggedFriendsView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+        stackView.alignment = .center
+        stackView.distribution = .fillEqually // 요소들의 너비를 동일하게 분배
+        return stackView
+    }()
+    
+    private let tagFriendsButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("친구 목록", for: .normal)
+        button.backgroundColor = UIColor(hex: "#C82D6B").withAlphaComponent(0.8)
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 8
+        return button
+    }()
+    
 
+    
     private let createButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("타임박스 만들기", for: .normal)
         button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline) // Dynamic type support
-        button.backgroundColor = UIColor(hex: "#C82D6B")
+        
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 16
         button.layer.shadowOpacity = 0.3
@@ -89,11 +131,13 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UICollect
         setupGestures()
         
         descriptionTextView.delegate = self
+        
+        addressTitleTextField.delegate = self
 
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
         
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged) // 데이터 피커의 값을 변경할 때마다 호출될 메서드를 설정합니다.
-
+        
         // 타임피커 초기 값을 현재 날짜보다 한 달 뒤로 설정
         let oneMonthLaterDate = Calendar.current.date(byAdding: .month, value: 1, to: Date()) ?? Date()
         datePicker.date = oneMonthLaterDate
@@ -104,53 +148,70 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UICollect
         
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        createButton.backgroundColor = UIColor(hex: "#C82D6B")
+//        createButton.setInstagram()
+        
+    }
     // MARK: - UI Setup
     private func setupUI() {
         
-        emojiPickerView.viewModel = emojiPickerViewModel
-        emojiPickerView.loadEmojis() // Ensure this method is designed to reload the picker view
-
         
         let stackView = UIStackView(arrangedSubviews: [
+            mainTitleLabel,
             descriptionTitleLabel,
             descriptionTextView,
+            addressTitleLabel,
             addressTitleTextField,
+            tagFriendsLabel,
+            taggedFriendsView,
+            tagFriendsButton,
             openDateTitleLabel,
             datePicker,
-            emojiPickerView,
             createButton
         ])
         
         stackView.axis = .vertical
-        stackView.spacing = 20
+        stackView.spacing = 15
         stackView.alignment = .fill
         stackView.distribution = .fill
         view.addSubview(stackView)
-
+        
         stackView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.bottom.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
         }
-
+        
         descriptionTextView.snp.makeConstraints{ make in
-            make.height.equalTo(100)
-        }
-
-        datePicker.snp.makeConstraints { make in
-            make.height.equalTo(100)
+            make.height.equalTo(150)
         }
         
-        emojiPickerView.snp.makeConstraints { make in
-            make.height.equalTo(100)
+        datePicker.snp.makeConstraints { make in
+            make.height.equalTo(150)
         }
+        
+        tagFriendsButton.snp.makeConstraints { make in
+            make.height.equalTo(40)
+        }
+        
+        taggedFriendsView.snp.makeConstraints { make in
+            make.height.equalTo(80)
+            make.width.equalTo(200)
 
+        }
+        
         createButton.snp.makeConstraints { make in
             make.width.equalTo(200)
             make.height.equalTo(40)
         }
+        
+        tagFriendsButton.addTarget(self, action: #selector(tagFriendsButtonTapped), for: .touchUpInside)
+        
     }
-
+    
     func uploadLocation() {
         // GeoPoint로 변환
         guard let geoPoint = convertToGeoPoint(location: selectedLocation) else {
@@ -174,7 +235,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UICollect
         guard let location = location else { return nil }
         return GeoPoint(latitude: location.latitude, longitude: location.longitude)
     }
-
+    
     
     // MARK: - UITextViewDelegate
     func textViewDidBeginEditing(_ textView: UITextView) {
@@ -199,7 +260,24 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UICollect
     }
     
     // MARK: - Button Actions
-    /// 타임캡슐을 생성하고, 이미지를 업로드한 후 Firestore에 저장합니다.
+    
+    @objc private func tagFriendsButtonTapped() {
+        
+        let friendsSelectionVC = FriendsSelectionViewController()
+        friendsSelectionVC.delegate = self
+        let navController = UINavigationController(rootViewController: friendsSelectionVC)
+        
+        if #available(iOS 15.0, *) {
+            if let sheet = navController.sheetPresentationController {
+                sheet.detents = [.medium()] // .medium() 또는 .large()로 설정 가능
+            }
+        }
+        
+        present(navController, animated: true)
+    }
+    
+    
+    // 타임캡슐을 생성하고, 이미지를 업로드한 후 Firestore에 저장합니다.
     @objc private func createButtonTapped(_ sender: UIButton) {
         guard let currentUser = Auth.auth().currentUser else {
             print("사용자 아이디를 가져올 수 없습니다.")
@@ -215,7 +293,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UICollect
             print("개봉일 정보가 없습니다.")
             return
         }
-
+        
         guard let description = descriptionTextView.text, !description.isEmpty else {
             print("타임박스 설명이 없습니다.")
             return
@@ -228,79 +306,120 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UICollect
         
         // 필요한 다른 필드 초기화
         let id = UUID().uuidString // 타임박스의 고유 ID 생성
-        let tagFriendUid: [String] = [] // 친구 태그 uid 배열 초기화
-        let tagFriendUserName: [String] = [] // 친구 닉네임 배열 초기화
+        let tagFriendUid = taggedFriends.map { $0.uid ?? "" }
+        let tagFriendUserName = taggedFriends.map { $0.userName ?? ""}
         let createTimeBoxDate = Timestamp(date: Date()) // 현재 시간을 생성일로 설정
         
         // Firestore에서 사용자의 이름 가져오기
-            let userDocRef = Firestore.firestore().collection("users").document(currentUser.uid)
-            userDocRef.getDocument { [weak self] (document, error) in
-                guard let self = self else { return }
-                if let document = document, document.exists {
-                    if let userName = document.data()?["userName"] as? String {
-                        // 사용자의 이름이 성공적으로 가져와졌습니다.
-                        
-                        // 나머지 코드는 변경하지 않습니다.
-                        let geocoder = CLGeocoder()
-                        
-                        let location = CLLocation(latitude: locationCoordinate.latitude, longitude: locationCoordinate.longitude)
-
-                        geocoder.reverseGeocodeLocation(location, preferredLocale: Locale(identifier: "ko_KR")) { [weak self] (placemarks, error) in
-                            guard let self = self else { return }
-                            if let error = error {
-                                print("Geocoding error: \(error.localizedDescription)")
-                                return
-                            }
-                            guard let placemark = placemarks?.first, let address = placemark.name else {
-                                print("No address found.")
-                                return
-                            }
-
-                            self.address = address // 상세 주소 저장
-
-                            // 상세 주소와 사용자가 입력한 주소명을 사용하여 타임캡슐 업로드
-                            self.viewModel.uploadTimeBox(
-                                id: id,
-                                uid: currentUser.uid, // 사용자의 UID를 직접 전달
-                                userName: userName, // Firestore에서 가져온 사용자 이름 전달
-                                imageURL: self.selectedImage, // 이미지 배열 전달
-                                location: GeoPoint(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude), // GeoPoint로 변경하여 전달
-                                addressTitle: addressTitle,
-                                address: address,
-                                description: description,
-                                tagFriendUid: tagFriendUid,
-                                tagFriendUserName: tagFriendUserName,
-                                createTimeBoxDate: createTimeBoxDate,
-                                openTimeBoxDate: openTimeBoxDate!,
-                                isOpened: false, // isOpened 값 전달
-                                completion: { result in
-                                    switch result {
-                                    case .success():
-                                        print("타임캡슐 업로드 성공")
-                                        // 성공적으로 업로드된 후의 처리 로직 (예: 알림 표시, 화면 전환 등)
-                                        self.showAlert(title: "타임캡슐 생성 완료", message: "타임캡슐이 성공적으로 생성되었습니다.")
-                                    case .failure(let error):
-                                        print("타임캡슐 업로드 실패: \(error.localizedDescription)")
-                                        // 실패 시 처리 로직
-                                    }
-                                }
-                            )
-
+        let userDocRef = Firestore.firestore().collection("users").document(currentUser.uid)
+        userDocRef.getDocument { [weak self] (document, error) in
+            guard let self = self else { return }
+            if let document = document, document.exists {
+                if let userName = document.data()?["userName"] as? String {
+                    // 사용자의 이름이 성공적으로 가져와졌습니다.
+                    
+                    // 나머지 코드는 변경하지 않습니다.
+                    let geocoder = CLGeocoder()
+                    
+                    let location = CLLocation(latitude: locationCoordinate.latitude, longitude: locationCoordinate.longitude)
+                    
+                    geocoder.reverseGeocodeLocation(location, preferredLocale: Locale(identifier: "ko_KR")) { [weak self] (placemarks, error) in
+                        guard let self = self else { return }
+                        if let error = error {
+                            print("Geocoding error: \(error.localizedDescription)")
+                            return
                         }
-                    } else {
-                        print("사용자 이름을 Firestore에서 가져올 수 없습니다.")
+                        guard let placemark = placemarks?.first, let address = placemark.name else {
+                            print("No address found.")
+                            return
+                        }
+                        
+                        self.address = address // 상세 주소 저장
+                        
+                        // 상세 주소와 사용자가 입력한 주소명을 사용하여 타임캡슐 업로드
+                        self.viewModel.uploadTimeBox(
+                            id: id,
+                            uid: currentUser.uid,
+                            userName: userName,
+                            imageURL: self.selectedImage,
+                            location: GeoPoint(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude),
+                            addressTitle: addressTitle,
+                            address: address,
+                            description: description,
+                            tagFriendUid: tagFriendUid, // 태그된 친구 UID 배열 전달
+                            tagFriendUserName: tagFriendUserName, // 태그된 친구 이름 배열 전달
+                            createTimeBoxDate: createTimeBoxDate,
+                            openTimeBoxDate: openTimeBoxDate!,
+                            isOpened: false,
+                            completion: { result in
+                                switch result {
+                                case .success():
+                                    print("타임캡슐 업로드 성공")
+                                    // 성공적으로 업로드된 후의 처리 로직 (예: 알림 표시, 화면 전환 등)
+                                    self.showAlert(title: "타임캡슐 생성 완료", message: "타임캡슐이 성공적으로 생성되었습니다.")
+                                case .failure(let error):
+                                    print("타임캡슐 업로드 실패: \(error.localizedDescription)")
+                                    // 실패 시 처리 로직
+                                }
+                            }
+                        )
+                        
                     }
                 } else {
-                    print("사용자 문서를 찾을 수 없습니다.")
+                    print("사용자 이름을 Firestore에서 가져올 수 없습니다.")
                 }
+            } else {
+                print("사용자 문서를 찾을 수 없습니다.")
             }
+        }
     }
-
+    
     
     // 데이터 피커의 값이 변경될 때 호출되는 메서드
     @objc private func datePickerValueChanged(_ datePicker: UIDatePicker) {
         openTimeBoxDate = Timestamp(date: datePicker.date)
     }
+    
+    private func createFriendView(for friend: User) -> UIView {
+        let container = UIView()
+
+        let imageView = UIImageView()
+        imageView.layer.cornerRadius = 25
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(imageView)
+
+        let nameLabel = UILabel()
+        nameLabel.text = friend.userName
+        nameLabel.font = UIFont.systemFont(ofSize: 18)
+        nameLabel.textAlignment = .center
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(nameLabel)
+
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: container.topAnchor),
+            imageView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: 50),
+            imageView.heightAnchor.constraint(equalToConstant: 50),
+
+            nameLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4),
+            nameLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            nameLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor)
+        ])
+
+        // 여기서 Kingfisher를 사용하여 이미지를 로드합니다.
+        if let profileImageUrl = friend.profileImageUrl, let url = URL(string: profileImageUrl) {
+            imageView.kf.setImage(with: url)
+        } else {
+            imageView.image = UIImage(systemName: "defaultProfileImage")
+        }
+
+        print("Creating view for friend: \(friend.userName ?? "Unknown")")
+
+        return container
+    }
+    
     
     // 알림창을 표시하는 메서드
     private func showAlert(title: String, message: String) {
@@ -351,7 +470,26 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UICollect
             self.address = detailedAddress
         }
     }
+    
 
+
+    // MARK: - UITextFieldDelegate 메서드
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        // addressTitleTextField에 대한 검사
+        if textField == addressTitleTextField {
+            let currentText = textField.text ?? ""
+            guard let stringRange = Range(range, in: currentText) else { return false }
+            let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+
+            if updatedText.count > 10 {
+                // 사용자에게 경고 표시
+                showAlert(title: "안내", message: "장소명은 10자를 넘길 수 없습니다.")
+                return false
+            }
+        }
+        return true
+    }
+    
     // MARK: - Pan Gesture Handler
     @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: view)
@@ -379,6 +517,29 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UICollect
     }
     
 }
+
+extension PostWritingViewController: FriendsSelectionDelegate {
+    func didTagFriends(_ friends: [User]) {
+        self.taggedFriends = friends
+        updateTaggedFriendsView()
+        print("Tagged friends updated: \(taggedFriends.map { $0.userName ?? "Unknown" })")
+    }
+
+    func updateTaggedFriendsView() {
+        print("Updating tagged friends view with \(taggedFriends.count) friends.")
+        // 기존 뷰 제거
+        taggedFriendsView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        // 선택된 친구들의 뷰 추가
+        for friend in taggedFriends {
+            let friendView = createFriendView(for: friend)
+            taggedFriendsView.addArrangedSubview(friendView)
+        }
+    }
+
+}
+
+
 
 // MARK: - SwiftUI Preview
 import SwiftUI

@@ -26,7 +26,7 @@ class FriendsListViewController: UIViewController {
         
         friendsListLabel = UILabel()
         friendsListLabel.text = "친구 목록"
-        friendsListLabel.font = UIFont.systemFont(ofSize: 26, weight: .bold)
+        friendsListLabel.font = UIFont.pretendardBold(ofSize: 20)
         friendsListLabel.textAlignment = .center
         friendsListLabel.backgroundColor = .white  // 라벨의 배경색도 흰색으로 설정합니다.
         backgroundView.addSubview(friendsListLabel)
@@ -160,7 +160,7 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+        return 100
     }
 }
 

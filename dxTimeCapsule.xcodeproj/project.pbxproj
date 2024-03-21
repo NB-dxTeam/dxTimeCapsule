@@ -8,10 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1B5287D4E4C9FEEC72B631CD /* Pods_dxTimeCapsule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B7158E13240DE5CE715E16 /* Pods_dxTimeCapsule.framework */; };
-		1F019A402BAC620F00F727D2 /* EmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F019A3F2BAC620F00F727D2 /* EmojiCell.swift */; };
-		1F019A442BACBB1500F727D2 /* EmojiPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F019A432BACBB1500F727D2 /* EmojiPickerView.swift */; };
-		1F019A462BACBB8900F727D2 /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F019A452BACBB8900F727D2 /* Emoji.swift */; };
-		1F019A492BACBBEC00F727D2 /* EmojiPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F019A482BACBBEC00F727D2 /* EmojiPickerViewModel.swift */; };
+		1F019A4F2BACCA2400F727D2 /* FriendsSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F019A4E2BACCA2400F727D2 /* FriendsSelectionViewController.swift */; };
+		1F019A522BACDEF500F727D2 /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F019A512BACDEF500F727D2 /* FriendTableViewCell.swift */; };
 		1F0854152B8EF4F400711660 /* TestLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0854142B8EF4F400711660 /* TestLoginViewController.swift */; };
 		1F0854322B8F254B00711660 /* MainCapsuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0854312B8F254B00711660 /* MainCapsuleViewController.swift */; };
 		1F0B91062B901D170022EDD9 /* Etc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0B91052B901D170022EDD9 /* Etc.swift */; };
@@ -140,10 +138,8 @@
 
 /* Begin PBXFileReference section */
 		04EFA52A53A71177B62D1D49 /* Pods-dxTimeCapsule.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.debug.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.debug.xcconfig"; sourceTree = "<group>"; };
-		1F019A3F2BAC620F00F727D2 /* EmojiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCell.swift; sourceTree = "<group>"; };
-		1F019A432BACBB1500F727D2 /* EmojiPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPickerView.swift; sourceTree = "<group>"; };
-		1F019A452BACBB8900F727D2 /* Emoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emoji.swift; sourceTree = "<group>"; };
-		1F019A482BACBBEC00F727D2 /* EmojiPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPickerViewModel.swift; sourceTree = "<group>"; };
+		1F019A4E2BACCA2400F727D2 /* FriendsSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsSelectionViewController.swift; sourceTree = "<group>"; };
+		1F019A512BACDEF500F727D2 /* FriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
 		1F0854142B8EF4F400711660 /* TestLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestLoginViewController.swift; sourceTree = "<group>"; };
 		1F0854162B8F091500711660 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1F0854312B8F254B00711660 /* MainCapsuleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCapsuleViewController.swift; sourceTree = "<group>"; };
@@ -291,13 +287,20 @@
 		1F019A4B2BACBCB900F727D2 /* Post */ = {
 			isa = PBXGroup;
 			children = (
+				1F019A502BACDE9500F727D2 /* Cell */,
 				1FBDDF752BA1D8B000FCDE5A /* Modal */,
-				1F019A432BACBB1500F727D2 /* EmojiPickerView.swift */,
-				1F019A3F2BAC620F00F727D2 /* EmojiCell.swift */,
 				1F2450172B9B4D74002C68BB /* PostWritingViewController.swift */,
-				1FBDDF782BA1DA3F00FCDE5A /* PostUploadView.swift */,
+				1F019A4E2BACCA2400F727D2 /* FriendsSelectionViewController.swift */,
 			);
 			path = Post;
+			sourceTree = "<group>";
+		};
+		1F019A502BACDE9500F727D2 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				1F019A512BACDEF500F727D2 /* FriendTableViewCell.swift */,
+			);
+			path = Cell;
 			sourceTree = "<group>";
 		};
 		1F1071BA2B95D3E8009E201A /* MapLocation */ = {
@@ -410,7 +413,6 @@
 				1FE313B02B98114700E02045 /* LocationHistoryViewModel.swift */,
 				27966F082BA06A41009EC5F3 /* HomeViewControllerModel.swift */,
 				1F53E5102BA27D5D004141C7 /* UploadPostViewModel.swift */,
-				1F019A482BACBBEC00F727D2 /* EmojiPickerViewModel.swift */,
 			);
 			name = ViewModel;
 			sourceTree = "<group>";
@@ -437,7 +439,6 @@
 				1FBDDF762BA1D90200FCDE5A /* Location */,
 				1FAB4DF72B8C49590054618A /* User.swift */,
 				1FB3873F2B8881DB00054816 /* TimeBox.swift */,
-				1F019A452BACBB8900F727D2 /* Emoji.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -564,6 +565,7 @@
 		1FE768342BA9842400CC4A55 /* Fix */ = {
 			isa = PBXGroup;
 			children = (
+				1FBDDF782BA1DA3F00FCDE5A /* PostUploadView.swift */,
 				1FC8F4A52BAC5E3D00BC7BF8 /* NewPostWritingViewController.swift */,
 			);
 			path = Fix;
@@ -858,6 +860,7 @@
 				1F0854322B8F254B00711660 /* MainCapsuleViewController.swift in Sources */,
 				1F6426D92BA9A2FE000E463E /* TermsTableViewCell.swift in Sources */,
 				1F16B82C2BA9AC1700753F82 /* CapsuleMapVC+Extensions.swift in Sources */,
+				1F019A522BACDEF500F727D2 /* FriendTableViewCell.swift in Sources */,
 				1F16B8242BA9A33A00753F82 /* TermsViewController.swift in Sources */,
 				1FBDDF792BA1DA3F00FCDE5A /* PostUploadView.swift in Sources */,
 				D274E0162B9C243900FAF849 /* TagFriendListTableViewCell.swift in Sources */,
@@ -879,14 +882,12 @@
 				1F16B8262BA9A46500753F82 /* AuthService.swift in Sources */,
 				1FD2B7BA2B96C04B00896F9C /* HorizontalSearchModel.swift in Sources */,
 				1FD2B7BD2B96C04B00896F9C /* HorizontalSearchTypeModel.swift in Sources */,
-				1F019A492BACBBEC00F727D2 /* EmojiPickerViewModel.swift in Sources */,
 				1FD2B7BB2B96C04B00896F9C /* CarouselButtonModel.swift in Sources */,
 				27FC12892B9A64B1008CBEB8 /* TimeCapsuleCell.swift in Sources */,
 				1FD2B79C2B96BD7300896F9C /* LocationMapkitViewController.swift in Sources */,
 				1F53E50A2BA20A8C004141C7 /* Button+Custom.swift in Sources */,
 				1FAB4DF62B8C48AF0054618A /* FriendsViewModel.swift in Sources */,
 				27EA9A922BAB8750009A1D21 /* SignUpOptionViewController.swift in Sources */,
-				1F019A462BACBB8900F727D2 /* Emoji.swift in Sources */,
 				1FAACDE12B8FAA520005B993 /* UIImage+RoundImage.swift in Sources */,
 				1F16B82A2BA9ABE200753F82 /* FriendCollectionViewCell.swift in Sources */,
 				1F53E5112BA27D5D004141C7 /* UploadPostViewModel.swift in Sources */,
@@ -905,11 +906,11 @@
 				1F5786F22B849CA900C40B08 /* AuthenticationViewModel.swift in Sources */,
 				1F16B8292BA9ABE200753F82 /* TimeBoxAnnotation.swift in Sources */,
 				1F2450242B9BF0A4002C68BB /* DatePickerModalViewController.swift in Sources */,
+				1F019A4F2BACCA2400F727D2 /* FriendsSelectionViewController.swift in Sources */,
 				1F9DA7B12B8C93BD00A74D84 /* SearchUserTableViewCell.swift in Sources */,
 				D274E0202B9CD36500FAF849 /* CapsuleTableViewCell.swift in Sources */,
 				27FC128B2B9A64E5008CBEB8 /* UpcomingTCViewController.swift in Sources */,
 				1FBDDF7C2BA1DCDB00FCDE5A /* PhotoPicker.swift in Sources */,
-				1F019A402BAC620F00F727D2 /* EmojiCell.swift in Sources */,
 				1F0854152B8EF4F400711660 /* TestLoginViewController.swift in Sources */,
 				4E2A09C82B8F755C00911390 /* OpenInteractionViewController.swift in Sources */,
 				1FD2B7A42B96BEFE00896F9C /* NotificationName+Extension.swift in Sources */,
@@ -923,7 +924,6 @@
 				D25B20EB2B89CD02006CEED8 /* SplashViewController.swift in Sources */,
 				1F0D3B2C2B89AA2B00A31E82 /* PhotoUploadViewController.swift in Sources */,
 				1FD2B7BC2B96C04B00896F9C /* CustomPresentationDetentsModel.swift in Sources */,
-				1F019A442BACBB1500F727D2 /* EmojiPickerView.swift in Sources */,
 				27F3827F2B8FA1240005F733 /* NotificationTableViewCell.swift in Sources */,
 				1F2450182B9B4D74002C68BB /* PostWritingViewController.swift in Sources */,
 			);

@@ -3,7 +3,7 @@ import SnapKit
 import PhotosUI
 import Photos
 
-class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
+class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate  {
     
     // MARK: - 속성 선언부
     
@@ -18,7 +18,7 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     private let placeholderLabel: UILabel = {
         let label = UILabel()
         label.text = "사진을 선택해주세요"
-        label.textColor = .gray
+        label.textColor = UIColor(hex: "#C82D6B")
         label.textAlignment = .center
         label.isHidden = true // 기본적으로 숨김 처리
         return label
@@ -323,7 +323,7 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         
         // Customize modal presentation for iOS 15 and later
         if #available(iOS 15.0, *) {
-            postWritingVC.modalPresentationStyle = .popover
+            postWritingVC.modalPresentationStyle = .formSheet
             if let sheet = postWritingVC.sheetPresentationController {
                 sheet.detents = [.large()]
                 // Customizing the grabber (optional)
@@ -389,22 +389,7 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
         }
         
         
-        
-        // MARK: - UIPickerViewDataSource and UIPickerViewDelegate
-        func numberOfComponents(in pickerView: UIPickerView) -> Int {
-            1
-        }
-        
-        func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-            return Emoji.emojis.count
-        }
-        
-        func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-            return Emoji.emojis[row].description
-        }
-        
-        
-        
+    
         // UICollectionViewDelegateFlowLayout
         func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
             let itemsPerRow: CGFloat = 3

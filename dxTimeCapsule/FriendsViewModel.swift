@@ -5,17 +5,18 @@ import FirebaseAuth
 class FriendsViewModel: ObservableObject {
     @Published var friends: [User] = []
     let db = Firestore.firestore()
-
+    
+    
+    // username -> userName 황주영 03/22
     func searchUsersByUsername(username: String, completion: @escaping ([User]?, Error?) -> Void) {
-        
         // 검색어의 첫 글자를 대문자로 변환합니다.
         let firstLetter = username.prefix(1).uppercased()
         let remainingString = username.dropFirst().lowercased()
         let searchQuery = firstLetter + remainingString
         
         let query = db.collection("users")
-            .whereField("username", isGreaterThanOrEqualTo: searchQuery)
-            .whereField("username", isLessThan: searchQuery + "\u{f8ff}")
+            .whereField("userName", isGreaterThanOrEqualTo: searchQuery)
+            .whereField("userName", isLessThan: searchQuery + "\u{f8ff}")
         
         query.getDocuments { (snapshot, error) in
             if let error = error {
@@ -29,19 +30,14 @@ class FriendsViewModel: ObservableObject {
             }
             
             let users: [User] = documents.compactMap { doc in
-                var user = User(uid: doc.documentID, userName: "", email: "", profileImageUrl: nil)
-                user.uid = doc.get("uid") as? String ?? ""
-                user.userName = doc.get("username") as? String ?? ""
-                user.profileImageUrl = doc.get("profileImageUrl") as? String
-                user.email = doc.get("email") as? String ?? ""
-                print("user: \(user)")
-                return user
+                // User 구조체의 새 이니셜라이저를 사용하여 각 문서로부터 User 인스턴스를 생성합니다.
+                return User()
             }
             
             completion(users, nil)
         }
     }
-    
+
     // 친구 상태 확인
     func checkFriendshipStatus(forUser userId: String, completion: @escaping (String) -> Void) {
         guard let currentUser = Auth.auth().currentUser else {
@@ -137,7 +133,7 @@ class FriendsViewModel: ObservableObject {
                     completion(nil, error)
                     return
                 }
-
+                
                 var requests: [User] = []
                 guard let documents = snapshot?.documents else {
                     completion([], nil) // 빈 배열 반환
@@ -191,71 +187,96 @@ class FriendsViewModel: ObservableObject {
     }
     
     func fetchFriends() {
-           guard let currentUserID = Auth.auth().currentUser?.uid else {
-               print("Debug: Cannot fetch current user ID")
-               return
-           }
-           
-           db.collection("users").document(currentUserID).getDocument { [weak self] document, error in
-               if let error = error {
-                   print("Debug: Error fetching user data: \(error.localizedDescription)")
-                   return
-               }
-               guard let self = self, let document = document, document.exists else {
-                   print("Debug: Document does not exist")
-                   return
-               }
-               
-               // Firestore 문서에서 친구의 UID 목록과 이름 목록을 가져옵니다.
-               let friendUIDs = document.get("friendsUid") as? [String] ?? []
-               let friendNames = document.get("friendsName") as? [String] ?? []
-               
-               // 가져온 정보를 바탕으로 친구 목록을 업데이트합니다.
-               for (index, friendUID) in friendUIDs.enumerated() {
-                   db.collection("users").document(friendUID).getDocument { document, error in
-                       if let document = document, document.exists {
-                           let friend = User(
-                            uid: friendUID, // UID를 Friend의 id로 사용합니다.
-                            userName: document.get("username") as? String ?? "Unknown",
-                               profileImageUrl: document.get("profileImageUrl") as? String
-                           )
-                           DispatchQueue.main.async {
-                               self.friends.append(friend)
-                           }
-                       } else {
-                           // 문서가 없는 경우, 이름을 사용하여 Friend 객체를 생성합니다.
-                           let friendName = index < friendNames.count ? friendNames[index] : "Unknown"
-                           let friend = User(
-                           uid: friendUID, // UID를 Friend의 id로 사용합니다.
-                           userName: friendName,
-                               profileImageUrl: nil
-                           )
-                           DispatchQueue.main.async {
-                               self.friends.append(friend)
-                           }
-                       }
-                   }
-               }
-           }
-       }
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            print("현재 사용자 ID를 가져올 수 없습니다.")
+            return
+        }
+
+        let userRef = db.collection("users").document(currentUserID)
+        userRef.getDocument { [weak self] documentSnapshot, error in
+            guard let self = self, let document = documentSnapshot, document.exists, error == nil else {
+                print("사용자 문서를 가져오는 중 오류 발생: \(error?.localizedDescription ?? "알 수 없는 오류")")
+                return
+            }
+            
+            if let friendsMap = document.get("friends") as? [String: Timestamp] {
+                let friendUIDs = Array(friendsMap.keys)
+                self.fetchDetailsForFriends(forUserUIDs: friendUIDs)
+            }
+
+        }
+    }
+    
+    // UID 배열을 기반으로 각 친구의 상세 정보를 가져오는 함수로 수정
+    private func fetchDetailsForFriends(forUserUIDs userUIDs: [String]) {
+        self.friends.removeAll() // 현재 친구 목록 초기화
+        let group = DispatchGroup()
         
-        func fetchUser(with userId: String, completion: @escaping (User?) -> Void) {
-            db.collection("users").document(userId).getDocument { documentSnapshot, error in
-                guard let document = documentSnapshot, document.exists, error == nil else {
-                    completion(nil)
+        for userUID in userUIDs {
+            group.enter()
+            let friendRef = db.collection("users").document(userUID)
+            friendRef.getDocument { [weak self] documentSnapshot, error in
+                guard let self = self, let document = documentSnapshot, document.exists, error == nil else {
+                    print("친구 문서를 가져오는 중 오류 발생: \(error?.localizedDescription ?? "알 수 없는 오류")")
+                    group.leave()
                     return
                 }
                 
-                let data = document.data()
-                let user = User(
-                    uid: userId,
-                    userName: data?["username"] as? String ?? "",
-                    email: data?["email"] as? String ?? "",
-                    profileImageUrl: data?["profileImageUrl"] as? String
-                )
-                completion(user)
+                // User 모델이 Firestore 문서로 초기화 가능하다고 가정
+                // 아래 코드는 User 인스턴스를 직접 생성하는 예제입니다.
+                // 실제로는 document.data()를 통해 얻은 데이터로부터 User 인스턴스를 생성해야 합니다.
+                if let data = document.data() {
+                    let user = User(
+                        uid: data["uid"] as? String,
+                        userName: data["userName"] as? String,
+                        email: data["email"] as? String,
+                        profileImageUrl: data["profileImageUrl"] as? String,
+                        friendsUid: data["friendsUid"] as? [String],
+                        friends: data["friends"] as? [String: Timestamp],
+                        friendRequestsSent: data["friendRequestsSent"] as? [String],
+                        friendRequestsReceived: data["friendRequestsReceived"] as? [String]
+                    )
+                    DispatchQueue.main.async {
+                        self.friends.append(user)
+                    }
+                }
+                group.leave()
             }
         }
         
+        group.notify(queue: .main) {
+            print("모든 친구 상세 정보를 가져오기 완료")
+            // 여기에서 UI를 업데이트하거나 추가 작업을 수행할 수 있습니다.
+        }
     }
+
     
+    func fetchUser(with userId: String, completion: @escaping (User?) -> Void) {
+        db.collection("users").document(userId).getDocument { documentSnapshot, error in
+            guard let document = documentSnapshot, document.exists, error == nil else {
+                completion(nil)
+                return
+            }
+            
+            guard let data = document.data() else {
+                completion(nil)
+                return
+            }
+            
+            let user = User(
+                uid: data["uid"] as? String,
+                userName: data["userName"] as? String,
+                email: data["email"] as? String,
+                profileImageUrl: data["profileImageUrl"] as? String,
+                friendsUid: data["friendsUid"] as? [String],
+                friends: data["friends"] as? [String : Timestamp],
+                friendRequestsSent: data["friendRequestsSent"] as? [String],
+                friendRequestsReceived: data["friendRequestsReceived"] as? [String]
+            )
+            
+            completion(user)
+        }
+    }
+
+}
+
