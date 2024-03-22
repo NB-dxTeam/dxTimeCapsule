@@ -13,7 +13,7 @@ class FriendCollectionViewCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 25
+        imageView.layer.cornerRadius = 20
         imageView.backgroundColor = .brown
         return imageView
     }()
@@ -53,7 +53,7 @@ class FriendCollectionViewCell: UICollectionViewCell {
         }
         
         profileImageView.snp.makeConstraints { make in
-            make.width.height.equalTo(50)
+            make.width.height.equalTo(40)
         }
     }
     
