@@ -13,7 +13,7 @@ import FirebaseFirestore
 import FirebaseAuth
 
 class CapsuleMapViewController: UIViewController {
-    
+    private var customModal: CustomModal?
     let capsuleMaps = MKMapView() // 지도 뷰
     var locationManager = CLLocationManager()
     var currentDetent: String? = nil
@@ -134,9 +134,11 @@ class CapsuleMapViewController: UIViewController {
         locationSetting()
         setupMapView()
         buttons()
+        customModal = CustomModal()
         updateButtonSelection(allButton)
         selectedButton = allButton
         loadCapsuleInfos(button: .all)
+        
         navigationController?.isNavigationBarHidden = true
 
     }
@@ -261,22 +263,32 @@ extension CapsuleMapViewController {
     private func buttonTapped(name: String) {
         let buttonToSelect: UIButton
         capsuleMaps.removeAnnotations(capsuleMaps.annotations)
+        
+        let status: CapsuleFilterButtons
         switch name {
         case "all":
             // 'All' 버튼 로직
             loadCapsuleInfos(button: .all)
             buttonToSelect = allButton
+            status = .all
         case "locked":
             // 'Locked' 버튼 로직
             loadCapsuleInfos(button: .locked)
             buttonToSelect = lockedButton
+            status = .locked
         case "opened":
             // 'Opened' 버튼 로직
             loadCapsuleInfos(button: .opened)
             buttonToSelect = openedButton
+            status = .opened
         default:
             return
         }
+        NotificationCenter.default.post(name: .capsuleButtonTapped, object: nil, userInfo: ["status": status])
+//        loadCapsuleInfos(button: status)
+//        let customModal = CustomModal()
+//        customModal.loadDataForStatus(status)
+        //present(customModal, animated: false, completion: nil)
         // 버튼의 선택 상태 업데이트
         updateButtonSelection(buttonToSelect)
         // 현재 선택된 버튼을 저장
@@ -373,7 +385,7 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
         }
     }
     // 데이터 정보 불러오기
-    func loadCapsuleInfos(button: CapsuleFilterButtons) {
+    private func loadCapsuleInfos(button: CapsuleFilterButtons) {
         let db = Firestore.firestore()
         guard let userId = Auth.auth().currentUser?.uid else { return }
         
@@ -391,16 +403,16 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
             query = db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
                 .whereField("isOpened", isEqualTo: true)
         }
-
+        
         query.getDocuments { [weak self] (querySnapshot, error) in
-                guard let documents = querySnapshot?.documents else {
-                    print("Error fetching documents: \(error!)")
-                    return
-                }
-                print("문서 데이터 가져옴: \(button)")
-                self?.dataCapsule(documents: documents)
+            guard let documents = querySnapshot?.documents else {
+                print("Error fetching documents: \(error!)")
+                return
             }
+            print("눌린 버튼: \(button)")
+            self?.dataCapsule(documents: documents)
         }
+    }
     
 }
 
@@ -571,9 +583,13 @@ extension CapsuleMapViewController: UISheetPresentationControllerDelegate {
     }
 }
 
+extension Notification.Name {
+    static let capsuleButtonTapped = Notification.Name("capsuleButtonTapped")
+}
 enum CapsuleFilterButtons {
     case all, locked, opened
 }
+
 // MARK: - Preview
 import SwiftUI
 

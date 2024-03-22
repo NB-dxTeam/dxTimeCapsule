@@ -49,11 +49,14 @@ class CustomModal: UIViewController {
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("capsuleCollection 인스턴스: \(Unmanaged.passUnretained(capsuleCollection).toOpaque())")
         view.backgroundColor = .white
         setupUI()
         configCollection()
-        fetchTimeCapsulesInfo()
+        loadDataForStatus(.all)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleCapsuleButtonTapped(notification:)), name: .capsuleButtonTapped, object: nil)
     }
+    
     // addsubView, autolayout
     private func setupUI() {
         view.addSubview(capsuleCollection)
@@ -95,58 +98,89 @@ class CustomModal: UIViewController {
             layout.sectionHeadersPinToVisibleBounds = true
         }
     }
-                        // MARK: - 수정(03/18) 황주영
-    // 데이터 정보 가져오기.
-    private func fetchTimeCapsulesInfo() {
+
+    
+    func dataCapsule(documents: [QueryDocumentSnapshot]) {
+        let group = DispatchGroup()
+        
+        var tempTimeBoxes = [TimeBox]()
+        var tempAnnotationsData = [TimeBoxAnnotationData]()
+        
+        let timeBoxes = documents.compactMap { doc -> TimeBox? in
+            let data = doc.data()
+            guard let createTimeBoxDate = (data["createTimeBoxDate"] as? Timestamp)?.dateValue(),
+                  let openTimeBoxDate = (data["openTimeBoxDate"] as? Timestamp)?.dateValue(),
+                  let location = data["location"] as? GeoPoint? else {
+                return nil
+            }
+            return TimeBox(
+                id: doc.documentID,
+                uid: data["uid"] as? String ?? "",
+                userName: data["userName"] as? String ?? "",
+                thumbnailURL: data["thumbnailURL"] as? String,
+                imageURL: data["imageURL"] as? [String],
+                location: location,
+                addressTitle: data["addressTitle"] as? String ?? "",
+                address: data["address"] as? String ?? "",
+                description: data["description"] as? String,
+                tagFriendUid: data["tagFriendUid"] as? [String],
+                createTimeBoxDate: Timestamp(date: (createTimeBoxDate)),
+                openTimeBoxDate: Timestamp(date: (openTimeBoxDate)),
+                isOpened: data["isOpened"] as? Bool ?? false
+            )
+        }
+        self.timeBoxes = timeBoxes
+        DispatchQueue.main.async {
+            print("collectionView reload.")
+            self.capsuleCollection.reloadData()
+        }
+    }
+    
+    func loadDataForStatus(_ status: CapsuleFilterButtons) {
         let db = Firestore.firestore()
         guard let userId = Auth.auth().currentUser?.uid else { return }
         
-        db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
-            .whereField("isOpened", isEqualTo: false)
-            .order(by: "openTimeBoxDate", descending: false) // 가장 먼저 개봉될 타임캡슐부터 정렬
-            .getDocuments { [weak self] (querySnapshot, err) in
-                if let err = err {
-                    print("Error getting documents: \(err)")
-                    return
-                }
-                
-                guard let documents = querySnapshot?.documents else {
-                    print("No documents found")
-                    return
-                }
-                
-                let timeBoxes = documents.compactMap { doc -> TimeBox? in
-                    let data = doc.data()
-                    guard let createTimeBoxDate = (data["createTimeBoxDate"] as? Timestamp)?.dateValue(),
-                          let openTimeBoxDate = (data["openTimeBoxDate"] as? Timestamp)?.dateValue(),
-                          let location = data["location"] as? GeoPoint? else {
-                        return nil
-                    }
-                    return TimeBox(
-                        id: doc.documentID,
-                        uid: data["uid"] as? String ?? "",
-                        userName: data["userName"] as? String ?? "",
-                        thumbnailURL: data["thumbnailURL"] as? String,
-                        imageURL: data["imageURL"] as? [String],
-                        location: location,
-                        addressTitle: data["addressTitle"] as? String ?? "",
-                        address: data["address"] as? String ?? "",
-                        description: data["description"] as? String,
-                        tagFriendUid: data["tagFriendUid"] as? [String],
-                        createTimeBoxDate: Timestamp(date: (createTimeBoxDate)),
-                        openTimeBoxDate: Timestamp(date: (openTimeBoxDate)),
-                        isOpened: data["isOpened"] as? Bool ?? false
-                    )
-                }
-                
-                print("Fetched \(timeBoxes.count) timeboxes for userID: \(userId)")
-                
-                DispatchQueue.main.async {
-                    self?.timeBoxes = timeBoxes // 'self?.timeBoxes'는 TimeBox 객체들을 저장하는 프로퍼티
-                    print("collectionView reload.")
-                    self?.capsuleCollection.reloadData()
-                }
+        var query: Query
+        switch status {
+        case .all:
+            query = db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
+                .order(by: "openTimeBoxDate", descending: false)
+            
+        case .locked:
+            query = db.collection("timeCapsules")
+                .whereField("uid", isEqualTo: userId)
+                .whereField("isOpened", isEqualTo: false)
+        case .opened:
+            query = db.collection("timeCapsules").whereField("uid", isEqualTo: userId)
+                .whereField("isOpened", isEqualTo: true)
+        }
+        print("전달 되는 필터: \(status)")
+        query.getDocuments { [weak self] (querySnapshot, error) in
+            if let error = error {
+                // 에러가 있는 경우 여기서 처리합니다.
+                print("Error fetching documents: \(error.localizedDescription)")
+                return
             }
+            
+            guard let documents = querySnapshot?.documents else {
+                // documents가 없는 경우 처리
+                print("No documents found")
+                return
+            }
+            
+            DispatchQueue.main.async {
+                self?.dataCapsule(documents: documents)
+            }
+        }
+    }
+    
+    @objc func handleCapsuleButtonTapped(notification: Notification) {
+        guard let status = notification.userInfo?["status"] as? CapsuleFilterButtons else { return }
+        loadDataForStatus(status)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }
 
@@ -154,6 +188,7 @@ extension CustomModal: UICollectionViewDataSource, UICollectionViewDelegate {
     // MARK: - UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print("timeBoxes 배열 갯수: \(timeBoxes.count)")
         return timeBoxes.count
     }
     
