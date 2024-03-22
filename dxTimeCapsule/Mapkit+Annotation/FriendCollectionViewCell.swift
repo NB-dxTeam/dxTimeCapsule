@@ -14,15 +14,13 @@ class FriendCollectionViewCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 20
-        imageView.backgroundColor = .brown
         return imageView
     }()
     
     private let userNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14)
+        label.font = UIFont.systemFont(ofSize: 12)
         label.textAlignment = .center
-        label.backgroundColor = .yellow
         return label
     }()
     
@@ -40,7 +38,6 @@ class FriendCollectionViewCell: UICollectionViewCell {
         stackView.axis = .vertical
         stackView.alignment = .center
         stackView.distribution = .fill
-        stackView.backgroundColor = .purple
         stackView.spacing = 5
         
         addSubview(stackView)

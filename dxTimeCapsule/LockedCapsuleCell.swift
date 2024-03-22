@@ -124,11 +124,13 @@ class LockedCapsuleCell: UICollectionViewCell {
         }
         
         dDay.snp.makeConstraints { make in
-            let offset = UIScreen.main.bounds.width * (0.05/2.0)
-            make.top.equalTo(registerImage.snp.bottom).offset(offset)
-            make.leading.equalTo(registerImage.snp.leading)
-            make.width.equalTo(registerImage.snp.width).multipliedBy(0.23/1.0)
-            make.height.equalTo(25)
+            let offset1 = UIScreen.main.bounds.height * (0.3/16.0)
+            let offset2 = UIScreen.main.bounds.height * (0.35/16.0)
+            make.top.equalTo(registerImage.snp.bottom).offset(offset1)
+            make.bottom.equalTo(addressTitle.snp.bottom)
+            make.leading.equalToSuperview().inset(30)
+            make.width.equalTo(registerImage.snp.width).multipliedBy(0.17/1.0)
+            make.height.equalTo(offset2)
         }
         
         addressTitle.snp.makeConstraints { make in
@@ -155,6 +157,6 @@ class LockedCapsuleCell: UICollectionViewCell {
 import SwiftUI
 struct Preview: PreviewProvider {
     static var previews: some View {
-        CapsuleMapViewController().toPreview()
+        CustomModal().toPreview()
     }
 }

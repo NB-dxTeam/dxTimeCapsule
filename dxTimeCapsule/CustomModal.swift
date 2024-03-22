@@ -17,21 +17,13 @@ class CustomModal: UIViewController {
     var timeBoxes = [TimeBox]()
     var capsuleMapViewController = CapsuleMapViewController()
     var onCapsuleSelected: ((Double, Double) -> Void)? //선택된 위치 정보를 받아 처리하는 클로저
-    private var headerCollection: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collection.backgroundColor = .white
-        collection.layer.cornerRadius = 20
-        collection.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        collection.layer.masksToBounds = true
-        return collection
-    }()
+    
     private var capsuleCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.backgroundColor = .white
-        //collection.layer.cornerRadius = 10
-       // collection.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        collection.layer.cornerRadius = 10
+        collection.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         collection.layer.masksToBounds = true
         return collection
     }()
@@ -61,14 +53,10 @@ class CustomModal: UIViewController {
     // addsubView, autolayout
     private func setupUI() {
         view.addSubview(capsuleCollection)
-        view.addSubview(headerCollection)
-        headerCollection.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.leading.trailing.equalToSuperview()
-            make.height.equalTo(48)
-        }
+
+
         capsuleCollection.snp.makeConstraints { make in
-            make.top.equalTo(headerCollection.snp.bottom)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(UIScreen.main.bounds.height * 0.02)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
@@ -79,7 +67,6 @@ class CustomModal: UIViewController {
         capsuleCollection.dataSource = self
         // 셀 등록
         capsuleCollection.register(LockedCapsuleCell.self, forCellWithReuseIdentifier: LockedCapsuleCell.identifier)
-        capsuleCollection.isPagingEnabled = true // 페이징 활성화
         capsuleCollection.showsVerticalScrollIndicator = false // 수직 스크롤 인디케이터 표시 여부 설정.
         capsuleCollection.decelerationRate = .normal // 콜렉션 뷰의 감속 속도 설정
         capsuleCollection.alpha = 1 // 투명도
@@ -87,16 +74,16 @@ class CustomModal: UIViewController {
             layout.collectionView?.isPagingEnabled = true
             layout.scrollDirection = .vertical // 스크롤 방향(수직)
             let screenWidth = UIScreen.main.bounds.width
-            let itemWidth = screenWidth * 0.9 // 화면 너비의 90%를 아이템 너비로 설정
-            let itemHeight: CGFloat = 230 // 아이템 높이는 고정 값으로 설정
-            layout.itemSize = CGSize(width: itemWidth, height: itemHeight)
+            let itemHeight = CGFloat(UIScreen.main.bounds.height * 0.31)
+            layout.itemSize = CGSize(width: screenWidth, height: itemHeight)
             // 섹션 여백 설정
             let sectionInsetHorizontal = screenWidth * 0.05 // 좌우 여백을 화면 너비의 5%로 설정
-            layout.sectionInset = UIEdgeInsets(top: 10, left: sectionInsetHorizontal, bottom: 10, right: sectionInsetHorizontal)
+            layout.sectionInset = UIEdgeInsets(top: 0, left: sectionInsetHorizontal, bottom: 0, right: sectionInsetHorizontal)
             // 최소 줄 간격 설정
             let minimumLineSpacing = itemHeight * 0.1 // 최소 줄 간격을 화면 너비의 10%로 설정
             layout.minimumLineSpacing = minimumLineSpacing
             layout.sectionHeadersPinToVisibleBounds = true
+            
         }
     }
 
