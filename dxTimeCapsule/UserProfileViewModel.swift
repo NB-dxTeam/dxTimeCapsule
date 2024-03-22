@@ -15,14 +15,14 @@ class UserProfileViewModel {
     // Properties to hold the user data
     var uid: String?
     var email: String?
-    var nickname: String?
+    var userName: String?
     var profileImageUrl: String?
 
     // Initialization with default values
-    init(uid: String? = nil, email: String? = nil, nickname: String? = nil, profileImageUrl: String? = nil) {
+    init(uid: String? = nil, email: String? = nil, userName: String? = nil, profileImageUrl: String? = nil) {
         self.uid = uid
         self.email = email
-        self.nickname = nickname
+        self.userName = userName
         self.profileImageUrl = profileImageUrl
     }
 
@@ -38,16 +38,17 @@ class UserProfileViewModel {
 
             userDocRef.getDocument { [weak self] (document, error) in
                 DispatchQueue.main.async {
+                    
                     if let document = document, document.exists {
                         self?.uid = document.get("uid") as? String
                         self?.email = document.get("email") as? String
-                        self?.nickname = document.get("username") as? String
+                        self?.userName = document.get("userName") as? String
                         self?.profileImageUrl = document.get("profileImageUrl") as? String
                         print("User data fetched successfully")
                     } else {
                         self?.uid = "123456"
                         self?.email = "pandaruss@example.com"
-                        self?.nickname = "PANDA RUSS"
+                        self?.userName = "PANDA RUSS"
                         self?.profileImageUrl = "https://example.com/profile/pandaruss.jpg"
                         print("User data not found")
                     }

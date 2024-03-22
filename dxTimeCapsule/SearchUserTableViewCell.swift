@@ -101,8 +101,7 @@ class SearchUserTableViewCell: UITableViewCell {
     }
     
     // MARK: - Functions
-    private func updateFriendshipStatusUI(user: User, currentUserID: String) {
-        friendsViewModel?.checkFriendshipStatus(forUser: user.uid!) { status in
+    private func updateFriendshipStatusUI(user: User, currentUserID: String)        friendsViewModel?.checkFriendshipStatus(forUser: user.uid!) { status in
             DispatchQueue.main.async {
                 self.friendActionButton.isHidden = false
                 switch status {

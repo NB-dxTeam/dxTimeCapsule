@@ -18,7 +18,7 @@ class FriendCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
     
-    private let usernameLabel: UILabel = {
+    private let userNameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
         label.textAlignment = .center
@@ -36,7 +36,7 @@ class FriendCollectionViewCell: UICollectionViewCell {
     }
     
     private func setupViews() {
-        let stackView = UIStackView(arrangedSubviews: [profileImageView, usernameLabel])
+        let stackView = UIStackView(arrangedSubviews: [profileImageView, userNameLabel])
         stackView.axis = .vertical
         stackView.alignment = .center
         stackView.distribution = .fill
@@ -58,7 +58,7 @@ class FriendCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(with friend: User) {
-        usernameLabel.text = friend.userName
+        userNameLabel.text = friend.userName
         if let profileImageUrlString = friend.profileImageUrl, let profileImageUrl = URL(string: profileImageUrlString) {
             profileImageView.sd_setImage(with: profileImageUrl, placeholderImage: UIImage(named: "defaultProfileImage"))
         } else {
