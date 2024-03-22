@@ -13,5 +13,3 @@ class BottomSheetControllerViewModel: UIViewController {
     }
     
     // 사용자 인터랙션 처리 메서드 구현
-
- 
