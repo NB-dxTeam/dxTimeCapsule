@@ -161,7 +161,7 @@ class HomeViewController: UIViewController {
         return stackView
     }()
     
-    // noMainTC 버튼
+    // addTCButton 버튼
     let addTCButton: UIButton = {
         let button = UIButton(type: .system)
         let image = UIImage(systemName: "plus.app")?.withRenderingMode(.alwaysTemplate)
@@ -415,14 +415,14 @@ class HomeViewController: UIViewController {
     
     func fetchTimeCapsuleData() {
         DispatchQueue.main.async {
-            self.showLoadingIndicator()
-        }
-        DispatchQueue.global().async {
+//            self.showLoadingIndicator()
+//        }
+//        DispatchQueue.global().async {
             let db = Firestore.firestore()
             // 로그인한 사용자의 UID를 가져옵니다.
-            guard let userId = Auth.auth().currentUser?.uid else { return }
+//            guard let userId = Auth.auth().currentUser?.uid else { return }
             
-//            let userId = "K15VeSkLpGhNZl9MdUIh46mNrxr2" // 테스트를 위한 임시 UID
+            let userId = "K15VeSkLpGhNZl9MdUIh46mNrxr2" // 테스트를 위한 임시 UID
             
             // 사용자의 UID로 필터링하고, openDate 필드로 오름차순 정렬한 후, 최상위 1개 문서만 가져옵니다.
             db.collection("timeCapsules")
@@ -519,7 +519,6 @@ class HomeViewController: UIViewController {
         }
     }
     
-    
     // MARK: - Image Transition Animation
     
     /// Animates the transition of the main time capsule image.
@@ -587,7 +586,6 @@ class HomeViewController: UIViewController {
     @objc private func addNewTC() {
         print("새 타임머신 만들기 클릭되었습니다")
         let addNewTC = LocationMapkitViewController()
-//        let navController = UINavigationController(rootViewController: addNewTC)
         navigationController?.pushViewController(addNewTC, animated: true)
     }
     
@@ -611,3 +609,10 @@ class HomeViewController: UIViewController {
     }
 }
 
+import SwiftUI
+
+struct Previewsaa : PreviewProvider {
+    static var previews: some View {
+        MainTabBarView().toPreview()
+    }
+}

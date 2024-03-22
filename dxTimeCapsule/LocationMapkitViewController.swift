@@ -32,6 +32,7 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     // MARK: - Initialization
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.isNavigationBarHidden = true
         initializeComponents()
         setupLayout()
         configureLocationServices()
