@@ -11,6 +11,8 @@
 		1F019A4F2BACCA2400F727D2 /* FriendsSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F019A4E2BACCA2400F727D2 /* FriendsSelectionViewController.swift */; };
 		1F019A522BACDEF500F727D2 /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F019A512BACDEF500F727D2 /* FriendTableViewCell.swift */; };
 		1F019A542BAD14B300F727D2 /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F019A532BAD14B200F727D2 /* UIImage+Resize.swift */; };
+		1F019A572BAD6AFD00F727D2 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F019A562BAD6AFD00F727D2 /* BottomSheetViewController.swift */; };
+		1F019A592BAD6E1300F727D2 /* BottomSheetControllerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F019A582BAD6E1300F727D2 /* BottomSheetControllerViewModel.swift */; };
 		1F0854152B8EF4F400711660 /* TestLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0854142B8EF4F400711660 /* TestLoginViewController.swift */; };
 		1F0854322B8F254B00711660 /* MainCapsuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0854312B8F254B00711660 /* MainCapsuleViewController.swift */; };
 		1F0B91062B901D170022EDD9 /* Etc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0B91052B901D170022EDD9 /* Etc.swift */; };
@@ -142,6 +144,8 @@
 		1F019A4E2BACCA2400F727D2 /* FriendsSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsSelectionViewController.swift; sourceTree = "<group>"; };
 		1F019A512BACDEF500F727D2 /* FriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
 		1F019A532BAD14B200F727D2 /* UIImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
+		1F019A562BAD6AFD00F727D2 /* BottomSheetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BottomSheetViewController.swift; path = ../../../../../Downloads/BottomSheetViewController.swift; sourceTree = "<group>"; };
+		1F019A582BAD6E1300F727D2 /* BottomSheetControllerViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BottomSheetControllerViewModel.swift; path = ../../../../../Desktop/BottomSheetControllerViewModel.swift; sourceTree = "<group>"; };
 		1F0854142B8EF4F400711660 /* TestLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestLoginViewController.swift; sourceTree = "<group>"; };
 		1F0854162B8F091500711660 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1F0854312B8F254B00711660 /* MainCapsuleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCapsuleViewController.swift; sourceTree = "<group>"; };
@@ -305,9 +309,19 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
+		1F019A552BAD6AE300F727D2 /* BottomSheet */ = {
+			isa = PBXGroup;
+			children = (
+				1F019A562BAD6AFD00F727D2 /* BottomSheetViewController.swift */,
+				1F019A582BAD6E1300F727D2 /* BottomSheetControllerViewModel.swift */,
+			);
+			name = BottomSheet;
+			sourceTree = "<group>";
+		};
 		1F1071BA2B95D3E8009E201A /* MapLocation */ = {
 			isa = PBXGroup;
 			children = (
+				1F019A552BAD6AE300F727D2 /* BottomSheet */,
 				1FD2B79B2B96BD7300896F9C /* LocationMapkitViewController.swift */,
 			);
 			name = MapLocation;
@@ -874,6 +888,7 @@
 				4E2A09CA2B8F86C600911390 /* FadeInAnimator.swift in Sources */,
 				1F5786D92B849AF800C40B08 /* AppDelegate.swift in Sources */,
 				1FC8F4A62BAC5E3D00BC7BF8 /* NewPostWritingViewController.swift in Sources */,
+				1F019A572BAD6AFD00F727D2 /* BottomSheetViewController.swift in Sources */,
 				1F8EA39E2B9538DD004856B7 /* UIFont+CustomFont.swift in Sources */,
 				1FB387352B87A0B300054816 /* SignUpViewController.swift in Sources */,
 				1F367EA62B8F803A00563908 /* UIColor+Hex.swift in Sources */,
@@ -898,6 +913,7 @@
 				1F5787132B86DBF900C40B08 /* LoginViewController.swift in Sources */,
 				1FB387402B8881DB00054816 /* TimeBox.swift in Sources */,
 				1FB387392B8863DE00054816 /* HomeViewController.swift in Sources */,
+				1F019A592BAD6E1300F727D2 /* BottomSheetControllerViewModel.swift in Sources */,
 				D22B171F2B973416006CAEA6 /* SceneDelegate.swift in Sources */,
 				1F0B91082B9026020022EDD9 /* UIImageView+RoundImage.swift in Sources */,
 				1FE313B12B98114700E02045 /* LocationHistoryViewModel.swift in Sources */,

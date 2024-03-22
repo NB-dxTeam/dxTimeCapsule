@@ -408,7 +408,7 @@ extension CapsuleMapViewController {
     // CustomModal 뷰를 모달로 화면에 표시하는 함수
     func showModalVC() {
         let vc = CustomModal()
-        //vc.sheetPresentationController?.delegate = self
+//        vc.sheetPresentationController?.delegate = self
         // CustomModal에서 타임캡슐 선택 시 실행할 클로저 구현
         vc.onCapsuleSelected = { [weak self] latitude, longitude in
             // 지도의 위치를 업데이트하는 메소드 호출
@@ -417,8 +417,8 @@ extension CapsuleMapViewController {
                 DispatchQueue.main.async {
                     sheet.animateChanges {
                         
-                        sheet.detents = [/*.half,*/ .large()]  // 03/22 황주영
-                        sheet.selectedDetentIdentifier = .large // '.half'<- 기존코드. 03/22 황주영
+                        sheet.detents = [.half, .large()]  // 03/22 황주영
+                        sheet.selectedDetentIdentifier = .half // '.half'<- 기존코드. 03/22 황주영
                         sheet.largestUndimmedDetentIdentifier = .large
                     }
                 }
