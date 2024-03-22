@@ -13,9 +13,31 @@ import FirebaseAuth
 class OpenedTCViewController: UITableViewController {
     
     // MARK: - Properties
+    
     var documentId: String?
     private var timeBoxes: [TimeBox] = []
     var onCapsuleSelected: ((Double, Double) -> Void)?
+    
+    // 정렬 옵션
+    enum SortOption {
+        case oldestFirst
+        case newestFirst
+    }
+    
+    // 현재 설정된 정렬 옵션
+    var currentSortOption: SortOption = .oldestFirst {
+        didSet {
+            sortTimeBoxesAndReloadTableView()
+        }
+    }
+    
+    // 세그먼트 컨트롤 정의
+    lazy var sortSegmentedControl: UISegmentedControl = {
+        let segmentedControl = UISegmentedControl(items: ["최신순", "오래된순"])
+        segmentedControl.selectedSegmentIndex = 0 // 기본 선택값
+        segmentedControl.addTarget(self, action: #selector(sortOptionChanged), for: .valueChanged)
+        return segmentedControl
+    }()
     
     // MARK: - Lifecycle
     
@@ -36,6 +58,7 @@ class OpenedTCViewController: UITableViewController {
     private func setupUI() {
         tableView.register(TimeCapsuleCell.self, forCellReuseIdentifier: TimeCapsuleCell.identifier)
         tableView.separatorStyle = .none
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: sortSegmentedControl)
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -60,12 +83,35 @@ class OpenedTCViewController: UITableViewController {
         backButton.addTarget(self, action: #selector(homeButtonTapped), for: .touchUpInside)
         backButton.frame = CGRect(x: 0, y: 0, width: 20, height: 30)
         
-        // backButton 위치 설정
-//        backButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
-        
         // 네비게이션 아이템에 backButton 설정
         let backButtonBarItem = UIBarButtonItem(customView: backButton)
         navigationItem.leftBarButtonItem = backButtonBarItem
+    }
+    
+    // 세그먼트 컨트롤 값 변경 액션
+    @objc private func sortOptionChanged() {
+        switch sortSegmentedControl.selectedSegmentIndex {
+        case 0:
+            currentSortOption = .newestFirst
+        case 1:
+            currentSortOption = .oldestFirst
+        default:
+            break
+        }
+        
+        // 셀 재정렬
+        sortTimeBoxesAndReloadTableView()
+    }
+    
+    // 시간 캡슐을 정렬하고 테이블 뷰 다시 로드
+    private func sortTimeBoxesAndReloadTableView() {
+        switch currentSortOption {
+        case .newestFirst:
+            timeBoxes.sort { $0.createTimeBoxDate?.dateValue() ?? Date() > $1.createTimeBoxDate?.dateValue() ?? Date() }
+        case .oldestFirst:
+            timeBoxes.sort { $0.createTimeBoxDate?.dateValue() ?? Date() < $1.createTimeBoxDate?.dateValue() ?? Date() }
+        }
+        tableView.reloadData()
     }
 
     // MARK: - Data Fetching
@@ -105,7 +151,6 @@ class OpenedTCViewController: UITableViewController {
                 }
             }
     }
-    
     
     // MARK: - UITableViewDataSource, UITableViewDelegate
     
