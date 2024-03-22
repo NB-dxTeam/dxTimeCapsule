@@ -88,18 +88,26 @@ class PostWritingViewControllerNew: UIViewController, UITextViewDelegate {
         descriptionTextView.delegate = self
         setupGestures()
         createButton.addTarget(self, action: #selector(createTimeCapsule), for: .touchUpInside)
-        
-        // Add pan gesture recognizer to detect downward drag
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-        view.addGestureRecognizer(panGesture)
-        
-        
-        // FriendsViewModel의 인스턴스 생성
-        let friendsViewModel = FriendsViewModel()
-        // fetchFriends 메서드 호출
-        friendsViewModel.fetchFriends()
-        
+
+        if let userId = Auth.auth().currentUser?.uid {
+            viewModel.fetchFriends(forUser: userId) { [weak self] friends, error in
+                DispatchQueue.main.async {
+                    if let friends = friends {
+                        self?.friends = friends
+                        // 필요한 UI 업데이트 로직 추가
+                        // 예: self?.updateUIWithFriends()
+                    } else if let error = error {
+                        print("친구 목록을 가져오는 데 실패했습니다: \(error.localizedDescription)")
+                        // 적절한 에러 처리 로직 추가
+                    }
+                }
+            }
+        } else {
+            print("사용자가 로그인하지 않았습니다.")
+            // 사용자 로그인이 필요함을 알리는 UI 업데이트 로직 추가
+        }
     }
+
     
 
     // MARK: - UI Setup

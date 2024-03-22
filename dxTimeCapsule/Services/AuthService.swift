@@ -15,7 +15,7 @@ class AuthService {
     
     private init() {}
     
-    func signUpWithEmail(email: String, password: String, username: String, profileImage: UIImage, completion: @escaping (Result<Bool, Error>) -> Void) {
+    func signUpWithEmail(email: String, password: String, userName: String, profileImage: UIImage, completion: @escaping (Result<Bool, Error>) -> Void) {
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
                 completion(.failure(error))
@@ -45,7 +45,7 @@ class AuthService {
                         return
                     }
                     
-                    let userData = ["email": email, "username": username, "profileImageUrl": downloadURL.absoluteString]
+                    let userData = ["email": email, "userName": userName, "profileImageUrl": downloadURL.absoluteString]
                     Firestore.firestore().collection("users").document(uid).setData(userData) { error in
                         if let error = error {
                             completion(.failure(error))

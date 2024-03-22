@@ -16,7 +16,7 @@ class FriendsListViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         setupTableView()
-        fetchCurrentUser()
+        fetchFriendsUids()
     }
     
     private func setupViews() {
@@ -25,8 +25,8 @@ class FriendsListViewController: UIViewController {
         view.addSubview(backgroundView)
         
         friendsListLabel = UILabel()
-        friendsListLabel.text = "친구 목록"
-        friendsListLabel.font = UIFont.pretendardBold(ofSize: 20)
+        friendsListLabel.text = "Friends List"
+        friendsListLabel.font = UIFont.systemFont(ofSize: 26, weight: .bold)
         friendsListLabel.textAlignment = .center
         friendsListLabel.backgroundColor = .white  // 라벨의 배경색도 흰색으로 설정합니다.
         backgroundView.addSubview(friendsListLabel)
@@ -59,7 +59,6 @@ class FriendsListViewController: UIViewController {
 
     }
 
-    
     private func setupTableView() {
         tableView = UITableView()
         tableView.delegate = self
@@ -73,78 +72,55 @@ class FriendsListViewController: UIViewController {
         }
     }
     
-    private func fetchCurrentUser() {
-        // Fetch current user data from Firebase
+    private func fetchFriendsUids() {
         guard let currentUserID = Auth.auth().currentUser?.uid else { return }
-        
+
         db.collection("users").document(currentUserID).getDocument { [weak self] snapshot, error in
             guard let self = self, let document = snapshot, document.exists, error == nil else {
-                print("Error fetching current user: \(String(describing: error))")
+                print("Error fetching user's friends UIDs: \(String(describing: error))")
                 return
             }
             
-            guard let userData = document.data() else { return }
-            self.currentUser = User(
-                uid: currentUserID,
-                userName: userData["username"] as? String ?? "",
-                email: userData["email"] as? String ?? "",
-                profileImageUrl: userData["profileImageUrl"] as? String
-            )
-            self.fetchFriends(forUserID: currentUserID)
-        }
-    }
-    
-    private func fetchFriends(forUserID userID: String) {
-        db.collection("friendships").whereField("userUids", arrayContains: userID).getDocuments { [weak self] snapshot, error in
-            guard let self = self, let documents = snapshot?.documents, error == nil else {
-                print("Error fetching friends: \(error)")
-                return
-            }
+            guard let userData = document.data(),
+                  let friendsData = userData["friends"] as? [String: Any] else { return }
             
-            var friendIDs: [String] = []
-            for document in documents {
-                let userUids = document.get("userUids") as? [String] ?? []
-                if let friendID = userUids.first(where: { $0 != userID }) {
-                    friendIDs.append(friendID)
-                }
-            }
-            
-            var fetchedFriends: [User] = [] // Use a temporary array to store fetched friends
-            
+            let friendUids = Array(friendsData.keys) // 친구들의 UID 목록을 추출합니다.
+            print("Friends UIDs: \(friendUids)")
+
+            var fetchedFriends: [User] = [] // 임시 배열에 친구 정보 저장
             let dispatchGroup = DispatchGroup()
             
-            for friendID in friendIDs {
+            for friendUid in friendUids { // 변수 이름을 변경했습니다.
                 dispatchGroup.enter()
-                self.db.collection("users").document(friendID).getDocument { friendSnapshot, friendError in
-                    defer {
-                        dispatchGroup.leave()
-                    }
+                self.db.collection("users").document(friendUid).getDocument { friendSnapshot, friendError in
+                    defer { dispatchGroup.leave() }
                     if let error = friendError {
                         print("Error fetching friend: \(error)")
+
                         return
                     }
                     if let friendData = friendSnapshot?.data(),
-                        let uid = friendData["uid"] as? String,
-                        let username = friendData["username"] as? String, // 수정됨
-                        let email = friendData["email"] as? String, // 수정됨
-                        let imageUrl = friendData["profileImageUrl"] as? String {
-                        let friend = User(uid: uid, userName: username, email: email, profileImageUrl: imageUrl) // 수정됨
-                        fetchedFriends.append(friend) // Append fetched friend to the temporary array
+                       let uid = friendSnapshot?.documentID, // UID를 직접 가져옵니다.
+                       let userName = friendData["userName"] as? String,
+                       let email = friendData["email"] as? String,
+                       let profileImageUrl = friendData["profileImageUrl"] as? String {
+                        let friend = User(uid: uid, userName: userName, email: email, profileImageUrl: profileImageUrl)
+                        fetchedFriends.append(friend) // 임시 배열에 친구 정보 추가
+                        print("fetched friend: \(friend)")
                     }
                 }
             }
-            
             dispatchGroup.notify(queue: .main) {
-                // Wait for all asynchronous tasks to complete
-                // After that, update the friends array and reload tableView
-                self.friends = fetchedFriends // Update friends array with fetchedFriends
-                self.tableView.reloadData()
+                // 모든 비동기 작업 완료 후, 친구 배열 업데이트 및 테이블 뷰 리로드
+                self.friends = fetchedFriends
+                self.tableView.reloadData() // 주석 제거
                 
-                // Update Friends Count Label
+                // 친구 수 라벨 업데이트
                 self.friendsCountLabel.text = "친구 \(self.friends.count)명"
             }
         }
     }
+
 
 }
 
@@ -160,8 +136,6 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return 80
     }
 }
-
-
