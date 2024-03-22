@@ -130,7 +130,7 @@ class TimeCapsuleCell: UITableViewCell {
     
         
         registerImage.snp.makeConstraints { make in
-            let offset = UIScreen.main.bounds.height * (0.15/16.0)
+            let offset = UIScreen.main.bounds.height * (0.3/16.0)
             make.top.equalToSuperview().inset(offset)
             make.height.equalTo(registerImage.snp.width).multipliedBy(9.0/16.0)
             make.leading.trailing.equalToSuperview().inset(20)
