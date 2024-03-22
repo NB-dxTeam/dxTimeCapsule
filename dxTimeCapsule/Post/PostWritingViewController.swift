@@ -319,6 +319,14 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
         let tagFriendUserName = taggedFriends.map { $0.userName ?? ""}
         let createTimeBoxDate = Timestamp(date: Date()) // 현재 시간을 생성일로 설정
         
+        // 태그된 친구가 없는 경우에 대한 처리 추가
+        if tagFriendUid.isEmpty {
+            print("태그된 친구가 없습니다.")
+            // 태그된 친구가 없는 경우에 대한 추가적인 처리를 여기에 추가할 수 있습니다.
+            // 예: 사용자에게 경고 메시지를 표시하거나, 타임박스 업로드를 중지합니다.
+            // 이 예제에서는 태그된 친구가 없어도 타임박스를 업로드할 수 있도록 진행합니다.
+        }
+        
         // Firestore에서 사용자의 이름 가져오기
         let userDocRef = Firestore.firestore().collection("users").document(currentUser.uid)
         userDocRef.getDocument { [weak self] (document, error) in
@@ -327,9 +335,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
                 if let userName = document.data()?["userName"] as? String {
                     // 사용자의 이름이 성공적으로 가져와졌습니다.
                     
-                    // 나머지 코드는 변경하지 않습니다.
                     let geocoder = CLGeocoder()
-                    
                     let location = CLLocation(latitude: locationCoordinate.latitude, longitude: locationCoordinate.longitude)
                     
                     geocoder.reverseGeocodeLocation(location, preferredLocale: Locale(identifier: "ko_KR")) { [weak self] (placemarks, error) in
@@ -358,21 +364,18 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
                             tagFriendUid: tagFriendUid, // 태그된 친구 UID 배열 전달
                             tagFriendUserName: tagFriendUserName, // 태그된 친구 이름 배열 전달
                             createTimeBoxDate: createTimeBoxDate,
-                            openTimeBoxDate: openTimeBoxDate!,
+                            openTimeBoxDate: openDate,
                             isOpened: false,
                             completion: { result in
                                 switch result {
                                 case .success():
                                     print("타임캡슐 업로드 성공")
-                                    // 성공적으로 업로드된 후의 처리 로직 (예: 알림 표시, 화면 전환 등)
                                     self.showAlert(title: "타임캡슐 생성 완료", message: "타임캡슐이 성공적으로 생성되었습니다.")
                                 case .failure(let error):
                                     print("타임캡슐 업로드 실패: \(error.localizedDescription)")
-                                    // 실패 시 처리 로직
                                 }
                             }
                         )
-                        
                     }
                 } else {
                     print("사용자 이름을 Firestore에서 가져올 수 없습니다.")
@@ -382,6 +385,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
             }
         }
     }
+
     
     
     // 데이터 피커의 값이 변경될 때 호출되는 메서드
