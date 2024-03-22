@@ -38,6 +38,10 @@ class LoginViewController: UIViewController {
         button.layer.cornerRadius = 16
         button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 16)
         button.layer.borderWidth = 1.5 // 라인의 너비 설정
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowRadius = 6 // 그림자의 블러 정도 설정 (조금 더 부드럽게)
+        button.layer.shadowOpacity = 0.3 // 그림자의 투명도 설정 (적당한 농도로)
+        button.layer.shadowOffset =  CGSize(width: 0, height: 3)
         button.layer.borderColor = UIColor(hex: "#C82D6B").cgColor
         button.layer.shadowColor = UIColor.black.cgColor
         button.layer.shadowRadius = 6 // 그림자의 블러 정도 설정 (조금 더 부드럽게)
@@ -64,7 +68,7 @@ class LoginViewController: UIViewController {
         passwordTextField.delegate = self
         
         // Test 자동기입
-        emailTextField.text =  "test1@gmail.com"
+        emailTextField.text =  "Hwangc1226@gmail.com"
         passwordTextField.text = "12345678"
     }
     

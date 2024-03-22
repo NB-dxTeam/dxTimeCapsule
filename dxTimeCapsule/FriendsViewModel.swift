@@ -27,82 +27,101 @@ class FriendsViewModel: ObservableObject {
     
     // 친구 검색 (닉네임 기준 영어 2글자만 입력해도 검색되게)
     func searchUsersByUserName(userName: String, completion: @escaping ([User]?, Error?) -> Void) {
-        
         // 검색어의 첫 글자를 대문자로 변환합니다.
         let firstLetter = userName.prefix(1).uppercased()
         let remainingString = userName.dropFirst().lowercased()
         let searchQuery = firstLetter + remainingString
         
+        print("검색 쿼리: \(searchQuery)") // 디버깅 출력
+
         let query = db.collection("users")
             .whereField("userName", isGreaterThanOrEqualTo: searchQuery)
             .whereField("userName", isLessThan: searchQuery + "\u{f8ff}")
         
         query.getDocuments { (snapshot, error) in
             if let error = error {
+                print("Firestore에서 사용자 검색 중 에러 발생: \(error.localizedDescription)") // 에러 발생 시 디버깅 출력
                 completion(nil, error)
                 return
             }
             
             guard let documents = snapshot?.documents else {
+                print("Firestore에서 문서를 찾을 수 없음.") // 문서가 없을 때 디버깅 출력
                 completion([], nil)
                 return
             }
             
+            print("검색된 문서 수: \(documents.count)") // 검색된 문서의 수 디버깅 출력
+
             let users: [User] = documents.compactMap { doc in
-                // User 구조체의 새 이니셜라이저를 사용하여 각 문서로부터 User 인스턴스를 생성합니다.
-                return User()
+                let data = doc.data()
+                return User(
+                    uid: doc.documentID, // 문서 ID를 uid로 사용
+                    userName: data["userName"] as? String,
+                    email: data["email"] as? String,
+                    profileImageUrl: data["profileImageUrl"] as? String,
+                    friendsUid: data["friendsUid"] as? [String],
+                    friends: data["friends"] as? [String: Timestamp],
+                    friendRequestsSent: data["friendRequestsSent"] as? [String: Timestamp],
+                    friendRequestsReceived: data["friendRequestsReceived"] as? [String: Timestamp]
+                )
+            }
+            
+            if users.isEmpty {
+                print("검색 결과가 없습니다.") // 검색 결과가 없을 때 디버깅 출력
+            } else {
+                print("검색된 사용자: \(users)") // 검색된 사용자 디버깅 출력
             }
             
             completion(users, nil)
         }
     }
+
     
-    // 친구 상태 확인
+    // 친구 상태 확인 개선
     func checkFriendshipStatus(forUser userId: String, completion: @escaping (String) -> Void) {
         guard let currentUser = Auth.auth().currentUser else {
             completion("사용자 인증 실패")
             return
         }
         let currentUserID = currentUser.uid
+        print("currentUserID=" + currentUserID)
         
         // 현재 사용자 문서 가져오기
         db.collection("users").document(currentUserID).getDocument { (document, error) in
             if let error = error {
                 completion("데이터 조회 실패: \(error.localizedDescription)")
+                print("Error fetching user data: \(error.localizedDescription)")
                 return
             }
             
-            guard let document = document, document.exists,
-                  let userData = document.data() else {
+            guard let document = document, document.exists, let userData = document.data() else {
                 completion("사용자 데이터를 찾을 수 없습니다.")
+                print("User data not found.")
                 return
             }
             
-            // 친구 요청 보낸 상태 확인
-            if let friendRequestsSent = userData["friendRequestsSent"] as? [String: Timestamp],
-               friendRequestsSent.keys.contains(userId) {
+            // 여기서부터 비동기 작업이 완료된 것으로 간주하고, 디버깅 메시지를 출력합니다.
+            print("Debugging: Current user data - \(userData)")
+            
+            // 비즈니스 로직에 따른 분기 처리
+            // 예를 들어, 친구 요청 보낸 상태 확인
+            if let friendRequestsSent = userData["friendRequestsSent"] as? [String: Timestamp], friendRequestsSent.keys.contains(userId) {
                 completion("요청 보냄")
-                return
-            }
-            
-            // 친구 요청 받은 상태 확인
-            if let friendRequestsReceived = userData["friendRequestsReceived"] as? [String: Timestamp],
-               friendRequestsReceived.keys.contains(userId) {
+                print("Friend request sent.")
+            } else if let friendRequestsReceived = userData["friendRequestsReceived"] as? [String: Timestamp], friendRequestsReceived.keys.contains(userId) {
                 completion("요청 받음")
-                return
-            }
-            
-            // 이미 친구인지 확인
-            if let friends = userData["friends"] as? [String: String],
-               friends.keys.contains(userId) {
+                print("Friend request received.")
+            } else if let friends = userData["friends"] as? [String: String], friends.keys.contains(userId) {
                 completion("이미 친구입니다")
-                return
+                print("Already friends.")
+            } else {
+                completion("친구 추가")
+                print("Can send friend request.")
             }
-            
-            // 친구 요청 가능 상태
-            completion("친구 추가")
         }
     }
+
 
     
     // 친구 요청 보내기
@@ -272,8 +291,5 @@ class FriendsViewModel: ObservableObject {
         }
     }
 
-    func uploadPost(description: String, selectedImage: UIImage?, emoji: String, openDate: Date) {
-        // 게시물 업로드 로직 구현
-    }
     
 }

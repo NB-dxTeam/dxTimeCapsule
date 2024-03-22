@@ -161,7 +161,7 @@ class HomeViewController: UIViewController {
         return stackView
     }()
     
-    // noMainTC 버튼
+    // addTCButton 버튼
     let addTCButton: UIButton = {
         let button = UIButton(type: .system)
         let image = UIImage(systemName: "plus.app")?.withRenderingMode(.alwaysTemplate)
@@ -193,7 +193,6 @@ class HomeViewController: UIViewController {
         button.setBackgroundImage(image, for: .normal)
         button.clipsToBounds = true
         button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(openedTCButtonTapped), for: .touchUpInside)
         
         // 버튼 내에 UILabel 추가
         let titleLabel = UILabel()
@@ -232,12 +231,11 @@ class HomeViewController: UIViewController {
         button.setBackgroundImage(image, for: .normal)
         button.clipsToBounds = true
         button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(upcomingTCButtonTapped), for: .touchUpInside)
         
         // 버튼 내에 UILabel 추가
         let titleLabel = UILabel()
         titleLabel.text = "Upcoming\nmemories"
-        titleLabel.numberOfLines = 2
+        titleLabel.numberOfLines = 0
         titleLabel.textAlignment = .center
         titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
         titleLabel.textColor = .white
@@ -284,6 +282,8 @@ class HomeViewController: UIViewController {
         addLogoToNavigationBar()
         fetchTimeCapsuleData()
         configureUI()
+        openedTCButton.addTarget(self, action: #selector(openedTCButtonTapped), for: .touchUpInside)
+        upcomingTCButton.addTarget(self, action: #selector(upcomingTCButtonTapped), for: .touchUpInside)
     }
     
     // MARK: - Helpers
@@ -442,12 +442,9 @@ class HomeViewController: UIViewController {
                                 self.animateMainTCImageChange()
                                 self.duestTCInforStackView.removeFromSuperview()
                                 self.upcomingTCButton.isEnabled = false
-                                self.upcomingTCButton.setBackgroundImage(UIImage(named: "empty"), for: .normal)
+                                self.upcomingTCButton.setBackgroundImage(UIImage(named: "emptyBox"), for: .normal)
                                 if let titleLabel = self.upcomingTCButton.subviews.first(where: { $0 is UILabel }) as? UILabel {
-                                    titleLabel.text = ""
-                                    titleLabel.textColor = .black
-                                    titleLabel.backgroundColor = UIColor.gray.withAlphaComponent(0)
-                                    titleLabel.font = UIFont.boldSystemFont(ofSize: 100)
+                                        titleLabel.text = "NO\nMemories\nYET😭"
                                 }
                             }
                         } else if let document = querySnapshot?.documents.first {
@@ -508,7 +505,7 @@ class HomeViewController: UIViewController {
                             print("No saved memories found")
                             DispatchQueue.main.async {
                                 self.openedTCButton.isEnabled = false
-                                self.openedTCButton.setBackgroundImage(UIImage(named: "empty"), for: .normal)
+                                self.openedTCButton.setBackgroundImage(UIImage(named: "emptyBox"), for: .normal)
                                 if let titleLabel = self.openedTCButton.subviews.first(where: { $0 is UILabel }) as? UILabel {
                                     titleLabel.text = "NO\nMemories\nYET😭"
                                 }
@@ -521,7 +518,6 @@ class HomeViewController: UIViewController {
                 }
         }
     }
-    
     
     // MARK: - Image Transition Animation
     
@@ -590,7 +586,6 @@ class HomeViewController: UIViewController {
     @objc private func addNewTC() {
         print("새 타임머신 만들기 클릭되었습니다")
         let addNewTC = LocationMapkitViewController()
-//        let navController = UINavigationController(rootViewController: addNewTC)
         navigationController?.pushViewController(addNewTC, animated: true)
     }
     
@@ -614,3 +609,10 @@ class HomeViewController: UIViewController {
     }
 }
 
+import SwiftUI
+
+struct Previewsaa : PreviewProvider {
+    static var previews: some View {
+        MainTabBarView().toPreview()
+    }
+}

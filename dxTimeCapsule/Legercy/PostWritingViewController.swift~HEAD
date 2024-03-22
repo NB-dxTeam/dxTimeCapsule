@@ -4,18 +4,26 @@ import FirebaseFirestore
 import FirebaseStorage
 import SnapKit
 
-class PostWritingViewControllerNew: UIViewController, UITextViewDelegate {
+class PostWritingViewController: UIViewController, UITextViewDelegate {
     
     // MARK: - Properties
-    var viewModel = FriendsViewModel()
     var selectedImage: UIImage?
     var userProfileImageView: UIImageView!
     var userNameLabel: UILabel!
     var friends: [User] = []
-    var selectedFriends: [User] = []
-    var selectedMood: String = ""
-    var selectedMoodDescription: String = ""
-        
+    
+    // MARK: - UI Components
+//    private let titleLabel: UILabel = {
+//        let label = UILabel()
+//        label.text = "타임캡슐 생성 위치를 확인해주세요!"
+//        label.font = UIFont.preferredFont(forTextStyle: .headline) // Dynamic type support
+//        label.textColor = .black.withAlphaComponent(0.9)
+//        label.textAlignment = .center
+//        label.numberOfLines = 0
+//        label.adjustsFontSizeToFitWidth = true
+//        return label
+//    }()
+    
     private let descriptionTitleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
@@ -56,29 +64,12 @@ class PostWritingViewControllerNew: UIViewController, UITextViewDelegate {
         button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline) // Dynamic type support
         button.backgroundColor = UIColor(hex: "#C82D6B")
         button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 16
+        button.layer.cornerRadius = 8
         button.layer.shadowOpacity = 0.3
         button.layer.shadowRadius = 5
         button.layer.shadowOffset = CGSize(width: 0, height: 5)
         return button
     }()
-    
-    private let friendTagTitleLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.text = "친구 태그"
-        label.textColor = UIColor(hex: "#C82D6B")
-        return label
-        
-    }()
-    
-    private lazy var friendTagButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("친구 태그하기", for: .normal)
-        button.addTarget(self, action: #selector(tagFriends), for: .touchUpInside)
-        return button
-    }()
-    
     
     // MARK: - View Lifecycle
     override func viewDidLoad() {
@@ -88,31 +79,15 @@ class PostWritingViewControllerNew: UIViewController, UITextViewDelegate {
         descriptionTextView.delegate = self
         setupGestures()
         createButton.addTarget(self, action: #selector(createTimeCapsule), for: .touchUpInside)
-
-        if let userId = Auth.auth().currentUser?.uid {
-            viewModel.fetchFriends(forUser: userId) { [weak self] friends, error in
-                DispatchQueue.main.async {
-                    if let friends = friends {
-                        self?.friends = friends
-                        // 필요한 UI 업데이트 로직 추가
-                        // 예: self?.updateUIWithFriends()
-                    } else if let error = error {
-                        print("친구 목록을 가져오는 데 실패했습니다: \(error.localizedDescription)")
-                        // 적절한 에러 처리 로직 추가
-                    }
-                }
-            }
-        } else {
-            print("사용자가 로그인하지 않았습니다.")
-            // 사용자 로그인이 필요함을 알리는 UI 업데이트 로직 추가
-        }
+        
+        // Add pan gesture recognizer to detect downward drag
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        view.addGestureRecognizer(panGesture)
     }
-
     
-
     // MARK: - UI Setup
     private func setupUI() {
-        let stackView = UIStackView(arrangedSubviews: [ descriptionTitleLabel, descriptionTextView, openDateTitleLabel, datePicker, friendTagTitleLabel, friendTagButton, createButton])
+        let stackView = UIStackView(arrangedSubviews: [ descriptionTitleLabel, descriptionTextView, openDateTitleLabel, datePicker, createButton])
         stackView.axis = .vertical
         stackView.spacing = 20
         stackView.alignment = .fill
@@ -133,31 +108,10 @@ class PostWritingViewControllerNew: UIViewController, UITextViewDelegate {
             make.height.equalTo(100)
         }
         
-        friendTagButton.snp.makeConstraints { make in
-            make.height.equalTo(20)
-        }
-        
         createButton.snp.makeConstraints { make in
             make.width.equalTo(200)
-            make.height.equalTo(40)
-        }
-        
-        
-    }
-    
-    private func setupGestures() {
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-        view.addGestureRecognizer(panGesture)
-    }
-    
-    private func transitionToMainTabBar() {
-        if let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) {
-            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                window.rootViewController = MainTabBarView()
-            })
         }
     }
-
     
     // MARK: - UITextViewDelegate
     func textViewDidBeginEditing(_ textView: UITextView) {
@@ -172,6 +126,12 @@ class PostWritingViewControllerNew: UIViewController, UITextViewDelegate {
             textView.text = "타임박스에 들어갈 편지를 쓰세요!"
             textView.textColor = .lightGray
         }
+    }
+    
+    // MARK: - Gestures
+    private func setupGestures() {
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        view.addGestureRecognizer(panGesture)
     }
     
     // MARK: - Button Actions
@@ -195,11 +155,14 @@ class PostWritingViewControllerNew: UIViewController, UITextViewDelegate {
         present(alert, animated: true, completion: nil)
     }
     
-    @objc private func tagFriends() {
-        
+    private func transitionToMainTabBar() {
+        if let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) {
+            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                window.rootViewController = MainTabBarView()
+            })
+        }
     }
     
-
     // MARK: - Pan Gesture Handler
     @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: view)
@@ -229,8 +192,8 @@ class PostWritingViewControllerNew: UIViewController, UITextViewDelegate {
 
 // MARK: - SwiftUI Preview
 import SwiftUI
-struct PostWritingViewControllerPreview2: PreviewProvider {
+struct PostWritingViewControllerPreview1: PreviewProvider {
     static var previews: some View {
-        PostWritingViewControllerNew().toPreview()
+        PostWritingViewController().toPreview()
     }
 }

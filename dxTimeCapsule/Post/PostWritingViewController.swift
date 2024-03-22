@@ -319,6 +319,14 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
         let tagFriendUserName = taggedFriends.map { $0.userName ?? ""}
         let createTimeBoxDate = Timestamp(date: Date()) // 현재 시간을 생성일로 설정
         
+        // 태그된 친구가 없는 경우에 대한 처리 추가
+        if tagFriendUid.isEmpty {
+            print("태그된 친구가 없습니다.")
+            // 태그된 친구가 없는 경우에 대한 추가적인 처리를 여기에 추가할 수 있습니다.
+            // 예: 사용자에게 경고 메시지를 표시하거나, 타임박스 업로드를 중지합니다.
+            // 이 예제에서는 태그된 친구가 없어도 타임박스를 업로드할 수 있도록 진행합니다.
+        }
+        
         // Firestore에서 사용자의 이름 가져오기
         let userDocRef = Firestore.firestore().collection("users").document(currentUser.uid)
         userDocRef.getDocument { [weak self] (document, error) in
@@ -327,9 +335,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
                 if let userName = document.data()?["userName"] as? String {
                     // 사용자의 이름이 성공적으로 가져와졌습니다.
                     
-                    // 나머지 코드는 변경하지 않습니다.
                     let geocoder = CLGeocoder()
-                    
                     let location = CLLocation(latitude: locationCoordinate.latitude, longitude: locationCoordinate.longitude)
                     
                     geocoder.reverseGeocodeLocation(location, preferredLocale: Locale(identifier: "ko_KR")) { [weak self] (placemarks, error) in
@@ -349,8 +355,9 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
                         self.viewModel.uploadTimeBox(
                             id: id,
                             uid: currentUser.uid,
-                            userName: userName,
-                            imageURL: self.selectedImage!,
+                            userName: userName, 
+                            thumbnailImage: selectedImage![0],
+                            imageArray: self.selectedImage!,
                             location: GeoPoint(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude),
                             addressTitle: addressTitle,
                             address: address,
@@ -358,21 +365,18 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
                             tagFriendUid: tagFriendUid, // 태그된 친구 UID 배열 전달
                             tagFriendUserName: tagFriendUserName, // 태그된 친구 이름 배열 전달
                             createTimeBoxDate: createTimeBoxDate,
-                            openTimeBoxDate: openTimeBoxDate!,
+                            openTimeBoxDate: openDate,
                             isOpened: false,
                             completion: { result in
                                 switch result {
                                 case .success():
                                     print("타임캡슐 업로드 성공")
-                                    // 성공적으로 업로드된 후의 처리 로직 (예: 알림 표시, 화면 전환 등)
-                                    self.showAlert(title: "타임캡슐 생성 완료", message: "타임캡슐이 성공적으로 생성되었습니다.")
+                                    self.showSuccessAlertAndSwitchView()
                                 case .failure(let error):
                                     print("타임캡슐 업로드 실패: \(error.localizedDescription)")
-                                    // 실패 시 처리 로직
                                 }
                             }
                         )
-                        
                     }
                 } else {
                     print("사용자 이름을 Firestore에서 가져올 수 없습니다.")
@@ -382,7 +386,26 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
             }
         }
     }
-    
+
+    private func showSuccessAlertAndSwitchView() {
+        let alert = UIAlertController(title: "완료되었습니다", message: "타임박스가 성공적으로 생성되었습니다!", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { _ in
+            self.switchToMainTabBarView()
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+
+    // 
+    private func switchToMainTabBarView() {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let sceneDelegate = windowScene.delegate as? SceneDelegate else {
+            return
+        }
+
+        let mainTabBarVC = MainTabBarView() // 메인 탭 바 뷰 컨트롤러 인스턴스 생성
+        sceneDelegate.window?.rootViewController = mainTabBarVC
+        sceneDelegate.window?.makeKeyAndVisible()
+    }
     
     // 데이터 피커의 값이 변경될 때 호출되는 메서드
     @objc private func datePickerValueChanged(_ datePicker: UIDatePicker) {
@@ -494,7 +517,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
             guard let stringRange = Range(range, in: currentText) else { return false }
             let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
 
-            if updatedText.count > 10 {
+            if updatedText.count > 20 {
                 // 사용자에게 경고 표시
                 showAlert(title: "안내", message: "장소명은 10자를 넘길 수 없습니다.")
                 return false

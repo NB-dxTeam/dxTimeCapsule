@@ -1,11 +1,3 @@
-//
-//  AuthService.swift
-//  dxTimeCapsule
-//
-//  Created by Lee HyeKyung on 3/14/24.
-//
-
-//import Firebase
 import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
@@ -45,7 +37,13 @@ class AuthService {
                         return
                     }
                     
-                    let userData = ["email": email, "userName": userName, "profileImageUrl": downloadURL.absoluteString]
+                    // Here we include the uid in the userData dictionary
+                    let userData = [
+                        "uid": uid,
+                        "email": email,
+                        "userName": userName,
+                        "profileImageUrl": downloadURL.absoluteString
+                    ]
                     Firestore.firestore().collection("users").document(uid).setData(userData) { error in
                         if let error = error {
                             completion(.failure(error))

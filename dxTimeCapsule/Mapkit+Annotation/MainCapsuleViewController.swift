@@ -166,7 +166,12 @@ class MainCapsuleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        // 기본 'Back' 버튼 숨기기
+        self.navigationItem.hidesBackButton = true
 //        setupBackLightLayout()
+        // 왼쪽 backButton 설정
+        
+        setupBackButton()
         setupLayout()
         addTapGestureToCapsuleImageView()
         checkIfItsOpeningDay()
@@ -174,7 +179,29 @@ class MainCapsuleViewController: UIViewController {
         setupStackView()
         setupDetailedLocationLabel()
     }
+    
+    // 왼쪽 backButton 설정 메서드
+    private func setupBackButton() {
+        let backButton = UIButton(type: .system)
+        let image = UIImage(systemName: "chevron.left")
+        backButton.setImage(image, for: .normal)
+        backButton.tintColor = UIColor(red: 209/255.0, green: 94/255.0, blue: 107/255.0, alpha: 1)
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        
+        // 버튼의 프레임을 설정하여 클릭 영역을 확장합니다.
+        backButton.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
 
+        // 네비게이션 아이템에 backButton 설정
+        let backButtonBarItem = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = backButtonBarItem
+    }
+
+    @objc private func backButtonTapped() {
+           let tabBarController = MainTabBarView()
+           tabBarController.modalPresentationStyle = .fullScreen
+           present(tabBarController, animated: true, completion: nil)
+       }
+    
     private func setupStackView() {
         dDayBackgroundView.addSubview(dDayLabel)
         
@@ -293,6 +320,8 @@ class MainCapsuleViewController: UIViewController {
         openCapsuleLabel.isHidden = true
         detailedLocationLabel.isHidden = true
         dDayBackgroundView.isHidden = true
+        // 네비게이션 바의 backButton 숨기기
+        navigationItem.leftBarButtonItem = nil
     }
 
     private func addShakeAnimation() {

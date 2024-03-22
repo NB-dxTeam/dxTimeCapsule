@@ -194,6 +194,7 @@ class SignUpViewController: UIViewController  {
             make.height.equalTo(50)
         }
         
+        
         // Ensure dividerView is added to the view before setting constraints
         dividerView.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-70)
@@ -518,7 +519,7 @@ extension SignUpViewController: TermsViewControllerDelegate {
             // 회원가입 성공 후 메인 화면으로 이동
             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                let sceneDelegate = windowScene.delegate as? SceneDelegate {
-                let mainTabBarController = MainTabBarView()
+                let mainTabBarController = NewUserViewController()
                 sceneDelegate.window?.rootViewController = mainTabBarController
             }
         }

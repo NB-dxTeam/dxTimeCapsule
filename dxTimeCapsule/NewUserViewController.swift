@@ -6,21 +6,29 @@
 //
 
 import UIKit
-
+import SnapKit
 //#Preview{
 //    NewUserViewController()
 //}
 
 class NewUserViewController: UIViewController {
     
-    var imageView: UIImageView!
-    var images: [UIImage] = []
-    var currentImageIndex = 0
+    let imageLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = UIColor.systemGray5.withAlphaComponent(0.5) // 투명도를 0.5로 설정
+        label.text = "😢"
+        label.font = UIFont.boldSystemFont(ofSize: 200)
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.1
+        label.textAlignment = .center
+        return label
+    }()
     
     let newLabel: UILabel = {
         let label = UILabel()
-        label.text = "아직 생성된 캡슐이 없습니다 🥲\n첫번째 캡슐을 만들어 시간여행을 준비하세요!"
-        label.font = UIFont.boldSystemFont(ofSize: 15)
+//        label.backgroundColor = UIColor.systemCyan.withAlphaComponent(0.5)
+        label.text = "아직 생성된 캡슐이 없습니다 😭\n첫번째 캡슐을 만들어 시간여행을 준비하세요!"
+        label.font = UIFont.boldSystemFont(ofSize: 20)
         label.numberOfLines = 2
         label.textColor = .black
         label.textAlignment = .center
@@ -31,48 +39,43 @@ class NewUserViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle("새로운 타임캡슐 만들기", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = UIColor(red: 213/255.0, green: 51/255.0, blue: 105/255.0, alpha: 1.0)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .black)
-        button.layer.cornerRadius = 10
-        button.addTarget(NewUserViewController.self, action: #selector(addNewTC), for: .touchUpInside)
+        button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 16)
+        button.layer.cornerRadius = 16
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowRadius = 6
+        button.layer.shadowOpacity = 0.3
+        button.layer.shadowOffset =  CGSize(width: 0, height: 3)
         return button
     }()
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        addNewTCButton.setCustom1()
-      }
+        addNewTCButton.setInstagram()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        startSlideShow()
+        addNewTCButton.addTarget(self, action: #selector(addNewTC), for: .touchUpInside)
     }
     
     private func setupUI() {
         view.backgroundColor = .white
         navigationController?.isNavigationBarHidden = true
-        
         configureImageView()
-        loadImages()
     }
     
     private func configureImageView() {
-        imageView = UIImageView()
-        imageView.contentMode = .scaleToFill
-        imageView.layer.cornerRadius = 10
-        imageView.clipsToBounds = true
-        view.addSubview(imageView)
-        
-        imageView.snp.makeConstraints { make in
+        view.addSubview(imageLabel)
+        imageLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(view.bounds.height / 7)
             make.leading.trailing.equalToSuperview().inset(30)
-            make.height.equalToSuperview().multipliedBy(1.5/3.0)
+            make.height.equalToSuperview().multipliedBy(3.0/7.0)
         }
         
         view.addSubview(newLabel)
         newLabel.snp.makeConstraints { make in
-            make.top.equalTo(imageView.snp.bottom).offset(20)
+            make.top.equalTo(imageLabel.snp.bottom).offset(20)
             make.leading.trailing.equalToSuperview().inset(30)
             make.height.equalToSuperview().multipliedBy(0.5/7.0)
         }
@@ -81,45 +84,29 @@ class NewUserViewController: UIViewController {
         addNewTCButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(newLabel.snp.bottom).offset(20)
-            make.width.equalToSuperview().multipliedBy(1.5/3.0)
-            make.height.equalToSuperview().multipliedBy(0.5/7.0)
-        }
-    }
-    
-    private func loadImages() {
-        images = [
-            UIImage(named: "kuma1")!,
-            UIImage(named: "kuma2")!,
-            UIImage(named: "kuma3")!,
-            UIImage(named: "kuma4")!,
-            UIImage(named: "kuma5")!
-        ]
-    }
-    
-    private func startSlideShow() {
-        if !images.isEmpty {
-            UIView.transition(with: imageView,
-                              duration: 3.0,
-                              options: .transitionCrossDissolve,
-                              animations: {
-                                self.imageView.image = self.images[self.currentImageIndex]
-                              },
-                              completion: { _ in
-                                self.moveToNextImage()
-                                self.startSlideShow()
-                              })
-        }
-    }
-    
-    private func moveToNextImage() {
-        currentImageIndex += 1
-        if currentImageIndex == images.count {
-            currentImageIndex = 0
+            make.width.equalToSuperview().multipliedBy(2.3/3.0)
+            make.height.equalTo(50)
+
         }
     }
     
     @objc private func addNewTC() {
         print("새 타임머신 만들기 클릭되었습니다")
-        // 새로운 타임캡슐을 만들기 위한 코드 추가
+        let addNewTC = LocationMapkitViewController()
+        // 현재 윈도우 객체 가져오기
+        guard let window = UIApplication.shared.windows.first else {
+            return
+        }
+        // 새로운 타임캡슐 뷰 컨트롤러를 루트 뷰 컨트롤러로 설정
+        window.rootViewController = addNewTC
+        window.makeKeyAndVisible()
+    }
+}
+// MARK: - SwiftUI Preview
+import SwiftUI
+
+struct Previewsa : PreviewProvider {
+    static var previews: some View {
+        NewUserViewController().toPreview()
     }
 }
