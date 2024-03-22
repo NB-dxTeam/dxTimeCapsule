@@ -13,7 +13,6 @@ import FirebaseFirestore
 import FirebaseAuth
 
 class CapsuleMapViewController: UIViewController {
-    private var customModal: CustomModal?
     let capsuleMaps = MKMapView() // 지도 뷰
     var locationManager = CLLocationManager()
     var currentDetent: String? = nil
@@ -151,13 +150,10 @@ class CapsuleMapViewController: UIViewController {
         locationSetting()
         setupMapView()
         buttons()
-        customModal = CustomModal()
         updateButtonSelection(allButton)
         selectedButton = allButton
         loadCapsuleInfos(button: .all)
-        
         navigationController?.isNavigationBarHidden = true
-
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -518,7 +514,7 @@ extension CapsuleMapViewController: MKMapViewDelegate {
             annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             annotationView?.canShowCallout = true
             annotationView?.animatesWhenAdded = true
-            annotationView?.glyphImage = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? UIImage(named: "lockimage") : UIImage(named: "lockimage")
+            annotationView?.glyphImage = UIImage(named: "lockimage")
             annotationView?.glyphTintColor = .white
             annotationView?.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .gray : .red
             
@@ -531,7 +527,7 @@ extension CapsuleMapViewController: MKMapViewDelegate {
         annotationView?.annotation = annotation
         annotationView?.canShowCallout = true
         annotationView?.animatesWhenAdded = true
-        annotationView?.glyphImage = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? UIImage(named: "lockimage") : UIImage(named: "lockimage")
+        annotationView?.glyphImage = UIImage(named: "lockimage")
         annotationView?.glyphTintColor = .white
         annotationView?.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .gray : .red
         
