@@ -15,6 +15,7 @@ import FirebaseAuth
 class CustomModal: UIViewController {
     
     var timeBoxes = [TimeBox]()
+    var capsuleMapViewController = CapsuleMapViewController()
     var onCapsuleSelected: ((Double, Double) -> Void)? //선택된 위치 정보를 받아 처리하는 클로저
     private var headerCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
