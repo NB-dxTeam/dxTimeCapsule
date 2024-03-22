@@ -13,15 +13,18 @@ class SignUpViewController: UIViewController  {
     private let emailTextField = UITextField()
     private let passwordTextField = UITextField()
     private let confirmPasswordTextField = UITextField()
-    private let usernameTextField = UITextField()
+    private let userNameTextField = UITextField()
     private let signUpButton = UIButton(type: .system)
     
+    // 중복확인 버튼
+    private let checkEmailButton = UIButton(type: .system)
+    private let checkUserNameButton = UIButton(type: .system)
     
     // 유효성 라벨
     private let emailValidationLabel = UILabel()
     private let passwordValidationLabel = UILabel()
     private let confirmPasswordValidationLabel = UILabel()
-    private let usernameValidationLabel = UILabel()
+    private let userNameValidationLabel = UILabel()
 
     
     private let labelsContainerView = UIView()
@@ -69,17 +72,28 @@ class SignUpViewController: UIViewController  {
         configureTextField(emailTextField, placeholder: "Enter your email")
         configureTextField(passwordTextField, placeholder: "Enter your password", isSecure: true)
         configureTextField(confirmPasswordTextField, placeholder: "Confirm your password", isSecure: true)
-        configureTextField(usernameTextField, placeholder: "Enter your username")
+        configureTextField(userNameTextField, placeholder: "Enter your userName")
         
         // configure the validationLabel
         configureValidationLabel(emailValidationLabel)
         configureValidationLabel(passwordValidationLabel)
         configureValidationLabel(confirmPasswordValidationLabel)
-        configureValidationLabel(usernameValidationLabel)
+        configureValidationLabel(userNameValidationLabel)
         view.addSubview(emailValidationLabel)
         view.addSubview(passwordValidationLabel)
         view.addSubview(confirmPasswordValidationLabel)
-        view.addSubview(usernameValidationLabel)
+        view.addSubview(userNameValidationLabel)
+        
+        // Configure the checkEmailButton
+        configureLineButton(checkEmailButton, title: "Check Email")
+        checkEmailButton.addTarget(self, action: #selector(checkEmailPressed), for: .touchUpInside)
+        
+        // Configure the checkUserNameButton
+        configureLineButton(checkUserNameButton, title: "Check UserName")
+        checkUserNameButton.addTarget(self, action: #selector(checkUserNamePressed), for: .touchUpInside)
+        
+        view.addSubview(checkEmailButton)
+        view.addSubview(checkUserNameButton)
         
         // Configure the signUpButton
         configureButton(signUpButton, title: "Sign Up")
@@ -123,6 +137,12 @@ class SignUpViewController: UIViewController  {
             make.left.right.equalToSuperview().inset(50)
             make.height.equalTo(44)
         }
+        
+        checkEmailButton.snp.makeConstraints { make in
+            make.centerY.equalTo(emailTextField)
+            make.right.equalToSuperview().inset(10)
+            make.width.equalTo(100)
+        }
 
         emailValidationLabel.snp.makeConstraints { make in
             make.top.equalTo(emailTextField.snp.bottom).offset(5)
@@ -151,15 +171,26 @@ class SignUpViewController: UIViewController  {
             make.left.right.equalTo(confirmPasswordTextField)
         }
         
-        usernameTextField.snp.makeConstraints { make in
+        userNameTextField.snp.makeConstraints { make in
             make.top.equalTo(confirmPasswordValidationLabel.snp.bottom).offset(10)
             make.left.right.equalTo(passwordTextField)
             make.height.equalTo(44)
         }
         
+        checkUserNameButton.snp.makeConstraints { make in
+            make.centerY.equalTo(userNameTextField)
+            make.right.equalToSuperview().inset(10)
+            make.width.equalTo(120)
+        }
+        
+        userNameValidationLabel.snp.makeConstraints { make in
+            make.top.equalTo(userNameTextField.snp.bottom).offset(5)
+            make.left.right.equalTo(userNameTextField)
+        }
+        
         signUpButton.snp.makeConstraints { make in
-            make.top.equalTo(usernameTextField.snp.bottom).offset(20)
-            make.left.right.equalTo(usernameTextField)
+            make.top.equalTo(userNameTextField.snp.bottom).offset(20)
+            make.left.right.equalTo(userNameTextField)
             make.height.equalTo(50)
         }
         
@@ -214,6 +245,17 @@ class SignUpViewController: UIViewController  {
         button.snp.makeConstraints { make in
             make.height.equalTo(44)
         }
+        view.addSubview(button)
+    }
+    
+    private func configureLineButton(_ button: UIButton, title: String) {
+        button.setTitle(title, for: .normal)
+        button.setTitleColor(UIColor(hex: "#FF3A4A"), for: .normal) // 글씨 색상 설정
+        button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 14) // 텍스트 크기 및 폰트 설정
+        button.layer.cornerRadius = 10
+        button.layer.borderWidth = 1 // 테두리 두께 설정
+        button.layer.borderColor = UIColor(hex: "#FF3A4A").cgColor // 테두리 색상 설정
+        
         view.addSubview(button)
     }
     
@@ -275,6 +317,54 @@ class SignUpViewController: UIViewController  {
         present(imagePickerController, animated: true)
     }
     
+    // MARK: - Button Actions
+    
+    @objc private func checkEmailPressed() {
+        guard let email = emailTextField.text, !email.isEmpty else {
+            presentAlert(title: "Error", message: "사용할 메일주소를 입력해 주세요.")
+            return
+        }
+        
+        Firestore.firestore().collection("users").whereField("email", isEqualTo: email).getDocuments { snapshot, error in
+            if let error = error {
+                self.presentAlert(title: "Error", message: error.localizedDescription)
+                return
+            }
+            
+            if let snapshot = snapshot, !snapshot.isEmpty {
+                self.emailValidationLabel.text = "사용 중인 메일주소입니다."
+                self.emailValidationLabel.textColor = .red
+            } else {
+                self.emailValidationLabel.text = "이메일 확인이 완료 되었습니다."
+                self.emailValidationLabel.textColor = .gray
+            }
+        }
+    }
+
+    @objc private func checkUserNamePressed() {
+        guard let userName = userNameTextField.text, !userName.isEmpty else {
+            presentAlert(title: "Error", message: "사용할 닉네임을 입력해 주세요.")
+            return
+        }
+        
+        Firestore.firestore().collection("users").whereField("userName", isEqualTo: userName).getDocuments { snapshot, error in
+            if let error = error {
+                self.presentAlert(title: "Error", message: error.localizedDescription)
+                return
+            }
+            
+            if let snapshot = snapshot, !snapshot.isEmpty {
+                self.userNameValidationLabel.text = "사용 중인 닉네임입니다."
+                self.userNameValidationLabel.textColor = .red
+            } else {
+                self.userNameValidationLabel.text = "닉네임 확인이 완료 되었습니다."
+                self.userNameValidationLabel.textColor = .gray
+            }
+        }
+    }
+
+
+    
     
     // 이전 화면으로 돌아가기
     @objc private func dismissSelf() {
@@ -328,8 +418,10 @@ class SignUpViewController: UIViewController  {
     @objc private func signUpButtonPressed() {
         guard let email = emailTextField.text, !email.isEmpty,
               let password = passwordTextField.text, !password.isEmpty,
-              let username = usernameTextField.text, !username.isEmpty,
-              let profileImage = profileImageView.image else {
+              let userName = userNameTextField.text, !userName.isEmpty,
+              let profileImage = profileImageView.image,
+              emailValidationLabel.text == "이메일 확인이 완료 되었습니다.",
+              userNameValidationLabel.text == "닉네임 확인이 완료 되었습니다." else {
             presentAlert(title: "입력 오류", message: "모든 필드를 채워주세요.")
             return
         }
@@ -338,7 +430,7 @@ class SignUpViewController: UIViewController  {
         
         termsVC.email = email
         termsVC.password = password
-        termsVC.username = username
+        termsVC.userName = userName
         termsVC.profileImage = profileImage
         
         termsVC.modalPresentationStyle = .formSheet // iPad에서 반 모달 스타일로 표시합니다.
@@ -385,7 +477,7 @@ class SignUpViewController: UIViewController  {
                     let userData: [String: Any] = [
                         "uid": uid,
                         "email": email,
-                        "username": username,
+                        "userName": userName,
                         "profileImageUrl": downloadURL.absoluteString,
                         "friends": [],
                         "friendRequestsSent": [],
@@ -414,6 +506,9 @@ class SignUpViewController: UIViewController  {
         }
         */
     }
+    
+
+
 }
 
 // MARK: - TermsViewControllerDelegate
@@ -464,6 +559,8 @@ func isValidEmail(_ email: String) -> Bool {
 
 func isPasswordStrong(_ password: String) -> Bool {
     let minLength = 8
+    
+    // For Strong Passward
 //    let hasUpperCase = password.range(of: "[A-Z]", options: .regularExpression) != nil
 //    let hasLowerCase = password.range(of: "[a-z]", options: .regularExpression) != nil
 //    let hasDigits = password.range(of: "\\d", options: .regularExpression) != nil
@@ -477,3 +574,5 @@ private func configureValidationLabel(_ label: UILabel) {
     label.font = UIFont.systemFont(ofSize: 12)
     label.textColor = .red // 유효성 검사 실패 메시지는 빨간색으로 표시
 }
+
+

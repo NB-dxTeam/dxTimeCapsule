@@ -71,10 +71,10 @@ extension CapsuleMapViewController {
         detailView.addSubview(stackView)
         
         stackView.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
+            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
         }
         detailView.snp.makeConstraints { make in
-            make.width.equalTo(200)
+            make.width.equalTo(150)
         }
         DispatchQueue.main.async {
             self.friendsCollectionView.reloadData()
@@ -85,10 +85,11 @@ extension CapsuleMapViewController {
     }
     
     func addAnnotations(from timeBoxes: [TimeBox]) {
-        print("Adding annotations for \(timeBoxes.count) timeBoxes.")
-        // 모든 TimeBox에서 고유한 tagFriendUid 값을 모두 수집
-        let allTaggedFriendUids = Set(timeBoxes.compactMap({ $0.tagFriendUid }).flatMap({ $0 }))
+        print("addAnnotations 호출됨, 처리할 timeBoxes의 수: \(timeBoxes.count)")
+        capsuleMaps.removeAnnotations(capsuleMaps.annotations) // 기존 어노테이션 제거
         
+        let allTaggedFriendUids = Set(timeBoxes.compactMap({ $0.tagFriendUid }).flatMap({ $0 }))
+                
         // 친구 정보 가져오기.
         FirestoreDataService().fetchFriendsInfo(byUIDs: Array(allTaggedFriendUids)) { [weak self] friendsInfo in
             guard let friendsInfo = friendsInfo else { return }

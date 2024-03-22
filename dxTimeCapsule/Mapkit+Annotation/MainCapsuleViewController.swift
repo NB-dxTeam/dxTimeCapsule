@@ -11,7 +11,6 @@ import FirebaseFirestore
 import FirebaseAuth
 
 class MainCapsuleViewController: UIViewController {
-    private var viewModel = MainCapsuleViewModel()
     var documentId: String?
     
     private var openDate: Date?

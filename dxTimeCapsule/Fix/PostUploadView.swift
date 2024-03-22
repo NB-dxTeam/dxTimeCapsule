@@ -70,20 +70,3 @@ struct PostUploadView: View {
     }
 }
 
-//    .navigationBarTitle("Create Post", displayMode: .large) // 네비게이션 타이틀 설정
-
-//{
-//           Text("Upload")
-//               .font(.custom("Pretendard-Bold", size: 22)) // 사용자 지정 폰트 및 크기
-//               .padding(10)
-//               .frame(maxWidth: .infinity) // 왼쪽 정렬이 아닌 가운데 정렬을 위해 alignment 제거
-//               .background(Color.customInstagram) // 배경색 설정
-//               .foregroundColor(.white) // 텍스트 색상을 흰색으로 설정
-//               .cornerRadius(8) // 버튼을 둥글게 만듦
-//       }
-
-//struct MainTabBarViewPreview221 : PreviewProvider {
-//    static var previews: some View {
-//        MainTabBarView().toPreview()
-//    }
-//}

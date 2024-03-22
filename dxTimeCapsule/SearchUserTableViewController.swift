@@ -16,7 +16,7 @@ class SearchUserTableViewController: UIViewController, UITableViewDelegate, UITa
     
     private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
-        searchBar.placeholder = "Search Username"
+        searchBar.placeholder = "Search UserName"
         searchBar.autocorrectionType = .no
         searchBar.spellCheckingType = .no
         searchBar.backgroundImage = UIImage() // 선 제거
@@ -110,7 +110,7 @@ class SearchUserTableViewController: UIViewController, UITableViewDelegate, UITa
              return
          }
 
-         friendsViewModel.searchUsersByUsername(username: searchText) { [weak self] users, error in
+         friendsViewModel.searchUsersByUserName(userName: searchText) { [weak self] users, error in
              DispatchQueue.main.async {
                  if let error = error {
                      print("Error searching users: \(error.localizedDescription)")

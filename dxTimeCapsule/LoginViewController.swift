@@ -32,7 +32,7 @@ class LoginViewController: UIViewController {
     
     private let signUpButton : UIButton = {
         let button = UIButton(type: .system)
-        let title = "Sign up" // 버튼의 제목 설정
+        let title = "Sign Up" // 버튼의 제목 설정
         button.setTitle(title, for: .normal)
         button.setTitleColor(UIColor(hex: "#C82D6B"), for: .normal)
         button.layer.cornerRadius = 16
@@ -43,6 +43,10 @@ class LoginViewController: UIViewController {
         button.layer.shadowOpacity = 0.3 // 그림자의 투명도 설정 (적당한 농도로)
         button.layer.shadowOffset =  CGSize(width: 0, height: 3)
         button.layer.borderColor = UIColor(hex: "#C82D6B").cgColor
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowRadius = 6 // 그림자의 블러 정도 설정 (조금 더 부드럽게)
+        button.layer.shadowOpacity = 0.2 // 그림자의 투명도 설정 (적당한 농도로)
+        button.layer.shadowOffset =  CGSize(width: 0, height: 3) // 그림
         
         return button
     }()
@@ -82,6 +86,7 @@ class LoginViewController: UIViewController {
         //        socialLogin.backgroundColor = UIColor(hex: "#FF3A4A")
         loginButton.setInstagram()
         loginButton.layer.cornerRadius = 16
+        signUpButton.backgroundColor = .white
  
     }
     
@@ -145,7 +150,7 @@ class LoginViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(offset)
             make.centerX.equalToSuperview()
             make.width.equalTo(logoImageView.snp.height)
-            make.height.equalToSuperview().multipliedBy((2.15/6.0) * 0.7)
+            make.height.equalToSuperview().multipliedBy((2.15/6.0) * 0.85)
         }
         
         appNameLabel.snp.makeConstraints { make in
@@ -154,9 +159,9 @@ class LoginViewController: UIViewController {
         }
         
         emailTextField.snp.makeConstraints { make in
-            let offset = UIScreen.main.bounds.height * (0.6/6.0)
+            let offset = UIScreen.main.bounds.height * (0.4/6.0)
             make.top.equalTo(appNameLabel.snp.bottom).offset(offset)
-            make.left.right.equalToSuperview().inset(50)
+            make.left.right.equalToSuperview().inset(60)
             make.height.equalTo(44)
         }
         
