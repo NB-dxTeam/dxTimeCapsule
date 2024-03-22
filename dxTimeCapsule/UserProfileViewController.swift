@@ -92,22 +92,37 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         editLabel.font = UIFont.pretendardBold(ofSize: 15)
         editLabel.textColor =  .white
         
-        profileImageView.addSubview(editLabel)
+        view.addSubview(editLabel)
         
         editLabel.snp.makeConstraints { make in
           make.bottom.equalTo(profileImageView.snp.bottom).offset(-10)
           make.centerX.equalTo(profileImageView.snp.centerX)
         }
         
+        
+        // Edit 카메라 버튼 추가
+        let editIconButton = UIButton()
+        editIconButton.setImage(UIImage(named: "editCameraIcon"), for: .normal)
+        editIconButton.addTarget(self, action: #selector(changePhotoTapped), for: .touchUpInside)
+        
+        view.addSubview(editIconButton)
+        
+        editIconButton.snp.makeConstraints { make in
+            make.bottom.equalTo(profileImageView.snp.bottom).offset(-10)
+            make.right.equalTo(profileImageView.snp.right).offset(-10)
+            make.width.height.equalTo(24)
+        }
+
+
         // Nickname Label Setup
         userNameLabel.font = .pretendardSemiBold(ofSize: 24)
         userNameLabel.textAlignment = .center
         
         // Edit Nickname Button Setup
-        editUserNameButton.setTitle("Edit", for: .normal)
-        editUserNameButton.titleLabel?.font = .pretendardSemiBold(ofSize: 15)
-        editUserNameButton.setTitleColor(.darkGray, for: .normal)
+        editUserNameButton.setImage(UIImage(named: "editNameIcon"), for: .normal)
+        editUserNameButton.imageView?.contentMode = .scaleAspectFit // 아이콘의 비율을 맞추기 위함
         editUserNameButton.addTarget(self, action: #selector(editUserNameTapped), for: .touchUpInside)
+
 
         // Email Label Setup
         logoutButton.titleLabel?.font = .pretendardSemiBold(ofSize: 24)
@@ -173,14 +188,15 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         // Nickname Label Constraints
         userNameLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(profileImageView.snp.bottom).offset(20) // 수정된 부분
-            make.left.right.equalToSuperview().inset(20)
+            make.top.equalTo(profileImageView.snp.bottom).offset(20)
+            make.left.equalToSuperview().inset(20)
+            make.right.lessThanOrEqualTo(editUserNameButton.snp.left).offset(-10)
         }
 
         editUserNameButton.snp.makeConstraints { make in
             make.centerY.equalTo(userNameLabel)
-            make.leading.equalTo(userNameLabel.snp.trailing).offset(-30)
-            make.width.height.equalTo(20) // Adjust the size as needed
+            make.right.equalToSuperview().inset(50) // 오른쪽 여백에 고정
+            make.width.height.equalTo(24)  // Adjust the size as needed
         }
         
         // Email Label Constraints
@@ -564,3 +580,28 @@ func configureButton(_ button: UIButton, title: String) {
         make.height.equalTo(44)
     }
 }
+
+
+#if DEBUG
+
+import SwiftUI
+
+//UIViewControllerRepresentable는 SwiftUI내에서 UIViewController를 사용할 수 있게 해줌
+struct UserProfileViewControllerPresentable : UIViewControllerRepresentable {
+    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+    }
+    
+    func makeUIViewController(context: Context) -> some UIViewController {
+        UserProfileViewController()
+    }
+}
+
+// 미리보기 제공
+struct UserProfileViewControllerPresentable_PreviewProvider : PreviewProvider {
+    static var previews: some View{
+        UserProfileViewControllerPresentable()
+    }
+}
+
+
+#endif

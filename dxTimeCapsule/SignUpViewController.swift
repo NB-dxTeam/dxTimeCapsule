@@ -85,11 +85,11 @@ class SignUpViewController: UIViewController  {
         view.addSubview(userNameValidationLabel)
         
         // Configure the checkEmailButton
-        configureLineButton(checkEmailButton, title: "Check Email")
+        configureLineButton(checkEmailButton, title: "✓")
         checkEmailButton.addTarget(self, action: #selector(checkEmailPressed), for: .touchUpInside)
         
         // Configure the checkUserNameButton
-        configureLineButton(checkUserNameButton, title: "Check UserName")
+        configureLineButton(checkUserNameButton, title: "✓")
         checkUserNameButton.addTarget(self, action: #selector(checkUserNamePressed), for: .touchUpInside)
         
         view.addSubview(checkEmailButton)
@@ -134,24 +134,31 @@ class SignUpViewController: UIViewController  {
         
         emailTextField.snp.makeConstraints { make in
             make.top.equalTo(profileImageView.snp.bottom).offset(20)
-            make.left.right.equalToSuperview().inset(50)
+            make.left.equalToSuperview().inset(50)
+            make.right.equalTo(checkEmailButton.snp.left).offset(-10)
             make.height.equalTo(44)
         }
         
+
+//        make.top.equalTo(profileImageView.snp.bottom).offset(20)
+//          make.left.right.equalToSuperview().inset(50)
+//          make.height.equalTo(44)
+        
         checkEmailButton.snp.makeConstraints { make in
             make.centerY.equalTo(emailTextField)
-            make.right.equalToSuperview().inset(10)
-            make.width.equalTo(100)
+            make.right.equalToSuperview().inset(50)
+            make.width.equalTo(30)
+            make.height.equalTo(44)
         }
 
         emailValidationLabel.snp.makeConstraints { make in
             make.top.equalTo(emailTextField.snp.bottom).offset(5)
-            make.left.right.equalTo(emailTextField)
+            make.left.right.equalToSuperview().inset(50)
         }
         
         passwordTextField.snp.makeConstraints { make in
             make.top.equalTo(emailValidationLabel.snp.bottom).offset(10)
-            make.left.right.equalTo(emailTextField)
+            make.left.right.equalTo(emailValidationLabel)
             make.height.equalTo(44)
         }
         
@@ -173,14 +180,16 @@ class SignUpViewController: UIViewController  {
         
         userNameTextField.snp.makeConstraints { make in
             make.top.equalTo(confirmPasswordValidationLabel.snp.bottom).offset(10)
-            make.left.right.equalTo(passwordTextField)
+            make.left.equalToSuperview().inset(50)
+            make.right.equalTo(checkUserNameButton.snp.left).offset(-10)
             make.height.equalTo(44)
         }
         
         checkUserNameButton.snp.makeConstraints { make in
             make.centerY.equalTo(userNameTextField)
-            make.right.equalToSuperview().inset(10)
-            make.width.equalTo(120)
+            make.right.equalToSuperview().inset(50)
+            make.width.equalTo(30)
+            make.height.equalTo(44)
         }
         
         userNameValidationLabel.snp.makeConstraints { make in
@@ -190,7 +199,7 @@ class SignUpViewController: UIViewController  {
         
         signUpButton.snp.makeConstraints { make in
             make.top.equalTo(userNameTextField.snp.bottom).offset(20)
-            make.left.right.equalTo(userNameTextField)
+            make.left.right.equalTo(confirmPasswordTextField)
             make.height.equalTo(50)
         }
         
@@ -222,6 +231,8 @@ class SignUpViewController: UIViewController  {
             make.height.equalTo(labelsContainerView.snp.height) // labelsContainerView와 동일한 높이를 가지도록 설정
         }
     }
+
+
     
     // MARK: - Functions
     private func configureTextField(_ textField: UITextField, placeholder: String, isSecure: Bool = false) {
@@ -576,3 +587,26 @@ private func configureValidationLabel(_ label: UILabel) {
 }
 
 
+#if DEBUG
+
+import SwiftUI
+
+//UIViewControllerRepresentable는 SwiftUI내에서 UIViewController를 사용할 수 있게 해줌
+struct ViewControllerPresentable : UIViewControllerRepresentable {
+    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+    }
+    
+    func makeUIViewController(context: Context) -> some UIViewController {
+        SignUpViewController()
+    }
+}
+
+// 미리보기 제공
+struct ViewControllerPresentable_PreviewProvider : PreviewProvider {
+    static var previews: some View{
+        ViewControllerPresentable()
+    }
+}
+
+
+#endif
