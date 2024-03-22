@@ -271,23 +271,39 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
     }
     
     private func updateSelectedImage() {
-        guard let firstSelectedAsset = selectedAssets.first else {
-            self.selectedImage = nil
-            return
-        }
-        
-        let targetSize = CGSize(width: imageView.frame.width * UIScreen.main.scale, height: imageView.frame.height * UIScreen.main.scale) // 화면의 해상도에 맞게 조정
-        imageManager.requestImage(for: firstSelectedAsset, targetSize: targetSize, contentMode: .aspectFill, options: nil) { image, _ in
-            DispatchQueue.main.async {
+        // 선택된 모든 이미지를 담을 배열 생성
+        var images: [UIImage] = []
+
+        // 이미지 로딩을 위한 옵션 설정
+        let options = PHImageRequestOptions()
+        options.resizeMode = .fast // 빠른 리사이즈 모드 사용
+        options.deliveryMode = .highQualityFormat // 가능한 높은 품질
+        options.isSynchronous = false // 비동기 방식
+
+        let targetSize = CGSize(width: 500, height: 500) // 요청할 이미지의 타겟 사이즈 조정
+
+        // 선택된 모든 이미지에 대한 처리를 위한 그룹 생성
+        let dispatchGroup = DispatchGroup()
+
+        for asset in selectedAssets {
+            dispatchGroup.enter() // 그룹에 진입을 알림
+            imageManager.requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: options) { image, _ in
                 if let image = image {
-                    self.selectedImage = [image]
-                } else {
-                    self.selectedImage = nil // 이미지가 없는 경우 selectedImage를 nil로 설정
+                    images.append(image)
                 }
+                dispatchGroup.leave() // 작업 완료를 알림
             }
         }
+        
+        dispatchGroup.notify(queue: .main) {
+            // 모든 이미지가 준비되었을 때 실행되는 블록
+            self.selectedImage = images
+            self.updateImageView() // 이미지 뷰 업데이트를 메인 스레드에서 수행
+        }
     }
+
     
+    // 선택된 이미지가 업데이트될 때 imageView에 표시하는 메서드 수정
     private func updateImageView() {
         if let firstImage = selectedImage?.first {
             imageView.image = firstImage
@@ -411,10 +427,11 @@ class PhotoUploadViewController: UIViewController, UICollectionViewDelegate, UIC
             } else {
                 selectedAssets.append(asset)
             }
+            
+            // 선택된 모든 이미지를 업데이트
             updateSelectedImage()
             collectionView.reloadData() // 콜렉션 뷰 갱신
         }
-        
         
         
         // MARK: - Pan Gesture Handler

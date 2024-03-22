@@ -233,8 +233,8 @@ class FriendsViewModel: ObservableObject {
                         profileImageUrl: data["profileImageUrl"] as? String,
                         friendsUid: data["friendsUid"] as? [String],
                         friends: data["friends"] as? [String: Timestamp],
-                        friendRequestsSent: data["friendRequestsSent"] as? [String],
-                        friendRequestsReceived: data["friendRequestsReceived"] as? [String]
+                        friendRequestsSent: data["friendRequestsSent"] as? [String: Timestamp],
+                        friendRequestsReceived: data["friendRequestsReceived"] as? [String: Timestamp]
                     )
                     DispatchQueue.main.async {
                         self.friends.append(user)
@@ -270,8 +270,8 @@ class FriendsViewModel: ObservableObject {
                 profileImageUrl: data["profileImageUrl"] as? String,
                 friendsUid: data["friendsUid"] as? [String],
                 friends: data["friends"] as? [String : Timestamp],
-                friendRequestsSent: data["friendRequestsSent"] as? [String],
-                friendRequestsReceived: data["friendRequestsReceived"] as? [String]
+                friendRequestsSent: data["friendRequestsSent"] as? [String: Timestamp],
+                friendRequestsReceived: data["friendRequestsReceived"] as? [String: Timestamp]
             )
             
             completion(user)

@@ -13,8 +13,10 @@ class UploadPostViewModel {
         let uniqueImageName = "image_\(UUID().uuidString)_\(timestamp)"
         let imagePath = constructImagePath(uid: uid, imageName: uniqueImageName)
         
-        guard let imageData = imageURL.jpegData(compressionQuality: 0.75) else {
-            completion(.failure(NSError(domain: "PostService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to compress image"])))
+        // UIImage 확장을 사용하여 이미지를 4:5 비율로 조정
+        guard let resizedImage = imageURL.resizedToFourFiveRatio(),
+              let imageData = resizedImage.jpegData(compressionQuality: 0.75) else {
+            completion(.failure(NSError(domain: "PostService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to process image"])))
             return
         }
         

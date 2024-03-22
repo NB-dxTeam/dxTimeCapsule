@@ -10,7 +10,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
     
     // MARK: - Properties
     var viewModel = UploadPostViewModel() // 뷰 모델 추가
-    var selectedImage: [UIImage] = [] // 사용자가 선택한 이미지들
+    var selectedImage: [UIImage]? // 사용자가 선택한 이미지들
     var thumnailImage: UIImage?
     var timeBoxDescription: String? // 사용자가 입력한 타임박스 설명
     var selectedLocation: CLLocationCoordinate2D? // 사용자가 선택한 위치
@@ -40,7 +40,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
         textView.font = UIFont.preferredFont(forTextStyle: .body) // Dynamic type support
         textView.layer.borderColor = UIColor.lightGray.cgColor
         textView.layer.borderWidth = 1
-        textView.layer.cornerRadius = 8
+        textView.layer.cornerRadius = 16
         textView.textColor = .lightGray
         textView.text = "타임박스에 들어갈 편지를 쓰세요!" // Placeholder text
         return textView
@@ -96,15 +96,17 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
         stackView.spacing = 8
         stackView.alignment = .center
         stackView.distribution = .fillEqually // 요소들의 너비를 동일하게 분배
+        stackView.translatesAutoresizingMaskIntoConstraints = false // Autolayout 사용할 때 필수
+
         return stackView
     }()
     
-    private let tagFriendsButton: UIButton = {
+    private let tagFriendsListButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("친구 목록", for: .normal)
-        button.backgroundColor = UIColor(hex: "#C82D6B").withAlphaComponent(0.8)
+        button.backgroundColor = UIColor(hex: "#C82D6B").withAlphaComponent(0.85)
         button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 8
+        button.layer.cornerRadius = 16
         return button
     }()
     
@@ -167,7 +169,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
             addressTitleTextField,
             tagFriendsLabel,
             taggedFriendsView,
-            tagFriendsButton,
+            tagFriendsListButton,
             openDateTitleLabel,
             datePicker,
             createButton
@@ -186,29 +188,31 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
         }
         
         descriptionTextView.snp.makeConstraints{ make in
-            make.height.equalTo(150)
+            make.height.equalTo(130)
         }
         
         datePicker.snp.makeConstraints { make in
             make.height.equalTo(150)
         }
         
-        tagFriendsButton.snp.makeConstraints { make in
-            make.height.equalTo(40)
-        }
-        
+
         taggedFriendsView.snp.makeConstraints { make in
-            make.height.equalTo(80)
+//            make.height.equalTo(100)
             make.width.equalTo(200)
 
         }
+        
+        tagFriendsListButton.snp.makeConstraints { make in
+            make.height.equalTo(40)
+        }
+        
         
         createButton.snp.makeConstraints { make in
             make.width.equalTo(200)
             make.height.equalTo(40)
         }
         
-        tagFriendsButton.addTarget(self, action: #selector(tagFriendsButtonTapped), for: .touchUpInside)
+        tagFriendsListButton.addTarget(self, action: #selector(tagFriendsButtonTapped), for: .touchUpInside)
         
     }
     
@@ -262,6 +266,8 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
     // MARK: - Button Actions
     
     @objc private func tagFriendsButtonTapped() {
+        // 태그된 친구 배열 초기화
+        taggedFriends.removeAll()
         
         let friendsSelectionVC = FriendsSelectionViewController()
         friendsSelectionVC.delegate = self
@@ -275,6 +281,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
         
         present(navController, animated: true)
     }
+
     
     
     // 타임캡슐을 생성하고, 이미지를 업로드한 후 Firestore에 저장합니다.
@@ -341,7 +348,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
                             id: id,
                             uid: currentUser.uid,
                             userName: userName,
-                            imageURL: self.selectedImage,
+                            imageURL: self.selectedImage!,
                             location: GeoPoint(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude),
                             addressTitle: addressTitle,
                             address: address,
@@ -397,18 +404,20 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(nameLabel)
 
-        NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: container.topAnchor),
-            imageView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
-            imageView.widthAnchor.constraint(equalToConstant: 50),
-            imageView.heightAnchor.constraint(equalToConstant: 50),
+        // Setting up constraints using SnapKit
+        imageView.snp.makeConstraints { make in
+            make.top.equalTo(container)
+            make.centerX.equalTo(container)
+            make.width.height.equalTo(50)
+        }
 
-            nameLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4),
-            nameLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor),
-            nameLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor)
-        ])
+        nameLabel.snp.makeConstraints { make in
+            make.top.equalTo(imageView.snp.bottom).offset(4)
+            make.leading.trailing.equalTo(container)
+            make.bottom.lessThanOrEqualTo(container) // Adjust bottom constraint to prevent overlapping
+        }
 
-        // 여기서 Kingfisher를 사용하여 이미지를 로드합니다.
+        // Loading image using Kingfisher
         if let profileImageUrl = friend.profileImageUrl, let url = URL(string: profileImageUrl) {
             imageView.kf.setImage(with: url)
         } else {
@@ -419,6 +428,8 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
 
         return container
     }
+
+
     
     
     // 알림창을 표시하는 메서드
@@ -516,15 +527,6 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
         }
     }
     
-}
-
-extension PostWritingViewController: FriendsSelectionDelegate {
-    func didTagFriends(_ friends: [User]) {
-        self.taggedFriends = friends
-        updateTaggedFriendsView()
-        print("Tagged friends updated: \(taggedFriends.map { $0.userName ?? "Unknown" })")
-    }
-
     func updateTaggedFriendsView() {
         print("Updating tagged friends view with \(taggedFriends.count) friends.")
         // 기존 뷰 제거
@@ -537,6 +539,25 @@ extension PostWritingViewController: FriendsSelectionDelegate {
         }
     }
 
+}
+
+extension PostWritingViewController: FriendsSelectionDelegate {
+    func didTagFriends(_ friends: [User]) {
+        // 중복된 친구를 제외하고 새로운 친구만 추가
+        for friend in friends {
+            if !taggedFriends.contains(friend) {
+                taggedFriends.append(friend)
+            }
+        }
+        
+        // 배열을 정렬하여 순서를 유지
+        taggedFriends.sort { $0.userName ?? "" < $1.userName ?? "" }
+        
+        // 뷰 업데이트
+        updateTaggedFriendsView()
+        
+        print("Tagged friends updated: \(taggedFriends.map { $0.userName ?? "Unknown" })")
+    }
 }
 
 
