@@ -71,7 +71,7 @@ extension CapsuleMapViewController {
         detailView.addSubview(stackView)
         
         stackView.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 20, left: 5, bottom: 20, right: 5))
+            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
         }
         detailView.snp.makeConstraints { make in
             make.width.equalTo(150)
