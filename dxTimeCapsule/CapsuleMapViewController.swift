@@ -39,8 +39,18 @@ class CapsuleMapViewController: UIViewController {
     private var originalCenterCoordinate: CLLocationCoordinate2D?
     private var shouldShowModal = false
     // 버튼을 생성하고 설정하는 클로저
-    private lazy var allButton: UIButton = createRoundButton(named: "all", title: "전체보기")
-
+    private lazy var allButton: UIButton = {
+        let button = UIButton()
+        // "AdobeBox_All" 이미지를 allButton에 설정합니다.
+        if let image = UIImage(named: "AdobeBox_All")?.resizedImage(newSize: CGSize(width: 70, height: 40)) {
+            button.setImage(image, for: .normal)
+        }
+        configureButtonAppearance(button: button)
+        button.addAction(UIAction { [weak self] _ in
+            self?.buttonTapped(name: "all")
+        }, for: .touchUpInside)
+        return button
+    }()
     private lazy var lockedButton: UIButton = {
         let button = UIButton()
         // "AdobeBox_Close" 이미지를 lockedButton에 설정합니다.
@@ -237,21 +247,7 @@ class CapsuleMapViewController: UIViewController {
         let zoomedRegion = capsuleMaps.regionThatFits(MKCoordinateRegion(center: region.center, span: MKCoordinateSpan(latitudeDelta: newLatitudeDelta, longitudeDelta: newLongitudeDelta)))
         capsuleMaps.setRegion(zoomedRegion, animated: true)
     }
-    private func createRoundButton(named name: String, title: String) -> UIButton {
-        let button = UIButton()
-        button.setTitle(title, for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = UIFont.proximaNovaRegular(ofSize: 14)
-        button.backgroundColor = .white.withAlphaComponent(0.8)
-        button.layer.cornerRadius = 20
-        button.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 80, height: 40))
-        }
-        button.addAction(UIAction { [weak self] _ in
-            self?.buttonTapped(name: name)
-        }, for: .touchUpInside)
-        return button
-    }
+    
     // 뒤로가기 버튼 동작
     @objc private func backButtonTapped() {
         if let presentedVC = presentedViewController, presentedVC is CustomModal {
@@ -293,10 +289,6 @@ class CapsuleMapViewController: UIViewController {
             return
         }
         NotificationCenter.default.post(name: .capsuleButtonTapped, object: nil, userInfo: ["status": status])
-//        loadCapsuleInfos(button: status)
-//        let customModal = CustomModal()
-//        customModal.loadDataForStatus(status)
-        //present(customModal, animated: false, completion: nil)
         // 버튼의 선택 상태 업데이트
         updateButtonSelection(buttonToSelect)
         // 현재 선택된 버튼을 저장
@@ -313,6 +305,7 @@ class CapsuleMapViewController: UIViewController {
         selectedButton.backgroundColor = UIColor(hex: "#C82D6B")// 필터 선택 시 배경 색상
         selectedButton.setTitleColor(.white, for: .normal)
     }
+    
     // 버튼의 공통된 외형을 설정하는 함수
     private func configureButtonAppearance(button: UIButton) {
         button.setTitleColor(.black, for: .normal)
@@ -343,7 +336,7 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
         
         var tempTimeBoxes = [TimeBox]()
         var tempAnnotationsData = [TimeBoxAnnotationData]()
-        
+    
         for doc in documents {
             let data = doc.data()
             let geoPoint = data["location"] as? GeoPoint
@@ -428,9 +421,6 @@ extension CapsuleMapViewController {
             let vc = CustomModal()
         
             vc.isModalInPresentation = false
-
-            //vc.sheetPresentationController?.delegate = self
-        
             // CustomModal에서 타임캡슐 선택 시 실행할 클로저 구현
             vc.onCapsuleSelected = { [weak self] latitude, longitude in
                 // 지도의 위치를 업데이트하는 메소드 호출
@@ -479,7 +469,10 @@ extension CapsuleMapViewController {
     }
     // 지도 현재 위치로 이동
     @objc func locationButton(_ sender: UIButton) {
-        capsuleMaps.setUserTrackingMode(.followWithHeading, animated: true)
+        capsuleMaps.setUserTrackingMode(.follow, animated: true)
+           // 적절한 줌 레벨로 조정하기 위해 추가
+           let region = MKCoordinateRegion(center: capsuleMaps.userLocation.coordinate, latitudinalMeters: 2000, longitudinalMeters: 2000)
+           capsuleMaps.setRegion(region, animated: true)
     }
     
 }
@@ -525,7 +518,7 @@ extension CapsuleMapViewController: MKMapViewDelegate {
             annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             annotationView?.canShowCallout = true
             annotationView?.animatesWhenAdded = true
-            annotationView?.glyphImage = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? UIImage(named: "boximage2") : UIImage(named: "boximage1")
+            annotationView?.glyphImage = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? UIImage(named: "lockimage") : UIImage(named: "lockimage")
             annotationView?.glyphTintColor = .white
             annotationView?.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .gray : .red
             
@@ -538,7 +531,7 @@ extension CapsuleMapViewController: MKMapViewDelegate {
         annotationView?.annotation = annotation
         annotationView?.canShowCallout = true
         annotationView?.animatesWhenAdded = true
-        annotationView?.glyphImage = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? UIImage(named: "boximage2") : UIImage(named: "boximage1")
+        annotationView?.glyphImage = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? UIImage(named: "lockimage") : UIImage(named: "lockimage")
         annotationView?.glyphTintColor = .white
         annotationView?.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .gray : .red
         
@@ -583,9 +576,7 @@ extension CapsuleMapViewController: UICollectionViewDataSource, UICollectionView
         return cell
     }
     
-    // Implement this method if you need to handle selection of a friend's cell.
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // Handle the friend selection here if necessary.
     }
 }
 
