@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import SnapKit
 //#Preview{
 //    NewUserViewController()
 //}
@@ -45,7 +45,6 @@ class NewUserViewController: UIViewController {
         button.layer.shadowRadius = 6
         button.layer.shadowOpacity = 0.3
         button.layer.shadowOffset =  CGSize(width: 0, height: 3)
-        button.addTarget(NewUserViewController.self, action: #selector(addNewTC), for: .touchUpInside)
         return button
     }()
     
@@ -57,6 +56,7 @@ class NewUserViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        addNewTCButton.addTarget(self, action: #selector(addNewTC), for: .touchUpInside)
     }
     
     private func setupUI() {
@@ -93,7 +93,13 @@ class NewUserViewController: UIViewController {
     @objc private func addNewTC() {
         print("새 타임머신 만들기 클릭되었습니다")
         let addNewTC = LocationMapkitViewController()
-        navigationController?.pushViewController(addNewTC, animated: true)
+        // 현재 윈도우 객체 가져오기
+        guard let window = UIApplication.shared.windows.first else {
+            return
+        }
+        // 새로운 타임캡슐 뷰 컨트롤러를 루트 뷰 컨트롤러로 설정
+        window.rootViewController = addNewTC
+        window.makeKeyAndVisible()
     }
 }
 // MARK: - SwiftUI Preview
