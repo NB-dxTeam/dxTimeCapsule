@@ -64,24 +64,30 @@ class FriendsViewModel: ObservableObject {
             return
         }
         let currentUserID = currentUser.uid
+        print("currentUserID="+currentUserID)
         
         // 현재 사용자 문서 가져오기
         db.collection("users").document(currentUserID).getDocument { (document, error) in
             if let error = error {
                 completion("데이터 조회 실패: \(error.localizedDescription)")
+                print("데이터 조회 실패: \(error.localizedDescription)")
                 return
             }
             
             guard let document = document, document.exists,
                   let userData = document.data() else {
                 completion("사용자 데이터를 찾을 수 없습니다.")
+                print("사용자 데이터를 찾을 수 없습니다.")
                 return
             }
+            
+            print("디버깅: 현재 사용자 데이터 - \(userData)")
             
             // 친구 요청 보낸 상태 확인
             if let friendRequestsSent = userData["friendRequestsSent"] as? [String: Timestamp],
                friendRequestsSent.keys.contains(userId) {
                 completion("요청 보냄")
+                print("요청 보냄")
                 return
             }
             
@@ -89,6 +95,8 @@ class FriendsViewModel: ObservableObject {
             if let friendRequestsReceived = userData["friendRequestsReceived"] as? [String: Timestamp],
                friendRequestsReceived.keys.contains(userId) {
                 completion("요청 받음")
+                print("요청 받음")
+
                 return
             }
             
@@ -96,11 +104,15 @@ class FriendsViewModel: ObservableObject {
             if let friends = userData["friends"] as? [String: String],
                friends.keys.contains(userId) {
                 completion("이미 친구입니다")
+                print("이미 친구입니다")
                 return
             }
             
             // 친구 요청 가능 상태
             completion("친구 추가")
+            print("친구 추가")
+
+            
         }
     }
 
@@ -272,8 +284,5 @@ class FriendsViewModel: ObservableObject {
         }
     }
 
-    func uploadPost(description: String, selectedImage: UIImage?, emoji: String, openDate: Date) {
-        // 게시물 업로드 로직 구현
-    }
     
 }

@@ -102,41 +102,55 @@ class SearchUserTableViewCell: UITableViewCell {
     
     // MARK: - Functions
     private func updateFriendshipStatusUI(user: User, currentUserID: String) {
-        friendsViewModel?.checkFriendshipStatus(forUser: user.uid!) { status in
-            DispatchQueue.main.async {
-                self.friendActionButton.isHidden = false
-                switch status {
-                case "요청 보냄":
-                    self.friendActionButton.isHidden = true
-                    self.statusLabel.text = "요청 보냄"
-                    self.statusLabel.textColor = UIColor(hex: "#FF3A4A")
-                    self.statusLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
-                    self.statusLabel.isHidden = false
-                    
-                case "요청 받음":
+        print("currentUserID = " + currentUserID)
+        if let userId = user.uid {
+            friendsViewModel?.checkFriendshipStatus(forUser: userId) { status in
+                DispatchQueue.main.async {
                     self.friendActionButton.isHidden = false
-                    
-                    self.friendActionButton.layer.borderColor = UIColor(hex: "#FF3A4A").cgColor
-                    self.friendActionButton.layer.borderWidth = 1
-                    self.friendActionButton.setTitle("수락", for: .normal)
-                    self.friendActionButton.setTitleColor(UIColor(hex: "#FF3A4A"), for: .normal)
-                    self.friendActionButton.titleLabel?.font = UIFont.pretendardRegular(ofSize: 14)
-                    self.statusLabel.isHidden = true
-                    
-                case "이미 친구입니다":
-                    self.updateUIAsAlreadyFriends()
-                    
-                default:
-                    self.friendActionButton.isHidden = false
-                    self.friendActionButton.setInstagram()
-                    self.friendActionButton.setTitle("친구 요청", for: .normal)
-                    self.friendActionButton.setTitleColor(.white, for: .normal)
-                    self.friendActionButton.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 14)
-                    self.statusLabel.isHidden = true
+                    switch status {
+                    case "요청 보냄":
+                        self.friendActionButton.isHidden = true
+                        self.statusLabel.text = "요청 보냄"
+                        self.statusLabel.textColor = UIColor(hex: "#FF3A4A")
+                        self.statusLabel.font = UIFont.pretendardSemiBold(ofSize: 14)
+                        self.statusLabel.isHidden = false
+                        
+                    case "요청 받음":
+                        self.friendActionButton.isHidden = false
+                        
+                        self.friendActionButton.layer.borderColor = UIColor(hex: "#FF3A4A").cgColor
+                        self.friendActionButton.layer.borderWidth = 1
+                        self.friendActionButton.setTitle("수락", for: .normal)
+                        self.friendActionButton.setTitleColor(UIColor(hex: "#FF3A4A"), for: .normal)
+                        self.friendActionButton.titleLabel?.font = UIFont.pretendardRegular(ofSize: 14)
+                        self.statusLabel.isHidden = true
+                        
+                    case "이미 친구입니다":
+                        self.updateUIAsAlreadyFriends()
+                        
+                    default:
+                        self.friendActionButton.isHidden = false
+                        self.friendActionButton.setInstagram()
+                        self.friendActionButton.setTitle("친구 요청", for: .normal)
+                        self.friendActionButton.setTitleColor(.white, for: .normal)
+                        self.friendActionButton.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 14)
+                        self.statusLabel.isHidden = true
+                    }
                 }
+            }
+        } else {
+            // user.uid가 nil인 경우에 대한 처리
+            DispatchQueue.main.async {
+                // 예: 사용자의 UID가 없을 때의 기본 UI 설정
+                self.friendActionButton.isHidden = true
+                self.statusLabel.text = "사용자 정보 불명"
+                self.statusLabel.textColor = .gray
+                self.statusLabel.font = UIFont.systemFont(ofSize: 14)
+                self.statusLabel.isHidden = false
             }
         }
     }
+
 
     
     @objc private func friendActionButtonTapped() {

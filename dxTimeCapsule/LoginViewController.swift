@@ -68,8 +68,8 @@ class LoginViewController: UIViewController {
         passwordTextField.delegate = self
         
         // Test 자동기입
-//        emailTextField.text =  "test1@gmail.com"
-//        passwordTextField.text = "12345678"
+        emailTextField.text =  "Hwangc1226@gmail.com"
+        passwordTextField.text = "12345678"
     }
     
     private func setupSignUpButtonAction() {
