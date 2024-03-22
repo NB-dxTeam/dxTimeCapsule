@@ -16,6 +16,8 @@ class OpenCapsuleViewController: UIViewController, UIScrollViewDelegate {
     var creationDate: Date? // 타임캡슐이 생성된 날짜
     var openDate: Date? // 타임캡슐이 열린 날짜
     var userMessage: String? // 사용자 메시지
+    var taggedFriendName: [String] = []
+    var indexOfTaggedImage: Int = 0 // 태그가 있는 이미지의 인덱스를 설정하세요.
     
     private var topBarView: UIView!
     private var homeButton: UIButton!
@@ -29,6 +31,8 @@ class OpenCapsuleViewController: UIViewController, UIScrollViewDelegate {
     private var currentPage = 0 // 현재 페이지 인덱스를 추적
     private var pageControl: CustomPageControl!
     
+    private var tagIconImageView: UIImageView!
+    
     private var memoryTextView: UITextView!
     private var messageButton: UIButton!
     
@@ -39,8 +43,9 @@ class OpenCapsuleViewController: UIViewController, UIScrollViewDelegate {
         setupUIComponents()
         setupHomeButton()
         loadTimeCapsuleData()
-        
         setupPageControl()
+        addTagIcon() // 태그 아이콘 추가
+        setupTagTapRecognizer() // 탭 제스처 인식기 설정
     }
     
     override func viewDidLayoutSubviews() {
@@ -82,6 +87,93 @@ class OpenCapsuleViewController: UIViewController, UIScrollViewDelegate {
             pageControl.enlargedIndex = pageControl.numberOfPages - 1
         } else {
             pageControl.enlargedIndex = -1
+        }
+        // 현재 페이지에 따라 태그 아이콘 표시 여부 결정
+        updateTagIconVisibility(currentPage: currentPage)
+    }
+    
+    // 현재 보이는 페이지에 따라 태그 아이콘의 가시성을 업데이트하는 메서드입니다.
+    private func updateTagIconVisibility(currentPage: Int) {
+        // 태그가 있는 페이지 인덱스와 현재 페이지가 같으면 태그 아이콘을 보여줍니다.
+        if currentPage == indexOfTaggedImage {
+            // tagIconImageView의 위치를 현재 페이지의 이미지와 관련된 위치로 업데이트
+            view.bringSubviewToFront(tagIconImageView)
+            tagIconImageView.isHidden = false
+        } else {
+            tagIconImageView.isHidden = true
+        }
+    }
+    
+    private func addTagIcon() {
+        if let customIconImage = UIImage(named: "myCustomTagIcon") {
+                tagIconImageView = UIImageView(image: customIconImage)
+            } else {
+                // 에셋을 찾을 수 없는 경우, 시스템 아이콘을 대신 사용합니다.
+                tagIconImageView = UIImageView(image: UIImage(systemName: "tag"))
+                tagIconImageView.tintColor = .white
+            }
+        tagIconImageView.isUserInteractionEnabled = true
+        
+
+        // tagIconImageView를 self.view의 하위 뷰로 추가합니다.
+        self.view.addSubview(tagIconImageView)
+
+        // 이제 tagIconImageView의 위치를 새로운 상위 뷰에 맞게 조정합니다.
+        tagIconImageView.snp.makeConstraints { make in
+            // 위치 조정이 필요합니다. 예를 들어, 이미지 뷰와 같은 위치에 놓고 싶다면:
+            make.bottom.equalTo(self.imageScrollView.snp.bottom).offset(-16)
+            make.right.equalTo(self.view.snp.right).offset(-16)
+            make.width.height.equalTo(24)
+        }
+
+        // zPosition을 조정하여 tagIconImageView를 가장 앞으로 가져옵니다.
+        tagIconImageView.layer.zPosition = 1
+    }
+    
+    // 탭 제스처 인식기를 추가하고 태그된 사용자의 이름을 표시하는 메소드
+    private func setupTagTapRecognizer() {
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tagIconTapped))
+        tagIconImageView.addGestureRecognizer(tapRecognizer)
+    }
+
+    @objc private func tagIconTapped() {
+        // 각각의 이름에 대한 레이블을 생성하고 화면에 표시합니다.
+        for (index, name) in taggedFriendName.enumerated() {
+            showTaggedFriendName(name, atIndex: index)
+        }
+    }
+
+    private func showTaggedFriendName(_ name: String, atIndex index: Int) {
+        let nameLabel = UILabel()
+        nameLabel.text = name
+        nameLabel.backgroundColor = .black.withAlphaComponent(0.5)
+        nameLabel.textColor = .white
+        nameLabel.textAlignment = .center
+        nameLabel.layer.cornerRadius = 5
+        nameLabel.clipsToBounds = true
+        nameLabel.numberOfLines = 0
+        
+        nameLabel.sizeToFit()
+        nameLabel.frame.size = CGSize(width: min(nameLabel.frame.width, self.view.frame.width - 40), height: nameLabel.frame.height + 10)
+        
+        let tagIconFrameInSuperview = tagIconImageView.superview?.convert(tagIconImageView.frame, to: self.view) ?? CGRect.zero
+        
+        nameLabel.center.x = tagIconFrameInSuperview.midX
+        nameLabel.center.y = tagIconFrameInSuperview.minY - CGFloat(index + 1) * (nameLabel.frame.height + 5)
+        
+        // 이름 레이블이 화면 왼쪽을 벗어나지 않도록 조정
+        nameLabel.frame.origin.x = max(nameLabel.frame.origin.x, 20)
+        
+        // 이름 레이블이 화면 오른쪽을 벗어나지 않도록 조정
+        if nameLabel.frame.maxX > self.view.frame.width - 20 {
+            nameLabel.frame.origin.x = self.view.frame.width - nameLabel.frame.width - 20
+        }
+        
+        self.view.addSubview(nameLabel)
+        
+        // 레이블을 일정 시간 후에 사라지게 설정
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            nameLabel.removeFromSuperview()
         }
     }
     
@@ -257,50 +349,52 @@ class OpenCapsuleViewController: UIViewController, UIScrollViewDelegate {
         db.collection("timeCapsules").document(documentId).getDocument { [weak self] (document, error) in
             guard let self = self, let document = document, document.exists else {
                 print("Error fetching document: \(error?.localizedDescription ?? "Unknown error")")
+                
                 return
+                
             }
             
             // DateFormatter 설정
-                 let dateFormatter = DateFormatter()
-                 dateFormatter.dateFormat = "yyyy년 MM월 dd일"
-                 dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul")
-                 dateFormatter.locale = Locale(identifier: "ko_KR")
-                 
-                // 'creationDate' 필드 값
-                   let creationDateTimestamp = document.get("createTimeBoxDate") as? Timestamp
-                   self.creationDate = creationDateTimestamp?.dateValue()
-                   let creationDateString = self.creationDate.map { dateFormatter.string(from: $0) } ?? "날짜 정보 없음"
-                   
-                 // 'openDate' 필드 값
-                   let openDateTimestamp = document.get("openTimeBoxDate") as? Timestamp
-                   self.openDate = openDateTimestamp?.dateValue()
-                   let openDateString = self.openDate.map { dateFormatter.string(from: $0) } ?? "날짜 정보 없음"
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy년 MM월 dd일"
+            dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul")
+            dateFormatter.locale = Locale(identifier: "ko_KR")
+            
+            // 'creationDate' 필드 값
+            let creationDateTimestamp = document.get("createTimeBoxDate") as? Timestamp
+            self.creationDate = creationDateTimestamp?.dateValue()
+            let creationDateString = self.creationDate.map { dateFormatter.string(from: $0) } ?? "날짜 정보 없음"
+            
+            // 'openDate' 필드 값
+            let openDateTimestamp = document.get("openTimeBoxDate") as? Timestamp
+            self.openDate = openDateTimestamp?.dateValue()
+            let openDateString = self.openDate.map { dateFormatter.string(from: $0) } ?? "날짜 정보 없음"
             
             // 'description' 필드 값
-                    self.userMessage = document.get("description") as? String
+            self.userMessage = document.get("description") as? String
             
-                 // 'username' 필드 값
-                 let userName = document.get("userName") as? String ?? "사용자"
+            // 'username' 필드 값
+            let userName = document.get("userName") as? String ?? "사용자"
             
-                 // 'userLocation' 필드 값
-                 let userLocation = document.get("addressTitle") as? String ?? "위치 정보 없음"
-                    
-                 // 'location' 필드 값
-                 let detailedLocation = document.get("address") as? String ?? "세부 주소 정보 없음"
-                    
-                 // 'mood' 필드 값
-                 let mood = document.get("mood") as? String ?? ""
-                 
-         
+            // 'userLocation' 필드 값
+            let userLocation = document.get("addressTitle") as? String ?? "위치 정보 없음"
+            
+            // 'location' 필드 값
+            let detailedLocation = document.get("address") as? String ?? "세부 주소 정보 없음"
+            
+            // 'mood' 필드 값
+            //                 let mood = document.get("mood") as? String ?? ""
+            
+            
             // Firestore에서 이미지 URL 배열 로딩 후 이미지 뷰 생성 및 추가
             if let imageUrlStrings = document.get("imageURL") as? [String], !imageUrlStrings.isEmpty {
                 let totalImages = imageUrlStrings.count
-
+                
                 // PageControl 설정
                 pageControl.numberOfPages = totalImages
                 pageControl.currentPage = 0
                 pageControl.enlargedIndex = totalImages > 5 ? 4 : totalImages - 1 // 5개를 초과하는 경우, '...'을 표시
-
+                
                 for (index, urlString) in imageUrlStrings.enumerated() {
                     if let url = URL(string: urlString) {
                         let imageView = UIImageView()
@@ -308,10 +402,10 @@ class OpenCapsuleViewController: UIViewController, UIScrollViewDelegate {
                         imageView.clipsToBounds = true
                         // 여기에 이미지 로딩 코드 추가 (예: URLSession, SDWebImage, AlamofireImage 등)
                         imageView.loadImage(from: url) // 예시 함수, 실제 이미지 로딩 로직 필요
-
+                        
                         let xPosition = self.imageScrollView.frame.width * CGFloat(index)
                         imageView.frame = CGRect(x: xPosition, y: 0, width: self.imageScrollView.frame.width, height: self.imageScrollView.frame.height)
-
+                        
                         self.imageScrollView.addSubview(imageView)
                         
                         // loadTimeCapsuleData() 메소드 내의 이미지 로딩 로직 후에 추가
@@ -319,28 +413,44 @@ class OpenCapsuleViewController: UIViewController, UIScrollViewDelegate {
                     }
                 }
             }
-
-                 // 'friendID' 필드 값 처리
-                 let friendID = document.get("tagFriendName") as? [String] ?? []
-                 let friendSentence: String
-                 if friendID.isEmpty {
-                     friendSentence = "\(userLocation)에서 보내셨군요"
-                 } else if friendID.count == 1 {
-                     friendSentence = "\(friendID.first!)님과 함께 보내셨군요!"
-                 } else {
-                     friendSentence = "많은 분들과 함께 하셨군요!"
-                 }
             
-            // 메모리 텍스트뷰에 표시할 문자열을 설정
+            // 'friendID' 필드 값 처리
+            // 여기서 self.taggedFriendName에 값을 할당합니다.
+            let friendID = document.get("tagFriendName") as? [String] ?? []
+            self.taggedFriendName = friendID // 이 부분이 수정되었습니다.
+            
+            // UI 업데이트는 메인 스레드에서 해야 합니다.
             DispatchQueue.main.async {
-                     self.updateTitleLabel(with: userName)
-                     self.locationLabel.text = userLocation
-                     self.detailedAddressLabel.text = detailedLocation
-                     self.memoryTextView.text = """
-                     \(userName)님의 지난 \(creationDateString)은
-                     \(friendSentence)
-                     어떤 추억을 남겼는지 확인해보세요😋
-                     """
+                // 'friendID'에 따른 문자열 설정
+                let friendSentence: String
+                if friendID.isEmpty {
+                    friendSentence = "\(userLocation)에서 보내셨군요"
+                } else if friendID.count == 1 {
+                    friendSentence = "\(friendID.first!)님과 함께 보내셨군요!"
+                } else {
+                    friendSentence = "많은 분들과 함께 하셨군요!"
+                }
+                
+                
+                // 메모리 텍스트뷰에 표시할 문자열을 설정
+                DispatchQueue.main.async {
+                    self.updateTitleLabel(with: userName)
+                    self.locationLabel.text = userLocation
+                    self.detailedAddressLabel.text = detailedLocation
+                    self.memoryTextView.text = """
+                \(userName)님의 지난 \(creationDateString)은
+                \(friendSentence)
+                어떤 추억을 남겼는지 확인해보세요😋
+                """
+                    
+                    // Firestore에서 tagFriendName 데이터를 불러오고 나서 태그 아이콘을 추가
+                    if !self.taggedFriendName.isEmpty {
+                        // indexOfTaggedImage는 실제 태그된 이미지의 인덱스로 업데이트해야 합니다.
+                        self.indexOfTaggedImage = 0 // 이 부분을 올바른 인덱스로 설정해야 합니다.
+                        self.addTagIcon() // 태그 아이콘 추가
+                        self.setupTagTapRecognizer() // 태그 제스처 인식기 설정
+                    }
+                }
             }
         }
     }
