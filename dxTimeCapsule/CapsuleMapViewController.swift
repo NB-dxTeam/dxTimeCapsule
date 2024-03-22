@@ -486,10 +486,10 @@ extension CapsuleMapViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        guard annotation is TimeBoxAnnotation else { return nil }
-        print("mapView:viewForAnnotation: called")
+        guard let timeBoxAnnotation = annotation as? TimeBoxAnnotation else { return nil }
         
         let identifier = "CustomAnnotationView"
+        
         var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView
         
         if annotationView == nil {
@@ -499,24 +499,23 @@ extension CapsuleMapViewController: MKMapViewDelegate {
             annotationView?.animatesWhenAdded = true
             annotationView?.glyphImage = UIImage(named: "boximage1")
             annotationView?.glyphTintColor = .white
-            annotationView?.markerTintColor = .red
+            annotationView?.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .gray : .red
+            
         } else {
             print("MKMarkerAnnotationView 재사용")
+            annotationView?.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .gray : .red
         }
         
-        // Ensure the annotationView's annotation is set correctly
+        
         annotationView?.annotation = annotation
         annotationView?.canShowCallout = true
         annotationView?.animatesWhenAdded = true
         annotationView?.glyphImage = UIImage(named: "boximage1")
         annotationView?.glyphTintColor = .white
-        annotationView?.markerTintColor = .red
-        // Configure the detailCalloutAccessoryView
+        
         if let timeBoxAnnotation = annotation as? TimeBoxAnnotation {
-            print("Configuring detailCalloutAccessoryView for timeBoxAnnotation")
             annotationView?.detailCalloutAccessoryView = configureDetailView(for: timeBoxAnnotation)
         } else {
-            print("Annotation is not of type TimeBoxAnnotation")
         }
         
         return annotationView
