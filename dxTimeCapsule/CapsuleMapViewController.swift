@@ -498,7 +498,7 @@ extension CapsuleMapViewController: MKMapViewDelegate {
             annotationView?.canShowCallout = true
             annotationView?.animatesWhenAdded = true
             annotationView?.glyphImage = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? UIImage(named: "boximage2") : UIImage(named: "boximage1")
-            annotationView?.glyphTintColor = .black
+            annotationView?.glyphTintColor = .white
             annotationView?.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .gray : .red
             
         } else {
@@ -511,7 +511,7 @@ extension CapsuleMapViewController: MKMapViewDelegate {
         annotationView?.canShowCallout = true
         annotationView?.animatesWhenAdded = true
         annotationView?.glyphImage = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? UIImage(named: "boximage2") : UIImage(named: "boximage1")
-        annotationView?.glyphTintColor = .black
+        annotationView?.glyphTintColor = .white
         annotationView?.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .gray : .red
         
         if let timeBoxAnnotation = annotation as? TimeBoxAnnotation {
