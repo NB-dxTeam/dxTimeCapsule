@@ -518,7 +518,7 @@ extension SignUpViewController: TermsViewControllerDelegate {
             // 회원가입 성공 후 메인 화면으로 이동
             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                let sceneDelegate = windowScene.delegate as? SceneDelegate {
-                let mainTabBarController = MainTabBarView()
+                let mainTabBarController = NewUserViewController()
                 sceneDelegate.window?.rootViewController = mainTabBarController
             }
         }
