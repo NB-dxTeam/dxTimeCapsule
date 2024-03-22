@@ -355,8 +355,9 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
                         self.viewModel.uploadTimeBox(
                             id: id,
                             uid: currentUser.uid,
-                            userName: userName,
-                            imageURL: self.selectedImage!,
+                            userName: userName, 
+                            thumbnailImage: selectedImage![0],
+                            imageArray: self.selectedImage!,
                             location: GeoPoint(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude),
                             addressTitle: addressTitle,
                             address: address,
@@ -370,7 +371,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
                                 switch result {
                                 case .success():
                                     print("타임캡슐 업로드 성공")
-                                    self.showAlert(title: "타임캡슐 생성 완료", message: "타임캡슐이 성공적으로 생성되었습니다.")
+                                    self.showSuccessAlertAndSwitchView()
                                 case .failure(let error):
                                     print("타임캡슐 업로드 실패: \(error.localizedDescription)")
                                 }
@@ -386,7 +387,25 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
         }
     }
 
-    
+    private func showSuccessAlertAndSwitchView() {
+        let alert = UIAlertController(title: "완료되었습니다", message: "타임박스가 성공적으로 생성되었습니다!", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { _ in
+            self.switchToMainTabBarView()
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+
+    // 
+    private func switchToMainTabBarView() {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let sceneDelegate = windowScene.delegate as? SceneDelegate else {
+            return
+        }
+
+        let mainTabBarVC = MainTabBarView() // 메인 탭 바 뷰 컨트롤러 인스턴스 생성
+        sceneDelegate.window?.rootViewController = mainTabBarVC
+        sceneDelegate.window?.makeKeyAndVisible()
+    }
     
     // 데이터 피커의 값이 변경될 때 호출되는 메서드
     @objc private func datePickerValueChanged(_ datePicker: UIDatePicker) {
@@ -498,7 +517,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
             guard let stringRange = Range(range, in: currentText) else { return false }
             let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
 
-            if updatedText.count > 10 {
+            if updatedText.count > 20 {
                 // 사용자에게 경고 표시
                 showAlert(title: "안내", message: "장소명은 10자를 넘길 수 없습니다.")
                 return false

@@ -194,6 +194,7 @@ class SignUpViewController: UIViewController  {
             make.height.equalTo(50)
         }
         
+        
         // Ensure dividerView is added to the view before setting constraints
         dividerView.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-70)

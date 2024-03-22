@@ -24,18 +24,20 @@ class UploadPostViewModel {
     }
     
     // 타임박스 데이터를 Firestore에 업로드합니다.
-    func uploadTimeBox(id: String, uid: String, userName: String, imageURL: [UIImage], location: GeoPoint, addressTitle: String, address: String, description: String, tagFriendUid: [String], tagFriendUserName: [String], createTimeBoxDate: Timestamp, openTimeBoxDate: Timestamp, isOpened: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
-        var imageURLs: [String] = []
+    func uploadTimeBox(id: String, uid: String, userName: String, thumbnailImage: UIImage, imageArray: [UIImage], location: GeoPoint, addressTitle: String, address: String, description: String, tagFriendUid: [String], tagFriendUserName: [String], createTimeBoxDate: Timestamp, openTimeBoxDate: Timestamp, isOpened: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
+        var uploadedImageURLs: [String] = []
         let uploadGroup = DispatchGroup()
         
-        for imageUrl in imageURL {
+        // Iterate over each image to upload
+        for image in imageArray {
             uploadGroup.enter()
-            uploadPostImage(imageURL: imageUrl, uid: uid) { result in
+            uploadPostImage(imageURL: image, uid: uid) { result in
                 switch result {
-                case .success(let imageURL):
-                    imageURLs.append(imageURL)
+                case .success(let uploadedURL):
+                    uploadedImageURLs.append(uploadedURL)
                     uploadGroup.leave()
                 case .failure(let error):
+                    uploadGroup.leave() // Ensure leaving the group on error to avoid deadlock.
                     completion(.failure(error))
                     return
                 }
@@ -43,8 +45,10 @@ class UploadPostViewModel {
         }
         
         uploadGroup.notify(queue: .main) {
-            let timeCapsuleData = TimeBox(id: id, uid: uid, userName: userName, thumbnailURL: imageURLs.first ?? "", imageURL: imageURLs, location: location, addressTitle: addressTitle, address: address, description: description, createTimeBoxDate: createTimeBoxDate, openTimeBoxDate: openTimeBoxDate, isOpened: isOpened)
-            self.saveTimeBoxData(TimeBox: timeCapsuleData, completion: completion)
+            // Once all images are uploaded, proceed with the TimeBox creation.
+            let timeBox = TimeBox(id: id, uid: uid, userName: userName, thumbnailURL: uploadedImageURLs.first, imageURL: uploadedImageURLs, location: location, addressTitle: addressTitle, address: address, description: description, tagFriendUid: tagFriendUid, tagFriendUserName: tagFriendUserName, createTimeBoxDate: createTimeBoxDate, openTimeBoxDate: openTimeBoxDate, isOpened: isOpened)
+            
+            self.saveTimeBoxData(TimeBox: timeBox, completion: completion)
         }
     }
     
@@ -85,10 +89,12 @@ class UploadPostViewModel {
             "uid": TimeBox.uid!,
             "userName": TimeBox.userName!,
             "thumbnailURL": TimeBox.thumbnailURL!,
-            "imageURLs": TimeBox.imageURL!,
+            "imageURL": TimeBox.imageURL!,
             "location": TimeBox.location!,
             "addressTitle": TimeBox.addressTitle!,
             "address": TimeBox.address!,
+            "tagFriendUid": TimeBox.tagFriendUid!,
+            "tagFriendUserName": TimeBox.tagFriendUserName!,
             "description": TimeBox.description!,
             "createTimeBoxDate": TimeBox.createTimeBoxDate!,
             "openTimeBoxDate": TimeBox.openTimeBoxDate!,
