@@ -57,8 +57,6 @@ extension CapsuleMapViewController {
             friendsCollectionView.dataSource = self
             friendsCollectionView.delegate = self
             friendsCollectionView.showsHorizontalScrollIndicator = false
-            
-            friendsCollectionView.backgroundColor = .systemBlue
             stackView.addArrangedSubview(friendsCollectionView)
             
             friendsCollectionView.snp.makeConstraints { make in
@@ -102,14 +100,8 @@ extension CapsuleMapViewController {
                     guard let location = timeBox.location else { continue }
                     print("Creating annotation for TimeBox with ID: \(timeBox.tagFriendUid ?? []) at location: \(location.latitude), \(location.longitude)")
                     let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
-                    
-                    // Fetch friends information for the current TimeBox
                     let friendsInfo = timeBox.tagFriendUid?.compactMap { friendsLookup[$0] } ?? []
-                    
-                    // Create a TimeBoxAnnotationData object
                     let annotationData = TimeBoxAnnotationData(timeBox: timeBox, friendsInfo: friendsInfo)
-                    
-                    // Pass the TimeBoxAnnotationData object to the TimeBoxAnnotation
                     let annotation = TimeBoxAnnotation(coordinate: coordinate, timeBoxAnnotationData: annotationData)
                     
                     self?.capsuleMaps.addAnnotation(annotation)
