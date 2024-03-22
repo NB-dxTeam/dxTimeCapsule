@@ -415,14 +415,14 @@ class HomeViewController: UIViewController {
     
     func fetchTimeCapsuleData() {
         DispatchQueue.main.async {
-//            self.showLoadingIndicator()
-//        }
-//        DispatchQueue.global().async {
+            self.showLoadingIndicator()
+        }
+        DispatchQueue.global().async {
             let db = Firestore.firestore()
             // 로그인한 사용자의 UID를 가져옵니다.
-//            guard let userId = Auth.auth().currentUser?.uid else { return }
+            guard let userId = Auth.auth().currentUser?.uid else { return }
             
-            let userId = "K15VeSkLpGhNZl9MdUIh46mNrxr2" // 테스트를 위한 임시 UID
+//            let userId = "K15VeSkLpGhNZl9MdUIh46mNrxr2" // 테스트를 위한 임시 UID
             
             // 사용자의 UID로 필터링하고, openDate 필드로 오름차순 정렬한 후, 최상위 1개 문서만 가져옵니다.
             db.collection("timeCapsules")
