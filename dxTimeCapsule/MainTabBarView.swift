@@ -41,6 +41,18 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         self.tabBar.backgroundColor = .white
     }
     
+    func updateNotificationBadge(with count: Int) {
+        DispatchQueue.main.async {
+            if count > 0 {
+                // 친구 요청이 있을 경우, 숫자를 배지에 표시
+                self.viewControllers?[3].tabBarItem.badgeValue = "\(count)"
+            } else {
+                // 친구 요청이 없을 경우, 배지를 숨깁니다.
+                self.viewControllers?[3].tabBarItem.badgeValue = nil
+            }
+        }
+    }
+
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         if viewController.tabBarItem.tag == 2 {
             let postUploadNavigationController = LocationMapkitViewController()
