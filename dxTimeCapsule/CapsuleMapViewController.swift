@@ -34,6 +34,7 @@ class CapsuleMapViewController: UIViewController {
         collectionView.backgroundColor = .clear
         return collectionView
     }()
+    
     // 원래 지도의 중심 위치를 저장할 변수
     private var originalCenterCoordinate: CLLocationCoordinate2D?
     private var shouldShowModal = false
@@ -52,6 +53,7 @@ class CapsuleMapViewController: UIViewController {
         }, for: .touchUpInside)
         return button
     }()
+    
     private lazy var openedButton: UIButton = {
         let button = UIButton()
         // "AdobeBox_Open" 이미지를 openedButton에 설정합니다.
@@ -83,6 +85,7 @@ class CapsuleMapViewController: UIViewController {
         button.tintColor = UIColor(hex: "#C82D6B")
         return button
     }()
+    
     // 하프모달 버튼
     private lazy var tapDidModal: UIButton = {
         let button = UIButton()
@@ -94,6 +97,7 @@ class CapsuleMapViewController: UIViewController {
         button.layer.cornerRadius = 25
         return button
     }()
+    
     // 현재 위치 버튼
     private lazy var currentLocationButton: UIButton = {
         let button = UIButton()
@@ -103,6 +107,7 @@ class CapsuleMapViewController: UIViewController {
         button.layer.cornerRadius = 20
         return button
     }()
+    
     // 지도 확대 버튼
     private let zoomInButton: UIButton = {
         let button = UIButton(type: .system)
@@ -110,6 +115,7 @@ class CapsuleMapViewController: UIViewController {
         button.tintColor = .white
         return button
     }()
+    
     // 줌 배경
     private let zoomBackgroundView: UIView = {
         let view = UIView()
@@ -117,6 +123,7 @@ class CapsuleMapViewController: UIViewController {
         view.layer.cornerRadius = 20
         return view
     }()
+    
     // 지도 축소 버튼
     private let zoomOutButton: UIButton = {
         let button = UIButton(type: .system)
@@ -150,9 +157,6 @@ class CapsuleMapViewController: UIViewController {
         }
     }
     
-}
-
-extension CapsuleMapViewController {
     private func addSubViews() {
         self.view.addSubview(capsuleMaps)
         self.view.addSubview(tapDidModal)
@@ -271,16 +275,20 @@ extension CapsuleMapViewController {
             loadCapsuleInfos(button: .all)
             buttonToSelect = allButton
             status = .all
+            showModalVC()
         case "locked":
             // 'Locked' 버튼 로직
             loadCapsuleInfos(button: .locked)
             buttonToSelect = lockedButton
             status = .locked
+            showModalVC()
+
         case "opened":
             // 'Opened' 버튼 로직
             loadCapsuleInfos(button: .opened)
             buttonToSelect = openedButton
             status = .opened
+            showModalVC()
         default:
             return
         }
@@ -415,49 +423,54 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
     }
     
 }
-
 extension CapsuleMapViewController {
-    // CustomModal 뷰를 모달로 화면에 표시하는 함수
     func showModalVC() {
-        let vc = CustomModal()
-//        vc.sheetPresentationController?.delegate = self
-        // CustomModal에서 타임캡슐 선택 시 실행할 클로저 구현
-        vc.onCapsuleSelected = { [weak self] latitude, longitude in
-            // 지도의 위치를 업데이트하는 메소드 호출
-            self?.moveToLocation(latitude: latitude, longitude: longitude)
-            if let sheet = vc.sheetPresentationController {
-                DispatchQueue.main.async {
-                    sheet.animateChanges {
-                        
-                        sheet.detents = [.half, .large()]  // 03/22 황주영
-                        sheet.selectedDetentIdentifier = .half // '.half'<- 기존코드. 03/22 황주영
-                        sheet.largestUndimmedDetentIdentifier = .large
+            let vc = CustomModal()
+        
+            vc.isModalInPresentation = false
+
+            //vc.sheetPresentationController?.delegate = self
+        
+            // CustomModal에서 타임캡슐 선택 시 실행할 클로저 구현
+            vc.onCapsuleSelected = { [weak self] latitude, longitude in
+                // 지도의 위치를 업데이트하는 메소드 호출
+                self?.moveToLocation(latitude: latitude, longitude: longitude)
+                if let sheet = vc.sheetPresentationController {
+                    DispatchQueue.main.async {
+                        sheet.animateChanges {
+                            sheet.detents = [.half, .large()]
+                            sheet.selectedDetentIdentifier = .half
+                            sheet.largestUndimmedDetentIdentifier = .large
+                            sheet.prefersGrabberVisible = true
+                            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+                            sheet.prefersEdgeAttachedInCompactHeight = true
+                            sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+                        }
                     }
                 }
             }
-        }
-        
-        if let sheet = vc.sheetPresentationController {
-            // 03/22 황주영.
-            sheet.detents = [/*.half,*/ .large()] // 크기 옵션 // 03/22 황주영
-            sheet.prefersGrabberVisible = true // 모달의 상단 그랩 핸들러 표시 여부
-            // 스크롤 가능한 내영이 모달 끝에 도달했을 때 스크롤 확장 여부
-            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-            // 어둡지 않게 표시되는 최대 크기의 상태 설정
-            sheet.largestUndimmedDetentIdentifier = .large
             
+            if let sheet = vc.sheetPresentationController {
+                sheet.detents = [.half, .large()]
+                sheet.selectedDetentIdentifier = .half
+                sheet.largestUndimmedDetentIdentifier = .large
+                sheet.prefersGrabberVisible = true
+                sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+                sheet.prefersEdgeAttachedInCompactHeight = true
+                sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+                
+            }
+            //vc.isModalInPresentation = true
+            vc.modalPresentationStyle = .formSheet
+            self.present(vc, animated: true)
         }
-        //vc.isModalInPresentation = true
-        vc.modalPresentationStyle = .formSheet
-        self.present(vc, animated: true)
-    }
-    
+
     func moveToLocation(latitude: Double, longitude: Double) {
         let adjustedLatitude = latitude
         let adjustedLongitude = longitude
-        
         let location = CLLocationCoordinate2D(latitude: adjustedLatitude, longitude: adjustedLongitude)
-        let region = MKCoordinateRegion(center: location, latitudinalMeters: 2000, longitudinalMeters: 2000) // 셀 탭했을 때, 줌 상태
+        // 셀 탭했을 때, 줌 상태
+        let region = MKCoordinateRegion(center: location, latitudinalMeters: 2000, longitudinalMeters: 2000)
         capsuleMaps.setRegion(region, animated: true)
     }
     // 하프 모달 버튼 동작
@@ -487,6 +500,7 @@ extension CapsuleMapViewController: MKMapViewDelegate {
         // 애니메이션 효과가 추가 되어 부드럽게 화면 확대 및 이동
         //capsuleMaps.setUserTrackingMode(.follow, animated: true)
         capsuleMaps.setUserTrackingMode(.followWithHeading, animated: true)
+        
         
         let initalLocation = CLLocation(latitude: 35.9333, longitude: 127.9933)
         let regionRadius: CLLocationDistance = 400000
