@@ -10,6 +10,7 @@
 		1B5287D4E4C9FEEC72B631CD /* Pods_dxTimeCapsule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B7158E13240DE5CE715E16 /* Pods_dxTimeCapsule.framework */; };
 		1F019A4F2BACCA2400F727D2 /* FriendsSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F019A4E2BACCA2400F727D2 /* FriendsSelectionViewController.swift */; };
 		1F019A522BACDEF500F727D2 /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F019A512BACDEF500F727D2 /* FriendTableViewCell.swift */; };
+		1F019A542BAD14B300F727D2 /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F019A532BAD14B200F727D2 /* UIImage+Resize.swift */; };
 		1F0854152B8EF4F400711660 /* TestLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0854142B8EF4F400711660 /* TestLoginViewController.swift */; };
 		1F0854322B8F254B00711660 /* MainCapsuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0854312B8F254B00711660 /* MainCapsuleViewController.swift */; };
 		1F0B91062B901D170022EDD9 /* Etc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0B91052B901D170022EDD9 /* Etc.swift */; };
@@ -140,6 +141,7 @@
 		04EFA52A53A71177B62D1D49 /* Pods-dxTimeCapsule.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dxTimeCapsule.debug.xcconfig"; path = "Target Support Files/Pods-dxTimeCapsule/Pods-dxTimeCapsule.debug.xcconfig"; sourceTree = "<group>"; };
 		1F019A4E2BACCA2400F727D2 /* FriendsSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsSelectionViewController.swift; sourceTree = "<group>"; };
 		1F019A512BACDEF500F727D2 /* FriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
+		1F019A532BAD14B200F727D2 /* UIImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 		1F0854142B8EF4F400711660 /* TestLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestLoginViewController.swift; sourceTree = "<group>"; };
 		1F0854162B8F091500711660 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1F0854312B8F254B00711660 /* MainCapsuleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCapsuleViewController.swift; sourceTree = "<group>"; };
@@ -609,6 +611,7 @@
 				1FF8691A2B8F4D81007B5112 /* UIButton+Gradient.swift */,
 				1F8EA3992B944054004856B7 /* UIViewController+Debugging.swift */,
 				1FAACDE02B8FAA520005B993 /* UIImage+RoundImage.swift */,
+				1F019A532BAD14B200F727D2 /* UIImage+Resize.swift */,
 				1FA11BF12B8F8C440014002F /* UITextField+Padding.swift */,
 				1F0B91072B9026020022EDD9 /* UIImageView+RoundImage.swift */,
 				1F367EA52B8F803A00563908 /* UIColor+Hex.swift */,
@@ -866,6 +869,7 @@
 				D274E0162B9C243900FAF849 /* TagFriendListTableViewCell.swift in Sources */,
 				1FEE07A32BA8141700B7BDB2 /* FirestoreDataService.swift in Sources */,
 				460FE7672B8A200D00AF8086 /* LockedCapsuleCell.swift in Sources */,
+				1F019A542BAD14B300F727D2 /* UIImage+Resize.swift in Sources */,
 				4E4F6CDB2B99C2B500154ED1 /* OpenCapsuleViewController.swift in Sources */,
 				4E2A09CA2B8F86C600911390 /* FadeInAnimator.swift in Sources */,
 				1F5786D92B849AF800C40B08 /* AppDelegate.swift in Sources */,
