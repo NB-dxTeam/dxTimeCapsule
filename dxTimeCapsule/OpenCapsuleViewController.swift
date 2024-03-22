@@ -11,30 +11,36 @@ import SnapKit
 import FirebaseFirestore
 //import SDWebImage
 
-class OpenCapsuleViewController: UIViewController {
+class OpenCapsuleViewController: UIViewController, UIScrollViewDelegate {
     var documentId: String?
+    var creationDate: Date? // 타임캡슐이 생성된 날짜
+    var openDate: Date? // 타임캡슐이 열린 날짜
+    var userMessage: String? // 사용자 메시지
     
     private var topBarView: UIView!
     private var homeButton: UIButton!
     private var titleLabel: UILabel!
     private var separatorLine: UIView!
-    private var logoImageView: UIImageView!
     private var locationLabel: UILabel!
     private var detailedAddressLabel: UILabel!
+    
     private var capsuleImageView: UIImageView!
+    private var imageScrollView: UIScrollView!
+    private var currentPage = 0 // 현재 페이지 인덱스를 추적
+    private var pageControl: CustomPageControl!
+    
     private var memoryTextView: UITextView!
     private var messageButton: UIButton!
-    var creationDate: Date? // 타임캡슐이 생성된 날짜
-    var openDate: Date? // 타임캡슐이 열린 날짜
-    var userMessage: String? // 사용자 메시지
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
         setupUIComponents()
-        setupHomeButton()  // 여기에 setupHomeButton 호출 추가
+        setupHomeButton()
         loadTimeCapsuleData()
+        
+        setupPageControl()
     }
     
     override func viewDidLayoutSubviews() {
@@ -42,7 +48,44 @@ class OpenCapsuleViewController: UIViewController {
         messageButton.setInstagram()
     }
     
-    private func setupHomeButton() {
+    private func setupImageScrollView(with imagesCount: Int) {
+        let scrollViewWidth = self.view.frame.width
+        let scrollViewHeight = imageScrollView.frame.height
+        imageScrollView.contentSize = CGSize(width: scrollViewWidth * CGFloat(imagesCount), height: scrollViewHeight)
+    }
+  
+    private func setupPageControl() {
+        pageControl = CustomPageControl()
+        pageControl.numberOfPages = 0 // 페이지 수는 나중에 업데이트합니다.
+        pageControl.currentPage = 0
+        pageControl.enlargedIndex = -1 // 기본적으로 마지막 인디케이터는 크지 않도록 설정합니다.
+        pageControl.currentPageIndicatorTintColor = .systemBlue // 현재 페이지 인디케이터 색상 설정
+           pageControl.pageIndicatorTintColor = .lightGray // 나머지 페이지 인디케이터 색상 설정
+
+        // 다른 설정도 추가할 수 있습니다.
+        view.addSubview(pageControl)
+         pageControl.snp.makeConstraints { make in
+             make.centerX.equalToSuperview()
+             make.top.equalTo(imageScrollView.snp.bottom).offset(8) // 이미지 밑에
+             make.width.equalTo(160) // 화면 폭을 설정해서 인디케이터의 길이을 조절
+             }
+     }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        // 이미지 스크롤뷰의 현재 페이지 인덱스 계산
+        let pageWidth = scrollView.frame.size.width
+        let currentPage = Int((scrollView.contentOffset.x + pageWidth / 2) / pageWidth)
+        pageControl.currentPage = currentPage
+        
+        // 마지막 인디케이터가 더 크게 설정되어야 하는 경우에만 enlargedIndex 값을 변경
+        if pageControl.currentPage < pageControl.numberOfPages - 1 {
+            pageControl.enlargedIndex = pageControl.numberOfPages - 1
+        } else {
+            pageControl.enlargedIndex = -1
+        }
+    }
+    
+        private func setupHomeButton() {
         homeButton = UIButton(type: .system)
         let homeImage = UIImage(systemName: "chevron.left") // SF Symbols에서 "house.fill" 이미지 사용
         homeButton.setImage(homeImage, for: .normal)
@@ -88,29 +131,18 @@ class OpenCapsuleViewController: UIViewController {
         
         // 구분선 뷰 설정
         separatorLine = UIView()
-        separatorLine.backgroundColor = UIColor.lightGray // 연한 그레이색 설정
+        separatorLine.backgroundColor = UIColor.lightGray
         topBarView.addSubview(separatorLine)
         separatorLine.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(6) // 타이틀 레이블 아래에 위치
+            make.top.equalTo(titleLabel.snp.bottom).offset(6) // 타이틀 레이블 아래
             make.leading.trailing.equalToSuperview() // 상단 바의 양쪽 가장자리에 맞춤
             make.height.equalTo(0.2) // 높이를 0.5로 설정하여 실선처럼 보이게 함
         }
-        // 로고 이미지 뷰 설정
-        //        let logoImageView = UIImageView(image: UIImage(named: "pagelogo")) // 로고 이미지 설정
-        //        topBarView.addSubview(logoImageView) // 상단 바 뷰에 로고 이미지 뷰 추가
-        //        logoImageView.contentMode = .scaleAspectFit
-        //        logoImageView.snp.makeConstraints { make in
-        //            make.leading.equalTo(topBarView.snp.leading).offset(16)
-        //            make.centerY.equalTo(topBarView.snp.centerY)
-        //            make.height.equalTo(40) // 이미 설정된 높이
-        //            make.width.equalTo(150) // 너비 제약 조건 추가
-        //        }
-        
         
         // 위치 레이블 초기화 및 설정
         locationLabel = UILabel()
-        locationLabel.text = "Loading.." // 초기값
-        locationLabel.font = UIFont.systemFont(ofSize: 12) // 폰트 설정
+        locationLabel.text = "Loading.."
+        locationLabel.font = UIFont.systemFont(ofSize: 12)
         locationLabel.textAlignment = .center
         view.addSubview(locationLabel)
         locationLabel.textAlignment = .left
@@ -121,8 +153,8 @@ class OpenCapsuleViewController: UIViewController {
         
         // 세부 주소 레이블 초기화 및 설정
         detailedAddressLabel = UILabel()
-        detailedAddressLabel.text = "Loading.." // 초기값
-        detailedAddressLabel.font = UIFont.systemFont(ofSize: 10) // 폰트 설정
+        detailedAddressLabel.text = "Loading.."
+        detailedAddressLabel.font = UIFont.systemFont(ofSize: 10)
         detailedAddressLabel.textColor = .gray
         detailedAddressLabel.textAlignment = .center
         view.addSubview(detailedAddressLabel)
@@ -141,10 +173,22 @@ class OpenCapsuleViewController: UIViewController {
         view.addSubview(capsuleImageView)
         
         capsuleImageView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview() // 슈퍼뷰의 양쪽 가장자리에 맞춥니다.
+            make.leading.trailing.equalToSuperview()
             make.top.equalTo(detailedAddressLabel.snp.bottom).offset(7)
             // 비율 제약 조건 (가로 대비 세로를 4:5로 설정) 인스타사이즈
             make.height.equalTo(capsuleImageView.snp.width).multipliedBy(5.0/4.0)
+        }
+        
+        // 이미지 스크롤 뷰 설정
+        imageScrollView = UIScrollView()
+        imageScrollView.delegate = self
+        imageScrollView.isPagingEnabled = true
+        imageScrollView.showsHorizontalScrollIndicator = false
+        view.addSubview(imageScrollView)
+        imageScrollView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(detailedAddressLabel.snp.bottom).offset(7)
+            make.height.equalTo(imageScrollView.snp.width).multipliedBy(5.0/4.0) // 비율 유지
         }
         
         // 메모리 텍스트 뷰 설정
@@ -160,7 +204,8 @@ class OpenCapsuleViewController: UIViewController {
         memoryTextView.textAlignment = .center
         view.addSubview(memoryTextView)
         memoryTextView.snp.makeConstraints { make in
-            make.top.equalTo(capsuleImageView.snp.bottom).offset(20)
+            // 여기 레이아웃 다시 설정해야함 임시임
+            make.top.equalTo(imageScrollView.snp.bottom).offset(35)
             make.centerX.equalToSuperview()
             make.left.right.equalToSuperview().inset(20)
         }
@@ -173,7 +218,7 @@ class OpenCapsuleViewController: UIViewController {
         messageButton.layer.cornerRadius = 10
         view.addSubview(messageButton)
         messageButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-35)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-10)
             make.centerX.equalToSuperview()
             make.width.equalToSuperview().multipliedBy(0.8)
             make.height.equalTo(50)
@@ -246,16 +291,40 @@ class OpenCapsuleViewController: UIViewController {
                  // 'mood' 필드 값
                  let mood = document.get("mood") as? String ?? ""
                  
-            // 이미지 URL 배열 처리 및 표시
-            if let imageUrlStrings = document.get("imageURL") as? [String], !imageUrlStrings.isEmpty, let imageUrl = URL(string: imageUrlStrings[0]) {
-                self.capsuleImageView.sd_setImage(with: imageUrl, placeholderImage: UIImage(named: "placeholder"))
+         
+            // Firestore에서 이미지 URL 배열 로딩 후 이미지 뷰 생성 및 추가
+            if let imageUrlStrings = document.get("imageURL") as? [String], !imageUrlStrings.isEmpty {
+                let totalImages = imageUrlStrings.count
+
+                // PageControl 설정
+                pageControl.numberOfPages = totalImages
+                pageControl.currentPage = 0
+                pageControl.enlargedIndex = totalImages > 5 ? 4 : totalImages - 1 // 5개를 초과하는 경우, '...'을 표시
+
+                for (index, urlString) in imageUrlStrings.enumerated() {
+                    if let url = URL(string: urlString) {
+                        let imageView = UIImageView()
+                        imageView.contentMode = .scaleAspectFill
+                        imageView.clipsToBounds = true
+                        // 여기에 이미지 로딩 코드 추가 (예: URLSession, SDWebImage, AlamofireImage 등)
+                        imageView.loadImage(from: url) // 예시 함수, 실제 이미지 로딩 로직 필요
+
+                        let xPosition = self.imageScrollView.frame.width * CGFloat(index)
+                        imageView.frame = CGRect(x: xPosition, y: 0, width: self.imageScrollView.frame.width, height: self.imageScrollView.frame.height)
+
+                        self.imageScrollView.addSubview(imageView)
+                        
+                        // loadTimeCapsuleData() 메소드 내의 이미지 로딩 로직 후에 추가
+                        setupImageScrollView(with: imageUrlStrings.count)
+                    }
+                }
             }
 
                  // 'friendID' 필드 값 처리
                  let friendID = document.get("tagFriendName") as? [String] ?? []
                  let friendSentence: String
                  if friendID.isEmpty {
-                     friendSentence = ""
+                     friendSentence = "\(userLocation)에서 보내셨군요"
                  } else if friendID.count == 1 {
                      friendSentence = "\(friendID.first!)님과 함께 보내셨군요!"
                  } else {
@@ -270,7 +339,7 @@ class OpenCapsuleViewController: UIViewController {
                      self.memoryTextView.text = """
                      \(username)님의 지난 \(creationDateString)은
                      \(friendSentence)
-                     굉장히 행복했던 날이에요\(mood).
+                     어떤 추억을 남겼는지 확인해보세요😋
                      """
             }
         }
@@ -296,4 +365,16 @@ class OpenCapsuleViewController: UIViewController {
           // 'titleLabel'의 'attributedText'를 업데이트합니다.
           titleLabel.attributedText = combinedAttributedString
       }
+}
+
+extension UIImageView {
+    func loadImage(from url: URL) {
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let data = data, let image = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    self.image = image
+                }
+            }
+        }.resume()
+    }
 }
