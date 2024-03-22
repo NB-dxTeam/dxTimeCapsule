@@ -22,7 +22,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
     private let mainTitleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.pretendardBold(ofSize: 28)
-        label.text = "New TimeBox"
+        label.text = "새로운 타임박스"
         label.textColor = .black.withAlphaComponent(0.85)
         return label
     }()
@@ -104,20 +104,26 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
     private let tagFriendsListButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("친구 목록", for: .normal)
-        button.backgroundColor = UIColor(hex: "#C82D6B").withAlphaComponent(0.85)
+        button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline) // Dynamic type support
         button.setTitleColor(.white, for: .normal)
+
+        button.backgroundColor = UIColor(hex: "#C82D6B").withAlphaComponent(0.85)
         button.layer.cornerRadius = 16
+        button.layer.shadowOpacity = 0.3
+        button.layer.shadowRadius = 5
+        button.layer.shadowOffset = CGSize(width: 0, height: 5)
+
         return button
     }()
     
-
-    
     private let createButton: UIButton = {
-        let button = UIButton(type: .system)
+        let button = UIButton(type: .custom)
         button.setTitle("타임박스 만들기", for: .normal)
         button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline) // Dynamic type support
         
         button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = UIColor(hex: "#C82D6B")
+
         button.layer.cornerRadius = 16
         button.layer.shadowOpacity = 0.3
         button.layer.shadowRadius = 5
@@ -152,14 +158,10 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        createButton.backgroundColor = UIColor(hex: "#C82D6B")
-//        createButton.setInstagram()
-        
+        createButton.setGradient(colors: [#colorLiteral(red: 0.5137254902, green: 0.2274509804, blue: 0.7058823529, alpha: 1), #colorLiteral(red: 0.9921568627, green: 0.1137254902, blue: 0.1137254902, alpha: 1), #colorLiteral(red: 0.9882352941, green: 0.6901960784, blue: 0.2705882353, alpha: 1)])
     }
     // MARK: - UI Setup
     private func setupUI() {
-        
         
         let stackView = UIStackView(arrangedSubviews: [
             mainTitleLabel,
@@ -174,7 +176,6 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
             datePicker,
             createButton
         ])
-        
         stackView.axis = .vertical
         stackView.spacing = 15
         stackView.alignment = .fill
@@ -203,6 +204,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
         }
         
         tagFriendsListButton.snp.makeConstraints { make in
+            make.width.equalTo(100)
             make.height.equalTo(40)
         }
         

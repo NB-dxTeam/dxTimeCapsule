@@ -1,3 +1,9 @@
+//
+//  UIButton+Gradient.swift
+//
+//  황주영
+//
+
 import UIKit
 
 extension UIButton {
