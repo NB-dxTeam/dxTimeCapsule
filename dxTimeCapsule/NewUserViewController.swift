@@ -86,7 +86,7 @@ class NewUserViewController: UIViewController {
             make.top.equalTo(newLabel.snp.bottom).offset(20)
             make.width.equalToSuperview().multipliedBy(2.3/3.0)
             make.height.equalTo(50)
-           // make.height.equalToSuperview().multipliedBy(0.5/7.0)
+
         }
     }
     
