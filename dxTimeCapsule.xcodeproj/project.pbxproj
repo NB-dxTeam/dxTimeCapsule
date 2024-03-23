@@ -1104,9 +1104,9 @@
 				INFOPLIST_FILE = dxTimeCapsule/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Memorium;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Memorium’에서는 사용자가 새로운 추억을 즉시 촬영하고 앱 내에 저장할 수 있도록 카메라 접근 권한을 요청합니다. 이를 통해 사용자는 소중한 순간을 바로 앱에 기록할 수 있습니다";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재 위치를 가져오기위해 필요한 권한입니다.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Memorium’에서는 사용자의 위치 기반 추억을 저장하고 관리하기 위해 사진 라이브러리 접근 권한이 필요합니다. 예를 들어, 귀하가 방문한 장소의 사진을 앱에 업로드하여 특별한 순간을 기록할 수 있습니다.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "'Memorium’에서는 사용자가 새로운 추억을 즉시 촬영하고 앱 내에 저장할 수 있도록 카메라 접근 권한을 요청합니다. 이를 통해 사용자는 소중한 순간을 바로 앱에 기록할 수 있습니다";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "'Memorium’은 사용자의 현재 위치를 기반으로 한 추억을 저장하고 관리하기 위해 위치 정보를 필요로 합니다. 이를 통해 사용자는 방문한 장소의 추억을 보다 정확하게 기록할 수 있습니다.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "'Memorium'에서는 사용자의 위치 기반 추억을 저장하고 관리하기 위해 사진 라이브러리 접근 권한이 필요합니다. 예를 들어, 귀하가 방문한 장소의 사진을 앱에 업로드하여 특별한 순간을 기록할 수 있습니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -1149,9 +1149,9 @@
 				INFOPLIST_FILE = dxTimeCapsule/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Memorium;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Memorium’에서는 사용자가 새로운 추억을 즉시 촬영하고 앱 내에 저장할 수 있도록 카메라 접근 권한을 요청합니다. 이를 통해 사용자는 소중한 순간을 바로 앱에 기록할 수 있습니다";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재 위치를 가져오기위해 필요한 권한입니다.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Memorium’에서는 사용자의 위치 기반 추억을 저장하고 관리하기 위해 사진 라이브러리 접근 권한이 필요합니다. 예를 들어, 귀하가 방문한 장소의 사진을 앱에 업로드하여 특별한 순간을 기록할 수 있습니다.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "'Memorium’에서는 사용자가 새로운 추억을 즉시 촬영하고 앱 내에 저장할 수 있도록 카메라 접근 권한을 요청합니다. 이를 통해 사용자는 소중한 순간을 바로 앱에 기록할 수 있습니다";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "'Memorium’은 사용자의 현재 위치를 기반으로 한 추억을 저장하고 관리하기 위해 위치 정보를 필요로 합니다. 이를 통해 사용자는 방문한 장소의 추억을 보다 정확하게 기록할 수 있습니다.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "'Memorium'에서는 사용자의 위치 기반 추억을 저장하고 관리하기 위해 사진 라이브러리 접근 권한이 필요합니다. 예를 들어, 귀하가 방문한 장소의 사진을 앱에 업로드하여 특별한 순간을 기록할 수 있습니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
