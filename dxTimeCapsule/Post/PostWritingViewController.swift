@@ -588,9 +588,9 @@ extension PostWritingViewController: FriendsSelectionDelegate {
 
 
 // MARK: - SwiftUI Preview
-import SwiftUI
-struct PostWritingViewControllerPreview1: PreviewProvider {
-    static var previews: some View {
-        PostWritingViewController().toPreview()
-    }
-}
+//import SwiftUI
+//struct PostWritingViewControllerPreview1: PreviewProvider {
+//    static var previews: some View {
+//        PostWritingViewController().toPreview()
+//    }
+//}

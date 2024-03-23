@@ -76,7 +76,7 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
 
     
     private func setupCenterView() {
-        centerView.backgroundColor = UIColor.white.withAlphaComponent(0.6)
+        centerView.backgroundColor = UIColor.white
         centerView.layer.cornerRadius = 16
         centerView.layer.shadowOpacity = 0.2
         centerView.layer.shadowRadius = 4.0

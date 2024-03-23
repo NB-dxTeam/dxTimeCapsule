@@ -289,12 +289,12 @@ class CapsuleMapViewController: UIViewController {
     private func updateButtonSelection(_ selectedButton: UIButton) {
         // 모든 버튼을 기본 상태로 리셋
         [allButton, lockedButton, openedButton].forEach {
-            $0.backgroundColor = .white.withAlphaComponent(0.8)
-            $0.setTitleColor(UIColor(hex: "#C82D6B"), for: .normal) // 필터 "전체보기" 색상
+            $0.backgroundColor = .white.withAlphaComponent(0.75)
+            $0.setTitleColor(UIColor.white.withAlphaComponent(0.2), for: .normal) // 필터 "전체보기" 색상
         }
         
-        // 선택된 버튼의 스타일을 변경
-        selectedButton.backgroundColor = UIColor(hex: "#C82D6B")// 필터 선택 시 배경 색상
+        // 선택된 필터 버튼의 스타일을 변경
+        selectedButton.backgroundColor = UIColor(hex: "#d65451") // 필터 선택 시 배경 색상
         selectedButton.setTitleColor(.white, for: .normal)
     }
     
@@ -592,11 +592,11 @@ enum CapsuleFilterButtons {
 // MARK: - Preview
 import SwiftUI
 
-struct PreView: PreviewProvider {
-    static var previews: some View {
-        CapsuleMapViewController().toPreview()
-    }
-}
+//struct PreView: PreviewProvider {
+//    static var previews: some View {
+//        CapsuleMapViewController().toPreview()
+//    }
+//}
 #if DEBUG
 extension UIViewController {
     private struct Preview: UIViewControllerRepresentable {
