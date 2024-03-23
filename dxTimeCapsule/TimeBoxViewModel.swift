@@ -6,3 +6,9 @@
 //
 
 import Foundation
+import FirebaseFirestore
+import FirebaseAuth
+
+class TimeBoxViewModel {
+    
+}

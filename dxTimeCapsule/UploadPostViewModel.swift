@@ -7,7 +7,7 @@ import CoreLocation
 
 class UploadPostViewModel {
     
-    // 이미지를 Firebase Storage에 업로드하고, 업로드된 이미지 URL을 반환합니다.
+    // 이미지(UIImage를 Firebase Storage에 업로드 이미지 URL(String)을 반환합니다.
     func uploadPostImage(imageURL: UIImage, uid: String, completion: @escaping (Result<String, Error>) -> Void) {
         let timestamp = generateTimestamp()
         let uniqueImageName = "image_\(UUID().uuidString)_\(timestamp)"
@@ -25,6 +25,7 @@ class UploadPostViewModel {
     
     // 타임박스 데이터를 Firestore에 업로드합니다.
     func uploadTimeBox(id: String, uid: String, userName: String, thumbnailImage: UIImage, imageArray: [UIImage], location: GeoPoint, addressTitle: String, address: String, description: String, tagFriendUid: [String], tagFriendUserName: [String], createTimeBoxDate: Timestamp, openTimeBoxDate: Timestamp, isOpened: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
+        
         var uploadedImageURLs: [String] = []
         let uploadGroup = DispatchGroup()
         
@@ -51,8 +52,6 @@ class UploadPostViewModel {
             self.saveTimeBoxData(TimeBox: timeBox, completion: completion)
         }
     }
-    
-    // MARK: - Private Methods
     
     private func generateTimestamp() -> String {
         let formatter = DateFormatter()
@@ -84,6 +83,7 @@ class UploadPostViewModel {
         }
     }
     
+    // 타임박스 데이터를 Firestore에 업로드합니다.
     private func saveTimeBoxData(TimeBox: TimeBox, completion: @escaping (Result<Void, Error>) -> Void) {
         let timeCapsuleDataDict: [String: Any] = [
             "uid": TimeBox.uid!,
