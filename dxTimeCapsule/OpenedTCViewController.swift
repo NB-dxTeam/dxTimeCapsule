@@ -23,19 +23,47 @@ class OpenedTCViewController: UITableViewController {
         super.viewDidLoad()
         setupUI()
         setupNavigationBarAppearance()
+        setupToolbar()
         setupBackButton()
         navigationItem.title = "Saved memories"
         fetchTimeBoxesInfo()
+        // 테이블뷰의 contentInset을 설정하여 툴바 아래로 이동
     }
     
+    // MARK: - Toolbar Setup
+
+    private func setupToolbar() {
+        // 툴바 인스턴스 생성
+        let toolbar = UIToolbar()
+        toolbar.translatesAutoresizingMaskIntoConstraints = false // 오토레이아웃 사용
+        // 툴바 색상 설정
+        toolbar.barTintColor = UIColor.systemGray6.withAlphaComponent(0.5)
+        // Segmented Control을 UIBarButtonItem으로 변환
+        let segmentedControlBarButton = UIBarButtonItem(customView: sortSegmentedControl)
+        
+        // 툴바 아이템 설정
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        toolbar.items = [flexibleSpace, segmentedControlBarButton]
+    
+        
+        // 툴바의 레이아웃 제약 조건 설정
+        toolbar.snp.makeConstraints { make in
+            make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
+            make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.height.equalTo(44) // 툴바 높이 설정
+            
+            // 툴바를 테이블 뷰의 헤더 뷰로 설정
+            tableView.tableHeaderView = toolbar
+        }
+    }
+   
     // MARK: - UI Setup
     
     private func setupUI() {
         tableView.register(TimeCapsuleCell.self, forCellReuseIdentifier: TimeCapsuleCell.identifier)
         tableView.separatorStyle = .none
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: sortSegmentedControl)
     }
-    
     // MARK: - Data Fetching
     
     private func fetchTimeBoxesInfo() {
@@ -166,5 +194,11 @@ class OpenedTCViewController: UITableViewController {
         
         let backButtonBarItem = UIBarButtonItem(customView: backButton)
         navigationItem.leftBarButtonItem = backButtonBarItem
+    }
+}
+import SwiftUI
+struct PreVie178w: PreviewProvider {
+    static var previews: some View {
+        OpenedTCViewController().toPreview()
     }
 }
