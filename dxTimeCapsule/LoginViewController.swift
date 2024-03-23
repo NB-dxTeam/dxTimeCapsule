@@ -59,7 +59,7 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
+        keyBoardHide()
         setupSignUpButtonAction() // 회원가입 버튼의 액션을 설정하는 메서드 호출
         setupViews()
         setupLayouts()
