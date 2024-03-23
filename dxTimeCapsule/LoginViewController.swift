@@ -59,7 +59,7 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
+        keyBoardHide()
         setupSignUpButtonAction() // 회원가입 버튼의 액션을 설정하는 메서드 호출
         setupViews()
         setupLayouts()
@@ -68,8 +68,8 @@ class LoginViewController: UIViewController {
         passwordTextField.delegate = self
         
         // Test 자동기입
-        emailTextField.text =  "gugu01@gmail.com"
-        passwordTextField.text = "12345678"
+//        emailTextField.text =  "gugu01@gmail.com"
+//        passwordTextField.text = "12345678"
     }
     
     private func setupSignUpButtonAction() {
@@ -367,10 +367,10 @@ extension LoginViewController: UITextFieldDelegate {
 
 
 // MARK: - SwiftUI Preview
-import SwiftUI
-
-struct MainTabBarViewPreview : PreviewProvider {
-    static var previews: some View {
-        LoginViewController().toPreview()
-    }
-}
+//import SwiftUI
+//
+//struct MainTabBarViewPreview : PreviewProvider {
+//    static var previews: some View {
+//        LoginViewController().toPreview()
+//    }
+//}

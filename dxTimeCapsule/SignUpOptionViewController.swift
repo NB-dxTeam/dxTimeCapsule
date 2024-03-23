@@ -301,9 +301,9 @@ class SignUpOptionViewController: UIViewController {
        }
    }
 
-import SwiftUI
-struct PreView73: PreviewProvider {
-    static var previews: some View {
-        SignUpOptionViewController().toPreview()
-    }
-}
+//import SwiftUI
+//struct PreView73: PreviewProvider {
+//    static var previews: some View {
+//        SignUpOptionViewController().toPreview()
+//    }
+//}

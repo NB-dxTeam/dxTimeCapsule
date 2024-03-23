@@ -34,6 +34,7 @@ class SearchUserTableViewController: UIViewController, UITableViewDelegate, UITa
         setupSearchComponents()
         setupTableView()
         searchBar.delegate = self
+        keyBoardHide()
     }
 
     func setupSearchComponents() {

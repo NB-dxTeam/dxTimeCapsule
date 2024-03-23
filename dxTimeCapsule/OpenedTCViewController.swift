@@ -197,9 +197,9 @@ class OpenedTCViewController: UITableViewController {
         navigationItem.leftBarButtonItem = backButtonBarItem
     }
 }
-import SwiftUI
-struct PreVie178w: PreviewProvider {
-    static var previews: some View {
-        OpenedTCViewController().toPreview()
-    }
-}
+//import SwiftUI
+//struct PreVie178w: PreviewProvider {
+//    static var previews: some View {
+//        OpenedTCViewController().toPreview()
+//    }
+//}

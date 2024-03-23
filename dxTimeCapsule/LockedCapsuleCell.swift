@@ -179,9 +179,9 @@ class LockedCapsuleCell: UICollectionViewCell {
 }
 
 
-import SwiftUI
-struct Preview: PreviewProvider {
-    static var previews: some View {
-        CustomModal().toPreview()
-    }
-}
+//import SwiftUI
+//struct Preview: PreviewProvider {
+//    static var previews: some View {
+//        CustomModal().toPreview()
+//    }
+//}

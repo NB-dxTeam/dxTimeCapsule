@@ -76,7 +76,7 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
 
     
     private func setupCenterView() {
-        centerView.backgroundColor = UIColor.white.withAlphaComponent(0.6)
+        centerView.backgroundColor = UIColor.white
         centerView.layer.cornerRadius = 16
         centerView.layer.shadowOpacity = 0.2
         centerView.layer.shadowRadius = 4.0
@@ -100,7 +100,7 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         
         view.addSubview(backButton)
         backButton.snp.makeConstraints { make in
-        make.top.equalTo(view.safeAreaLayoutGuide).offset(10)  // Adjust these values as needed
+        make.top.equalTo(view.safeAreaLayoutGuide)  // Adjust these values as needed
         make.leading.equalTo(view.safeAreaLayoutGuide).offset(10) // Adjust for padding from the left edge
         make.width.height.equalTo(40)  // Adjust based on your design
         }
@@ -142,13 +142,13 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         
         currentLocationBotton.setImage(UIImage(named: "locationicon"), for: .normal) // 이미지 설정
         currentLocationBotton.setTitleColor(.black, for: .normal)
-        currentLocationBotton.layer.backgroundColor = UIColor.white.withAlphaComponent(0.6).cgColor
-        currentLocationBotton.layer.cornerRadius = 10
+        currentLocationBotton.layer.backgroundColor = UIColor.white.withAlphaComponent(1.0).cgColor
+        currentLocationBotton.layer.cornerRadius = 20
     
         currentLocationBotton.addTarget(self, action: #selector(currentLocationButtonTapped), for: .touchUpInside) // 연결된 함수 설정
         
         currentLocationBotton.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(20) // 뷰의 safeArea의 위쪽에서 20pt 떨어진 곳에 배치
+            make.top.equalTo(view.safeAreaLayoutGuide)// 뷰의 safeArea의 위쪽에서 20pt 떨어진 곳에 배치
             make.trailing.equalTo(view.safeAreaLayoutGuide).inset(20) // 뷰의 safeArea의 오른쪽에서 20pt 떨어진 곳에 배치
             make.width.height.equalTo(40) // 너비와 높이는 40pt로 설정
         }

@@ -103,10 +103,10 @@ class NewUserViewController: UIViewController {
     }
 }
 // MARK: - SwiftUI Preview
-import SwiftUI
-
-struct Previewsa : PreviewProvider {
-    static var previews: some View {
-        NewUserViewController().toPreview()
-    }
-}
+//import SwiftUI
+//
+//struct Previewsa : PreviewProvider {
+//    static var previews: some View {
+//        NewUserViewController().toPreview()
+//    }
+//}
