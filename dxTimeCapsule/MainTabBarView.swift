@@ -1,5 +1,7 @@
 import UIKit
 import SwiftUI
+import FirebaseAuth
+import FirebaseFirestore
 
 class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
     
@@ -9,6 +11,12 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         setupTabs()
         self.delegate = self
         
+        // 앱 시작 시 친구 요청을 확인.
+
+        updateFriendRequestBadge()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateFriendRequestBadge), name: NSNotification.Name("UpdateFriendRequestBadge"), object: nil)
+
 //        // NotificationCenter Observer 추가 - 우경
 //        NotificationCenter.default.addObserver(self, selector: #selector(returnToHome), name: NSNotification.Name("ReturnToHome"), object: nil)
     }
@@ -71,6 +79,39 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         }
         return resizedImage
     }
+    
+    @objc func updateFriendRequestBadge() {
+        // 현재 로그인한 사용자의 UID를 가져옵니다.
+        guard let currentUserId = Auth.auth().currentUser?.uid else {
+            print("User not logged in")
+            return
+        }
+        
+        // Firestore에서 현재 사용자의 friendRequestsReceived 필드를 조회합니다.
+        let db = Firestore.firestore()
+        db.collection("users").document(currentUserId).getDocument { [weak self] (document, error) in
+            if let error = error {
+                // 오류가 발생했을 경우, 콘솔에 오류를 출력합니다.
+                print("Error fetching friend requests: \(error)")
+                return
+            }
+            
+            if let document = document, document.exists {
+                // friendRequestsReceived 필드에서 친구 요청의 수를 가져옵니다.
+                let friendRequestsReceived = document.get("friendRequestsReceived") as? [String: Timestamp] ?? [:]
+                let friendRequestCount = friendRequestsReceived.count
+                
+                // 친구 요청의 수를 바탕으로 알림 배지를 업데이트합니다.
+                DispatchQueue.main.async {
+                    self?.updateNotificationBadge(with: friendRequestCount)
+                }
+            } else {
+                print("Document does not exist")
+            }
+        }
+    }
+
+    
 
 }
 

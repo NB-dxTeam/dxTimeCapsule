@@ -12,6 +12,7 @@ class FriendsListViewController: UIViewController {
     var currentUser: User?
     var friends: [User] = []
     
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()

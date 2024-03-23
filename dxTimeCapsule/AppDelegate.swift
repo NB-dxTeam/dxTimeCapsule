@@ -23,6 +23,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let navigationController = mainTabBarView
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
+        
+        // 앱 시작 시 친구 요청 확인 이벤트를 발송합니다.
+        NotificationCenter.default.post(name: NSNotification.Name("AppDidLaunch"), object: nil)
+
 
         return true
     }

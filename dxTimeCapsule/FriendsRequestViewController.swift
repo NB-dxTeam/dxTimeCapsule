@@ -145,10 +145,13 @@ class FriendsRequestViewController: UIViewController, UITableViewDelegate, UITab
                     return
                 }
                 print("observeSuccess")
-                // 여기서 fetchFriendRequests를 다시 호출하여 데이터를 최신 상태로 유지할 수 있습니다.
                 self.fetchFriendRequests()
+
+                // 여기에 노티피케이션 발송 로직 추가
+                NotificationCenter.default.post(name: NSNotification.Name("UpdateFriendRequestBadge"), object: nil)
             }
     }
+
     
     private func updateUI() {
         DispatchQueue.main.async {
