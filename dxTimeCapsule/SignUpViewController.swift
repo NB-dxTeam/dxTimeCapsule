@@ -238,13 +238,24 @@ class SignUpViewController: UIViewController  {
     // MARK: - Functions
     private func configureTextField(_ textField: UITextField, placeholder: String, isSecure: Bool = false) {
         textField.placeholder = placeholder
-        textField.borderStyle = .roundedRect
-        textField.isSecureTextEntry = isSecure
-        textField.layer.cornerRadius = 10
+        textField.layer.cornerRadius = 10 // 모서리를 둥글게 만듭니다.
         textField.layer.masksToBounds = true
-        textField.layer.backgroundColor = UIColor.systemGray6.cgColor
-        textField.font = UIFont.pretendardRegular(ofSize: 14)
-
+        textField.layer.borderWidth = 1 // 선의 너비를 설정합니다.
+        textField.layer.borderColor = UIColor.systemGray5.cgColor // 선의 색상을 설정합니다.
+        textField.font = UIFont.pretendardRegular(ofSize: 16)
+        textField.snp.makeConstraints { make in
+            make.height.equalTo(40)
+        }
+        // 왼쪽 공백을 추가합니다.
+        let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 40))
+        textField.leftView = leftPaddingView
+        textField.leftViewMode = .always
+        
+        // 오른쪽 공백을 추가합니다.
+        let rightPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 40))
+        textField.rightView = rightPaddingView
+        textField.rightViewMode = .always
+        
         view.addSubview(textField)
     }
     

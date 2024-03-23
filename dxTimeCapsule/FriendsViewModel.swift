@@ -189,6 +189,8 @@ class FriendsViewModel: ObservableObject {
             } else {
                 print("디버깅: 배치 작업 성공")
                 completion(true, nil)
+                NotificationCenter.default.post(name: NSNotification.Name("UpdateFriendRequestBadge"), object: nil)
+                        
             }
         }
     }
