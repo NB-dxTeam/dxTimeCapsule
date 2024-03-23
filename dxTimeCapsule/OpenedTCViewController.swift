@@ -26,8 +26,9 @@ class OpenedTCViewController: UITableViewController {
         setupToolbar()
         setupBackButton()
         navigationItem.title = "Saved memories"
+        sortSegmentedControl.selectedSegmentIndex = 1
         fetchTimeBoxesInfo()
-        // 테이블뷰의 contentInset을 설정하여 툴바 아래로 이동
+
     }
     
     // MARK: - Toolbar Setup
@@ -70,6 +71,7 @@ class OpenedTCViewController: UITableViewController {
         viewModel.fetchTimeBoxesInfo { [weak self] timeBoxes in
             self?.viewModel.timeBoxes = timeBoxes
             self?.tableView.reloadData()
+            self?.sortOptionChanged()
         }
     }
     
@@ -91,7 +93,7 @@ class OpenedTCViewController: UITableViewController {
         }
         
         let timeBox = viewModel.timeBoxes[indexPath.row]
-        cell.configure(with: timeBox, dDayColor: UIColor.systemGray4)
+        cell.configure(with: timeBox, dDayColor: UIColor.systemGray4, controllerType: .OpenedTCViewControllerLogic)
         return cell
     }
     
@@ -133,7 +135,6 @@ class OpenedTCViewController: UITableViewController {
         default:
             break
         }
-        
         sortTimeBoxesAndReloadTableView()
     }
     
