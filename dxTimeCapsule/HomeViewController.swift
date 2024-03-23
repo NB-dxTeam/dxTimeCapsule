@@ -161,7 +161,7 @@ class HomeViewController: UIViewController {
         return stackView
     }()
     
-    // addTCButton 버튼
+    // noMainTC 버튼
     let addTCButton: UIButton = {
         let button = UIButton(type: .system)
         let image = UIImage(systemName: "plus.app")?.withRenderingMode(.alwaysTemplate)
@@ -484,7 +484,6 @@ class HomeViewController: UIViewController {
                                         
                                         DispatchQueue.main.async {
                                             self.mainTCImageView.image = UIImage(data: data)
-                                            self.hideLoadingIndicator()
                                         }
                                     }.resume()
                                 }
@@ -511,7 +510,7 @@ class HomeViewController: UIViewController {
                                 }
                             }
                         }
-                        DispatchQueue.main.async {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             self.hideLoadingIndicator()
                         }
                     }
@@ -586,6 +585,7 @@ class HomeViewController: UIViewController {
     @objc private func addNewTC() {
         print("새 타임머신 만들기 클릭되었습니다")
         let addNewTC = LocationMapkitViewController()
+//        let navController = UINavigationController(rootViewController: addNewTC)
         navigationController?.pushViewController(addNewTC, animated: true)
     }
     
@@ -609,10 +609,3 @@ class HomeViewController: UIViewController {
     }
 }
 
-import SwiftUI
-
-struct Previewsaa : PreviewProvider {
-    static var previews: some View {
-        MainTabBarView().toPreview()
-    }
-}
