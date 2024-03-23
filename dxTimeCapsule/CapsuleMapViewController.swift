@@ -1,10 +1,3 @@
-//
-//  CapsuleMapViewController.swift
-//  dxTimeCapsule
-//
-//  Created by YeongHo Ha on 2/24/24.
-//
-
 import UIKit
 import MapKit
 import CoreLocation
