@@ -68,7 +68,7 @@ class LoginViewController: UIViewController {
         passwordTextField.delegate = self
         
         // Test 자동기입
-        emailTextField.text =  "Hwangc1226@gmail.com"
+        emailTextField.text =  "gugu01@gmail.com"
         passwordTextField.text = "12345678"
     }
     
