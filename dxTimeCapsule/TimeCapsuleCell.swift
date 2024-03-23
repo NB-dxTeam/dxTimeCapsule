@@ -14,6 +14,11 @@ class TimeCapsuleCell: UITableViewCell {
     // MARK: - Properties
     static let identifier = "TimeCapsuleCell"
     
+    enum DDayLogicType {
+        case UpcomingTCViewControllerLogic
+        case OpenedTCViewControllerLogic
+    }
+    
     // 캡슐 이미지를 표시하는 이미지 뷰
     lazy var registerImage: UIImageView = {
         let image = UIImageView()
@@ -82,7 +87,7 @@ class TimeCapsuleCell: UITableViewCell {
     // MARK: - Configuration
     
     // 셀을 구성하는 메서드
-    func configure(with timeBox: TimeBox, dDayColor: UIColor) {
+    func configure(with timeBox: TimeBox, dDayColor: UIColor, controllerType: DDayLogicType) {
         // 이미지 설정
         if let imageUrl = timeBox.thumbnailURL ?? timeBox.imageURL?.first, let url = URL(string: imageUrl) {
             self.registerImage.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder"))
@@ -98,19 +103,30 @@ class TimeCapsuleCell: UITableViewCell {
         let today = Date()
         let calendar = Calendar.current
         
-        if let openTimeBoxDate = timeBox.openTimeBoxDate?.dateValue() {
-            let components = calendar.dateComponents([.day], from: today, to: openTimeBoxDate)
-            
-            if let daysUntilOpening = components.day {
-                if daysUntilOpening == 0 {
-                    
-                    // (수정) 오늘이 개봉일일 때 "D-day" 반환
-                    self.dDayLabel.text = "D-day"
-                } else {
-                    let dDayPrefix = daysUntilOpening < 0 ? "D+" : "D-"
-                    self.dDayLabel.text = "\(dDayPrefix)\(abs(daysUntilOpening))"
+        if controllerType == .UpcomingTCViewControllerLogic {
+            // UpcomingTCViewController의 D-Day 로직
+            if let openTimeBoxDate = timeBox.openTimeBoxDate?.dateValue() {
+                let components = calendar.dateComponents([.day], from: today, to: openTimeBoxDate)
+                
+                if let daysUntilOpening = components.day {
+                    if daysUntilOpening == 0 {
+                        self.dDayLabel.text = "D-day"
+                    } else {
+                        let dDayPrefix = daysUntilOpening < 0 ? "D+" : "D-"
+                        self.dDayLabel.text = "\(dDayPrefix)\(abs(daysUntilOpening))"
+                    }
+                    self.dDayBackgroundView.backgroundColor = dDayColor
                 }
-                self.dDayBackgroundView.backgroundColor = dDayColor
+            }
+        } else if controllerType == .OpenedTCViewControllerLogic {
+            // OpenedTCViewController의 D-Day 로직
+            if let createTimeBoxDate = timeBox.createTimeBoxDate?.dateValue() {
+                let components = calendar.dateComponents([.day], from: createTimeBoxDate, to: today)
+                if let daysSinceCreation = components.day {
+                    let dDayPrefix = daysSinceCreation < 0 ? "D+" : "D-"
+                    self.dDayLabel.text = "\(dDayPrefix)\(abs(daysSinceCreation))"
+                    self.dDayBackgroundView.backgroundColor = dDayColor
+                }
             }
         }
         
@@ -150,7 +166,7 @@ class TimeCapsuleCell: UITableViewCell {
             make.top.equalTo(registerImage.snp.bottom).offset(offset1)
             make.bottom.equalTo(userLocation.snp.bottom)
             make.leading.equalToSuperview().inset(30)
-            make.width.equalTo(registerImage.snp.width).multipliedBy(0.20/1.0)
+            make.width.equalTo(registerImage.snp.width).multipliedBy(0.17/1.0)
             make.height.equalToSuperview().multipliedBy(1.3/16.0)
         }
         dDayBackgroundView.addSubview(dDayLabel)

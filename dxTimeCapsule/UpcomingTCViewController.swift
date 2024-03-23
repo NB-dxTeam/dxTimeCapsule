@@ -119,7 +119,7 @@ class UpcomingTCViewController: UITableViewController {
         }
         
         let timeBox = timeBoxes[indexPath.row]
-        cell.configure(with: timeBox, dDayColor: UIColor(.red))
+        cell.configure(with: timeBox, dDayColor: UIColor(.red), controllerType: .UpcomingTCViewControllerLogic)
         return cell
     }
     
