@@ -43,7 +43,7 @@ class TimeCapsuleCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 44, weight: .bold)
         label.adjustsFontSizeToFitWidth = true
-        label.minimumScaleFactor = 0.3
+        label.minimumScaleFactor = 0.25
         label.textColor = .white
         label.textAlignment = .center
         return label
