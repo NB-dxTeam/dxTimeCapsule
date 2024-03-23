@@ -186,7 +186,7 @@ extension CustomModal: UICollectionViewDataSource, UICollectionViewDelegate {
         }
         
         let timeBoxes = timeBoxes[indexPath.row]
-        cell.configure(with: timeBoxes)
+        cell.configure(with: timeBoxes, dDayColor: UIColor.systemGray4)
         return cell
     }
     
