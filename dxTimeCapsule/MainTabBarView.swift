@@ -38,12 +38,24 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         let profileViewController = UINavigationController(rootViewController: UserProfileViewController())
         
         homeViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Home_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Home_Select", targetSize: CGSize(width: 24, height: 24)))
+        homeViewController.tabBarItem.tag = 0
+        
         searchModalTableViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Search_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Search_Select", targetSize: CGSize(width: 24, height: 24)))
+        searchModalTableViewController.tabBarItem.tag = 1
+
+        
         postUploadNavigationController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Write_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Write_Select", targetSize: CGSize(width: 24, height: 24)))
         postUploadNavigationController.tabBarItem.tag = 2
+        
         notificationViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Activity_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Activity_Select", targetSize: CGSize(width: 24, height: 24)))
+        notificationViewController.tabBarItem.tag = 3
+        
         profileViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Profile_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Profile_Select", targetSize: CGSize(width: 24, height: 24)))
+        profileViewController.tabBarItem.tag = 4
+
+        
         let viewControllers = [homeViewController, searchModalTableViewController, postUploadNavigationController, notificationViewController, profileViewController]
+        
         self.viewControllers = viewControllers
         self.tabBar.tintColor = UIColor(hex: "#C82D6B")
         self.tabBar.backgroundColor = .white
@@ -60,17 +72,37 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
             }
         }
     }
-
+    
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-        if viewController.tabBarItem.tag == 2 {
-            let postUploadNavigationController = LocationMapkitViewController()
-            postUploadNavigationController.modalPresentationStyle = .fullScreen
-            tabBarController.present(postUploadNavigationController, animated: true, completion: nil)
-            return false
+        if viewController.tabBarItem.tag == 0 { // 홈 버튼의 태그가 0이라고 가정합니다.
+            // 현재 선택된 뷰 컨트롤러를 가져옵니다.
+            guard let currentViewController = selectedViewController as? UINavigationController else {
+                return true
+            }
+            
+            // 홈 뷰 컨트롤러를 새로 생성합니다.
+            let newHomeViewController = HomeViewController()
+            newHomeViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Home_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Home_Select", targetSize: CGSize(width: 24, height: 24)))
+            newHomeViewController.tabBarItem.tag = 0 // 홈 버튼의 태그 설정
+            newHomeViewController.tabBarItem.badgeValue = viewController.tabBarItem.badgeValue // 배지 값 복사
+            
+            // 탭 바 아이템의 틴트 색상 변경
+            tabBarController.tabBar.tintColor = UIColor(hex: "#C82D6B")
+            
+            // 홈 버튼이 선택되었을 때의 이미지 설정
+            viewController.tabBarItem.selectedImage = resizeImage(imageName: "Light=Home_Select", targetSize: CGSize(width: 24, height: 24))
+            
+            // 현재 선택된 뷰 컨트롤러를 홈 뷰 컨트롤러로 교체합니다.
+            currentViewController.setViewControllers([newHomeViewController], animated: false)
+            
+            return false // 홈 버튼을 눌렀을 때 탭 바의 선택을 변경하지 않습니다.
         }
         return true
     }
-    
+
+
+
+
     func resizeImage(imageName: String, targetSize: CGSize) -> UIImage? {
         guard let image = UIImage(named: imageName) else { return nil }
         let renderer = UIGraphicsImageRenderer(size: targetSize)

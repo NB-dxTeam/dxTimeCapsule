@@ -34,7 +34,7 @@ class FriendRequestTableViewCell: UITableViewCell {
     
     private let statusLabel: UILabel = {
         let label = UILabel()
-        label.text = "Now friend"
+        label.text = "이제 친구입니다"
         label.font = UIFont.pretendardSemiBold(ofSize: 14)
         label.textColor = UIColor(hex: "C82D6B")
         label.textAlignment = .center
