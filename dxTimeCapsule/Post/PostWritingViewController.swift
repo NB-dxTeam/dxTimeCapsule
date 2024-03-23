@@ -137,7 +137,7 @@ class PostWritingViewController: UIViewController, UITextViewDelegate, UITextFie
         view.backgroundColor = .white
         setupUI()
         setupGestures()
-        
+        keyBoardHide()
         descriptionTextView.delegate = self
         
         addressTitleTextField.delegate = self

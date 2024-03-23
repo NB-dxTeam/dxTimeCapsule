@@ -41,7 +41,7 @@ class SignUpViewController: UIViewController  {
         super.viewDidLoad()
         setupViews()
         setupLayouts()
-        
+        keyBoardHide()
         emailTextField.addTarget(self, action: #selector(emailTextFieldDidChange(_:)), for: .editingChanged)
         passwordTextField.addTarget(self, action: #selector(passwordTextFieldDidChange(_:)), for: .editingChanged)
         confirmPasswordTextField.addTarget(self, action: #selector(confirmPasswordTextFieldDidChange(_:)), for: .editingChanged)
