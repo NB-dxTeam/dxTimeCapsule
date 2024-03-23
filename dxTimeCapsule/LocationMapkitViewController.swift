@@ -278,7 +278,20 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
 
 
     @objc private func backButtonTapped() {
-        dismiss(animated: true, completion: nil)
+        // 메인 탭바 컨트롤러로 이동
+        guard let tabBarController = self.tabBarController as? MainTabBarView else {
+            dismiss(animated: true, completion: nil)
+            return
+        }
+
+        // 첫 번째 탭(홈)으로 이동
+        tabBarController.selectedIndex = 0
+        
+        // 현재 뷰 컨트롤러 닫기
+        // 메인 탭바 뷰가 네비게이션 컨트롤러에 의해 관리되는 경우
+        navigationController?.popToRootViewController(animated: true)
+        // 혹은 단순 모달 형태로 띄워진 경우
+        // dismiss(animated: true, completion: nil)
     }
     
     @objc func handleModifyLocationTap() {

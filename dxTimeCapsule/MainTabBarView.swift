@@ -31,10 +31,10 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         
         let searchModalTableViewController = UINavigationController(rootViewController: CapsuleMapViewController())
         
-//        let postUploadViewHostingController = UIHostingController(rootView: PostUploadView())
         let postUploadNavigationController = UINavigationController(rootViewController: LocationMapkitViewController())
 
         let notificationViewController = UINavigationController(rootViewController: FriendsRequestViewController())
+        
         let profileViewController = UINavigationController(rootViewController: UserProfileViewController())
         
         homeViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Home_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Home_Select", targetSize: CGSize(width: 24, height: 24)))
@@ -43,15 +43,18 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
         searchModalTableViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Search_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Search_Select", targetSize: CGSize(width: 24, height: 24)))
         searchModalTableViewController.tabBarItem.tag = 1
 
+
         
         postUploadNavigationController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Write_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Write_Select", targetSize: CGSize(width: 24, height: 24)))
         postUploadNavigationController.tabBarItem.tag = 2
         
         notificationViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Activity_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Activity_Select", targetSize: CGSize(width: 24, height: 24)))
         notificationViewController.tabBarItem.tag = 3
+
         
         profileViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Profile_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Profile_Select", targetSize: CGSize(width: 24, height: 24)))
         profileViewController.tabBarItem.tag = 4
+
 
         
         let viewControllers = [homeViewController, searchModalTableViewController, postUploadNavigationController, notificationViewController, profileViewController]
@@ -74,34 +77,32 @@ class MainTabBarView: UITabBarController, UITabBarControllerDelegate {
     }
     
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-        if viewController.tabBarItem.tag == 0 { // 홈 버튼의 태그가 0이라고 가정합니다.
-            // 현재 선택된 뷰 컨트롤러를 가져옵니다.
-            guard let currentViewController = selectedViewController as? UINavigationController else {
-                return true
+        // 첫 번째 탭이 선택되었는지 확인합니다.
+        if viewController.tabBarItem.tag == 0 {
+            // 선택된 뷰 컨트롤러가 UINavigationController인지 확인합니다.
+            if let navController = viewController as? UINavigationController {
+                // UINavigationController의 루트 뷰 컨트롤러로 돌아갑니다.
+                navController.popToRootViewController(animated: false)
+                
+                // 현재 선택된 탭이 첫 번째 탭이 아닌 경우에만,
+                // 첫 번째 탭의 뷰 컨트롤러를 초기 상태로 리셋합니다.
+                if tabBarController.selectedIndex != 0 {
+                    let newHomeVC = HomeViewController()
+                    navController.setViewControllers([newHomeVC], animated: false)
+                }
+
+                return true // 첫 번째 탭으로의 이동을 허용합니다.
             }
-            
-            // 홈 뷰 컨트롤러를 새로 생성합니다.
-            let newHomeViewController = HomeViewController()
-            newHomeViewController.tabBarItem = UITabBarItem(title: nil, image: resizeImage(imageName: "Light=Home_Deselect", targetSize: CGSize(width: 24, height: 24)), selectedImage: resizeImage(imageName: "Light=Home_Select", targetSize: CGSize(width: 24, height: 24)))
-            newHomeViewController.tabBarItem.tag = 0 // 홈 버튼의 태그 설정
-            newHomeViewController.tabBarItem.badgeValue = viewController.tabBarItem.badgeValue // 배지 값 복사
-            
-            // 탭 바 아이템의 틴트 색상 변경
-            tabBarController.tabBar.tintColor = UIColor(hex: "#C82D6B")
-            
-            // 홈 버튼이 선택되었을 때의 이미지 설정
-            viewController.tabBarItem.selectedImage = resizeImage(imageName: "Light=Home_Select", targetSize: CGSize(width: 24, height: 24))
-            
-            // 현재 선택된 뷰 컨트롤러를 홈 뷰 컨트롤러로 교체합니다.
-            currentViewController.setViewControllers([newHomeViewController], animated: false)
-            
-            return false // 홈 버튼을 눌렀을 때 탭 바의 선택을 변경하지 않습니다.
-        }
-        return true
+        } else if viewController.tabBarItem.tag == 2{
+            // 태그 2번인 경우, 전체 화면 모달로 LocationMapkitViewController를 표시합니다.
+             let locationVC = LocationMapkitViewController()
+             locationVC.modalPresentationStyle = .fullScreen // 전체 화면으로 설정
+             self.present(locationVC, animated: true, completion: nil)
+             return false // 탭 바 컨트롤러에 의한 기본 이동 처리 방지
+         }
+        // 다른 모든 경우에는 탭 선택을 그대로 진행합니다.
+           return true
     }
-
-
-
 
     func resizeImage(imageName: String, targetSize: CGSize) -> UIImage? {
         guard let image = UIImage(named: imageName) else { return nil }

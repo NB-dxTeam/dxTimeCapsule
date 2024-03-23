@@ -1,10 +1,3 @@
-//
-//  CapsuleMapViewController.swift
-//  dxTimeCapsule
-//
-//  Created by YeongHo Ha on 2/24/24.
-//
-
 import UIKit
 import MapKit
 import CoreLocation
@@ -36,8 +29,10 @@ class CapsuleMapViewController: UIViewController {
     
     // 원래 지도의 중심 위치를 저장할 변수
     private var originalCenterCoordinate: CLLocationCoordinate2D?
+    
     private var shouldShowModal = false
     // 버튼을 생성하고 설정하는 클로저
+    
     private lazy var allButton: UIButton = {
         let button = UIButton()
         // "AdobeBox_All" 이미지를 allButton에 설정합니다.
@@ -50,6 +45,7 @@ class CapsuleMapViewController: UIViewController {
         }, for: .touchUpInside)
         return button
     }()
+    
     private lazy var lockedButton: UIButton = {
         let button = UIButton()
         // "AdobeBox_Close" 이미지를 lockedButton에 설정합니다.
