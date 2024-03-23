@@ -25,18 +25,25 @@ class TimeCapsuleCell: UITableViewCell {
     }()
     
     // D-Day 정보를 표시하는 레이블
-    lazy var dDay: UILabel = {
+    lazy var dDayBackgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .systemBlue
+        view.layer.cornerRadius = 13 // 모서리 둥글기 반지름 설정
+        view.clipsToBounds = true // 모서리 둥글기 적용을 위해 필요
+        return view
+    }()
+    
+    // D-Day 정보를 표시하는 레이블
+    lazy var dDayLabel: UILabel = {
         let label = UILabel()
-        label.backgroundColor = .systemBlue
-        label.font = UIFont.boldSystemFont(ofSize: 44)
+        label.font = UIFont.systemFont(ofSize: 44, weight: .bold)
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.3
         label.textColor = .white
         label.textAlignment = .center
-        label.layer.cornerRadius = 10
-        label.layer.masksToBounds = true
         return label
     }()
+    
     
     // 사용자 위치를 표시하는 레이블
     lazy var userLocation: UILabel = {
@@ -98,12 +105,12 @@ class TimeCapsuleCell: UITableViewCell {
                 if daysUntilOpening == 0 {
                     
                     // (수정) 오늘이 개봉일일 때 "D-day" 반환
-                    self.dDay.text = "D-day"
+                    self.dDayLabel.text = "D-day"
                 } else {
                     let dDayPrefix = daysUntilOpening < 0 ? "D+" : "D-"
-                    self.dDay.text = "\(dDayPrefix)\(abs(daysUntilOpening))"
+                    self.dDayLabel.text = "\(dDayPrefix)\(abs(daysUntilOpening))"
                 }
-                self.dDay.backgroundColor = dDayColor
+                self.dDayBackgroundView.backgroundColor = dDayColor
             }
         }
         
@@ -124,7 +131,7 @@ class TimeCapsuleCell: UITableViewCell {
     private func setupViews() {
 //        contentView.backgroundColor = .yellow
         contentView.addSubview(registerImage)
-        contentView.addSubview(dDay)
+        contentView.addSubview(dDayBackgroundView)
         contentView.addSubview(userLocation)
         contentView.addSubview(creationDate)
     
@@ -137,21 +144,28 @@ class TimeCapsuleCell: UITableViewCell {
             make.centerX.equalToSuperview()
         }
         
-        dDay.snp.makeConstraints { make in
+        dDayBackgroundView.snp.makeConstraints { make in
             let offset1 = UIScreen.main.bounds.height * (0.3/16.0)
-            let offset2 = UIScreen.main.bounds.height * (0.35/16.0)
+            let offset2 = UIScreen.main.bounds.height * (0.3/16.0)
             make.top.equalTo(registerImage.snp.bottom).offset(offset1)
             make.bottom.equalTo(userLocation.snp.bottom)
             make.leading.equalToSuperview().inset(30)
             make.width.equalTo(registerImage.snp.width).multipliedBy(0.17/1.0)
-            make.height.equalTo(offset2)
+            make.height.equalToSuperview().multipliedBy(1.3/16.0)
+        }
+        dDayBackgroundView.addSubview(dDayLabel)
+        
+        // dDayLabel의 레이아웃을 dDayBackgroundView 내부 중앙에 맞춤
+        dDayLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 2, left: 8, bottom: 2, right: 8)) // 여백 조정
         }
         
         userLocation.snp.makeConstraints { make in
             let offset1 = UIScreen.main.bounds.height * (0.3/16.0)
             let offset2 = UIScreen.main.bounds.width * (0.10/2.0)
             make.top.equalTo(registerImage.snp.bottom).offset(offset1)
-            make.leading.equalTo(dDay.snp.trailing).offset(offset2)
+            make.leading.equalTo(dDayBackgroundView.snp.trailing).offset(offset2)
             make.height.equalToSuperview().multipliedBy(1.3/16.0)
             make.trailing.equalTo(creationDate.snp.leading)
         }
