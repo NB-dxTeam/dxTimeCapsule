@@ -466,7 +466,7 @@ class OpenCapsuleViewController: UIViewController, UIScrollViewDelegate {
           ]
           
           let userIdString = NSAttributedString(string: "\(userId)\n", attributes: userIdTextAttributes)
-          let timeCapsuleString = NSAttributedString(string: "Time Capsule", attributes: timeCapsuleTextAttributes)
+          let timeCapsuleString = NSAttributedString(string: "Time Box", attributes: timeCapsuleTextAttributes)
           
           let combinedAttributedString = NSMutableAttributedString()
           combinedAttributedString.append(userIdString)

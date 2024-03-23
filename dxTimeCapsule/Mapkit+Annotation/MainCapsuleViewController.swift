@@ -152,7 +152,7 @@ class MainCapsuleViewController: UIViewController {
                     dateFormatter.dateFormat = "yyyy-MM-dd"
                     let dateStr = dateFormatter.string(from: creationDate.dateValue())
                     DispatchQueue.main.async {
-                        self.creationDateLabel.text = "\(dateStr) 생성된 캡슐"
+                        self.creationDateLabel.text = "\(dateStr) 생성된 타임박스"
                     }
                 }
             } else {
