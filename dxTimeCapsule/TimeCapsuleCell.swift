@@ -28,7 +28,7 @@ class TimeCapsuleCell: UITableViewCell {
     lazy var dDayBackgroundView: UIView = {
         let view = UIView()
         view.backgroundColor = .systemBlue
-        view.layer.cornerRadius = 13 // 모서리 둥글기 반지름 설정
+        view.layer.cornerRadius = 12 // 모서리 둥글기 반지름 설정
         view.clipsToBounds = true // 모서리 둥글기 적용을 위해 필요
         return view
     }()
@@ -150,7 +150,7 @@ class TimeCapsuleCell: UITableViewCell {
             make.top.equalTo(registerImage.snp.bottom).offset(offset1)
             make.bottom.equalTo(userLocation.snp.bottom)
             make.leading.equalToSuperview().inset(30)
-            make.width.equalTo(registerImage.snp.width).multipliedBy(0.17/1.0)
+            make.width.equalTo(registerImage.snp.width).multipliedBy(0.20/1.0)
             make.height.equalToSuperview().multipliedBy(1.3/16.0)
         }
         dDayBackgroundView.addSubview(dDayLabel)

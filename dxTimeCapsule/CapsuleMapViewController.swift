@@ -106,7 +106,9 @@ class CapsuleMapViewController: UIViewController {
     // 현재 위치 버튼
     private lazy var currentLocationButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "locationicon"), for: .normal)
+        if let image = UIImage(named: "locationicon")?.resizedImage(newSize: CGSize(width: 20, height: 20)) {
+            button.setImage(image, for: .normal)
+        }
         button.backgroundColor = UIColor.white.withAlphaComponent(1.0)
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 20
@@ -510,22 +512,22 @@ extension CapsuleMapViewController: MKMapViewDelegate {
             annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             annotationView?.canShowCallout = true
             annotationView?.animatesWhenAdded = true
-            annotationView?.glyphImage = UIImage(named: "lockimage")
+            annotationView?.glyphImage = UIImage(named: "boximage1")
             annotationView?.glyphTintColor = .white
-            annotationView?.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .gray : .red
+            annotationView?.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .systemGray4 : .systemRed
             
         } else {
             print("MKMarkerAnnotationView 재사용")
-            annotationView?.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .gray : .red
+            annotationView?.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .systemGray4 : .systemRed
         }
         
         
         annotationView?.annotation = annotation
         annotationView?.canShowCallout = true
         annotationView?.animatesWhenAdded = true
-        annotationView?.glyphImage = UIImage(named: "lockimage")
+        annotationView?.glyphImage = UIImage(named: "boximage1")
         annotationView?.glyphTintColor = .white
-        annotationView?.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .gray : .red
+        annotationView?.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .systemGray4 : .systemRed
         
         if let timeBoxAnnotation = annotation as? TimeBoxAnnotation {
             annotationView?.detailCalloutAccessoryView = configureDetailView(for: timeBoxAnnotation)

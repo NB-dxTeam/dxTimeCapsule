@@ -22,16 +22,23 @@ class LockedCapsuleCell: UICollectionViewCell {
         image.layer.masksToBounds = true
         return image
     }()
-    lazy var dDay: UILabel = { // openDate - creationDate = D-Day
+    // D-Day 정보를 표시하는 레이블
+    lazy var dDayBackgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .systemBlue
+        view.layer.cornerRadius = 11 // 모서리 둥글기 반지름 설정
+        view.clipsToBounds = true // 모서리 둥글기 적용을 위해 필요
+        return view
+    }()
+    
+    // D-Day 정보를 표시하는 레이블
+    lazy var dDayLabel: UILabel = {
         let label = UILabel()
-        label.backgroundColor = .systemBlue
-        label.font = UIFont.boldSystemFont(ofSize: 44)
+        label.font = UIFont.systemFont(ofSize: 44, weight: .bold)
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.3
         label.textColor = .white
         label.textAlignment = .center
-        label.layer.cornerRadius = 10
-        label.layer.masksToBounds = true
         return label
     }()
     lazy var addressTitle: UILabel = { // userLocation
@@ -69,49 +76,52 @@ class LockedCapsuleCell: UICollectionViewCell {
     // MARK: - Configuration
     
     // 셀을 구성하는 메서드
-    func configure(with timeboxes: TimeBox) {
-        // 이미지 URL을 사용하여 이미지를 로드하고 설정
-        if let thumbnailURL = timeboxes.thumbnailURL, let url = URL(string: thumbnailURL) {
-            // 이미지 로딩 라이브러리를 사용한 비동기 이미지 로딩
+    func configure(with timeBox: TimeBox, dDayColor: UIColor) {
+        // 이미지 설정
+        if let imageUrl = timeBox.thumbnailURL ?? timeBox.imageURL?.first, let url = URL(string: imageUrl) {
             self.registerImage.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder"))
         } else {
             self.registerImage.image = UIImage(named: "placeholder")
         }
-
-        // 오늘 날짜와 openDate 사이의 일수를 계산하여 D-Day를 결정
+        
+        // D-Day 설정
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul") // UTC+9:00
-
+        dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul") // 한국 시간대 설정
+        
         let today = Date()
         let calendar = Calendar.current
-        let components = calendar.dateComponents([.day], from: today, to: timeboxes.openTimeBoxDate!.dateValue())
-
-        if let daysUntilOpening = components.day {
-            // 날짜 차이에 따라 D-Day 표시를 조정
-            let dDayPrefix = daysUntilOpening < 0 ? "D+" : "D-"
-            self.dDay.text = "\(dDayPrefix)\(abs(daysUntilOpening))"
+        
+        if let openTimeBoxDate = timeBox.openTimeBoxDate?.dateValue() {
+            let components = calendar.dateComponents([.day], from: today, to: openTimeBoxDate)
             
-            // 배경색 설정 로직 추가
-            if dDayPrefix == "D+" {
-                self.dDay.backgroundColor = .gray // "D+" 일 때 회색으로 설정
-            } else if dDayPrefix == "D-" {
-                self.dDay.backgroundColor = UIColor(hex: "#C82D6B") // "D-"일 때 빨간색으로 설정
+            if let daysUntilOpening = components.day {
+                if daysUntilOpening == 0 {
+                    
+                    // (수정) 오늘이 개봉일일 때 "D-day" 반환
+                    self.dDayLabel.text = "D-day"
+                } else {
+                    let dDayPrefix = daysUntilOpening < 0 ? "D+" : "D-"
+                    self.dDayLabel.text = "\(dDayPrefix)\(abs(daysUntilOpening))"
+                }
+                self.dDayBackgroundView.backgroundColor = dDayColor
             }
         }
 
         // 사용자 위치를 설정
-        self.addressTitle.text = timeboxes.addressTitle ?? "Unknown addressTitle"
-
-        // 생성 날짜를 포맷에 맞게 설정
-        dateFormatter.dateFormat = "yyyy-MM-dd" // 시간 부분은 제외하고 날짜만 표시
-        let dateStr = dateFormatter.string(from: timeboxes.createTimeBoxDate!.dateValue())
-        self.creationDate.text = dateStr
+        // 사용자 위치 설정
+        self.addressTitle.text = timeBox.addressTitle ?? "Unknown location"
+        
+        // 생성 날짜 설정
+        if let createTimeBoxDate = timeBox.createTimeBoxDate?.dateValue() {
+            let dateStr = dateFormatter.string(from: createTimeBoxDate)
+            self.creationDate.text = dateStr
+        }
     }
     
     private func setupViews() {
         contentView.addSubview(registerImage)
-        contentView.addSubview(dDay)
+        contentView.addSubview(dDayBackgroundView)
         contentView.addSubview(addressTitle)
         contentView.addSubview(creationDate)
         
@@ -122,8 +132,7 @@ class LockedCapsuleCell: UICollectionViewCell {
             make.leading.trailing.equalToSuperview().inset(20)
             make.centerX.equalToSuperview()
         }
-        
-        dDay.snp.makeConstraints { make in
+        dDayBackgroundView.snp.makeConstraints { make in
             let offset1 = UIScreen.main.bounds.height * (0.3/16.0)
             let offset2 = UIScreen.main.bounds.height * (0.35/16.0)
             make.top.equalTo(registerImage.snp.bottom).offset(offset1)
@@ -132,12 +141,28 @@ class LockedCapsuleCell: UICollectionViewCell {
             make.width.equalTo(registerImage.snp.width).multipliedBy(0.17/1.0)
             make.height.equalTo(offset2)
         }
+        dDayBackgroundView.addSubview(dDayLabel)
+        
+        // dDayLabel의 레이아웃을 dDayBackgroundView 내부 중앙에 맞춤
+        dDayLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 2, left: 8, bottom: 2, right: 8)) // 여백 조정
+        }
+//        dDay.snp.makeConstraints { make in
+//            let offset1 = UIScreen.main.bounds.height * (0.3/16.0)
+//            let offset2 = UIScreen.main.bounds.height * (0.35/16.0)
+//            make.top.equalTo(registerImage.snp.bottom).offset(offset1)
+//            make.bottom.equalTo(addressTitle.snp.bottom)
+//            make.leading.equalToSuperview().inset(30)
+//            make.width.equalTo(registerImage.snp.width).multipliedBy(0.17/1.0)
+//            make.height.equalTo(offset2)
+//        }
         
         addressTitle.snp.makeConstraints { make in
             let offset1 = UIScreen.main.bounds.height * (0.3/16.0)
             let offset2 = UIScreen.main.bounds.width * (0.10/2.0)
             make.top.equalTo(registerImage.snp.bottom).offset(offset1)
-            make.leading.equalTo(dDay.snp.trailing).offset(offset2)
+            make.leading.equalTo(dDayBackgroundView.snp.trailing).offset(offset2)
             make.height.equalToSuperview().multipliedBy(1.3/16.0)
             make.trailing.equalTo(creationDate.snp.leading)
         }
