@@ -116,6 +116,7 @@
 		27966F092BA06A41009EC5F3 /* HomeViewControllerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27966F082BA06A41009EC5F3 /* HomeViewControllerModel.swift */; };
 		27D241B22B8F33A5000F8F16 /* OpenedTCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D241B12B8F33A5000F8F16 /* OpenedTCViewController.swift */; };
 		27EA9A922BAB8750009A1D21 /* SignUpOptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EA9A912BAB8750009A1D21 /* SignUpOptionViewController.swift */; };
+		27EA9A942BAE5ED3009A1D21 /* OpenedTCViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EA9A932BAE5ED3009A1D21 /* OpenedTCViewModel.swift */; };
 		27F3827F2B8FA1240005F733 /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F3827E2B8FA1240005F733 /* NotificationTableViewCell.swift */; };
 		27FC12892B9A64B1008CBEB8 /* TimeCapsuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FC12882B9A64B1008CBEB8 /* TimeCapsuleCell.swift */; };
 		27FC128B2B9A64E5008CBEB8 /* UpcomingTCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FC128A2B9A64E5008CBEB8 /* UpcomingTCViewController.swift */; };
@@ -219,6 +220,7 @@
 		27966F082BA06A41009EC5F3 /* HomeViewControllerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewControllerModel.swift; sourceTree = "<group>"; };
 		27D241B12B8F33A5000F8F16 /* OpenedTCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenedTCViewController.swift; sourceTree = "<group>"; };
 		27EA9A912BAB8750009A1D21 /* SignUpOptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpOptionViewController.swift; sourceTree = "<group>"; };
+		27EA9A932BAE5ED3009A1D21 /* OpenedTCViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenedTCViewModel.swift; sourceTree = "<group>"; };
 		27F3827E2B8FA1240005F733 /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
 		27FC12882B9A64B1008CBEB8 /* TimeCapsuleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCapsuleCell.swift; sourceTree = "<group>"; };
 		27FC128A2B9A64E5008CBEB8 /* UpcomingTCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingTCViewController.swift; sourceTree = "<group>"; };
@@ -429,6 +431,7 @@
 				1FE313B02B98114700E02045 /* LocationHistoryViewModel.swift */,
 				27966F082BA06A41009EC5F3 /* HomeViewControllerModel.swift */,
 				1F53E5102BA27D5D004141C7 /* UploadPostViewModel.swift */,
+				27EA9A932BAE5ED3009A1D21 /* OpenedTCViewModel.swift */,
 			);
 			name = ViewModel;
 			sourceTree = "<group>";
@@ -867,6 +870,7 @@
 			files = (
 				1FB3F4E92BAB04C10019416B /* MessageModalViewController.swift in Sources */,
 				FFC457642B8F0F36000761E9 /* UserProfileViewModel.swift in Sources */,
+				27EA9A942BAE5ED3009A1D21 /* OpenedTCViewModel.swift in Sources */,
 				1F52F8B92B9CDADC00974F0B /* TagFriendListTableCell.swift in Sources */,
 				FFC457662B8F0F74000761E9 /* UserProfileViewController.swift in Sources */,
 				D20CDCCA2B957D5D00B93788 /* SearchUserTableViewController.swift in Sources */,

@@ -15,51 +15,65 @@ class OpenedTCViewController: UITableViewController {
     // MARK: - Properties
     
     var documentId: String?
-    private var timeBoxes: [TimeBox] = []
-    var onCapsuleSelected: ((Double, Double) -> Void)?
-    
-    // 정렬 옵션
-    enum SortOption {
-        case oldestFirst
-        case newestFirst
-    }
-    
-    // 현재 설정된 정렬 옵션
-    var currentSortOption: SortOption = .oldestFirst {
-        didSet {
-            sortTimeBoxesAndReloadTableView()
-        }
-    }
-    
-    // 세그먼트 컨트롤 정의
-    lazy var sortSegmentedControl: UISegmentedControl = {
-        let segmentedControl = UISegmentedControl(items: ["최신순", "오래된순"])
-        segmentedControl.selectedSegmentIndex = 0 // 기본 선택값
-        segmentedControl.addTarget(self, action: #selector(sortOptionChanged), for: .valueChanged)
-        return segmentedControl
-    }()
+    private var viewModel = OpenedTCViewModel()
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        fetchTimeBoxesInfo()
-        // 네비게이션 바 스타일 설정
         setupNavigationBarAppearance()
-        // 왼쪽 backButton 설정
+        setupToolbar()
         setupBackButton()
-        // 타이틀 설정
         navigationItem.title = "Saved memories"
+        fetchTimeBoxesInfo()
+        // 테이블뷰의 contentInset을 설정하여 툴바 아래로 이동
     }
     
+    // MARK: - Toolbar Setup
+
+    private func setupToolbar() {
+        // 툴바 인스턴스 생성
+        let toolbar = UIToolbar()
+        toolbar.translatesAutoresizingMaskIntoConstraints = false // 오토레이아웃 사용
+        // 툴바 색상 설정
+        toolbar.barTintColor = UIColor.systemGray6.withAlphaComponent(0.5)
+        // Segmented Control을 UIBarButtonItem으로 변환
+        let segmentedControlBarButton = UIBarButtonItem(customView: sortSegmentedControl)
+        
+        // 툴바 아이템 설정
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        toolbar.items = [flexibleSpace, segmentedControlBarButton]
+    
+        
+        // 툴바의 레이아웃 제약 조건 설정
+        toolbar.snp.makeConstraints { make in
+            make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
+            make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.height.equalTo(44) // 툴바 높이 설정
+            
+            // 툴바를 테이블 뷰의 헤더 뷰로 설정
+            tableView.tableHeaderView = toolbar
+        }
+    }
+   
     // MARK: - UI Setup
     
     private func setupUI() {
         tableView.register(TimeCapsuleCell.self, forCellReuseIdentifier: TimeCapsuleCell.identifier)
         tableView.separatorStyle = .none
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: sortSegmentedControl)
     }
+    // MARK: - Data Fetching
+    
+    private func fetchTimeBoxesInfo() {
+        viewModel.fetchTimeBoxesInfo { [weak self] timeBoxes in
+            self?.viewModel.timeBoxes = timeBoxes
+            self?.tableView.reloadData()
+        }
+    }
+    
+    // MARK: - UITableViewDataSource, UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let screenWidth = UIScreen.main.bounds.width
@@ -67,95 +81,8 @@ class OpenedTCViewController: UITableViewController {
         return itemHeight
     }
     
-    // 네비게이션 바 스타일 설정 메서드
-    private func setupNavigationBarAppearance() {
-        navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.barTintColor = .white
-        navigationController?.navigationBar.shadowImage = UIImage(named: "gray_line")
-    }
-    
-    // 왼쪽 backButton 설정 메서드
-    private func setupBackButton() {
-        let backButton = UIButton(type: .system)
-        let image = UIImage(systemName: "chevron.left")
-        backButton.setBackgroundImage(image, for: .normal)
-        backButton.tintColor = UIColor(red: 209/255.0, green: 94/255.0, blue: 107/255.0, alpha: 1)
-        backButton.addTarget(self, action: #selector(homeButtonTapped), for: .touchUpInside)
-        backButton.frame = CGRect(x: 0, y: 0, width: 20, height: 30)
-        
-        // 네비게이션 아이템에 backButton 설정
-        let backButtonBarItem = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = backButtonBarItem
-    }
-    
-    // 세그먼트 컨트롤 값 변경 액션
-    @objc private func sortOptionChanged() {
-        switch sortSegmentedControl.selectedSegmentIndex {
-        case 0:
-            currentSortOption = .newestFirst
-        case 1:
-            currentSortOption = .oldestFirst
-        default:
-            break
-        }
-        
-        // 셀 재정렬
-        sortTimeBoxesAndReloadTableView()
-    }
-    
-    // 시간 캡슐을 정렬하고 테이블 뷰 다시 로드
-    private func sortTimeBoxesAndReloadTableView() {
-        switch currentSortOption {
-        case .newestFirst:
-            timeBoxes.sort { $0.createTimeBoxDate?.dateValue() ?? Date() > $1.createTimeBoxDate?.dateValue() ?? Date() }
-        case .oldestFirst:
-            timeBoxes.sort { $0.createTimeBoxDate?.dateValue() ?? Date() < $1.createTimeBoxDate?.dateValue() ?? Date() }
-        }
-        tableView.reloadData()
-    }
-
-    // MARK: - Data Fetching
-    
-    private func fetchTimeBoxesInfo() {
-        let db = Firestore.firestore()
-        guard let userId = Auth.auth().currentUser?.uid else { return }
-        
-        db.collection("timeCapsules")
-            .whereField("uid", isEqualTo: userId)
-            .whereField("isOpened", isEqualTo: true)
-            .order(by: "openTimeBoxDate", descending: false)
-            .getDocuments { [weak self] (querySnapshot, err) in
-                if let documents = querySnapshot?.documents {
-                    print("documents 개수: \(documents.count)")
-                    self?.timeBoxes = documents.compactMap { doc in
-                        let data = doc.data()
-                        let timeBox = TimeBox(
-                            id: doc.documentID,
-                            imageURL: (data["imageURL"] as? [String]),
-                            addressTitle: data["addressTitle"] as? String,
-                            createTimeBoxDate: data["createTimeBoxDate"] as? Timestamp,
-                            openTimeBoxDate: data["openTimeBoxDate"] as? Timestamp
-                        )
-                        print("매핑된 타임박스: \(timeBox)")
-                        return timeBox
-                    }
-                    print("Fetching time boxes for userID: \(userId)")
-                    print("Fetched \(self?.timeBoxes.count ?? 0) time boxes")
-                    
-                    DispatchQueue.main.async {
-                        print("tableView reload.")
-                        self?.tableView.reloadData()
-                    }
-                } else if let err = err {
-                    print("Error getting documents: \(err)")
-                }
-            }
-    }
-    
-    // MARK: - UITableViewDataSource, UITableViewDelegate
-    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return timeBoxes.count
+        return viewModel.timeBoxes.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -163,14 +90,14 @@ class OpenedTCViewController: UITableViewController {
             fatalError("Unable to dequeue TimeCapsuleCell")
         }
         
-        let timeBox = timeBoxes[indexPath.row]
+        let timeBox = viewModel.timeBoxes[indexPath.row]
         cell.configure(with: timeBox, dDayColor: UIColor.systemGray4)
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let openCapsuleVC = OpenCapsuleViewController()
-        let documentId = timeBoxes[indexPath.row].id
+        let documentId = viewModel.timeBoxes[indexPath.row].id
         openCapsuleVC.documentId = documentId
         openCapsuleVC.modalPresentationStyle = .fullScreen
         present(openCapsuleVC, animated: true, completion: nil)
@@ -178,9 +105,8 @@ class OpenedTCViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "삭제") { [weak self] (_, _, completionHandler) in
-            // 캡슐 삭제 확인 알림창 띄우기
             self?.showDeleteConfirmationAlert(at: indexPath)
-            completionHandler(false) // 완료 핸들러를 호출하지 않고, 알림창을 띄우기 위해 false 반환
+            completionHandler(false)
         }
         deleteAction.image = UIImage(systemName: "trash")
         
@@ -188,11 +114,40 @@ class OpenedTCViewController: UITableViewController {
         return configuration
     }
     
+    // MARK: - Actions
+    
+    @objc private func homeButtonTapped() {
+        let tabBarController = MainTabBarView()
+        tabBarController.modalPresentationStyle = .fullScreen
+        present(tabBarController, animated: true, completion: nil)
+    }
+    
+    // MARK: - Helper Methods
+    
+    @objc private func sortOptionChanged() {
+        switch sortSegmentedControl.selectedSegmentIndex {
+        case 0:
+            viewModel.currentSortOption = .newestFirst
+        case 1:
+            viewModel.currentSortOption = .oldestFirst
+        default:
+            break
+        }
+        
+        sortTimeBoxesAndReloadTableView()
+    }
+    
+    private func sortTimeBoxesAndReloadTableView() {
+        viewModel.sortTimeBoxesAndReloadTableView { [weak self] timeBoxes in
+            self?.viewModel.timeBoxes = timeBoxes
+            self?.tableView.reloadData()
+        }
+    }
+    
     private func showDeleteConfirmationAlert(at indexPath: IndexPath) {
         let alertController = UIAlertController(title: "경고", message: "이 추억은 영원히 기억속으로 사라집니다.\n정말로 이 추억을 삭제하시겠습니까?", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)
         let deleteAction = UIAlertAction(title: "삭제", style: .destructive) { [weak self] _ in
-            // 캡슐 삭제 로직 구현
             self?.deleteCapsule(at: indexPath)
         }
         alertController.addAction(cancelAction)
@@ -201,30 +156,49 @@ class OpenedTCViewController: UITableViewController {
     }
     
     private func deleteCapsule(at indexPath: IndexPath) {
-        guard let deletedId = timeBoxes[indexPath.row].id else {
-            // 캡슐 정보가 올바르지 않음
-            return
-        }
-      
-        // Firestore에서 해당 캡슐 삭제
-        let db = Firestore.firestore()
-        db.collection("timeCapsules").document(deletedId).delete { [weak self] error in
-            if let error = error {
-                print("Error deleting capsule: \(error)")
-            } else {
-                print("Capsule deleted successfully")
-                // 데이터 소스에서 삭제된 캡슐 제거 및 UI 업데이트
-                self?.timeBoxes.remove(at: indexPath.row)
+        viewModel.deleteCapsule(at: indexPath.row) { [weak self] success in
+            if success {
+                self?.viewModel.timeBoxes.remove(at: indexPath.row)
                 self?.tableView.deleteRows(at: [indexPath], with: .automatic)
+            } else {
+                // Handle deletion failure
             }
         }
     }
-
-// MARK: - Actions
     
-@objc private func homeButtonTapped() {
-       let tabBarController = MainTabBarView()
-       tabBarController.modalPresentationStyle = .fullScreen
-       present(tabBarController, animated: true, completion: nil)
-   }
+    // MARK: - Views
+    
+    // 세그먼트 컨트롤 정의
+    lazy var sortSegmentedControl: UISegmentedControl = {
+        let segmentedControl = UISegmentedControl(items: ["최신순", "오래된순"])
+        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.addTarget(self, action: #selector(sortOptionChanged), for: .valueChanged)
+        return segmentedControl
+    }()
+    
+    // 네비게이션 바 스타일 설정
+    private func setupNavigationBarAppearance() {
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.barTintColor = .white
+        navigationController?.navigationBar.shadowImage = UIImage(named: "gray_line")
+    }
+    
+    // 왼쪽 backButton 설정
+    private func setupBackButton() {
+        let backButton = UIButton(type: .system)
+        let image = UIImage(systemName: "chevron.left")
+        backButton.setBackgroundImage(image, for: .normal)
+        backButton.tintColor = UIColor(red: 209/255.0, green: 94/255.0, blue: 107/255.0, alpha: 1)
+        backButton.addTarget(self, action: #selector(homeButtonTapped), for: .touchUpInside)
+        backButton.frame = CGRect(x: 0, y: 0, width: 20, height: 30)
+        
+        let backButtonBarItem = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = backButtonBarItem
+    }
+}
+import SwiftUI
+struct PreVie178w: PreviewProvider {
+    static var previews: some View {
+        OpenedTCViewController().toPreview()
+    }
 }
