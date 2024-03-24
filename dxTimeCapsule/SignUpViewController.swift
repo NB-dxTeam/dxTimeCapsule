@@ -238,6 +238,7 @@ class SignUpViewController: UIViewController  {
     // MARK: - Functions
     private func configureTextField(_ textField: UITextField, placeholder: String, isSecure: Bool = false) {
         textField.placeholder = placeholder
+        textField.isSecureTextEntry = isSecure // 패스워드 가리기
         textField.layer.cornerRadius = 10 // 모서리를 둥글게 만듭니다.
         textField.layer.masksToBounds = true
         textField.layer.borderWidth = 1 // 선의 너비를 설정합니다.
