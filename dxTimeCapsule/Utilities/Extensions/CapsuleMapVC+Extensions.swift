@@ -33,20 +33,47 @@ extension CapsuleMapViewController {
             titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
             stackView.addArrangedSubview(titleLabel)
         }
+        let createTimetitle = UILabel()
+        createTimetitle.text = "생성일"
+        createTimetitle.textColor = .gray.withAlphaComponent(0.8)
+        createTimetitle.font = UIFont.systemFont(ofSize: 12)
+        createTimetitle.textAlignment = .left
+        
+        let createTimeStackView = UIStackView()
+        createTimeStackView.axis = .horizontal
+        createTimeStackView.spacing = 8
+        createTimeStackView.addArrangedSubview(createTimetitle)
         
         if let createTime = timeBoxData?.timeBox.createTimeBoxDate?.dateValue() {
             let createDateLabel = UILabel()
-            createDateLabel.text = "생성일: " + dateFormatter.string(from: createTime)
+            createDateLabel.text = dateFormatter.string(from: createTime)
             createDateLabel.font = UIFont.systemFont(ofSize: 16)
-            stackView.addArrangedSubview(createDateLabel)
+            createTimeStackView.addArrangedSubview(createDateLabel)
         }
+        
+        // createTimeStackView를 stackView에 추가
+        stackView.addArrangedSubview(createTimeStackView)
+        
+        let openTimetitle = UILabel()
+        openTimetitle.text = "개봉일"
+        openTimetitle.font = UIFont.systemFont(ofSize: 12)
+        openTimetitle.textAlignment = .left
+        openTimetitle.textColor = .gray.withAlphaComponent(0.8)
+        
+        let openTimeStackView = UIStackView()
+        openTimeStackView.axis = .horizontal
+        openTimeStackView.spacing = 8
+        openTimeStackView.addArrangedSubview(openTimetitle)
         
         if let openTime = timeBoxData?.timeBox.openTimeBoxDate?.dateValue() {
             let openDateLabel = UILabel()
-            openDateLabel.text = "개봉일: " + dateFormatter.string(from: openTime)
+            openDateLabel.text = dateFormatter.string(from: openTime)
             openDateLabel.font = UIFont.systemFont(ofSize: 16)
-            stackView.addArrangedSubview(openDateLabel)
+            openTimeStackView.addArrangedSubview(openDateLabel)
         }
+        
+        // openTimeStackView를 stackView에 추가
+        stackView.addArrangedSubview(openTimeStackView)
         
         if let friends = timeBoxData?.friendsInfo, !friends.isEmpty {
             let layout = UICollectionViewFlowLayout()
