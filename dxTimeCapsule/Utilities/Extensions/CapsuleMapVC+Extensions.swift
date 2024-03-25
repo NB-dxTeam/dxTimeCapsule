@@ -13,9 +13,9 @@ import SnapKit
 extension CapsuleMapViewController {
     
     func configureDetailView(for annotation: TimeBoxAnnotation) -> UIView {
-        print("configureDetailView called for annotation with title: \(annotation.title ?? "nil")")
         self.selectedTimeBoxAnnotationData = annotation.timeBoxAnnotationData
         let timeBoxData = annotation.timeBoxAnnotationData
+        
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .leading

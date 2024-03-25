@@ -354,6 +354,7 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
             if let tagFriendUids = timeBox.tagFriendUid, !tagFriendUids.isEmpty {
                 group.enter()
                 FirestoreDataService().fetchFriendsInfo(byUIDs: tagFriendUids) { [weak self] friendsInfo in
+                    defer { group.leave() }
                     guard let self = self else {
                         print("fetchFriendsInfo: weak self is no longer available")
                         group.leave()
@@ -368,15 +369,16 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
                     print("fetchFriendsInfo: retrieved \(friendsInfo.count) friends for UIDs: \(tagFriendUids)")
                     let annotationData = TimeBoxAnnotationData(timeBox: timeBox, friendsInfo: friendsInfo)
                     tempAnnotationsData.append(annotationData)
-                    group.leave()
                 }
             }
         }
         
         group.notify(queue: .main) {
             self.timeBoxes = tempTimeBoxes
+            self.timeBoxAnnotationsData = tempAnnotationsData
             print("Data processing completed. Total count: \(self.timeBoxes.count)")
             self.addAnnotations(from: self.timeBoxes)
+            
         }
     }
     // 데이터 정보 불러오기
