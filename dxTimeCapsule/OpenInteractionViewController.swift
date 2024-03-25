@@ -129,6 +129,9 @@ class OpenInteractionViewController: UIViewController {
         setupMotionManager()
         setupSkipButton()
         setupGradientProgress()
+        
+        // interactionGaugeView의 배경색 설정
+        interactionGaugeView.backgroundColor = .clear
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -139,6 +142,7 @@ class OpenInteractionViewController: UIViewController {
     // 뷰의 레이아웃이 변경될 때마다 호출됩니다. 여기서 게이지 뷰를 다시 설정할 수 있습니다.
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        setupGradientProgress()
         if progressLayer == nil {
             setupGaugeView()
         }
@@ -202,8 +206,8 @@ class OpenInteractionViewController: UIViewController {
         // 배경 게이지를 설정
         let backgroundLayer = CAShapeLayer()
         backgroundLayer.path = circlePath.cgPath
-        backgroundLayer.strokeColor = UIColor.systemGray5.cgColor // 색상
-        backgroundLayer.lineWidth = 9 // 선의 굵기
+        backgroundLayer.strokeColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor // 색상
+        backgroundLayer.lineWidth = 8.5 // 선의 굵기
         backgroundLayer.fillColor = UIColor.clear.cgColor // 내부를 채우지 않습니다.
         backgroundLayer.strokeEnd = 1 // 전체를 그립니다.
         interactionGaugeView.layer.addSublayer(backgroundLayer) // 레이어를 추가합니다.
@@ -212,7 +216,6 @@ class OpenInteractionViewController: UIViewController {
         progressLayer = CAShapeLayer()
         progressLayer.path = circlePath.cgPath
         //progressLayer.strokeColor = skyBlueColor.cgColor // 진행 게이지의 색상을 하늘색으로 설정
-       //progressLayer.strokeColor = UIColor.systemOrange.cgColor // 색상
         //progressLayer.strokeColor = UIColor(hex: "#C82D6B").cgColor // 색상
         progressLayer.lineWidth = 9 // 선의 굵기
         progressLayer.fillColor = UIColor.clear.cgColor // 내부를 채우지 않습니다.
@@ -221,29 +224,30 @@ class OpenInteractionViewController: UIViewController {
     }
     
     private func setupGradientProgress() {
-        view.layoutIfNeeded()
+        // 이전에 추가된 gradientLayer를 제거합니다. (옵션)
+        interactionGaugeView.layer.sublayers?.filter { $0 is CAGradientLayer }.forEach { $0.removeFromSuperlayer() }
+
         // circlePath 설정
         let centerPoint = CGPoint(x: interactionGaugeView.bounds.midX, y: interactionGaugeView.bounds.midY)
         let radius = interactionGaugeView.bounds.width / 2 - 10
-        circlePath = UIBezierPath(arcCenter: centerPoint, radius: radius, startAngle: -CGFloat.pi / 2, endAngle: 2 * CGFloat.pi - CGFloat.pi / 2, clockwise: true)
+        let circlePath = UIBezierPath(arcCenter: centerPoint, radius: radius, startAngle: -CGFloat.pi / 2, endAngle: 2 * CGFloat.pi - CGFloat.pi / 2, clockwise: true)
 
         // 그라디언트 레이어 생성 및 설정
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = interactionGaugeView.bounds
         gradientLayer.colors = [
-            UIColor(red: 66/255.0, green: 176/255.0, blue: 255/255.0, alpha: 1.0).cgColor, // #42B0FF
-            UIColor(red: 198/255.0, green: 229/255.0, blue: 255/255.0, alpha: 1.0).cgColor // #C6E5FF
+            UIColor(red: 66/255.0, green: 176/255.0, blue: 255/255.0, alpha: 1.0).cgColor,
+            UIColor(red: 198/255.0, green: 229/255.0, blue: 255/255.0, alpha: 1.0).cgColor
         ]
-
         gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
         gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
 
         // 진행률을 표시할 CAShapeLayer 생성 및 설정
-        let progressLayer = CAShapeLayer()
-        progressLayer.path = circlePath?.cgPath
+        progressLayer = CAShapeLayer()
+        progressLayer.path = circlePath.cgPath
         progressLayer.lineWidth = 9
         progressLayer.fillColor = UIColor.clear.cgColor
-        progressLayer.strokeColor = UIColor.black.cgColor // 마스크로 사용되므로 실제 색상은 중요하지 않음
+        progressLayer.strokeColor = UIColor.white.cgColor // 실제 색상은 중요하지 않으나, 시각적 확인을 위해 변경할 수 있습니다.
         progressLayer.strokeEnd = 0.0
 
         // 그라디언트 레이어에 마스크로 설정
@@ -256,8 +260,8 @@ class OpenInteractionViewController: UIViewController {
     // 게이지의 진행 상황을 업데이트하는 메소드
     func updateProgress(to progress: CGFloat) {
         DispatchQueue.main.async {
-            guard let maskLayer = self.interactionGaugeView.layer.sublayers?.first(where: { $0 is CAGradientLayer })?.mask as? CAShapeLayer else { return }
-            maskLayer.strokeEnd = progress
+            // progressLayer의 strokeEnd 값을 직접 업데이트합니다.
+            self.progressLayer.strokeEnd = progress
         }
     }
 
@@ -273,7 +277,7 @@ class OpenInteractionViewController: UIViewController {
             if abs(data.acceleration.x) > threshold || abs(data.acceleration.y) > threshold || abs(data.acceleration.z) > threshold {
                        let newProgress = min(self.progress + 0.1, 1) // 진행률을 증가시킵니다.
                        DispatchQueue.main.async {
-                           self.updateProgress(to: newProgress) // 메인 스레드에서 UI 업데이트
+                           self.progress = newProgress // 메인 스레드에서 UI 업데이트
                        }
             }
         }
