@@ -325,12 +325,12 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
     }
     
     // Firestore 쿼리 결과를 처리하는 함수
-    func dataCapsule(documents: [QueryDocumentSnapshot]) {
+    private func dataCapsule(documents: [QueryDocumentSnapshot]) {
         let group = DispatchGroup()
         
         var tempTimeBoxes = [TimeBox]()
         var tempAnnotationsData = [TimeBoxAnnotationData]()
-    
+        
         for doc in documents {
             let data = doc.data()
             let geoPoint = data["location"] as? GeoPoint
@@ -350,33 +350,30 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
             )
             
             tempTimeBoxes.append(timeBox)
+                    
+            // Always enter the group regardless of whether there are friend tags or not.
+            group.enter()
             
             if let tagFriendUids = timeBox.tagFriendUid, !tagFriendUids.isEmpty {
-                group.enter()
                 FirestoreDataService().fetchFriendsInfo(byUIDs: tagFriendUids) { [weak self] friendsInfo in
-                    guard let self = self else {
-                        print("fetchFriendsInfo: weak self is no longer available")
-                        group.leave()
-                        return
-                    }
-                    guard let friendsInfo = friendsInfo else {
-                        print("fetchFriendsInfo: returned nil for UIDs: \(tagFriendUids)")
-                        group.leave()
-                        return
-                    }
-                    // 여기서 friendsInfo가 비어있지 않은지 확인
-                    print("fetchFriendsInfo: retrieved \(friendsInfo.count) friends for UIDs: \(tagFriendUids)")
+                    defer { group.leave() }
+                    guard let self = self, let friendsInfo = friendsInfo, !friendsInfo.isEmpty else { return }
+                    
                     let annotationData = TimeBoxAnnotationData(timeBox: timeBox, friendsInfo: friendsInfo)
                     tempAnnotationsData.append(annotationData)
-                    group.leave()
                 }
+            } else {
+                // If there are no friend tags, still add the annotation data with an empty friendsInfo.
+                let annotationData = TimeBoxAnnotationData(timeBox: timeBox, friendsInfo: [])
+                tempAnnotationsData.append(annotationData)
+                group.leave()
             }
         }
         
         group.notify(queue: .main) {
             self.timeBoxes = tempTimeBoxes
-            print("Data processing completed. Total count: \(self.timeBoxes.count)")
-            self.addAnnotations(from: self.timeBoxes)
+            // Call the refactored addAnnotations method with tempAnnotationsData.
+            self.addAnnotations(with: tempAnnotationsData)
         }
     }
     // 데이터 정보 불러오기

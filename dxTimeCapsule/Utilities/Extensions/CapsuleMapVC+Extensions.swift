@@ -13,100 +13,105 @@ import SnapKit
 extension CapsuleMapViewController {
     
     func configureDetailView(for annotation: TimeBoxAnnotation) -> UIView {
-        print("configureDetailView called for annotation with title: \(annotation.title ?? "nil")")
         self.selectedTimeBoxAnnotationData = annotation.timeBoxAnnotationData
-        let timeBoxData = annotation.timeBoxAnnotationData
+        // 상세 뷰의 기본 구성
+        let detailView = UIView()
+        detailView.layer.cornerRadius = 8
+        detailView.backgroundColor = .white
+        
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .leading
         stackView.distribution = .equalSpacing
         stackView.spacing = 8
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yy.MM.dd" // 날짜 형식 지정
-        dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul") // 한국 시간대 설정
-        dateFormatter.locale = Locale(identifier: "ko_KR") // 로케일을 한국어로 설정
-        
-        if let locationTitle = timeBoxData?.timeBox.addressTitle {
-            let titleLabel = UILabel()
-            titleLabel.text = locationTitle
-            titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
-            stackView.addArrangedSubview(titleLabel)
-        }
-        
-        if let createTime = timeBoxData?.timeBox.createTimeBoxDate?.dateValue() {
-            let createDateLabel = UILabel()
-            createDateLabel.text = "생성일: " + dateFormatter.string(from: createTime)
-            createDateLabel.font = UIFont.systemFont(ofSize: 16)
-            stackView.addArrangedSubview(createDateLabel)
-        }
-        
-        if let openTime = timeBoxData?.timeBox.openTimeBoxDate?.dateValue() {
-            let openDateLabel = UILabel()
-            openDateLabel.text = "개봉일: " + dateFormatter.string(from: openTime)
-            openDateLabel.font = UIFont.systemFont(ofSize: 16)
-            stackView.addArrangedSubview(openDateLabel)
-        }
-        
-        if let friends = timeBoxData?.friendsInfo, !friends.isEmpty {
-            let layout = UICollectionViewFlowLayout()
-            layout.scrollDirection = .horizontal
-            layout.itemSize = CGSize(width: 70, height: 100)
-            //let friendsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-            friendsCollectionView.register(FriendCollectionViewCell.self, forCellWithReuseIdentifier: "FriendCollectionViewCell")
-            friendsCollectionView.dataSource = self
-            friendsCollectionView.delegate = self
-            friendsCollectionView.showsHorizontalScrollIndicator = false
-            stackView.addArrangedSubview(friendsCollectionView)
-            
-            friendsCollectionView.snp.makeConstraints { make in
-                make.height.equalTo(80)
-                make.leading.trailing.equalToSuperview()
-            }
-        }
-        
-        let detailView = UIView()
         detailView.addSubview(stackView)
-        
         stackView.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
-        }
-        detailView.snp.makeConstraints { make in
-            make.width.equalTo(150)
-        }
-        DispatchQueue.main.async {
-            self.friendsCollectionView.reloadData()
+            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
         }
         
-        print("Detail view constructed and configured")
-        return detailView
-    }
-    
-    func addAnnotations(from timeBoxes: [TimeBox]) {
-        print("addAnnotations 호출됨, 처리할 timeBoxes의 수: \(timeBoxes.count)")
-        capsuleMaps.removeAnnotations(capsuleMaps.annotations) // 기존 어노테이션 제거
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yy.MM.dd"
+        dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul")
+        dateFormatter.locale = Locale(identifier: "ko_KR")
         
-        let allTaggedFriendUids = Set(timeBoxes.compactMap({ $0.tagFriendUid }).flatMap({ $0 }))
-                
-        // 친구 정보 가져오기.
-        FirestoreDataService().fetchFriendsInfo(byUIDs: Array(allTaggedFriendUids)) { [weak self] friendsInfo in
-            guard let friendsInfo = friendsInfo else { return }
+        // 타이틀, 생성일, 개봉일 레이블 및 친구 목록 추가
+        if let timeBoxData = self.selectedTimeBoxAnnotationData {
+            addLabel(to: stackView, with: timeBoxData.timeBox.addressTitle ?? "Unknown Location", fontSize: 18, isBold: true)
+            addDateView(to: stackView, title: "생성일", date: timeBoxData.timeBox.createTimeBoxDate?.dateValue(), using: dateFormatter)
+            addDateView(to: stackView, title: "개봉일", date: timeBoxData.timeBox.openTimeBoxDate?.dateValue(), using: dateFormatter)
             
-            // uid로 친구 정보 빠르게 검색하기.
-            let friendsLookup = Dictionary(uniqueKeysWithValues: friendsInfo.map { ($0.uid, $0) })
-            
-            DispatchQueue.main.async {
-                for timeBox in timeBoxes {
-                    guard let location = timeBox.location else { continue }
-                    print("Creating annotation for TimeBox with ID: \(timeBox.tagFriendUid ?? []) at location: \(location.latitude), \(location.longitude)")
-                    let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
-                    let friendsInfo = timeBox.tagFriendUid?.compactMap { friendsLookup[$0] } ?? []
-                    let annotationData = TimeBoxAnnotationData(timeBox: timeBox, friendsInfo: friendsInfo)
-                    let annotation = TimeBoxAnnotation(coordinate: coordinate, timeBoxAnnotationData: annotationData)
-                    
-                    self?.capsuleMaps.addAnnotation(annotation)
+            // 친구 목록이 있다면, 친구 목록 추가
+            if !timeBoxData.friendsInfo.isEmpty {
+                stackView.addArrangedSubview(friendsCollectionView)
+                friendsCollectionView.snp.makeConstraints { make in
+                    make.height.equalTo(80)
+                    make.leading.trailing.equalToSuperview()
+                }
+                DispatchQueue.main.async {
+                    self.friendsCollectionView.reloadData()
                 }
             }
         }
+        
+        // 로딩 인디케이터 추가
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        detailView.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        activityIndicator.startAnimating()
+        
+        // 로딩 인디케이터가 몇 초 후에 사라지도록 설정
+        // 이 부분은 실제 데이터 로딩 로직이 완료되면 로딩 인디케이터를 중지하고 숨기는 부분입니다.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            activityIndicator.stopAnimating()
+            activityIndicator.removeFromSuperview()
+        }
+        
+        return detailView
     }
+    
+    private func addLabel(to stackView: UIStackView, with text: String, fontSize: CGFloat, isBold: Bool) {
+        let label = UILabel()
+        label.text = text
+        label.textColor = .black
+        label.numberOfLines = 0
+        label.font = isBold ? UIFont.boldSystemFont(ofSize: fontSize) : UIFont.systemFont(ofSize: fontSize)
+        stackView.addArrangedSubview(label)
+    }
+    
+    private func addDateView(to stackView: UIStackView, title: String, date: Date?, using dateFormatter: DateFormatter) {
+        guard let date = date else { return }
+        let dateView = UIStackView()
+        dateView.axis = .horizontal
+        dateView.spacing = 8
+        
+        let titleLabel = UILabel()
+        titleLabel.text = title
+        titleLabel.font = UIFont.systemFont(ofSize: 12)
+        titleLabel.textColor = .gray
+        
+        let dateLabel = UILabel()
+        dateLabel.text = dateFormatter.string(from: date)
+        dateLabel.font = UIFont.systemFont(ofSize: 16)
+        
+        dateView.addArrangedSubview(titleLabel)
+        dateView.addArrangedSubview(dateLabel)
+        
+        stackView.addArrangedSubview(dateView)
+    }
+    
+    func addAnnotations(with annotationsData: [TimeBoxAnnotationData]) {
+        capsuleMaps.removeAnnotations(capsuleMaps.annotations) // Remove all current annotations
+        
+        for annotationData in annotationsData {
+            guard let location = annotationData.timeBox.location else { continue }
+            let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
+            
+            let annotation = TimeBoxAnnotation(coordinate: coordinate, timeBoxAnnotationData: annotationData)
+            capsuleMaps.addAnnotation(annotation)
+        }
+    }
+
 }
