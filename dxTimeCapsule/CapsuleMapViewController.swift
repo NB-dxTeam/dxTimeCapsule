@@ -325,12 +325,12 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
     }
     
     // Firestore 쿼리 결과를 처리하는 함수
-    func dataCapsule(documents: [QueryDocumentSnapshot]) {
+    private func dataCapsule(documents: [QueryDocumentSnapshot]) {
         let group = DispatchGroup()
         
         var tempTimeBoxes = [TimeBox]()
         var tempAnnotationsData = [TimeBoxAnnotationData]()
-    
+        
         for doc in documents {
             let data = doc.data()
             let geoPoint = data["location"] as? GeoPoint
@@ -354,7 +354,6 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
             if let tagFriendUids = timeBox.tagFriendUid, !tagFriendUids.isEmpty {
                 group.enter()
                 FirestoreDataService().fetchFriendsInfo(byUIDs: tagFriendUids) { [weak self] friendsInfo in
-                    defer { group.leave() }
                     guard let self = self else {
                         print("fetchFriendsInfo: weak self is no longer available")
                         group.leave()
@@ -369,16 +368,15 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
                     print("fetchFriendsInfo: retrieved \(friendsInfo.count) friends for UIDs: \(tagFriendUids)")
                     let annotationData = TimeBoxAnnotationData(timeBox: timeBox, friendsInfo: friendsInfo)
                     tempAnnotationsData.append(annotationData)
+                    group.leave()
                 }
             }
         }
         
         group.notify(queue: .main) {
             self.timeBoxes = tempTimeBoxes
-            self.timeBoxAnnotationsData = tempAnnotationsData
             print("Data processing completed. Total count: \(self.timeBoxes.count)")
             self.addAnnotations(from: self.timeBoxes)
-            
         }
     }
     // 데이터 정보 불러오기
