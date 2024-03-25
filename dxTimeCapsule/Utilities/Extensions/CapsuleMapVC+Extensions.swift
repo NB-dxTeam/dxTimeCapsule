@@ -102,41 +102,16 @@ extension CapsuleMapViewController {
         stackView.addArrangedSubview(dateView)
     }
     
-    func addAnnotations(from timeBoxes: [TimeBox]) {
-        print("addAnnotations 호출됨, 처리할 timeBoxes의 수: \(timeBoxes.count)")
-        capsuleMaps.removeAnnotations(capsuleMaps.annotations) // 기존 어노테이션 제거
+    func addAnnotations(with annotationsData: [TimeBoxAnnotationData]) {
+        capsuleMaps.removeAnnotations(capsuleMaps.annotations) // Remove all current annotations
         
-        let allTaggedFriendUids = Set(timeBoxes.compactMap({ $0.tagFriendUid }).flatMap({ $0 }))
-                
-        // 친구 정보 가져오기.
-        FirestoreDataService().fetchFriendsInfo(byUIDs: Array(allTaggedFriendUids)) { [weak self] friendsInfo in
-            guard let strongSelf = self, let friendsInfo = friendsInfo else { return }
+        for annotationData in annotationsData {
+            guard let location = annotationData.timeBox.location else { continue }
+            let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
             
-            // Remove duplicate UIDs while preserving the order
-            var uniqueFriendsInfo = [User]()
-            var seenUIDs = Set<String>()
-            for friend in friendsInfo {
-                if let uid = friend.uid, !seenUIDs.contains(uid) {
-                    seenUIDs.insert(uid)
-                    uniqueFriendsInfo.append(friend)
-                }
-            }
-            
-            // Now create the dictionary with unique keys
-            let friendsLookup = Dictionary(uniqueKeysWithValues: uniqueFriendsInfo.map { ($0.uid, $0) })
-            
-            DispatchQueue.main.async {
-                for timeBox in timeBoxes {
-                    guard let location = timeBox.location else { continue }
-                    print("Creating annotation for TimeBox with ID: \(timeBox.tagFriendUid ?? []) at location: \(location.latitude), \(location.longitude)")
-                    let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
-                    let friendsInfo = timeBox.tagFriendUid?.compactMap { friendsLookup[$0] } ?? []
-                    let annotationData = TimeBoxAnnotationData(timeBox: timeBox, friendsInfo: friendsInfo)
-                    let annotation = TimeBoxAnnotation(coordinate: coordinate, timeBoxAnnotationData: annotationData)
-                    
-                    strongSelf.capsuleMaps.addAnnotation(annotation)
-                }
-            }
+            let annotation = TimeBoxAnnotation(coordinate: coordinate, timeBoxAnnotationData: annotationData)
+            capsuleMaps.addAnnotation(annotation)
         }
     }
+
 }
