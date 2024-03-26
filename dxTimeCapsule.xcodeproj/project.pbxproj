@@ -122,6 +122,7 @@
 		27FC128B2B9A64E5008CBEB8 /* UpcomingTCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FC128A2B9A64E5008CBEB8 /* UpcomingTCViewController.swift */; };
 		27FD43CC2B9CD8EA00D83B27 /* NewUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FD43CB2B9CD8E900D83B27 /* NewUserViewController.swift */; };
 		460FE7672B8A200D00AF8086 /* LockedCapsuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */; };
+		46C1AA772BB1F2DE007604D6 /* UIResponder+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C1AA762BB1F2DE007604D6 /* UIResponder+Extension.swift */; };
 		46EA9BAE2B89A27E00633EC4 /* CapsuleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */; };
 		4E2A09C82B8F755C00911390 /* OpenInteractionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */; };
 		4E2A09CA2B8F86C600911390 /* FadeInAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */; };
@@ -229,6 +230,7 @@
 		460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedCapsuleCell.swift; sourceTree = "<group>"; };
 		467D1DE22B972499005249B1 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		46B655792B9891FE001EFF23 /* CapsuleAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapsuleAnnotation.swift; sourceTree = "<group>"; };
+		46C1AA762BB1F2DE007604D6 /* UIResponder+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIResponder+Extension.swift"; sourceTree = "<group>"; };
 		46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleMapViewController.swift; sourceTree = "<group>"; };
 		4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInteractionViewController.swift; sourceTree = "<group>"; };
 		4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeInAnimator.swift; sourceTree = "<group>"; };
@@ -633,6 +635,7 @@
 				1F0B91072B9026020022EDD9 /* UIImageView+RoundImage.swift */,
 				1F367EA52B8F803A00563908 /* UIColor+Hex.swift */,
 				1FD2B7A12B96BEFE00896F9C /* NotificationName+Extension.swift */,
+				46C1AA762BB1F2DE007604D6 /* UIResponder+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -919,6 +922,7 @@
 				1F019A602BADB89B00F727D2 /* BottomSheetControllerViewModel.swift in Sources */,
 				1F0B91082B9026020022EDD9 /* UIImageView+RoundImage.swift in Sources */,
 				1FE313B12B98114700E02045 /* LocationHistoryViewModel.swift in Sources */,
+				46C1AA772BB1F2DE007604D6 /* UIResponder+Extension.swift in Sources */,
 				27966F092BA06A41009EC5F3 /* HomeViewControllerModel.swift in Sources */,
 				4EA223652BADCDEB005181C7 /* CustomPageControl.swift in Sources */,
 				1FF8691B2B8F4D81007B5112 /* UIButton+Gradient.swift in Sources */,
@@ -1115,7 +1119,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0;
+				MARKETING_VERSION = 4.0;
 				OTHER_LIBTOOLFLAGS = "\"-XCBuildForPre true\" \"-WLinkingC true\" \"-XCExpApple true\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dxTeam.dxTimeCapsule;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1160,7 +1164,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0;
+				MARKETING_VERSION = 4.0;
 				OTHER_LIBTOOLFLAGS = "\"-XCBuildForPre true\" \"-WLinkingC true\" \"-XCExpApple true\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dxTeam.dxTimeCapsule;
 				PRODUCT_NAME = "$(TARGET_NAME)";

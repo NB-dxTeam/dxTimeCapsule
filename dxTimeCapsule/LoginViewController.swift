@@ -63,14 +63,15 @@ class LoginViewController: UIViewController {
         setupSignUpButtonAction() // 회원가입 버튼의 액션을 설정하는 메서드 호출
         setupViews()
         setupLayouts()
-        
+        setupKeyboardNotifications()
         emailTextField.delegate = self
         passwordTextField.delegate = self
         
         // Test 자동기입
-//        emailTextField.text =  "gugu01@gmail.com"
+//        emailTextField.text =  "test1@gmail.com"
 //        passwordTextField.text = "12345678"
     }
+    
     
     private func setupSignUpButtonAction() {
         // 회원가입 버튼의 액션 설정
@@ -90,11 +91,43 @@ class LoginViewController: UIViewController {
  
     }
     
+    override func keyboardWillShow(notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardSize = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+            return
+        }
+        
+        var shouldMoveViewUp = false
+        
+        // 현재 활성화된 텍스트 필드 찾기
+        let activeTextField = emailTextField.isFirstResponder ? emailTextField : passwordTextField
+        
+        let bottomOfTextField = activeTextField.convert(activeTextField.bounds, to: self.view).maxY;
+        let topOfKeyboard = self.view.frame.height - keyboardSize.height
+        
+        // 텍스트 필드가 키보드에 의해 가려지는지 확인
+        if bottomOfTextField > topOfKeyboard {
+            shouldMoveViewUp = true
+        }
+        
+        // 뷰를 올려야 하는 경우, 텍스트 필드의 하단과 키보드의 상단 사이의 거리만큼 뷰를 이동
+        if(shouldMoveViewUp) {
+            self.view.frame.origin.y = 0 - (bottomOfTextField - topOfKeyboard)
+        }
+    }
+    
+    override func keyboardWillHide(notification: NSNotification) {
+        // 키보드가 사라질 때 원래 위치로 뷰를 이동
+        self.view.frame.origin.y = 0
+    }
+    
     deinit {
         // 리스너 제거
         if let handle = authHandle {
             Auth.auth().removeStateDidChangeListener(handle)
         }
+        // 키보드 사라질 때 올라간 뷰 원 위치로.
+        removeKeyboardNotifications()
     }
     
     private func setupViews() {

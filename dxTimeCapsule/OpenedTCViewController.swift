@@ -22,10 +22,8 @@ class OpenedTCViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        setupNavigationBarAppearance()
         setupToolbar()
-        setupBackButton()
-        navigationItem.title = "Saved memories"
+        backButtonNavigationBar()
         sortSegmentedControl.selectedSegmentIndex = 1
         fetchTimeBoxesInfo()
 
@@ -159,13 +157,28 @@ class OpenedTCViewController: UITableViewController {
     private func deleteCapsule(at indexPath: IndexPath) {
         viewModel.deleteCapsule(at: indexPath.row) { [weak self] success in
             if success {
-                self?.viewModel.timeBoxes.remove(at: indexPath.row)
-                self?.tableView.deleteRows(at: [indexPath], with: .automatic)
+                // 삭제 작업이 성공한 경우에는 그냥 다시 정보를 불러오기
+                self?.fetchTimeBoxesInfo()
             } else {
-                // Handle deletion failure
+                // 삭제 실패 시 알림 표시
+                DispatchQueue.main.async {
+                    let alertController = UIAlertController(title: "삭제 실패", message: "삭제 작업을 완료할 수 없습니다. 다시 시도하시겠습니까?", preferredStyle: .alert)
+                    let retryAction = UIAlertAction(title: "다시 시도", style: .default) { _ in
+                        // 다시 시도하기 위한 작업 수행
+                        self?.deleteCapsule(at: indexPath)
+                    }
+                    let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+                    alertController.addAction(retryAction)
+                    alertController.addAction(cancelAction)
+                    self?.present(alertController, animated: true, completion: nil)
+                }
             }
         }
     }
+
+
+
+
     
     // MARK: - Views
     
@@ -197,9 +210,32 @@ class OpenedTCViewController: UITableViewController {
         navigationItem.leftBarButtonItem = backButtonBarItem
     }
 }
-//import SwiftUI
-//struct PreVie178w: PreviewProvider {
-//    static var previews: some View {
-//        OpenedTCViewController().toPreview()
-//    }
-//}
+
+extension OpenedTCViewController {
+    func backButtonNavigationBar() {
+        navigationController?.navigationBar.barStyle = .default
+        navigationController?.navigationBar.barTintColor = .white
+        navigationItem.hidesBackButton = true
+        
+        // 타이틀 설정
+        navigationItem.title = "Saved memories"
+        
+        // 백 버튼 생성
+        let backButton = UIButton(type: .system)
+        let image = UIImage(systemName: "chevron.left")
+        backButton.setBackgroundImage(image, for: .normal)
+        backButton.tintColor = UIColor(red: 209/255.0, green: 94/255.0, blue: 107/255.0, alpha: 1)
+        backButton.addTarget(self, action: #selector(homeButtonTapped), for: .touchUpInside)
+
+        
+        // 내비게이션 바에 백 버튼 추가
+         navigationController?.navigationBar.addSubview(backButton)
+        
+        // 백 버튼의 위치 조정
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        backButton.widthAnchor.constraint(equalToConstant: 15).isActive = true
+        backButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        backButton.centerYAnchor.constraint(equalTo: navigationController!.navigationBar.centerYAnchor).isActive = true
+        backButton.leadingAnchor.constraint(equalTo: navigationController!.navigationBar.leadingAnchor, constant: 20).isActive = true
+    }
+}
