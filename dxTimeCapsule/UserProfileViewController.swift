@@ -59,7 +59,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         super.viewDidLoad()
         setupViews()
         setupConstraints()
-        settingButtonToNavigationBar()
+//        settingButtonToNavigationBar()
         showLoadingIndicator() // 데이터 로딩 전 로딩 인디케이터 표시
         userProfileViewModel.fetchUserData { [weak self] in
             self?.hideLoadingIndicator()

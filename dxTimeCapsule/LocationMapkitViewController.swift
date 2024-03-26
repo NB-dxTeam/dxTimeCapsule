@@ -379,7 +379,6 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         updateUIWithCurrentLocation()
     }
 
-
     // 위치 권한 변경 시 UI를 업데이트합니다.
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {

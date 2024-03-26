@@ -1119,7 +1119,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.0;
+				MARKETING_VERSION = 6.0;
 				OTHER_LIBTOOLFLAGS = "\"-XCBuildForPre true\" \"-WLinkingC true\" \"-XCExpApple true\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dxTeam.dxTimeCapsule;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1164,7 +1164,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.0;
+				MARKETING_VERSION = 6.0;
 				OTHER_LIBTOOLFLAGS = "\"-XCBuildForPre true\" \"-WLinkingC true\" \"-XCExpApple true\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dxTeam.dxTimeCapsule;
 				PRODUCT_NAME = "$(TARGET_NAME)";
