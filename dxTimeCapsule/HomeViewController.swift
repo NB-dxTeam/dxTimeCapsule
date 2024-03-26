@@ -280,6 +280,7 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         addLogoToNavigationBar()
+        navigationItem.hidesBackButton = true
         fetchTimeCapsuleData()
         configureUI()
         openedTCButton.addTarget(self, action: #selector(openedTCButtonTapped), for: .touchUpInside)

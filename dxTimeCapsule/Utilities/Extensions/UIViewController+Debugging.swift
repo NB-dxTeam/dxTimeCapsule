@@ -29,3 +29,36 @@ extension UIViewController {
     }
     
 }
+
+// MARK: - 텍스트필드 반응에 따라 스크린 올리기
+extension UIViewController {
+    func setupKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    func removeKeyboardNotifications() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardSize = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
+              let activeTextField = UIResponder.currentFirstResponder as? UITextField else { return }
+        
+        var aRect : CGRect = self.view.frame
+        aRect.size.height -= keyboardSize.height
+        
+        let activeTextFieldFrame: CGRect? = activeTextField.superview?.convert(activeTextField.frame, to: view)
+        
+        if let activeTextFieldFrame = activeTextFieldFrame, !aRect.contains(activeTextFieldFrame.origin) {
+            let diff = activeTextFieldFrame.origin.y - aRect.size.height + activeTextFieldFrame.size.height
+            view.frame.origin.y -= diff
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        view.frame.origin.y = 0
+    }
+}

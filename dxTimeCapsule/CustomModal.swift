@@ -88,11 +88,7 @@ class CustomModal: UIViewController {
     }
 
     
-    func dataCapsule(documents: [QueryDocumentSnapshot]) {
-        let group = DispatchGroup()
-        
-        var tempTimeBoxes = [TimeBox]()
-        var tempAnnotationsData = [TimeBoxAnnotationData]()
+    private func dataCapsule(documents: [QueryDocumentSnapshot]) {
         
         let timeBoxes = documents.compactMap { doc -> TimeBox? in
             let data = doc.data()

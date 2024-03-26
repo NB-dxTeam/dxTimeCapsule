@@ -354,19 +354,22 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
     
     // 위치 업데이트 시 사용자의 현재 위치 정보를 처리합니다.
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        // 위치 정보 배열에서 최근 위치를 가져옵니다.
         guard let location = locations.last else { return }
         
-        // 사용자의 현재 위치를 selectedLocation에 할당합니다.
-        selectedLocation = location.coordinate
-
-        // 맵 뷰를 사용자의 현재 위치로 이동합니다.
-        let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 5000, longitudinalMeters: 5000)
+        // 사용자의 현재 위치에서 위도를 0.01만큼 조정합니다.
+        let adjustedLatitude = location.coordinate.latitude - 0.01
+        let adjustedLocation = CLLocationCoordinate2D(latitude: adjustedLatitude, longitude: location.coordinate.longitude)
+        
+        // 맵 뷰를 조정된 위치로 이동시킵니다.
+        let region = MKCoordinateRegion(center: adjustedLocation, latitudinalMeters: 5000, longitudinalMeters: 5000)
         mapView.setRegion(region, animated: true)
+        
+        // 선택된 위치를 업데이트합니다. 필요한 경우 이 위치를 사용하여 UI를 업데이트하거나 기타 작업을 수행할 수 있습니다.
+        selectedLocation = adjustedLocation
 
         // 사용자의 현재 위치에 핀을 추가합니다. (선택적)
         let annotation = MKPointAnnotation()
-        annotation.coordinate = location.coordinate
+        annotation.coordinate = location.coordinate // 원래 위치에 핀을 추가
         mapView.addAnnotation(annotation)
 
         // 더 이상 위치 업데이트가 필요하지 않으면 위치 업데이트를 중지합니다.
@@ -375,6 +378,7 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         // 사용자의 현재 위치가 업데이트되었으므로 UI를 업데이트합니다.
         updateUIWithCurrentLocation()
     }
+
 
     // 위치 권한 변경 시 UI를 업데이트합니다.
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {

@@ -46,7 +46,7 @@ class CapsuleMapViewController: UIViewController {
         return button
     }()
     
-    private lazy var lockedButton: UIButton = {
+    lazy var lockedButton: UIButton = {
         let button = UIButton()
         // "AdobeBox_Close" 이미지를 lockedButton에 설정합니다.
         if let image = UIImage(named: "AdobeBox_Close")?.resizedImage(newSize: CGSize(width: 35, height: 35)) {
@@ -59,7 +59,7 @@ class CapsuleMapViewController: UIViewController {
         return button
     }()
     
-    private lazy var openedButton: UIButton = {
+    lazy var openedButton: UIButton = {
         let button = UIButton()
         // "AdobeBox_Open" 이미지를 openedButton에 설정합니다.
         if let image = UIImage(named: "AdobeBox_Open")?.resizedImage(newSize: CGSize(width: 35, height: 35)) {
@@ -72,25 +72,6 @@ class CapsuleMapViewController: UIViewController {
         return button
     }()
     
-    private lazy var buttonsStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [allButton, lockedButton, openedButton])
-        stackView.axis = .horizontal
-        stackView.distribution = .fillEqually
-        stackView.alignment = .center
-        stackView.spacing = 10 // 버튼 사이의 간격을 설정합니다.
-        return stackView
-    }()
-    
-    // 뒤로가기 버튼
-    private lazy var backButton: UIButton = {
-        let button = UIButton()
-        if let image = UIImage(systemName: "chevron.left")?.resizedImage(newSize: CGSize(width: 15, height: 20)) {
-            button.setImage(image, for: .normal)
-        }
-        button.tintColor = UIColor(hex: "#C82D6B")
-        return button
-    }()
-    
     // 하프모달 버튼
     private lazy var tapDidModal: UIButton = {
         let button = UIButton()
@@ -100,18 +81,6 @@ class CapsuleMapViewController: UIViewController {
         button.backgroundColor = UIColor.white.withAlphaComponent(1.0)
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 25
-        return button
-    }()
-    
-    // 현재 위치 버튼
-    private lazy var currentLocationButton: UIButton = {
-        let button = UIButton()
-        if let image = UIImage(named: "locationicon")?.resizedImage(newSize: CGSize(width: 20, height: 20)) {
-            button.setImage(image, for: .normal)
-        }
-        button.backgroundColor = UIColor.white.withAlphaComponent(1.0)
-        button.layer.masksToBounds = true
-        button.layer.cornerRadius = 20
         return button
     }()
     
@@ -142,6 +111,7 @@ class CapsuleMapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        addButtonNavigationBar()
         addSubViews()
         setupZoomControls()
         autoLayouts()
@@ -151,7 +121,6 @@ class CapsuleMapViewController: UIViewController {
         updateButtonSelection(allButton)
         selectedButton = allButton
         loadCapsuleInfos(button: .all)
-        navigationController?.isNavigationBarHidden = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -164,10 +133,7 @@ class CapsuleMapViewController: UIViewController {
     private func addSubViews() {
         self.view.addSubview(capsuleMaps)
         self.view.addSubview(tapDidModal)
-        self.view.addSubview(currentLocationButton)
         self.view.addSubview(zoomBackgroundView)
-        view.addSubview(backButton)
-        view.addSubview(buttonsStackView)
     }
     private func setupZoomControls() {
         view.addSubview(zoomBackgroundView)
@@ -180,25 +146,13 @@ class CapsuleMapViewController: UIViewController {
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
         }
-        buttonsStackView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.centerX.equalToSuperview()
-        }
-        backButton.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.leading.equalToSuperview().offset(10)
-            make.height.width.equalTo(40)
-        }
+        
         tapDidModal.snp.makeConstraints { make in
             make.bottom.equalTo(capsuleMaps.snp.bottom).offset(-20)
             make.trailing.equalTo(capsuleMaps.snp.trailing).offset(-20)
             make.size.equalTo(CGSize(width: 50, height: 50))
         }
-        currentLocationButton.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.trailing.equalTo(capsuleMaps.snp.trailing).offset(-10)
-            make.size.equalTo(CGSize(width: 40, height: 40))
-        }
+        
         zoomBackgroundView.snp.makeConstraints { make in
             make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing).offset(-10)
             make.centerY.equalTo(view.safeAreaLayoutGuide.snp.centerY).offset(-50) // 센터보다 위로 조금
@@ -222,10 +176,8 @@ class CapsuleMapViewController: UIViewController {
     }
     private func buttons() {
         tapDidModal.addTarget(self, action: #selector(modalButton(_:)), for: .touchUpInside)
-        currentLocationButton.addTarget(self, action: #selector(locationButton(_:)), for: .touchUpInside)
         zoomOutButton.addTarget(self, action: #selector(zoomOut), for: .touchUpInside)
         zoomInButton.addTarget(self, action: #selector(zoomIn), for: .touchUpInside)
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
     }
     // MARK: - Actions
     @objc private func zoomIn() {
@@ -240,17 +192,6 @@ class CapsuleMapViewController: UIViewController {
         let newLongitudeDelta = min(region.span.longitudeDelta * 2, 180.0)
         let zoomedRegion = capsuleMaps.regionThatFits(MKCoordinateRegion(center: region.center, span: MKCoordinateSpan(latitudeDelta: newLatitudeDelta, longitudeDelta: newLongitudeDelta)))
         capsuleMaps.setRegion(zoomedRegion, animated: true)
-    }
-    
-    // 뒤로가기 버튼 동작
-    @objc private func backButtonTapped() {
-        if let presentedVC = presentedViewController, presentedVC is CustomModal {
-            presentedVC.dismiss(animated: true) { [weak self] in
-                self?.tabBarController?.selectedIndex = 0
-            }
-        } else {
-            self.tabBarController?.selectedIndex = 0
-        }
     }
     
     // 버튼이 눌렸을 때 호출되는 메서드
@@ -325,12 +266,12 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
     }
     
     // Firestore 쿼리 결과를 처리하는 함수
-    func dataCapsule(documents: [QueryDocumentSnapshot]) {
+    private func dataCapsule(documents: [QueryDocumentSnapshot]) {
         let group = DispatchGroup()
         
         var tempTimeBoxes = [TimeBox]()
         var tempAnnotationsData = [TimeBoxAnnotationData]()
-    
+        
         for doc in documents {
             let data = doc.data()
             let geoPoint = data["location"] as? GeoPoint
@@ -350,33 +291,30 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
             )
             
             tempTimeBoxes.append(timeBox)
+                    
+            // Always enter the group regardless of whether there are friend tags or not.
+            group.enter()
             
             if let tagFriendUids = timeBox.tagFriendUid, !tagFriendUids.isEmpty {
-                group.enter()
                 FirestoreDataService().fetchFriendsInfo(byUIDs: tagFriendUids) { [weak self] friendsInfo in
-                    guard let self = self else {
-                        print("fetchFriendsInfo: weak self is no longer available")
-                        group.leave()
-                        return
-                    }
-                    guard let friendsInfo = friendsInfo else {
-                        print("fetchFriendsInfo: returned nil for UIDs: \(tagFriendUids)")
-                        group.leave()
-                        return
-                    }
-                    // 여기서 friendsInfo가 비어있지 않은지 확인
-                    print("fetchFriendsInfo: retrieved \(friendsInfo.count) friends for UIDs: \(tagFriendUids)")
+                    defer { group.leave() }
+                    guard let self = self, let friendsInfo = friendsInfo, !friendsInfo.isEmpty else { return }
+                    
                     let annotationData = TimeBoxAnnotationData(timeBox: timeBox, friendsInfo: friendsInfo)
                     tempAnnotationsData.append(annotationData)
-                    group.leave()
                 }
+            } else {
+                // If there are no friend tags, still add the annotation data with an empty friendsInfo.
+                let annotationData = TimeBoxAnnotationData(timeBox: timeBox, friendsInfo: [])
+                tempAnnotationsData.append(annotationData)
+                group.leave()
             }
         }
         
         group.notify(queue: .main) {
             self.timeBoxes = tempTimeBoxes
-            print("Data processing completed. Total count: \(self.timeBoxes.count)")
-            self.addAnnotations(from: self.timeBoxes)
+            // Call the refactored addAnnotations method with tempAnnotationsData.
+            self.addAnnotations(with: tempAnnotationsData)
         }
     }
     // 데이터 정보 불러오기
@@ -482,7 +420,7 @@ extension CapsuleMapViewController: MKMapViewDelegate {
         // 위치 사용 시 사용자의 현재 위치 표시
         capsuleMaps.showsUserLocation = true
         capsuleMaps.layer.masksToBounds = true
-        capsuleMaps.layer.cornerRadius = 10
+        capsuleMaps.layer.cornerRadius = 0
         
         // 애니메이션 효과가 추가 되어 부드럽게 화면 확대 및 이동
         //capsuleMaps.setUserTrackingMode(.follow, animated: true)
@@ -591,6 +529,83 @@ enum CapsuleFilterButtons {
     case all, locked, opened
 }
 
+extension CapsuleMapViewController {
+    func addButtonNavigationBar() {
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
+        navigationItem.hidesBackButton = true
+        
+        // 백 버튼 생성
+        let backButton = UIButton(type: .system)
+        let image = UIImage(systemName: "chevron.left")
+        backButton.setBackgroundImage(image, for: .normal)
+        backButton.tintColor = UIColor(red: 209/255.0, green: 94/255.0, blue: 107/255.0, alpha: 1)
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+
+        // 현재 위치 버튼
+        lazy var currentLocationButton: UIButton = {
+            let button = UIButton()
+            if let image = UIImage(named: "locationicon")?.resizedImage(newSize: CGSize(width: 20, height: 20)) {
+                button.setImage(image, for: .normal)
+            }
+            button.backgroundColor = UIColor.white.withAlphaComponent(1.0)
+            button.layer.masksToBounds = true
+            button.layer.cornerRadius = 20
+            button.addTarget(self, action: #selector(locationButton(_:)), for: .touchUpInside)
+            return button
+        }()
+        
+        lazy var buttonsStackView: UIStackView = {
+            let stackView = UIStackView(arrangedSubviews: [allButton, lockedButton, openedButton])
+            stackView.axis = .horizontal
+            stackView.distribution = .fillEqually
+            stackView.alignment = .center
+            stackView.spacing = 20 // 버튼 사이의 간격을 설정합니다.
+            return stackView
+        }()
+        
+        // 내비게이션 바에 버튼 추가
+        navigationController?.navigationBar.addSubview(backButton)
+        navigationController?.navigationBar.addSubview(currentLocationButton)
+        navigationController?.navigationBar.addSubview(buttonsStackView)
+        
+        // 버튼의 위치 조정
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        backButton.widthAnchor.constraint(equalToConstant: 15).isActive = true
+        backButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        backButton.centerYAnchor.constraint(equalTo: navigationController!.navigationBar.centerYAnchor).isActive = true
+        backButton.leadingAnchor.constraint(equalTo: navigationController!.navigationBar.leadingAnchor, constant: 20).isActive = true
+        
+        
+        currentLocationButton.snp.makeConstraints { make in
+        currentLocationButton.centerYAnchor.constraint(equalTo: navigationController!.navigationBar.centerYAnchor).isActive = true
+        currentLocationButton.trailingAnchor.constraint(equalTo: navigationController!.navigationBar.trailingAnchor, constant: -20).isActive = true
+        make.size.equalTo(CGSize(width: 40, height: 40))
+        }
+        
+        buttonsStackView.snp.makeConstraints { make in
+        buttonsStackView.trailingAnchor.constraint(equalTo: currentLocationButton.leadingAnchor, constant: -20).isActive = true
+        buttonsStackView.leadingAnchor.constraint(equalTo: backButton.trailingAnchor, constant: 20).isActive = true
+        buttonsStackView.centerYAnchor.constraint(equalTo: navigationController!.navigationBar.centerYAnchor).isActive = true
+//        buttonsStackView.centerXAnchor.constraint(equalTo: navigationController!.navigationBar.centerXAnchor).isActive = true
+            // 화면 너비의 5/4로 설정합니다.
+//            let screenWidth = UIScreen.main.bounds.width
+//            let targetWidth = screenWidth * 4 / 6
+//            buttonsStackView.widthAnchor.constraint(equalToConstant: targetWidth).isActive = true
+        }
+    }
+    // 뒤로가기 버튼 동작
+    @objc private func backButtonTapped() {
+        if let presentedVC = presentedViewController, presentedVC is CustomModal {
+            presentedVC.dismiss(animated: true) { [weak self] in
+                self?.tabBarController?.selectedIndex = 0
+            }
+        } else {
+            self.tabBarController?.selectedIndex = 0
+        }
+    }
+}
 // MARK: - Preview
 import SwiftUI
 
@@ -614,3 +629,4 @@ extension UIViewController {
         }
 }
 #endif
+
