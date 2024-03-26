@@ -254,17 +254,34 @@ class LoginViewController: UIViewController {
             guard let self = self else { return }
             DispatchQueue.main.async {
                 if let error = error {
-                    print("Login failed with error: \(error.localizedDescription)") // Debug print
-                    
-                    // 로그인 실패: 에러 메시지 처리 및 알림 표시
+                    print("Login failed with error: \(error.localizedDescription)")
                     let alert = UIAlertController(title: "로그인 실패", message: error.localizedDescription, preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "확인", style: .default))
                     self.present(alert, animated: true)
                 } else {
                     print("Login succeeded")
-                    let mainTabVC = MainTabBarView()
-                    mainTabVC.modalPresentationStyle = .fullScreen
-                    self.present(mainTabVC, animated: true, completion: nil)
+                    // 사용자의 데이터를 불러옴
+                    let db = Firestore.firestore()
+                    guard let userId = Auth.auth().currentUser?.uid else { return }
+                    db.collection("timeCapsules")
+                        .whereField("uid", isEqualTo: userId)
+                        .getDocuments { (snapshot, error) in
+                            if let error = error {
+                                print("Error fetching time capsules: \(error.localizedDescription)")
+                                return
+                            }
+                            if let count = snapshot?.documents.count, count > 0 {
+                                // timeCapsules 컬렉션에 문서가 있는 경우
+                                let mainTabVC = MainTabBarView()
+                                mainTabVC.modalPresentationStyle = .fullScreen
+                                self.present(mainTabVC, animated: true, completion: nil)
+                            } else {
+                                // timeCapsules 컬렉션에 문서가 없는 경우
+                                let newUserVC = NewUserViewController()
+                                newUserVC.modalPresentationStyle = .fullScreen
+                                self.present(newUserVC, animated: true, completion: nil)
+                            }
+                        }
                 }
             }
         }
