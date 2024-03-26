@@ -23,12 +23,13 @@ class UpcomingTCViewController: UITableViewController {
         super.viewDidLoad()
         setupUI()
         fetchTimeBoxesInfo()
-        // 네비게이션 바 스타일 설정
-        setupNavigationBarAppearance()
-        // 왼쪽 backButton 설정
-        setupBackButton()
-        // 타이틀 설정
-        navigationItem.title = "Upcoming memories"
+        backButtonNavigationBar()
+//        // 네비게이션 바 스타일 설정
+//        setupNavigationBarAppearance()
+//        // 왼쪽 backButton 설정
+//        setupBackButton()
+//        // 타이틀 설정
+//        navigationItem.title = "Upcoming memories"
     }
     
     // MARK: - UI Setup
@@ -44,29 +45,29 @@ class UpcomingTCViewController: UITableViewController {
         return itemHeight
     }
     
-    // 네비게이션 바 스타일 설정 메서드
-    private func setupNavigationBarAppearance() {
-        navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.barTintColor = .white
-        navigationController?.navigationBar.shadowImage = UIImage(named: "gray_line")
-    }
+//    // 네비게이션 바 스타일 설정 메서드
+//    private func setupNavigationBarAppearance() {
+//        navigationController?.navigationBar.isTranslucent = false
+//        navigationController?.navigationBar.barTintColor = .white
+//        navigationController?.navigationBar.shadowImage = UIImage(named: "gray_line")
+//    }
     
-    // 왼쪽 backButton 설정 메서드
-    private func setupBackButton() {
-        let backButton = UIButton(type: .system)
-        let image = UIImage(systemName: "chevron.left")
-        backButton.setBackgroundImage(image, for: .normal)
-        backButton.tintColor = UIColor(red: 209/255.0, green: 94/255.0, blue: 107/255.0, alpha: 1)
-        backButton.addTarget(self, action: #selector(homeButtonTapped), for: .touchUpInside)
-        backButton.frame = CGRect(x: 0, y: 0, width: 20, height: 30)
-        
-        // backButton 위치 설정
-//        backButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
-        
-        // 네비게이션 아이템에 backButton 설정
-        let backButtonBarItem = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = backButtonBarItem
-    }
+//    // 왼쪽 backButton 설정 메서드
+//    private func setupBackButton() {
+//        let backButton = UIButton(type: .system)
+//        let image = UIImage(systemName: "chevron.left")
+//        backButton.setBackgroundImage(image, for: .normal)
+//        backButton.tintColor = UIColor(red: 209/255.0, green: 94/255.0, blue: 107/255.0, alpha: 1)
+//        backButton.addTarget(self, action: #selector(homeButtonTapped), for: .touchUpInside)
+//        backButton.frame = CGRect(x: 0, y: 0, width: 15, height: 30)
+//        
+//        // backButton 위치 설정
+////        backButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
+//        
+//        // 네비게이션 아이템에 backButton 설정
+//        let backButtonBarItem = UIBarButtonItem(customView: backButton)
+//        navigationItem.leftBarButtonItem = backButtonBarItem
+//    }
     
     // MARK: - Data Fetching
     
@@ -139,3 +140,32 @@ class UpcomingTCViewController: UITableViewController {
 //        MainTabBarView().toPreview()
 //    }
 //}
+
+extension UpcomingTCViewController {
+    func backButtonNavigationBar() {
+        navigationController?.navigationBar.barStyle = .default
+        navigationController?.navigationBar.barTintColor = .white
+        navigationItem.hidesBackButton = true
+        
+        // 타이틀 설정
+        navigationItem.title = "Upcoming memories"
+        
+        // 백 버튼 생성
+        let backButton = UIButton(type: .system)
+        let image = UIImage(systemName: "chevron.left")
+        backButton.setBackgroundImage(image, for: .normal)
+        backButton.tintColor = UIColor(red: 209/255.0, green: 94/255.0, blue: 107/255.0, alpha: 1)
+        backButton.addTarget(self, action: #selector(homeButtonTapped), for: .touchUpInside)
+
+        
+        // 내비게이션 바에 백 버튼 추가
+         navigationController?.navigationBar.addSubview(backButton)
+        
+        // 백 버튼의 위치 조정
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        backButton.widthAnchor.constraint(equalToConstant: 15).isActive = true
+        backButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        backButton.centerYAnchor.constraint(equalTo: navigationController!.navigationBar.centerYAnchor).isActive = true
+        backButton.leadingAnchor.constraint(equalTo: navigationController!.navigationBar.leadingAnchor, constant: 20).isActive = true
+    }
+}
