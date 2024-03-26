@@ -170,30 +170,13 @@ class MainCapsuleViewController: UIViewController {
         self.navigationItem.hidesBackButton = true
 //        setupBackLightLayout()
         // 왼쪽 backButton 설정
-        
-        setupBackButton()
+        backButtonNavigationBar()
         setupLayout()
         addTapGestureToCapsuleImageView()
         checkIfItsOpeningDay()
         fetchTimeCapsuleData()
         setupStackView()
         setupDetailedLocationLabel()
-    }
-    
-    // 왼쪽 backButton 설정 메서드
-    private func setupBackButton() {
-        let backButton = UIButton(type: .system)
-        let image = UIImage(systemName: "chevron.left")
-        backButton.setImage(image, for: .normal)
-        backButton.tintColor = UIColor(red: 209/255.0, green: 94/255.0, blue: 107/255.0, alpha: 1)
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        
-        // 버튼의 프레임을 설정하여 클릭 영역을 확장합니다.
-        backButton.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-
-        // 네비게이션 아이템에 backButton 설정
-        let backButtonBarItem = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = backButtonBarItem
     }
 
     @objc private func backButtonTapped() {
@@ -388,5 +371,32 @@ class MainCapsuleViewController: UIViewController {
 extension MainCapsuleViewController: UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return FadeInAnimator() // 모달 표시시 사용할 애니메이터를 반환
+    }
+}
+
+extension MainCapsuleViewController {
+    func backButtonNavigationBar() {
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
+        navigationItem.hidesBackButton = true
+        
+        // 백 버튼 생성
+        let backButton = UIButton(type: .system)
+        let image = UIImage(systemName: "chevron.left")
+        backButton.setBackgroundImage(image, for: .normal)
+        backButton.tintColor = UIColor(red: 209/255.0, green: 94/255.0, blue: 107/255.0, alpha: 1)
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        
+        
+        // 내비게이션 바에 백 버튼 추가
+        navigationController?.navigationBar.addSubview(backButton)
+        
+        // 백 버튼의 위치 조정
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        backButton.widthAnchor.constraint(equalToConstant: 15).isActive = true
+        backButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        backButton.centerYAnchor.constraint(equalTo: navigationController!.navigationBar.centerYAnchor).isActive = true
+        backButton.leadingAnchor.constraint(equalTo: navigationController!.navigationBar.leadingAnchor, constant: 20).isActive = true
     }
 }

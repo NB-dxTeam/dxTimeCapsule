@@ -31,16 +31,38 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     private let dividerView = UIView()
     private var loadingIndicator = UIActivityIndicatorView(style: .medium) // 로딩 인디케이터 추가\
     private let friendListButton = UIButton()
-
+    
+    private func settingButtonToNavigationBar() {
+        // 설정 버튼 생성
+        let settingButton = UIButton(type: .system)
+        let image = UIImage(systemName: "gearshape")?.withRenderingMode(.alwaysTemplate)
+        settingButton.setBackgroundImage(image, for: .normal)
+        settingButton.clipsToBounds = true
+        settingButton.tintColor = UIColor(.gray)
+        settingButton.addTarget(self, action: #selector(settingButtonTapped), for: .touchUpInside)
+        settingButton.isUserInteractionEnabled = true
+        settingButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        
+        // 설정 버튼을 UIBarButtonItem으로 변환
+        let settingBarButtonItem = UIBarButtonItem(customView: settingButton)
+        
+        // 고정된 간격 아이템 생성
+        let space = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        space.width = 20
+        
+        // 네비게이션 바에 아이템 추가
+        navigationItem.rightBarButtonItems = [space, settingBarButtonItem]
+    }
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
         setupConstraints()
+        settingButtonToNavigationBar()
         showLoadingIndicator() // 데이터 로딩 전 로딩 인디케이터 표시
         userProfileViewModel.fetchUserData { [weak self] in
-            self?.hideLoadingIndicator() // 데이터 로딩 완료 후 로딩 인디케이터 숨김
+            self?.hideLoadingIndicator()
             self?.bindViewModel()
         }
     }
@@ -98,26 +120,11 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
           make.bottom.equalTo(profileImageView.snp.bottom).offset(-10)
           make.centerX.equalTo(profileImageView.snp.centerX)
         }
-        
-        
-        // Edit 카메라 버튼 추가
-        let editIconButton = UIButton()
-        editIconButton.setImage(UIImage(named: "editCameraIcon"), for: .normal)
-        editIconButton.addTarget(self, action: #selector(changePhotoTapped), for: .touchUpInside)
-        
-        view.addSubview(editIconButton)
-        
-        editIconButton.snp.makeConstraints { make in
-            make.bottom.equalTo(profileImageView.snp.bottom).offset(-10)
-            make.right.equalTo(profileImageView.snp.right).offset(-10)
-            make.width.height.equalTo(24)
-        }
-
 
         // Nickname Label Setup
         userNameLabel.font = .pretendardSemiBold(ofSize: 24)
         userNameLabel.textAlignment = .center
-        
+
         // Edit Nickname Button Setup
         editUserNameButton.setImage(UIImage(named: "editNameIcon"), for: .normal)
         editUserNameButton.imageView?.contentMode = .scaleAspectFit // 아이콘의 비율을 맞추기 위함
@@ -181,7 +188,8 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         profileImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview().offset(-130)
-            make.width.height.equalTo(150)
+            make.height.equalToSuperview().multipliedBy(0.2)
+            make.width.equalTo(profileImageView.snp.height)
             profileImageView.setRoundedImage()
         }
         
@@ -189,13 +197,14 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         userNameLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(profileImageView.snp.bottom).offset(20)
-            make.left.equalToSuperview().inset(20)
-            make.right.lessThanOrEqualTo(editUserNameButton.snp.left).offset(-10)
+            // 텍스트에 맞게 라벨의 너비를 동적으로 조절하도록 설정합니다.
         }
-
+        userNameLabel.setContentHuggingPriority(.required, for: .vertical)
+        userNameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        
         editUserNameButton.snp.makeConstraints { make in
             make.centerY.equalTo(userNameLabel)
-            make.right.equalToSuperview().inset(50) // 오른쪽 여백에 고정
+            make.leading.equalTo(userNameLabel.snp.trailing).offset(10)
             make.width.height.equalTo(24)  // Adjust the size as needed
         }
         
@@ -529,6 +538,9 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     
     @objc func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true)
+    }
+    
+    @objc private func settingButtonTapped() {
     }
     
     // MARK: - Image Upload
