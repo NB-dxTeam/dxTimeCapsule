@@ -42,6 +42,11 @@ class SignUpViewController: UIViewController  {
         setupViews()
         setupLayouts()
         keyBoardHide()
+        
+        // 키보드 알림 구독 설정
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
         emailTextField.addTarget(self, action: #selector(emailTextFieldDidChange(_:)), for: .editingChanged)
         passwordTextField.addTarget(self, action: #selector(passwordTextFieldDidChange(_:)), for: .editingChanged)
         confirmPasswordTextField.addTarget(self, action: #selector(confirmPasswordTextFieldDidChange(_:)), for: .editingChanged)
@@ -51,6 +56,33 @@ class SignUpViewController: UIViewController  {
         super.viewDidLayoutSubviews()
         
         signUpButton.setInstagram()
+    }
+    
+    override func keyboardWillShow(notification: NSNotification) {
+        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
+        
+        if userNameTextField.isFirstResponder {
+            let bottomOfTextField = userNameTextField.convert(userNameTextField.bounds, to: self.view).maxY
+            let topOfKeyboard = self.view.frame.height - keyboardSize.height
+            let spacing: CGFloat = 20 // 원하는 텍스트 필드와 키보드 사이의 간격
+            
+            // 텍스트 필드와 키보드 사이의 간격을 계산합니다.
+            let offset = bottomOfTextField - topOfKeyboard + spacing
+            if offset > 0 {
+                // 계산된 간격만큼 뷰를 올립니다.
+                self.view.frame.origin.y = -offset
+            }
+        }
+    }
+    
+    override func keyboardWillHide(notification: NSNotification) {
+        // 키보드가 사라질 때 원래 위치로 뷰를 이동
+        self.view.frame.origin.y = 0
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // MARK: - Setup Views
