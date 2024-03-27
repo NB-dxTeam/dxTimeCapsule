@@ -19,14 +19,17 @@ class LoginViewController: UIViewController {
         let button = UIButton(type: .system)
         let title = "Login" // 버튼의 제목 설정
         button.setTitle(title, for: .normal)
-        button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 16
         button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 16)
+        button.setTitleColor(UIColor(hex: "#C82D6B"), for: .normal)
+        button.layer.borderWidth = 1.5 // 라인의 너비 설정
+        button.layer.borderColor = UIColor(hex: "#C82D6B").cgColor
+        
         // 그림자 설정
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowRadius = 6 // 그림자의 블러 정도 설정 (조금 더 부드럽게)
-        button.layer.shadowOpacity = 0.3 // 그림자의 투명도 설정 (적당한 농도로)
-        button.layer.shadowOffset =  CGSize(width: 0, height: 3) // 그림자
+//        button.layer.shadowColor = UIColor.black.cgColor
+//        button.layer.shadowRadius = 6 // 그림자의 블러 정도 설정 (조금 더 부드럽게)
+//        button.layer.shadowOpacity = 0.3 // 그림자의 투명도 설정 (적당한 농도로)
+//        button.layer.shadowOffset =  CGSize(width: 0, height: 3) // 그림자
         return button
     }()
     
@@ -38,15 +41,12 @@ class LoginViewController: UIViewController {
         button.layer.cornerRadius = 16
         button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 16)
         button.layer.borderWidth = 1.5 // 라인의 너비 설정
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowRadius = 6 // 그림자의 블러 정도 설정 (조금 더 부드럽게)
-        button.layer.shadowOpacity = 0.3 // 그림자의 투명도 설정 (적당한 농도로)
-        button.layer.shadowOffset =  CGSize(width: 0, height: 3)
         button.layer.borderColor = UIColor(hex: "#C82D6B").cgColor
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowRadius = 6 // 그림자의 블러 정도 설정 (조금 더 부드럽게)
-        button.layer.shadowOpacity = 0.2 // 그림자의 투명도 설정 (적당한 농도로)
-        button.layer.shadowOffset =  CGSize(width: 0, height: 3) // 그림
+//        button.layer.shadowOffset =  CGSize(width: 0, height: 3)
+//        button.layer.shadowColor = UIColor.black.cgColor
+//        button.layer.shadowRadius = 6 // 그림자의 블러 정도 설정 (조금 더 부드럽게)
+//        button.layer.shadowOpacity = 0.2 // 그림자의 투명도 설정 (적당한 농도로)
+//        button.layer.shadowOffset =  CGSize(width: 0, height: 3) // 그림
         
         return button
     }()
@@ -85,9 +85,6 @@ class LoginViewController: UIViewController {
         
         //        loginButton.backgroundColor = UIColor(hex: "#FF3A4A")
         //        socialLogin.backgroundColor = UIColor(hex: "#FF3A4A")
-        loginButton.setInstagram()
-        loginButton.layer.cornerRadius = 16
-        signUpButton.backgroundColor = .white
  
     }
     
@@ -147,9 +144,11 @@ class LoginViewController: UIViewController {
         
         // 앱 이름 설정
         appNameLabel.text = "Memorium"
-        appNameLabel.font = UIFont.proximaNovaBold(ofSize: 44)
+        appNameLabel.font = UIFont.proximaNovaBold(ofSize: 80)
+        appNameLabel.adjustsFontSizeToFitWidth = true
+        appNameLabel.minimumScaleFactor = 0.5
         appNameLabel.textAlignment = .center
-        
+      
         // 이메일 텍스트필드 설정
         configureTextField(emailTextField, placeholder: "Enter your email")
         
@@ -189,36 +188,42 @@ class LoginViewController: UIViewController {
         appNameLabel.snp.makeConstraints { make in
             make.top.equalTo(logoImageView.snp.bottom)
             make.centerX.equalToSuperview()
+            make.height.equalTo(logoImageView.snp.height).multipliedBy(0.25/1.0)
         }
         
         emailTextField.snp.makeConstraints { make in
-            let offset = UIScreen.main.bounds.height * (0.4/6.0)
-            make.top.equalTo(appNameLabel.snp.bottom).offset(offset)
-            make.left.right.equalToSuperview().inset(60)
-            make.height.equalTo(44)
+            let offset1 = UIScreen.main.bounds.height * (0.15/6.0)
+            let offset2 = UIScreen.main.bounds.width * (0.28/2.0)
+            make.bottom.equalTo(passwordTextField.snp.top).offset(-offset1)
+            make.left.right.equalToSuperview().inset(offset2)
+            make.height.equalToSuperview().multipliedBy(0.24/5.0)
         }
         
         passwordTextField.snp.makeConstraints { make in
-            make.top.equalTo(emailTextField.snp.bottom).offset(20)
+            let offset = UIScreen.main.bounds.height * (0.15/6.0)
+            make.bottom.equalTo(loginButton.snp.top).offset(-offset)
             make.left.right.equalTo(emailTextField)
-            make.height.equalTo(44)
+            make.height.equalToSuperview().multipliedBy(0.24/5.0)
         }
         passwordTextField.isSecureTextEntry = true
         
         
         // 로그인 버튼 레이아웃 설정
         loginButton.snp.makeConstraints { make in
-            make.top.equalTo(passwordTextField.snp.bottom).offset(20)
-            make.left.right.equalTo(passwordTextField)
-            make.height.equalTo(44)
+            let offset = UIScreen.main.bounds.height * (0.15/6.0)
+            make.left.right.equalTo(emailTextField)
+            make.height.equalToSuperview().multipliedBy(0.24/5.0)
+            make.bottom.equalTo(signUpButton.snp.top).offset(-offset)
         }
         
         // 회원가입 버튼 레이아웃 설정
         signUpButton.snp.makeConstraints { make in
+            let offset = UIScreen.main.bounds.height * (0.15/6.0)
             make.centerX.equalToSuperview()
-            make.top.equalTo(loginButton.snp.bottom).offset(20)
-            make.width.equalTo(loginButton.snp.width)
-            make.height.equalTo(44)
+           // make.top.equalTo(loginButton.snp.bottom).offset(offset)
+            make.left.right.equalTo(emailTextField)
+            make.height.equalToSuperview().multipliedBy(0.24/5.0)
+            make.bottom.equalToSuperview().multipliedBy(4.07/5.0)
         }
         
         // dividerView 레이아웃 설정
@@ -413,14 +418,55 @@ extension LoginViewController: UITextFieldDelegate {
         }
         return true
     }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        // 텍스트 입력이 변경될 때마다 로그인 버튼의 색상을 업데이트합니다.
+        updateLoginButton()
+        return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        updateLoginButton()
+    }
+
+    func updateLoginButton() {
+        guard let email = emailTextField.text, !email.isEmpty,
+              let password = passwordTextField.text, !password.isEmpty else {
+            // 하나 이상의 텍스트 필드가 비어있는 경우
+            loginButton.setTitleColor(UIColor(hex: "#C82D6B"), for: .normal)
+            loginButton.backgroundColor = .clear
+            loginButton.layer.borderWidth = 1.5
+            loginButton.layer.borderColor = UIColor(hex: "#C82D6B").cgColor
+            return
+        }
+        loginButton.setTitleColor(.white, for: .normal)
+        loginButton.layer.borderWidth = 0
+        loginButton.layer.borderColor = UIColor.clear.cgColor
+        loginButton.layer.cornerRadius = 16
+        loginButton.setInstagram()
+    }
 }
 
 
-// MARK: - SwiftUI Preview
-//import SwiftUI
-//
-//struct MainTabBarViewPreview : PreviewProvider {
-//    static var previews: some View {
-//        LoginViewController().toPreview()
-//    }
-//}
+#if DEBUG
+
+import SwiftUI
+
+//UIViewControllerRepresentable는 SwiftUI내에서 UIViewController를 사용할 수 있게 해줌
+struct ViewControllerPresentabl : UIViewControllerRepresentable {
+    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+    }
+    
+    func makeUIViewController(context: Context) -> some UIViewController {
+        // LoginViewController의 인스턴스를 생성하여 반환
+        return LoginViewController()
+    }
+}
+
+// 미리보기 제공
+struct ViewControllerPresentabl_PreviewProvider : PreviewProvider {
+    static var previews: some View{
+        ViewControllerPresentabl()
+    }
+}
+
+#endif
