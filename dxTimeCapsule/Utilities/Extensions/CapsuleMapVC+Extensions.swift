@@ -64,7 +64,7 @@ extension CapsuleMapViewController {
         
         // 로딩 인디케이터가 몇 초 후에 사라지도록 설정
         // 이 부분은 실제 데이터 로딩 로직이 완료되면 로딩 인디케이터를 중지하고 숨기는 부분입니다.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             activityIndicator.stopAnimating()
             activityIndicator.removeFromSuperview()
         }

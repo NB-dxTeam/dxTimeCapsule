@@ -35,10 +35,9 @@ class CapsuleMapViewController: UIViewController {
     
     private lazy var allButton: UIButton = {
         let button = UIButton()
-        // "AdobeBox_All" 이미지를 allButton에 설정합니다.
-        if let image = UIImage(named: "AdobeBox_All")?.resizedImage(newSize: CGSize(width: 70, height: 40)) {
-            button.setImage(image, for: .normal)
-        }
+        button.setTitle("전체", for: .normal)
+        button.tintColor = UIColor(hex: "#d65451")
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         configureButtonAppearance(button: button)
         button.addAction(UIAction { [weak self] _ in
             self?.buttonTapped(name: "all")
@@ -48,10 +47,9 @@ class CapsuleMapViewController: UIViewController {
     
     lazy var lockedButton: UIButton = {
         let button = UIButton()
-        // "AdobeBox_Close" 이미지를 lockedButton에 설정합니다.
-        if let image = UIImage(named: "AdobeBox_Close")?.resizedImage(newSize: CGSize(width: 35, height: 35)) {
-            button.setImage(image, for: .normal)
-        }
+        button.setTitle("잠김", for: .normal)
+        button.tintColor = UIColor(hex: "#d65451")
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         configureButtonAppearance(button: button)
         button.addAction(UIAction { [weak self] _ in
             self?.buttonTapped(name: "locked")
@@ -61,10 +59,9 @@ class CapsuleMapViewController: UIViewController {
     
     lazy var openedButton: UIButton = {
         let button = UIButton()
-        // "AdobeBox_Open" 이미지를 openedButton에 설정합니다.
-        if let image = UIImage(named: "AdobeBox_Open")?.resizedImage(newSize: CGSize(width: 35, height: 35)) {
-            button.setImage(image, for: .normal)
-        }
+        button.setTitle("열림", for: .normal)
+        button.tintColor = UIColor(hex: "#d65451")
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         configureButtonAppearance(button: button)
         button.addAction(UIAction { [weak self] _ in
             self?.buttonTapped(name: "opened")
@@ -233,7 +230,7 @@ class CapsuleMapViewController: UIViewController {
         // 모든 버튼을 기본 상태로 리셋
         [allButton, lockedButton, openedButton].forEach {
             $0.backgroundColor = .white.withAlphaComponent(0.75)
-            $0.setTitleColor(UIColor.white.withAlphaComponent(0.2), for: .normal) // 필터 "전체보기" 색상
+            $0.setTitleColor(UIColor(hex: "#d65451"), for: .normal) // 필터 색상
         }
         
         // 선택된 필터 버튼의 스타일을 변경
@@ -350,42 +347,42 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
 }
 extension CapsuleMapViewController {
     func showModalVC() {
-            let vc = CustomModal()
+        let vc = CustomModal()
         
-            vc.isModalInPresentation = false
-            // CustomModal에서 타임캡슐 선택 시 실행할 클로저 구현
-            vc.onCapsuleSelected = { [weak self] latitude, longitude in
-                // 지도의 위치를 업데이트하는 메소드 호출
-                self?.moveToLocation(latitude: latitude, longitude: longitude)
-                if let sheet = vc.sheetPresentationController {
-                    DispatchQueue.main.async {
-                        sheet.animateChanges {
-                            sheet.detents = [.half, .large()]
-                            sheet.selectedDetentIdentifier = .half
-                            sheet.largestUndimmedDetentIdentifier = .large
-                            sheet.prefersGrabberVisible = true
-                            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-                            sheet.prefersEdgeAttachedInCompactHeight = true
-                            sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
-                        }
+        vc.isModalInPresentation = false
+        // CustomModal에서 타임캡슐 선택 시 실행할 클로저 구현
+        vc.onCapsuleSelected = { [weak self] latitude, longitude in
+            // 지도의 위치를 업데이트하는 메소드 호출
+            self?.moveToLocation(latitude: latitude, longitude: longitude)
+            if let sheet = vc.sheetPresentationController {
+                DispatchQueue.main.async {
+                    sheet.animateChanges {
+                        sheet.detents = [.half, .large()]
+                        sheet.selectedDetentIdentifier = .half
+                        sheet.largestUndimmedDetentIdentifier = .large
+                        sheet.prefersGrabberVisible = true
+                        sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+                        sheet.prefersEdgeAttachedInCompactHeight = true
+                        sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
                     }
                 }
             }
-            
-            if let sheet = vc.sheetPresentationController {
-                sheet.detents = [.half, .large()]
-                sheet.selectedDetentIdentifier = .half
-                sheet.largestUndimmedDetentIdentifier = .large
-                sheet.prefersGrabberVisible = true
-                sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-                sheet.prefersEdgeAttachedInCompactHeight = true
-                sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
-                
-            }
-            //vc.isModalInPresentation = true
-            vc.modalPresentationStyle = .formSheet
-            self.present(vc, animated: true)
         }
+        
+        if let sheet = vc.sheetPresentationController {
+            sheet.detents = [.half, .large()]
+            sheet.selectedDetentIdentifier = .half
+            sheet.largestUndimmedDetentIdentifier = .large
+            sheet.prefersGrabberVisible = true
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+            sheet.prefersEdgeAttachedInCompactHeight = true
+            sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+            
+        }
+        //vc.isModalInPresentation = true
+        vc.modalPresentationStyle = .formSheet
+        self.present(vc, animated: true)
+    }
 
     func moveToLocation(latitude: Double, longitude: Double) {
         let adjustedLatitude = latitude
@@ -454,11 +451,15 @@ extension CapsuleMapViewController: MKMapViewDelegate {
             annotationView?.glyphTintColor = .white
             annotationView?.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .systemGray4 : .systemRed
             
+            // 클러스터링을 위한 clusteringIdentifier 설정
+            annotationView?.clusteringIdentifier = "timeBoxCluster"
         } else {
             print("MKMarkerAnnotationView 재사용")
             annotationView?.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .systemGray4 : .systemRed
         }
         
+        // 클러스터링을 위한 clusteringIdentifier 설정
+        annotationView?.clusteringIdentifier = "timeBoxCluster"
         
         annotationView?.annotation = annotation
         annotationView?.canShowCallout = true
