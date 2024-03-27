@@ -14,7 +14,17 @@ class SignUpViewController: UIViewController  {
     private let passwordTextField = UITextField()
     private let confirmPasswordTextField = UITextField()
     private let userNameTextField = UITextField()
-    private let signUpButton = UIButton(type: .system)
+    private let signUpButton : UIButton = {
+        let button = UIButton(type: .system)
+        let title = "Sign Up" // 버튼의 제목 설정
+        button.setTitle(title, for: .normal)
+        button.setTitleColor(UIColor(hex: "#C82D6B"), for: .normal)
+        button.layer.cornerRadius = 16
+        button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 16)
+        button.layer.borderWidth = 1.5 // 라인의 너비 설정
+        button.layer.borderColor = UIColor(hex: "#C82D6B").cgColor
+        return button
+    }()
     
     // 중복확인 버튼
     private let checkEmailButton = UIButton(type: .system)
@@ -50,13 +60,17 @@ class SignUpViewController: UIViewController  {
         emailTextField.addTarget(self, action: #selector(emailTextFieldDidChange(_:)), for: .editingChanged)
         passwordTextField.addTarget(self, action: #selector(passwordTextFieldDidChange(_:)), for: .editingChanged)
         confirmPasswordTextField.addTarget(self, action: #selector(confirmPasswordTextFieldDidChange(_:)), for: .editingChanged)
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        confirmPasswordTextField.delegate = self
+        userNameTextField.delegate = self
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        signUpButton.setInstagram()
-    }
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//        
+////        signUpButton.setInstagram()
+//    }
     
     override func keyboardWillShow(notification: NSNotification) {
         guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
@@ -100,6 +114,19 @@ class SignUpViewController: UIViewController  {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(selectImage))
         profileImageView.addGestureRecognizer(tapGestureRecognizer)
         
+        // "Edit" 레이블 추가
+        let editLabel = UILabel()
+        editLabel.text = "Edit"
+        editLabel.font = UIFont.pretendardBold(ofSize: 15)
+        editLabel.textColor =  .white
+        
+        view.addSubview(editLabel)
+        
+        editLabel.snp.makeConstraints { make in
+          make.bottom.equalTo(profileImageView.snp.bottom).offset(-10)
+          make.centerX.equalTo(profileImageView.snp.centerX)
+        }
+        
         // Configure the text fields
         configureTextField(emailTextField, placeholder: "Enter your email")
         configureTextField(passwordTextField, placeholder: "Enter your password", isSecure: true)
@@ -117,18 +144,18 @@ class SignUpViewController: UIViewController  {
         view.addSubview(userNameValidationLabel)
         
         // Configure the checkEmailButton
-        configureLineButton(checkEmailButton, title: "✓")
+        configureLineButton(checkEmailButton, title: "check✓")
         checkEmailButton.addTarget(self, action: #selector(checkEmailPressed), for: .touchUpInside)
         
         // Configure the checkUserNameButton
-        configureLineButton(checkUserNameButton, title: "✓")
+        configureLineButton(checkUserNameButton, title: "check✓")
         checkUserNameButton.addTarget(self, action: #selector(checkUserNamePressed), for: .touchUpInside)
         
         view.addSubview(checkEmailButton)
         view.addSubview(checkUserNameButton)
         
         // Configure the signUpButton
-        configureButton(signUpButton, title: "Sign Up")
+        view.addSubview(signUpButton)
         signUpButton.addTarget(self, action: #selector(signUpButtonPressed), for: .touchUpInside)
         
         // 디바이더 뷰 셋업
@@ -159,16 +186,20 @@ class SignUpViewController: UIViewController  {
     
     private func setupLayouts() {
         profileImageView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(80)
+            let offset = UIScreen.main.bounds.height * (0.8/6.0)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(offset)
             make.centerX.equalToSuperview()
-            make.width.height.equalTo(180)
+            make.width.equalTo(profileImageView.snp.height)
+            make.height.equalToSuperview().multipliedBy(1.05/5.0)
         }
         
         emailTextField.snp.makeConstraints { make in
-            make.top.equalTo(profileImageView.snp.bottom).offset(20)
-            make.left.equalToSuperview().inset(50)
-            make.right.equalTo(checkEmailButton.snp.left).offset(-10)
-            make.height.equalTo(44)
+            let offset1 = UIScreen.main.bounds.height * (0.4/6.0)
+            let offset2 = UIScreen.main.bounds.width * (0.28/2.0)
+            make.top.equalTo(profileImageView.snp.bottom).offset(offset1)
+            make.left.equalToSuperview().inset(offset2)
+            make.width.equalToSuperview().multipliedBy(1.1/2.0)
+            make.height.equalToSuperview().multipliedBy(0.24/5.0)
         }
         
 
@@ -177,10 +208,11 @@ class SignUpViewController: UIViewController  {
 //          make.height.equalTo(44)
         
         checkEmailButton.snp.makeConstraints { make in
+            let offset2 = UIScreen.main.bounds.width * (0.28/2.0)
             make.centerY.equalTo(emailTextField)
-            make.right.equalToSuperview().inset(50)
-            make.width.equalTo(30)
-            make.height.equalTo(44)
+            make.right.equalToSuperview().inset(offset2)
+            make.width.equalToSuperview().multipliedBy(0.3/2.0)
+            make.height.equalToSuperview().multipliedBy(0.24/5.0)
         }
 
         emailValidationLabel.snp.makeConstraints { make in
@@ -189,9 +221,11 @@ class SignUpViewController: UIViewController  {
         }
         
         passwordTextField.snp.makeConstraints { make in
-            make.top.equalTo(emailValidationLabel.snp.bottom).offset(10)
-            make.left.right.equalTo(emailValidationLabel)
-            make.height.equalTo(44)
+            let offset1 = UIScreen.main.bounds.height * (0.10/6.0)
+            let offset2 = UIScreen.main.bounds.width * (0.28/2.0)
+            make.top.equalTo(emailValidationLabel.snp.bottom).offset(offset1)
+            make.left.right.equalToSuperview().inset(offset2)
+            make.height.equalToSuperview().multipliedBy(0.24/5.0)
         }
         
         passwordValidationLabel.snp.makeConstraints { make in
@@ -200,9 +234,11 @@ class SignUpViewController: UIViewController  {
         }
         
         confirmPasswordTextField.snp.makeConstraints { make in
-            make.top.equalTo(passwordValidationLabel.snp.bottom).offset(10)
-            make.left.right.equalTo(passwordTextField)
-            make.height.equalTo(44)
+            let offset1 = UIScreen.main.bounds.height * (0.10/6.0)
+            let offset2 = UIScreen.main.bounds.width * (0.28/2.0)
+            make.top.equalTo(passwordValidationLabel.snp.bottom).offset(offset1)
+            make.left.right.equalToSuperview().inset(offset2)
+            make.height.equalToSuperview().multipliedBy(0.24/5.0)
         }
         
         confirmPasswordValidationLabel.snp.makeConstraints { make in
@@ -211,17 +247,20 @@ class SignUpViewController: UIViewController  {
         }
         
         userNameTextField.snp.makeConstraints { make in
-            make.top.equalTo(confirmPasswordValidationLabel.snp.bottom).offset(10)
-            make.left.equalToSuperview().inset(50)
-            make.right.equalTo(checkUserNameButton.snp.left).offset(-10)
-            make.height.equalTo(44)
+            let offset1 = UIScreen.main.bounds.height * (0.10/6.0)
+            let offset2 = UIScreen.main.bounds.width * (0.28/2.0)
+            make.top.equalTo(confirmPasswordValidationLabel.snp.bottom).offset(offset1)
+            make.left.right.equalToSuperview().inset(offset2)
+            make.width.equalToSuperview().multipliedBy(1.1/2.0)
+            make.height.equalToSuperview().multipliedBy(0.24/5.0)
         }
         
         checkUserNameButton.snp.makeConstraints { make in
+            let offset2 = UIScreen.main.bounds.width * (0.28/2.0)
             make.centerY.equalTo(userNameTextField)
-            make.right.equalToSuperview().inset(50)
-            make.width.equalTo(30)
-            make.height.equalTo(44)
+            make.right.equalToSuperview().inset(offset2)
+            make.width.equalToSuperview().multipliedBy(0.3/2.0)
+            make.height.equalToSuperview().multipliedBy(0.24/5.0)
         }
         
         userNameValidationLabel.snp.makeConstraints { make in
@@ -230,9 +269,11 @@ class SignUpViewController: UIViewController  {
         }
         
         signUpButton.snp.makeConstraints { make in
-            make.top.equalTo(userNameTextField.snp.bottom).offset(20)
-            make.left.right.equalTo(confirmPasswordTextField)
-            make.height.equalTo(50)
+            let offset = UIScreen.main.bounds.width * (0.28/2.0)
+            make.centerX.equalToSuperview()
+            make.left.right.equalToSuperview().inset(offset)
+            make.height.equalToSuperview().multipliedBy(0.24/5.0)
+            make.bottom.equalToSuperview().multipliedBy(4.07/5.0)
         }
         
         
@@ -290,18 +331,6 @@ class SignUpViewController: UIViewController  {
         textField.rightViewMode = .always
         
         view.addSubview(textField)
-    }
-    
-    private func configureButton(_ button: UIButton, title: String) {
-        button.setTitle(title, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 14) // 텍스트 크기 및 폰트 설정
-        button.layer.cornerRadius = 10
-        
-        button.snp.makeConstraints { make in
-            make.height.equalTo(44)
-        }
-        view.addSubview(button)
     }
     
     private func configureLineButton(_ button: UIButton, title: String) {
@@ -390,9 +419,15 @@ class SignUpViewController: UIViewController  {
             if let snapshot = snapshot, !snapshot.isEmpty {
                 self.emailValidationLabel.text = "사용 중인 메일주소입니다."
                 self.emailValidationLabel.textColor = .red
+                // 중복 확인이 실패한 경우, 버튼 색상 및 테두리 색상을 원래대로 돌려야 합니다.
+                self.checkEmailButton.setTitleColor(UIColor(hex: "#FF3A4A"), for: .normal)
+                self.checkEmailButton.layer.borderColor = UIColor(hex: "#FF3A4A").cgColor
             } else {
                 self.emailValidationLabel.text = "이메일 확인이 완료 되었습니다."
                 self.emailValidationLabel.textColor = .gray
+                // 중복 확인이 성공한 경우, 버튼 색상 및 테두리 색상을 변경합니다.
+                self.checkEmailButton.setTitleColor(.systemGreen, for: .normal)
+                self.checkEmailButton.layer.borderColor = UIColor.systemGreen.cgColor
             }
         }
     }
@@ -415,6 +450,8 @@ class SignUpViewController: UIViewController  {
             } else {
                 self.userNameValidationLabel.text = "닉네임 확인이 완료 되었습니다."
                 self.userNameValidationLabel.textColor = .gray
+                self.checkUserNameButton.setTitleColor(.systemGreen, for: .normal)
+                self.checkUserNameButton.layer.borderColor = UIColor.systemGreen.cgColor
             }
         }
     }
@@ -475,10 +512,25 @@ class SignUpViewController: UIViewController  {
         guard let email = emailTextField.text, !email.isEmpty,
               let password = passwordTextField.text, !password.isEmpty,
               let userName = userNameTextField.text, !userName.isEmpty,
-              let profileImage = profileImageView.image,
-              emailValidationLabel.text == "이메일 확인이 완료 되었습니다.",
-              userNameValidationLabel.text == "닉네임 확인이 완료 되었습니다." else {
+              let profileImage = profileImageView.image else {
             presentAlert(title: "입력 오류", message: "모든 필드를 채워주세요.")
+            return
+        }
+        // 각각의 중복 확인을 수행하고, 중복 여부를 확인하는 변수 추가
+        let isEmailValidated = emailValidationLabel.text == "이메일 확인이 완료 되었습니다."
+        let isUserNameValidated = userNameValidationLabel.text == "닉네임 확인이 완료 되었습니다."
+        
+        // 이메일과 닉네임 중복 확인이 모두 완료되지 않은 경우
+        guard isEmailValidated && isUserNameValidated else {
+            var message = ""
+            if !isEmailValidated && !isUserNameValidated {
+                message = "이메일 및 닉네임 중복 확인이 필요합니다."
+            } else if !isEmailValidated {
+                message = "이메일 중복 확인이 필요합니다."
+            } else {
+                message = "닉네임 중복 확인이 필요합니다."
+            }
+            presentAlert(title: "중복 확인 필요", message: message)
             return
         }
         
@@ -562,9 +614,6 @@ class SignUpViewController: UIViewController  {
         }
         */
     }
-    
-
-
 }
 
 // MARK: - TermsViewControllerDelegate
@@ -631,27 +680,55 @@ private func configureValidationLabel(_ label: UILabel) {
     label.textColor = .red // 유효성 검사 실패 메시지는 빨간색으로 표시
 }
 
-
-#if DEBUG
-
-import SwiftUI
-
-//UIViewControllerRepresentable는 SwiftUI내에서 UIViewController를 사용할 수 있게 해줌
-struct ViewControllerPresentable : UIViewControllerRepresentable {
-    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+extension SignUpViewController: UITextFieldDelegate {
+    // UITextFieldDelegate 프로토콜의 textFieldShouldReturn 메서드 구현
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        // 텍스트 입력이 변경될 때마다 로그인 버튼의 색상을 업데이트합니다.
+        updateSignUpButton()
+        return true
+    }
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        updateSignUpButton()
+    }
+    private func updateSignUpButton() {
+        guard let email = emailTextField.text, !email.isEmpty,
+              let password = passwordTextField.text, !password.isEmpty,
+              let confirmPassword = confirmPasswordTextField.text, !confirmPassword.isEmpty,
+              let userName = userNameTextField.text, !userName.isEmpty else {
+            signUpButton.setTitleColor(UIColor(hex: "#C82D6B"), for: .normal)
+            signUpButton.backgroundColor = .clear
+            signUpButton.layer.borderWidth = 1.5
+            signUpButton.layer.borderColor = UIColor(hex: "#C82D6B").cgColor
+            return
+        }
+            signUpButton.setTitleColor(.white, for: .normal)
+            signUpButton.layer.borderWidth = 0
+            signUpButton.layer.borderColor = UIColor.clear.cgColor
+            signUpButton.layer.cornerRadius = 16
+            signUpButton.setInstagram()
+        }
     }
     
-    func makeUIViewController(context: Context) -> some UIViewController {
-        SignUpViewController()
+#if DEBUG
+    
+    import SwiftUI
+    
+    //UIViewControllerRepresentable는 SwiftUI내에서 UIViewController를 사용할 수 있게 해줌
+    struct ViewControllerPresentable : UIViewControllerRepresentable {
+        func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+        }
+        
+        func makeUIViewController(context: Context) -> some UIViewController {
+            SignUpViewController()
+        }
     }
-}
-
-// 미리보기 제공
-struct ViewControllerPresentable_PreviewProvider : PreviewProvider {
-    static var previews: some View{
-        ViewControllerPresentable()
+    
+    // 미리보기 제공
+    struct ViewControllerPresentable_PreviewProvider : PreviewProvider {
+        static var previews: some View{
+            ViewControllerPresentable()
+        }
     }
-}
-
-
+    
+    
 #endif
