@@ -51,6 +51,25 @@ class OpenCapsuleViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         messageButton.setInstagram()
+        
+        // 메모리 텍스트 뷰와 메시지 버튼 사이의 간격 동적 조정 로직
+        let screenHeight = UIScreen.main.bounds.height
+        let gap: CGFloat = screenHeight < 667 ? 10 : 20 // 예를 들어 iPhone 15 Pro의 경우 gap을 조금 줄여봅니다.
+        // 이미지 인디케이터(pageControl)와 memoryTextView 사이의 간격 조정
+        let gapBetweenPageControlAndMemoryTextView: CGFloat = 5 // 원하는 간격으로 조절
+
+        // 여기서 pageControl의 하단과 memoryTextView의 상단 사이의 간격을 설정합니다.
+        memoryTextView.snp.remakeConstraints { make in
+            // pageControl의 하단에 연결해야 합니다.
+            make.top.equalTo(pageControl.snp.bottom).offset(gapBetweenPageControlAndMemoryTextView)
+            make.centerX.equalToSuperview()
+            make.left.right.equalToSuperview().inset(20)
+            // messageButton 위에 위치하도록 하되, 최소 gap 만큼의 간격을 유지합니다.
+            make.bottom.lessThanOrEqualTo(messageButton.snp.top).offset(-gap)
+        }
+
+        // memoryTextView의 최종 위치와 크기를 로깅하여 디버깅
+        print("memoryTextView frame: \(memoryTextView.frame)")
     }
     
     private func setupImageScrollView(with imagesCount: Int) {
@@ -233,27 +252,33 @@ class OpenCapsuleViewController: UIViewController, UIScrollViewDelegate {
         
         // 위치 레이블 초기화 및 설정
         locationLabel = UILabel()
-        locationLabel.text = "Loading.."
-        locationLabel.font = UIFont.systemFont(ofSize: 12)
-        locationLabel.textAlignment = .center
-        view.addSubview(locationLabel)
+        locationLabel.text = "서울 영등포 여의도동 330"
+        locationLabel.font = UIFont.systemFont(ofSize: 12) // 원래대로 폰트 사이즈 조정
         locationLabel.textAlignment = .left
+        locationLabel.adjustsFontSizeToFitWidth = false // 글자 크기 자동 조정 비활성화
+        locationLabel.numberOfLines = 1 // 한 줄로 설정
+        view.addSubview(locationLabel)
         locationLabel.snp.makeConstraints { make in
             make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading).offset(16)
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(50)
+            make.trailing.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.trailing).offset(-16)
+            make.top.equalTo(topBarView.snp.bottom).offset(8) // 값을 조절하여 레이블에 충분한 공간을 할당
+            // 높이 제약 조건 삭제
         }
-        
+
         // 세부 주소 레이블 초기화 및 설정
         detailedAddressLabel = UILabel()
         detailedAddressLabel.text = "Loading.."
-        detailedAddressLabel.font = UIFont.systemFont(ofSize: 10)
+        detailedAddressLabel.font = UIFont.systemFont(ofSize: 10) // 원래대로 폰트 사이즈 조정
         detailedAddressLabel.textColor = .gray
-        detailedAddressLabel.textAlignment = .center
-        view.addSubview(detailedAddressLabel)
         detailedAddressLabel.textAlignment = .left
+        detailedAddressLabel.adjustsFontSizeToFitWidth = false // 글자 크기 자동 조정 비활성화
+        detailedAddressLabel.numberOfLines = 1 // 한 줄로 설정
+        view.addSubview(detailedAddressLabel)
         detailedAddressLabel.snp.makeConstraints { make in
-            make.leading.equalTo(locationLabel.snp.leading) // 위치 레이블과 동일한 leading
-            make.top.equalTo(locationLabel.snp.bottom).offset(0.5)
+            make.leading.equalTo(locationLabel.snp.leading)
+            make.trailing.equalTo(locationLabel.snp.trailing)
+            make.top.equalTo(locationLabel.snp.bottom).offset(4) // 값을 조절하여 간격 설정
+            // 높이 제약 조건 삭제
         }
         
         // 이미지 뷰 설정
@@ -291,7 +316,7 @@ class OpenCapsuleViewController: UIViewController, UIScrollViewDelegate {
                                 굉장히 즐거웠던 날이에요.😋
                                 """
         memoryTextView.isEditable = false
-        memoryTextView.isScrollEnabled = false
+        memoryTextView.isScrollEnabled = true
         memoryTextView.font = UIFont.systemFont(ofSize: 14) // 폰트 설정
         memoryTextView.textAlignment = .center
         view.addSubview(memoryTextView)
