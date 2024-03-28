@@ -512,8 +512,18 @@ class SignUpViewController: UIViewController  {
         guard let email = emailTextField.text, !email.isEmpty,
               let password = passwordTextField.text, !password.isEmpty,
               let userName = userNameTextField.text, !userName.isEmpty,
-              let profileImage = profileImageView.image else {
-            presentAlert(title: "입력 오류", message: "모든 필드를 채워주세요.")
+
+              let profileImage = profileImageView.image,
+              emailValidationLabel.text == "이메일 확인이 완료 되었습니다.",
+              userNameValidationLabel.text == "닉네임 확인이 완료 되었습니다." else {
+                presentAlert(title: "입력 오류", message: "모든 필드를 채워주세요.")
+                return
+        }
+        
+        // 비밀번호 강도 검사
+        guard isPasswordStrong(password) else {
+            presentAlert(title: "비밀번호 오류", message: "비밀번호는 8자 이상이어야 합니다.")
+
             return
         }
         // 각각의 중복 확인을 수행하고, 중복 여부를 확인하는 변수 추가
@@ -533,6 +543,7 @@ class SignUpViewController: UIViewController  {
             presentAlert(title: "중복 확인 필요", message: message)
             return
         }
+        
         
         let termsVC = TermsViewController()
         
