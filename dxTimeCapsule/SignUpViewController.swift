@@ -478,9 +478,16 @@ class SignUpViewController: UIViewController  {
               let profileImage = profileImageView.image,
               emailValidationLabel.text == "이메일 확인이 완료 되었습니다.",
               userNameValidationLabel.text == "닉네임 확인이 완료 되었습니다." else {
-            presentAlert(title: "입력 오류", message: "모든 필드를 채워주세요.")
+                presentAlert(title: "입력 오류", message: "모든 필드를 채워주세요.")
+                return
+        }
+        
+        // 비밀번호 강도 검사
+        guard isPasswordStrong(password) else {
+            presentAlert(title: "비밀번호 오류", message: "비밀번호는 8자 이상이어야 합니다.")
             return
         }
+        
         
         let termsVC = TermsViewController()
         
