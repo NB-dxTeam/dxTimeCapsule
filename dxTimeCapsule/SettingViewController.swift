@@ -31,7 +31,7 @@ class SettingViewController: UIViewController, UITableViewDelegate, UITableViewD
         super.viewDidLoad()
         setupNavigationBar()
         setupTableView()
-        setupSwitch()
+//        setupSwitch()
     }
     
     // MARK: - Setup
@@ -65,12 +65,12 @@ class SettingViewController: UIViewController, UITableViewDelegate, UITableViewD
         backButton.leadingAnchor.constraint(equalTo: navigationController!.navigationBar.leadingAnchor, constant: 20).isActive = true
     }
     
-    func setupSwitch() {
-        // 이전에 저장된 스위치 상태를 불러옴
-        let savedSwitchState = UserDefaults.standard.bool(forKey: cameraPermissionKey)
-        cameraSwitch.isOn = savedSwitchState
-        cameraSwitch.addTarget(self, action: #selector(switchValueChanged(_:)), for: .valueChanged)
-    }
+//    func setupSwitch() {
+//        // 이전에 저장된 스위치 상태를 불러옴
+//        let savedSwitchState = UserDefaults.standard.bool(forKey: cameraPermissionKey)
+//        cameraSwitch.isOn = savedSwitchState
+//        cameraSwitch.addTarget(self, action: #selector(switchValueChanged(_:)), for: .valueChanged)
+//    }
     
     // 권한 상태를 UserDefaults에 저장하는 함수
     func savePermissionStatus(isGranted: Bool) {
@@ -177,41 +177,41 @@ class SettingViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     // MARK: - Private Methods
     
-    @objc func switchValueChanged(_ sender: UISwitch) {
-        guard let cell = sender.superview as? UITableViewCell, let indexPath = tableView.indexPath(for: cell) else { return }
-
-        if sender.isOn {
-            // 스위치가 켜진 경우
-            AVCaptureDevice.requestAccess(for: .video) { granted in
-                DispatchQueue.main.async {
-                    if granted {
-                        self.savePermissionStatus(isGranted: true)
-                        self.showAlert(title: "Success", message: "카메라 권한이 허용되었습니다.")
-                        UserDefaults.standard.set(true, forKey: self.cameraPermissionKey)
-                    } else {
-                        self.savePermissionStatus(isGranted: true)
-                        self.showAlert(title: "Success", message: "카메라 권한이 허용되었습니다.")
-                        UserDefaults.standard.set(true, forKey: self.cameraPermissionKey)
-                    }
-                }
-            }
-        } else {           
-            AVCaptureDevice.requestAccess(for: .video) { granted
-                in
-                DispatchQueue.main.async {
-                    if granted {
-                    self.savePermissionStatus(isGranted: false)
-                    self.showAlert(title: "Success", message: "카메라 권한이 해제되었습니다.")
-                        UserDefaults.standard.set(false, forKey: self.cameraPermissionKey)
-                    } else {
-                        self.savePermissionStatus(isGranted: false)
-                        self.showAlert(title: "Success", message: "카메라 권한이 해제되었습니다.")
-                        UserDefaults.standard.set(false, forKey: self.cameraPermissionKey)
-                    }
-                }
-            }
-        }
-    }
+//    @objc func switchValueChanged(_ sender: UISwitch) {
+//        guard let cell = sender.superview as? UITableViewCell, let indexPath = tableView.indexPath(for: cell) else { return }
+//
+//        if sender.isOn {
+//            // 스위치가 켜진 경우
+//            AVCaptureDevice.requestAccess(for: .video) { granted in
+//                DispatchQueue.main.async {
+//                    if granted {
+//                        self.savePermissionStatus(isGranted: true)
+//                        self.showAlert(title: "Success", message: "카메라 권한이 허용되었습니다.")
+//                        UserDefaults.standard.set(true, forKey: self.cameraPermissionKey)
+//                    } else {
+//                        self.savePermissionStatus(isGranted: true)
+//                        self.showAlert(title: "Success", message: "카메라 권한이 허용되었습니다.")
+//                        UserDefaults.standard.set(true, forKey: self.cameraPermissionKey)
+//                    }
+//                }
+//            }
+//        } else {           
+//            AVCaptureDevice.requestAccess(for: .video) { granted
+//                in
+//                DispatchQueue.main.async {
+//                    if granted {
+//                    self.savePermissionStatus(isGranted: false)
+//                    self.showAlert(title: "Success", message: "카메라 권한이 해제되었습니다.")
+//                        UserDefaults.standard.set(false, forKey: self.cameraPermissionKey)
+//                    } else {
+//                        self.savePermissionStatus(isGranted: false)
+//                        self.showAlert(title: "Success", message: "카메라 권한이 해제되었습니다.")
+//                        UserDefaults.standard.set(false, forKey: self.cameraPermissionKey)
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     
     @objc private func deleteProfileTapped() {

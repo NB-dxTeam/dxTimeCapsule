@@ -584,7 +584,6 @@ class HomeViewController: UIViewController {
         hostingController.view.frame = view.bounds
         hostingController.view.backgroundColor = UIColor.white.withAlphaComponent(1.0)
         hostingController.didMove(toParent: self)
-        print("showLoadingIndicator가 실행되었습니다")
     }
 
     private func hideLoadingIndicator() {
@@ -594,7 +593,6 @@ class HomeViewController: UIViewController {
                 hostingController.willMove(toParent: nil)
                 hostingController.view.removeFromSuperview()
                 hostingController.removeFromParent()
-                print("hideLoadingIndicator가 실행되었습니다")
                 break
             }
         }
