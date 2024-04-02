@@ -25,11 +25,6 @@ class LoginViewController: UIViewController {
         button.layer.borderWidth = 1.5 // 라인의 너비 설정
         button.layer.borderColor = UIColor(hex: "#C82D6B").cgColor
         
-        // 그림자 설정
-//        button.layer.shadowColor = UIColor.black.cgColor
-//        button.layer.shadowRadius = 6 // 그림자의 블러 정도 설정 (조금 더 부드럽게)
-//        button.layer.shadowOpacity = 0.3 // 그림자의 투명도 설정 (적당한 농도로)
-//        button.layer.shadowOffset =  CGSize(width: 0, height: 3) // 그림자
         return button
     }()
     
@@ -42,12 +37,7 @@ class LoginViewController: UIViewController {
         button.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 16)
         button.layer.borderWidth = 1.5 // 라인의 너비 설정
         button.layer.borderColor = UIColor(hex: "#C82D6B").cgColor
-//        button.layer.shadowOffset =  CGSize(width: 0, height: 3)
-//        button.layer.shadowColor = UIColor.black.cgColor
-//        button.layer.shadowRadius = 6 // 그림자의 블러 정도 설정 (조금 더 부드럽게)
-//        button.layer.shadowOpacity = 0.2 // 그림자의 투명도 설정 (적당한 농도로)
-//        button.layer.shadowOffset =  CGSize(width: 0, height: 3) // 그림
-        
+
         return button
     }()
     
@@ -59,6 +49,7 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        checkForUpdates()
         keyBoardHide()
         setupSignUpButtonAction() // 회원가입 버튼의 액션을 설정하는 메서드 호출
         setupViews()
@@ -67,7 +58,7 @@ class LoginViewController: UIViewController {
         emailTextField.delegate = self
         passwordTextField.delegate = self
         
-        // Test 자동기입
+//        // Test 자동기입
 //        emailTextField.text =  "test1@gmail.com"
 //        passwordTextField.text = "12345678"
     }
@@ -82,10 +73,6 @@ class LoginViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        //        loginButton.backgroundColor = UIColor(hex: "#FF3A4A")
-        //        socialLogin.backgroundColor = UIColor(hex: "#FF3A4A")
- 
     }
     
     override func keyboardWillShow(notification: NSNotification) {
@@ -107,13 +94,33 @@ class LoginViewController: UIViewController {
             shouldMoveViewUp = true
         }
         
-        // 뷰를 올려야 하는 경우, 텍스트 필드의 하단과 키보드의 상단 사이의 거리만큼 뷰를 이동
         if(shouldMoveViewUp) {
             self.view.frame.origin.y = 0 - (bottomOfTextField - topOfKeyboard)
         }
     }
     
-    override func keyboardWillHide(notification: NSNotification) {
+    func checkForUpdates() {
+        guard let latestVersionNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String else {
+            print("Failed to retrieve the latest version number.")
+            return
+        }
+        
+        let currentVersionNumber = UserDefaults.standard.string(forKey: "currentVersionNumber")
+        
+        if latestVersionNumber != currentVersionNumber {
+            showUpdateAlert()
+        }
+    }
+    
+    func showUpdateAlert() {
+        let alert = UIAlertController(title: "새로운 업데이트", message: "새로운 업데이트가 있습니다. 지금 업데이트하시겠습니까?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "업데이트", style: .default, handler: { (_) in
+        }))
+        alert.addAction(UIAlertAction(title: "나중에", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+   override func keyboardWillHide(notification: NSNotification) {
         // 키보드가 사라질 때 원래 위치로 뷰를 이동
         self.view.frame.origin.y = 0
     }
@@ -218,9 +225,7 @@ class LoginViewController: UIViewController {
         
         // 회원가입 버튼 레이아웃 설정
         signUpButton.snp.makeConstraints { make in
-            let offset = UIScreen.main.bounds.height * (0.15/6.0)
             make.centerX.equalToSuperview()
-           // make.top.equalTo(loginButton.snp.bottom).offset(offset)
             make.left.right.equalTo(emailTextField)
             make.height.equalToSuperview().multipliedBy(0.24/5.0)
             make.bottom.equalToSuperview().multipliedBy(4.07/5.0)
@@ -238,7 +243,6 @@ class LoginViewController: UIViewController {
         forgotPWLabel.snp.makeConstraints { make in
             make.top.equalTo(dividerView.snp.bottom).offset(15)
             make.centerX.equalToSuperview()
-            // 높이를 명시적으로 설정
             make.height.equalTo(20)
         }
         

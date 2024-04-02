@@ -59,7 +59,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         super.viewDidLoad()
         setupViews()
         setupConstraints()
-//        settingButtonToNavigationBar()
+        settingButtonToNavigationBar()
         showLoadingIndicator() // 데이터 로딩 전 로딩 인디케이터 표시
         userProfileViewModel.fetchUserData { [weak self] in
             self?.hideLoadingIndicator()
@@ -74,6 +74,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         profileImageView.layer.cornerRadius = imageSize / 2
 //        logoutButton.backgroundColor = UIColor(hex: "#FF3A4A")
         logoutButton.setInstagram()
+        logoutButton.layer.cornerRadius = 16
     }
     
     // MARK: - Setup
@@ -113,7 +114,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         editLabel.text = "Edit"
         editLabel.font = UIFont.pretendardBold(ofSize: 15)
         editLabel.textColor =  .white
-        
+        editLabel.backgroundColor = UIColor.gray.withAlphaComponent(0.5)
         view.addSubview(editLabel)
         
         editLabel.snp.makeConstraints { make in
@@ -139,15 +140,13 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         logoutButton.setTitle("Logout", for: .normal)
         logoutButton.addTarget(self, action: #selector(logoutTapped), for: .touchUpInside)
         logoutButton.layer.cornerRadius = 16
-//        logoutButton.backgroundColor = UIColor(hex: "#FF3A4A")
-        logoutButton.setInstagram()
         logoutButton.titleLabel?.font = UIFont.pretendardSemiBold(ofSize: 16)
         
-        // 그림자 설정
-        logoutButton.layer.shadowColor = UIColor.black.cgColor
-        logoutButton.layer.shadowRadius = 6 // 그림자의 블러 정도 설정 (조금 더 부드럽게)
-        logoutButton.layer.shadowOpacity = 0.3 // 그림자의 투명도 설정 (적당한 농도로)
-        logoutButton.layer.shadowOffset =  CGSize(width: 0, height: 3) // 그림자 방향 설정 (아래로 조금 더 멀리)
+//        // 그림자 설정
+//        logoutButton.layer.shadowColor = UIColor.black.cgColor
+//        logoutButton.layer.shadowRadius = 6 // 그림자의 블러 정도 설정 (조금 더 부드럽게)
+//        logoutButton.layer.shadowOpacity = 0.3 // 그림자의 투명도 설정 (적당한 농도로)
+//        logoutButton.layer.shadowOffset =  CGSize(width: 0, height: 3) // 그림자 방향 설정 (아래로 조금 더 멀리)
         
         
         logoutButton.snp.makeConstraints { make in
@@ -164,45 +163,48 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         // Divider View Setup
         dividerView.backgroundColor = .lightGray
         
-        // "정말 탈퇴하실건가요?" 라벨 설정
-        areYouSerious.text = "Are you really going to leave?"
-        areYouSerious.font = .pretendardSemiBold(ofSize: 14)
-        areYouSerious.textColor = .black
+//        // "정말 탈퇴하실건가요?" 라벨 설정
+//        areYouSerious.text = "Are you really going to leave?"
+//        areYouSerious.font = .pretendardSemiBold(ofSize: 14)
+//        areYouSerious.textColor = .black
+//        
+//        // Delete Account Label Setup
+//        deleteAccountLabel.text = "Leave Account"
+//        deleteAccountLabel.font = .pretendardSemiBold(ofSize: 14)
+//        deleteAccountLabel.textColor = UIColor(hex: "#C82D6B")
+//        deleteAccountLabel.textAlignment = .center
+//        
+//        labelsContainerView.addSubview(areYouSerious)
+//        labelsContainerView.addSubview(deleteAccountLabel)
         
-        // Delete Account Label Setup
-        deleteAccountLabel.text = "Leave Account"
-        deleteAccountLabel.font = .pretendardSemiBold(ofSize: 14)
-        deleteAccountLabel.textColor = UIColor(hex: "#C82D6B")
-        deleteAccountLabel.textAlignment = .center
-        
-        labelsContainerView.addSubview(areYouSerious)
-        labelsContainerView.addSubview(deleteAccountLabel)
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(deleteProfileTapped))
-        deleteAccountLabel.isUserInteractionEnabled = true // 사용자 인터랙션 활성화
-        deleteAccountLabel.addGestureRecognizer(tapGesture)
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(deleteProfileTapped))
+//        deleteAccountLabel.isUserInteractionEnabled = true // 사용자 인터랙션 활성화
+//        deleteAccountLabel.addGestureRecognizer(tapGesture)
     }
 
     private func setupConstraints() {
         // Profile Image View Constraints
         profileImageView.snp.makeConstraints { make in
+            let offset = UIScreen.main.bounds.height * (0.8/6.0)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(offset)
             make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(-130)
-            make.height.equalToSuperview().multipliedBy(0.2)
             make.width.equalTo(profileImageView.snp.height)
-            profileImageView.setRoundedImage()
+            make.height.equalToSuperview().multipliedBy(1.05/5.0)
         }
         
         // Nickname Label Constraints
         userNameLabel.snp.makeConstraints { make in
+            let offset1 = UIScreen.main.bounds.height * (0.15/6.0)
+            make.top.equalTo(profileImageView.snp.bottom).offset(offset1)
             make.centerX.equalToSuperview()
-            make.top.equalTo(profileImageView.snp.bottom).offset(20)
-            // 텍스트에 맞게 라벨의 너비를 동적으로 조절하도록 설정합니다.
+            make.height.equalToSuperview().multipliedBy(0.24/5.0)
         }
         userNameLabel.setContentHuggingPriority(.required, for: .vertical)
         userNameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         
         editUserNameButton.snp.makeConstraints { make in
+            let offset1 = UIScreen.main.bounds.height * (0.15/6.0)
+            make.top.equalTo(profileImageView.snp.bottom).offset(offset1)
             make.centerY.equalTo(userNameLabel)
             make.leading.equalTo(userNameLabel.snp.trailing).offset(10)
             make.width.height.equalTo(24)  // Adjust the size as needed
@@ -217,46 +219,49 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         
         // Logout Button Constraints
         logoutButton.snp.makeConstraints { make in
+            let offset = UIScreen.main.bounds.width * (0.28/2.0)
             make.centerX.equalToSuperview()
-            make.top.equalTo(emailLabel.snp.bottom).offset(20)
-            make.left.right.equalToSuperview().inset(50)
-            make.height.equalTo(50)
+            make.left.right.equalToSuperview().inset(offset)
+            make.height.equalToSuperview().multipliedBy(0.24/5.0)
+            make.bottom.equalToSuperview().multipliedBy(4.07/5.0)
+            //make.bottom.equalToSuperview().multipliedBy(3.7/5.0)
         }
         
         friendListButton.snp.makeConstraints { make in
+            let offset = UIScreen.main.bounds.height * (0.3/6.0)
             make.centerX.equalToSuperview()
-            make.top.equalTo(logoutButton.snp.bottom).offset(20)
-            make.left.right.equalToSuperview().inset(50)
+            make.top.equalTo(logoutButton.snp.top).offset(-offset)
+            make.left.right.equalToSuperview().inset(20)
             make.height.equalTo(20)
         }
         
-        // Ensure dividerView is added to the view before setting constraints
-        dividerView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-70)
-            make.left.right.equalToSuperview().inset(20)
-            make.height.equalTo(1)
-        }
+//        // Ensure dividerView is added to the view before setting constraints
+//        dividerView.snp.makeConstraints { make in
+//            make.centerX.equalToSuperview()
+//            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+//            make.left.right.equalToSuperview().inset(20)
+//            make.height.equalTo(1)
+//        }
         
         // labelsContainerView에 대한 높이 제약 조건 추가
-        labelsContainerView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(dividerView.snp.bottom).offset(15)
-            // 높이를 명시적으로 설정
-            make.height.equalTo(20)
-        }
-        
-        // Delete Account Label Constraints
-        areYouSerious.snp.makeConstraints { make in
-            make.left.equalTo(labelsContainerView.snp.left)
-            make.centerY.equalTo(labelsContainerView.snp.centerY)
-        }
-        
-        deleteAccountLabel.snp.makeConstraints { make in
-            make.right.equalTo(labelsContainerView.snp.right)
-            make.centerY.equalTo(labelsContainerView.snp.centerY)
-            make.left.equalTo(areYouSerious.snp.right).offset(5)
-        }
+//        labelsContainerView.snp.makeConstraints { make in
+//            make.centerX.equalToSuperview()
+//            make.top.equalTo(dividerView.snp.bottom).offset(15)
+//            // 높이를 명시적으로 설정
+//            make.height.equalTo(20)
+//        }
+//        
+//        // Delete Account Label Constraints
+//        areYouSerious.snp.makeConstraints { make in
+//            make.left.equalTo(labelsContainerView.snp.left)
+//            make.centerY.equalTo(labelsContainerView.snp.centerY)
+//        }
+//        
+//        deleteAccountLabel.snp.makeConstraints { make in
+//            make.right.equalTo(labelsContainerView.snp.right)
+//            make.centerY.equalTo(labelsContainerView.snp.centerY)
+//            make.left.equalTo(areYouSerious.snp.right).offset(5)
+//        }
         
         // 로딩 인디케이터 제약 조건 추가
          loadingIndicator.snp.makeConstraints { make in
@@ -425,73 +430,6 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         self.present(friendListViewController, animated: true, completion: nil)
     }
     
-    
-    @objc private func deleteProfileTapped() {
-        let alertController = UIAlertController(title: "회원 탈퇴", message: "정말로 계정을 삭제하시겠습니까?\n 소중한 추억들이 영원히 사라집니다.", preferredStyle: .alert)
-
-        let deleteAction = UIAlertAction(title: "탈퇴하기", style: .destructive) { [weak self] _ in
-            self?.deleteAccount()
-        }
-        alertController.addAction(deleteAction)
-
-        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-        alertController.addAction(cancelAction)
-
-        present(alertController, animated: true)
-    }
-
-    private func deleteAccount() {
-        // 사용자 ID를 가져옵니다.
-        guard let userId = Auth.auth().currentUser?.uid else { return }
-        
-        // Firestore에서 사용자 데이터 삭제
-        let userDocument = Firestore.firestore().collection("users").document(userId)
-        userDocument.delete { error in
-            if let error = error {
-                // Firestore에서 사용자 데이터 삭제 실패 처리
-                print("Firestore에서 사용자 데이터 삭제 실패: \(error.localizedDescription)")
-                return
-            }
-            
-            // Firebase Storage에서 사용자 이미지 삭제
-            let storageRef = Storage.storage().reference().child("userProfileImages/\(userId)")
-            storageRef.delete { error in
-                if let error = error as NSError? {
-                    // Storage 오류 코드 확인
-                    if error.domain == StorageErrorDomain && error.code == StorageErrorCode.objectNotFound.rawValue {
-                        // 이미지가 존재하지 않는 경우, 오류를 무시하고 계속 진행
-                        print("이미지가 존재하지 않으므로 삭제 과정을 건너뜁니다.")
-                    } else {
-                        // 다른 유형의 오류 처리
-                        print("Storage에서 이미지 삭제 실패: \(error.localizedDescription)")
-                    }
-                    return
-                }
-                // 이미지 삭제 성공 처리
-                print("이미지가 성공적으로 삭제되었습니다.")
-            }
-            
-            // Firebase Authentication에서 사용자 삭제
-            Auth.auth().currentUser?.delete { error in
-                if let error = error {
-                    // 사용자 삭제 실패 처리
-                    print("사용자 삭제 실패: \(error.localizedDescription)")
-                } else {
-                    // 성공적으로 모든 작업 완료 후 처리
-                    print("사용자 계정 및 데이터 삭제 완료")
-                    DispatchQueue.main.async {
-                        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
-                        guard let sceneDelegate = windowScene.delegate as? SceneDelegate else { return }
-                        
-                        let loginViewController = LoginViewController()
-                        sceneDelegate.window?.rootViewController = loginViewController
-                        sceneDelegate.window?.makeKeyAndVisible()
-                    }
-                }
-            }
-        }
-    }
-    
     @objc private func changePhotoTapped() {
         let alertController = UIAlertController(title: "프로필 사진 변경", message: "사진을 선택해주세요.", preferredStyle: .actionSheet)
 
@@ -541,6 +479,8 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     }
     
     @objc private func settingButtonTapped() {
+        let settingVC = SettingViewController()
+        navigationController?.pushViewController(settingVC, animated: true)
     }
     
     // MARK: - Image Upload
@@ -583,16 +523,6 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     }
     
 }
-
-func configureButton(_ button: UIButton, title: String) {
-    button.setTitle(title, for: .normal)
-    button.setTitleColor(.white, for: .normal)
-    button.layer.cornerRadius = 12
-    button.snp.makeConstraints { make in
-        make.height.equalTo(44)
-    }
-}
-
 
 #if DEBUG
 

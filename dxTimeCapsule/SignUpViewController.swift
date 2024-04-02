@@ -119,6 +119,7 @@ class SignUpViewController: UIViewController  {
         editLabel.text = "Edit"
         editLabel.font = UIFont.pretendardBold(ofSize: 15)
         editLabel.textColor =  .white
+        editLabel.backgroundColor = UIColor.gray.withAlphaComponent(0.5)
         
         view.addSubview(editLabel)
         

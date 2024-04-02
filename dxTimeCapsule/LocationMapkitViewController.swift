@@ -120,6 +120,7 @@ class LocationMapkitViewController: UIViewController, CLLocationManagerDelegate,
         locationManager = CLLocationManager()
         locationManager.delegate = self
         mapView.showsUserLocation = true
+        
         if CLLocationManager.locationServicesEnabled() {
             switch locationManager.authorizationStatus {
             case .notDetermined:

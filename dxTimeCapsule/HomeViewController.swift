@@ -31,10 +31,10 @@ class HomeViewController: UIViewController {
         let view = UIView()
         view.backgroundColor = .white
         view.layer.cornerRadius = 10
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.5
-        view.layer.shadowOffset = CGSize(width: 2, height: 4)
-        view.layer.shadowRadius = 7
+//        view.layer.shadowColor = UIColor.black.cgColor
+//        view.layer.shadowOpacity = 0.5
+//        view.layer.shadowOffset = CGSize(width: 2, height: 4)
+//        view.layer.shadowRadius = 7
         return view
     }()
     
@@ -76,17 +76,37 @@ class HomeViewController: UIViewController {
         return label
     }()
     
-    // D-Day 레이블
-    let dDayLabel: VerticallyAlignedLabel = {
-        let label = VerticallyAlignedLabel()
-        label.text = "D-DAY"
-        label.font = UIFont.boldSystemFont(ofSize: 15)
-        label.textColor = UIColor(hex: "#C82D68")
-        label.textAlignment = .right
-     //   label.backgroundColor = .yellow
-        label.verticalAlignment = .top
+    // D-Day 정보를 표시하는 레이블
+    lazy var dDayBackgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .red
+        view.layer.cornerRadius = 12 // 모서리 둥글기 반지름 설정
+        view.clipsToBounds = true // 모서리 둥글기 적용을 위해 필요
+        return view
+    }()
+    
+    // D-Day 정보를 표시하는 레이블
+    lazy var dDayLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 15, weight: .bold)
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.25
+        label.textColor = .white
+        label.textAlignment = .center
         return label
     }()
+    
+//    // D-Day 레이블
+//    let dDayLabel: VerticallyAlignedLabel = {
+//        let label = VerticallyAlignedLabel()
+//        label.text = "D-DAY"
+//        label.font = UIFont.boldSystemFont(ofSize: 15)
+//        label.textColor = UIColor(hex: "#C82D68")
+//        label.textAlignment = .right
+//     //   label.backgroundColor = .yellow
+//        label.verticalAlignment = .top
+//        return label
+//    }()
     
     // MARK: - StackViews
     
@@ -97,7 +117,7 @@ class HomeViewController: UIViewController {
         stackView.alignment = .fill
         stackView.spacing = 0
         stackView.addArrangedSubview(self.locationNameLabel)
-        stackView.addArrangedSubview(self.dDayLabel)
+        stackView.addArrangedSubview(self.dDayBackgroundView)
         return stackView
     }()
     
@@ -213,16 +233,16 @@ class HomeViewController: UIViewController {
         return button
     }()
     
-    let openedButtonContainerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 10
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.5
-        view.layer.shadowOffset = CGSize(width: 2, height: 4)
-        view.layer.shadowRadius = 7
-        return view
-    }()
+//    let openedButtonContainerView: UIView = {
+//        let view = UIView()
+//        view.backgroundColor = .white
+//        view.layer.cornerRadius = 10
+//        view.layer.shadowColor = UIColor.black.cgColor
+//        view.layer.shadowOpacity = 0.5
+//        view.layer.shadowOffset = CGSize(width: 2, height: 4)
+//        view.layer.shadowRadius = 7
+//        return view
+//    }()
     
     // 다가오는 타임캡슐 버튼
     let upcomingTCButton: UIButton = {
@@ -251,22 +271,22 @@ class HomeViewController: UIViewController {
         return button
     }()
     
-    let upcomingButtonContainerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 10
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.5
-        view.layer.shadowOffset = CGSize(width: 2, height: 4)
-        view.layer.shadowRadius = 7
-        return view
-    }()
+//    let upcomingButtonContainerView: UIView = {
+//        let view = UIView()
+//        view.backgroundColor = .white
+//        view.layer.cornerRadius = 10
+//        view.layer.shadowColor = UIColor.black.cgColor
+//        view.layer.shadowOpacity = 0.5
+//        view.layer.shadowOffset = CGSize(width: 2, height: 4)
+//        view.layer.shadowRadius = 7
+//        return view
+//    }()
     
     // MARK: - Other UI properties
     
     // 버튼 스택뷰
     lazy var buttonStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [openedButtonContainerView, upcomingButtonContainerView])
+        let stackView = UIStackView(arrangedSubviews: [openedTCButton, upcomingTCButton])
         stackView.axis = .horizontal
         stackView.spacing = 20
         stackView.alignment = .fill
@@ -291,10 +311,16 @@ class HomeViewController: UIViewController {
     
     private func addLogoToNavigationBar() {
         // 로고 이미지 설정
-        let logoImage = UIImage(named: "App_Logo")
-        let imageView = UIImageView(image: logoImage)
-        imageView.contentMode = .scaleAspectFit
-        
+        let appNameLabel : UILabel = {
+            let label = UILabel()
+            label.text = "Memorium"
+            label.font = UIFont.proximaNovaBold(ofSize: 30)
+            label.adjustsFontSizeToFitWidth = true
+            label.minimumScaleFactor = 0.5
+            label.textAlignment = .center
+            return label
+        }()
+            
         let addFriendsButton: UIButton = {
             let button = UIButton(type: .system)
             let image = UIImage(systemName: "person.badge.plus")?.withRenderingMode(.alwaysTemplate) // 이미지를 템플릿 모드로 설정
@@ -307,17 +333,13 @@ class HomeViewController: UIViewController {
             return button
         }()
         
-        let imageSize = CGSize(width: 120, height: 40)
-        imageView.frame = CGRect(origin: CGPoint(x: 0, y: -5), size: imageSize)
-        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height))
+        let spaceL = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        spaceL.width = 20
+        navigationItem.leftBarButtonItems = [spaceL, UIBarButtonItem(customView: appNameLabel)]
         
-        containerView.addSubview(imageView)
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: containerView)
-        
-        let space = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        space.width = 20
-        navigationItem.rightBarButtonItems = [space, UIBarButtonItem(customView: addFriendsButton)]
+        let spaceR = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        spaceR.width = 20
+        navigationItem.rightBarButtonItems = [spaceR, UIBarButtonItem(customView: addFriendsButton)]
     }
     
     // MARK: - UI Configuration
@@ -347,6 +369,18 @@ class HomeViewController: UIViewController {
             make.top.equalTo(mainContainerView.snp.bottom).offset(offset)
             make.leading.trailing.equalToSuperview().inset(30)
             make.height.equalToSuperview().multipliedBy(0.8/6.0)
+        }
+        duestTCInforStackView.addSubview(dDayBackgroundView)
+        dDayBackgroundView.snp.makeConstraints { make in
+            make.trailing.equalToSuperview()
+            make.height.equalTo(locationNameLabel).multipliedBy(2.0/3.0)
+        }
+        dDayBackgroundView.addSubview(dDayLabel)
+        
+        // dDayLabel의 레이아웃을 dDayBackgroundView 내부 중앙에 맞춤
+        dDayLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 2, left: 8, bottom: 2, right: 8)) // 여백 조정
         }
         
         view.addSubview(noMainTCStackView)
@@ -391,15 +425,15 @@ class HomeViewController: UIViewController {
         }
         noMainTCStackView.addSubview(addTCButton)
         
-        // 버튼 스택뷰에 버튼 추가
-        openedButtonContainerView.addSubview(openedTCButton)
-        openedTCButton.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        upcomingButtonContainerView.addSubview(upcomingTCButton)
-        upcomingTCButton.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
+//        // 버튼 스택뷰에 버튼 추가
+//        openedButtonContainerView.addSubview(openedTCButton)
+//        openedTCButton.snp.makeConstraints { make in
+//            make.edges.equalToSuperview()
+//        }
+//        upcomingButtonContainerView.addSubview(upcomingTCButton)
+//        upcomingTCButton.snp.makeConstraints { make in
+//            make.edges.equalToSuperview()
+//        }
         
         // 버튼 스택뷰를 뷰에 추가
         view.addSubview(buttonStackView)
@@ -550,7 +584,6 @@ class HomeViewController: UIViewController {
         hostingController.view.frame = view.bounds
         hostingController.view.backgroundColor = UIColor.white.withAlphaComponent(1.0)
         hostingController.didMove(toParent: self)
-        print("showLoadingIndicator가 실행되었습니다")
     }
 
     private func hideLoadingIndicator() {
@@ -560,7 +593,6 @@ class HomeViewController: UIViewController {
                 hostingController.willMove(toParent: nil)
                 hostingController.view.removeFromSuperview()
                 hostingController.removeFromParent()
-                print("hideLoadingIndicator가 실행되었습니다")
                 break
             }
         }
