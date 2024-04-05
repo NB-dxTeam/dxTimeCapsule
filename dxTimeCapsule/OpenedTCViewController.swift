@@ -37,14 +37,21 @@ class OpenedTCViewController: UITableViewController {
         toolbar.translatesAutoresizingMaskIntoConstraints = false // 오토레이아웃 사용
         // 툴바 색상 설정
         toolbar.barTintColor = UIColor.systemGray6.withAlphaComponent(0.5)
+        
+//        // Magnify 버튼 생성
+//        let magnifyButton = UIButton(type: .custom)
+//        magnifyButton.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
+//        magnifyButton.addTarget(self, action: #selector(magnifyButtonTapped), for: .touchUpInside)
+//        magnifyButton.tintColor = UIColor.systemGray
+//        let magnifyBarButton = UIBarButtonItem(customView: magnifyButton)
+        
         // Segmented Control을 UIBarButtonItem으로 변환
         let segmentedControlBarButton = UIBarButtonItem(customView: sortSegmentedControl)
         
         // 툴바 아이템 설정
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+       // toolbar.items = [magnifyBarButton, flexibleSpace, segmentedControlBarButton]
         toolbar.items = [flexibleSpace, segmentedControlBarButton]
-    
-        
         // 툴바의 레이아웃 제약 조건 설정
         toolbar.snp.makeConstraints { make in
             make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
@@ -56,6 +63,11 @@ class OpenedTCViewController: UITableViewController {
             tableView.tableHeaderView = toolbar
         }
     }
+
+//    @objc func magnifyButtonTapped() {
+//        // Magnify 버튼이 탭되었을 때 수행할 동작
+//    }
+
    
     // MARK: - UI Setup
     
