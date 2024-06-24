@@ -6,14 +6,19 @@ import FirebaseFirestore
 import FirebaseAuth
 
 class CapsuleMapViewController: UIViewController {
+    
+    // MARK: - Properties
     let capsuleMaps = MKMapView() // 지도 뷰
     var locationManager = CLLocationManager()
     var currentDetent: String? = nil
-    // 타임박스 정보와 태그된 친구들의 정보를 담을 배열
     var timeBoxAnnotationsData = [TimeBoxAnnotationData]()
     var timeBoxes: [TimeBox] = []
     var selectedTimeBoxAnnotationData: TimeBoxAnnotationData?
+    // 원래 지도의 중심 위치를 저장할 변수
+    private var originalCenterCoordinate: CLLocationCoordinate2D?
+    private var shouldShowModal = false
     private var selectedButton: UIButton?
+    
     lazy var friendsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -27,12 +32,7 @@ class CapsuleMapViewController: UIViewController {
         return collectionView
     }()
     
-    // 원래 지도의 중심 위치를 저장할 변수
-    private var originalCenterCoordinate: CLLocationCoordinate2D?
-    
-    private var shouldShowModal = false
     // 버튼을 생성하고 설정하는 클로저
-    
     private lazy var allButton: UIButton = {
         let button = UIButton()
         button.setTitle("전체", for: .normal)
@@ -347,7 +347,7 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
 }
 extension CapsuleMapViewController {
     func showModalVC() {
-        let vc = CustomModal()
+        let vc = TimeBoxListViewController()
         
         vc.isModalInPresentation = false
         // CustomModal에서 타임캡슐 선택 시 실행할 클로저 구현
@@ -598,7 +598,7 @@ extension CapsuleMapViewController {
     }
     // 뒤로가기 버튼 동작
     @objc private func backButtonTapped() {
-        if let presentedVC = presentedViewController, presentedVC is CustomModal {
+        if let presentedVC = presentedViewController, presentedVC is TimeBoxListViewController {
             presentedVC.dismiss(animated: true) { [weak self] in
                 self?.tabBarController?.selectedIndex = 0
             }

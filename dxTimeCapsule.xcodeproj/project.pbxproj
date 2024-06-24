@@ -32,7 +32,7 @@
 		1F24501F2B9B82D3002C68BB /* HalfModalPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F24501E2B9B82D3002C68BB /* HalfModalPresentationController.swift */; };
 		1F2450242B9BF0A4002C68BB /* DatePickerModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2450232B9BF0A4002C68BB /* DatePickerModalViewController.swift */; };
 		1F367EA62B8F803A00563908 /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F367EA52B8F803A00563908 /* UIColor+Hex.swift */; };
-		1F52DE1D2B972C9000EE2E1E /* CustomModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F52DE1C2B972C9000EE2E1E /* CustomModal.swift */; };
+		1F52DE1D2B972C9000EE2E1E /* TimeBoxListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F52DE1C2B972C9000EE2E1E /* TimeBoxListViewController.swift */; };
 		1F52F8B92B9CDADC00974F0B /* TagFriendListTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F52F8B82B9CDADC00974F0B /* TagFriendListTableCell.swift */; };
 		1F53E50A2BA20A8C004141C7 /* Button+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F53E5092BA20A8C004141C7 /* Button+Custom.swift */; };
 		1F53E5112BA27D5D004141C7 /* UploadPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F53E5102BA27D5D004141C7 /* UploadPostViewModel.swift */; };
@@ -123,6 +123,7 @@
 		27FC128B2B9A64E5008CBEB8 /* UpcomingTCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FC128A2B9A64E5008CBEB8 /* UpcomingTCViewController.swift */; };
 		27FD43CC2B9CD8EA00D83B27 /* NewUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FD43CB2B9CD8E900D83B27 /* NewUserViewController.swift */; };
 		460FE7672B8A200D00AF8086 /* LockedCapsuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */; };
+		469B80992C295BBC00DF4FD6 /* TimeBoxAnnotationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469B80982C295BBC00DF4FD6 /* TimeBoxAnnotationData.swift */; };
 		46C1AA772BB1F2DE007604D6 /* UIResponder+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C1AA762BB1F2DE007604D6 /* UIResponder+Extension.swift */; };
 		46EA9BAE2B89A27E00633EC4 /* CapsuleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */; };
 		4E2A09C82B8F755C00911390 /* OpenInteractionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */; };
@@ -169,7 +170,7 @@
 		1F24501E2B9B82D3002C68BB /* HalfModalPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HalfModalPresentationController.swift; sourceTree = "<group>"; };
 		1F2450232B9BF0A4002C68BB /* DatePickerModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerModalViewController.swift; sourceTree = "<group>"; };
 		1F367EA52B8F803A00563908 /* UIColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Hex.swift"; sourceTree = "<group>"; };
-		1F52DE1C2B972C9000EE2E1E /* CustomModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModal.swift; sourceTree = "<group>"; };
+		1F52DE1C2B972C9000EE2E1E /* TimeBoxListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBoxListViewController.swift; sourceTree = "<group>"; };
 		1F52F8B82B9CDADC00974F0B /* TagFriendListTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFriendListTableCell.swift; sourceTree = "<group>"; };
 		1F53E5092BA20A8C004141C7 /* Button+Custom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Button+Custom.swift"; sourceTree = "<group>"; };
 		1F53E5102BA27D5D004141C7 /* UploadPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPostViewModel.swift; sourceTree = "<group>"; };
@@ -231,6 +232,7 @@
 		29B7158E13240DE5CE715E16 /* Pods_dxTimeCapsule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dxTimeCapsule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedCapsuleCell.swift; sourceTree = "<group>"; };
 		467D1DE22B972499005249B1 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		469B80982C295BBC00DF4FD6 /* TimeBoxAnnotationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBoxAnnotationData.swift; sourceTree = "<group>"; };
 		46B655792B9891FE001EFF23 /* CapsuleAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapsuleAnnotation.swift; sourceTree = "<group>"; };
 		46C1AA762BB1F2DE007604D6 /* UIResponder+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIResponder+Extension.swift"; sourceTree = "<group>"; };
 		46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleMapViewController.swift; sourceTree = "<group>"; };
@@ -510,14 +512,12 @@
 		1FAB4DEE2B8C2B800054618A /* Capsule */ = {
 			isa = PBXGroup;
 			children = (
+				469B808F2C295A2000DF4FD6 /* CapsulesMap */,
 				461D3C2D2BA17CB0009C8B6E /* Mapkit+Annotation */,
 				4E4F6CDA2B99C2B500154ED1 /* OpenCapsuleViewController.swift */,
 				4EA223642BADCDEB005181C7 /* CustomPageControl.swift */,
 				4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */,
-				460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */,
 				4E2A09C92B8F86C600911390 /* FadeInAnimator.swift */,
-				1F52DE1C2B972C9000EE2E1E /* CustomModal.swift */,
-				46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */,
 			);
 			name = Capsule;
 			sourceTree = "<group>";
@@ -627,7 +627,6 @@
 			isa = PBXGroup;
 			children = (
 				1F53E5082BA20A74004141C7 /* SwiftUI */,
-				1F16B82B2BA9AC1700753F82 /* CapsuleMapVC+Extensions.swift */,
 				1FD2B7A22B96BEFE00896F9C /* UIStackView+Extensions.swift */,
 				1F8EA39D2B9538DD004856B7 /* UIFont+CustomFont.swift */,
 				1FF8691A2B8F4D81007B5112 /* UIButton+Gradient.swift */,
@@ -679,10 +678,46 @@
 			children = (
 				1FB3F4E82BAB04C10019416B /* MessageModalViewController.swift */,
 				1F0854312B8F254B00711660 /* MainCapsuleViewController.swift */,
-				1F16B8282BA9ABE200753F82 /* FriendCollectionViewCell.swift */,
-				1F16B8272BA9ABE200753F82 /* TimeBoxAnnotation.swift */,
 			);
 			path = "Mapkit+Annotation";
+			sourceTree = "<group>";
+		};
+		469B808F2C295A2000DF4FD6 /* CapsulesMap */ = {
+			isa = PBXGroup;
+			children = (
+				469B80932C295B3E00DF4FD6 /* Models */,
+				469B80972C295B5000DF4FD6 /* Cotrollers */,
+				469B80952C295B4C00DF4FD6 /* Views */,
+			);
+			name = CapsulesMap;
+			sourceTree = "<group>";
+		};
+		469B80932C295B3E00DF4FD6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				469B80982C295BBC00DF4FD6 /* TimeBoxAnnotationData.swift */,
+				1F16B8272BA9ABE200753F82 /* TimeBoxAnnotation.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		469B80952C295B4C00DF4FD6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */,
+				1F16B8282BA9ABE200753F82 /* FriendCollectionViewCell.swift */,
+				1F16B82B2BA9AC1700753F82 /* CapsuleMapVC+Extensions.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		469B80972C295B5000DF4FD6 /* Cotrollers */ = {
+			isa = PBXGroup;
+			children = (
+				46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */,
+				1F52DE1C2B972C9000EE2E1E /* TimeBoxListViewController.swift */,
+			);
+			name = Cotrollers;
 			sourceTree = "<group>";
 		};
 		527B6C3903D561045CAE89FD /* Frameworks */ = {
@@ -875,6 +910,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FB3F4E92BAB04C10019416B /* MessageModalViewController.swift in Sources */,
+				469B80992C295BBC00DF4FD6 /* TimeBoxAnnotationData.swift in Sources */,
 				FFC457642B8F0F36000761E9 /* UserProfileViewModel.swift in Sources */,
 				27EA9A942BAE5ED3009A1D21 /* OpenedTCViewModel.swift in Sources */,
 				1F52F8B92B9CDADC00974F0B /* TagFriendListTableCell.swift in Sources */,
@@ -932,7 +968,7 @@
 				1FF8691B2B8F4D81007B5112 /* UIButton+Gradient.swift in Sources */,
 				D20CDCCD2B959DFE00B93788 /* FriendsRequestViewController.swift in Sources */,
 				D20CDCCF2B96D86100B93788 /* FriendRequestTableViewCell.swift in Sources */,
-				1F52DE1D2B972C9000EE2E1E /* CustomModal.swift in Sources */,
+				1F52DE1D2B972C9000EE2E1E /* TimeBoxListViewController.swift in Sources */,
 				1F24501F2B9B82D3002C68BB /* HalfModalPresentationController.swift in Sources */,
 				1F5786F22B849CA900C40B08 /* AuthenticationViewModel.swift in Sources */,
 				1F16B8292BA9ABE200753F82 /* TimeBoxAnnotation.swift in Sources */,

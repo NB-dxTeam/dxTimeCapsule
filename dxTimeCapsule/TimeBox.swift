@@ -18,10 +18,5 @@ struct TimeBox {
     var isOpened: Bool? = false // 개봉여부
 }
 
-struct TimeBoxAnnotationData {
-    var timeBox: TimeBox
-    var friendsInfo: [User]
-}
-
 
 

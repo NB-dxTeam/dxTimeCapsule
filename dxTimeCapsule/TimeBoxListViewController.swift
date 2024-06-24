@@ -12,7 +12,7 @@ import FirebaseAuth
 
 
 
-class CustomModal: UIViewController {
+class TimeBoxListViewController: UIViewController {
     
     var timeBoxes = [TimeBox]()
     var capsuleMapViewController = CapsuleMapViewController()
@@ -27,19 +27,7 @@ class CustomModal: UIViewController {
         collection.layer.masksToBounds = true
         return collection
     }()
-    private lazy var stackView: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.alignment = .fill
-        stack.distribution = .fillEqually
-        stack.spacing = 10
-        return stack
-    }()
-    private lazy var aBotton: UIButton = {
-        let button = UIButton()
-        
-        return button
-    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         print("capsuleCollection 인스턴스: \(Unmanaged.passUnretained(capsuleCollection).toOpaque())")
@@ -53,8 +41,6 @@ class CustomModal: UIViewController {
     // addsubView, autolayout
     private func setupUI() {
         view.addSubview(capsuleCollection)
-
-
         capsuleCollection.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(UIScreen.main.bounds.height * 0.02)
             make.leading.trailing.equalToSuperview()
@@ -65,11 +51,8 @@ class CustomModal: UIViewController {
     private func configCollection() {
         capsuleCollection.delegate = self
         capsuleCollection.dataSource = self
-        // 셀 등록
         capsuleCollection.register(LockedCapsuleCell.self, forCellWithReuseIdentifier: LockedCapsuleCell.identifier)
         capsuleCollection.showsVerticalScrollIndicator = false // 수직 스크롤 인디케이터 표시 여부 설정.
-        capsuleCollection.decelerationRate = .normal // 콜렉션 뷰의 감속 속도 설정
-        capsuleCollection.alpha = 1 // 투명도
         if let layout = capsuleCollection.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.collectionView?.isPagingEnabled = true
             layout.scrollDirection = .vertical // 스크롤 방향(수직)
@@ -83,20 +66,19 @@ class CustomModal: UIViewController {
             let minimumLineSpacing = itemHeight * 0.1 // 최소 줄 간격을 화면 너비의 10%로 설정
             layout.minimumLineSpacing = minimumLineSpacing
             layout.sectionHeadersPinToVisibleBounds = true
-            
         }
     }
-
     
     private func dataCapsule(documents: [QueryDocumentSnapshot]) {
-        
-        let timeBoxes = documents.compactMap { doc -> TimeBox? in
+            let timeBoxes = documents.compactMap { doc -> TimeBox? in
             let data = doc.data()
+            
             guard let createTimeBoxDate = (data["createTimeBoxDate"] as? Timestamp)?.dateValue(),
                   let openTimeBoxDate = (data["openTimeBoxDate"] as? Timestamp)?.dateValue(),
                   let location = data["location"] as? GeoPoint? else {
                 return nil
             }
+            
             return TimeBox(
                 id: doc.documentID,
                 uid: data["uid"] as? String ?? "",
@@ -113,6 +95,7 @@ class CustomModal: UIViewController {
                 isOpened: data["isOpened"] as? Bool ?? false
             )
         }
+        
         self.timeBoxes = timeBoxes
         DispatchQueue.main.async {
             print("collectionView reload.")
@@ -168,7 +151,7 @@ class CustomModal: UIViewController {
     }
 }
 
-extension CustomModal: UICollectionViewDataSource, UICollectionViewDelegate {
+extension TimeBoxListViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     // MARK: - UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
