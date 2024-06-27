@@ -124,6 +124,8 @@
 		27FD43CC2B9CD8EA00D83B27 /* NewUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FD43CB2B9CD8E900D83B27 /* NewUserViewController.swift */; };
 		460FE7672B8A200D00AF8086 /* LockedCapsuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */; };
 		469B80992C295BBC00DF4FD6 /* TimeBoxAnnotationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469B80982C295BBC00DF4FD6 /* TimeBoxAnnotationData.swift */; };
+		469B809B2C29A45900DF4FD6 /* CapsuleMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469B809A2C29A45900DF4FD6 /* CapsuleMapView.swift */; };
+		469B809D2C2C0D0800DF4FD6 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469B809C2C2C0D0800DF4FD6 /* LocationService.swift */; };
 		46C1AA772BB1F2DE007604D6 /* UIResponder+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C1AA762BB1F2DE007604D6 /* UIResponder+Extension.swift */; };
 		46EA9BAE2B89A27E00633EC4 /* CapsuleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */; };
 		4E2A09C82B8F755C00911390 /* OpenInteractionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2A09C72B8F755C00911390 /* OpenInteractionViewController.swift */; };
@@ -233,6 +235,8 @@
 		460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedCapsuleCell.swift; sourceTree = "<group>"; };
 		467D1DE22B972499005249B1 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		469B80982C295BBC00DF4FD6 /* TimeBoxAnnotationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBoxAnnotationData.swift; sourceTree = "<group>"; };
+		469B809A2C29A45900DF4FD6 /* CapsuleMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleMapView.swift; sourceTree = "<group>"; };
+		469B809C2C2C0D0800DF4FD6 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		46B655792B9891FE001EFF23 /* CapsuleAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapsuleAnnotation.swift; sourceTree = "<group>"; };
 		46C1AA762BB1F2DE007604D6 /* UIResponder+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIResponder+Extension.swift"; sourceTree = "<group>"; };
 		46EA9BAD2B89A27E00633EC4 /* CapsuleMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleMapViewController.swift; sourceTree = "<group>"; };
@@ -374,6 +378,7 @@
 			children = (
 				1FEE07A22BA8141700B7BDB2 /* FirestoreDataService.swift */,
 				1F16B8252BA9A46500753F82 /* AuthService.swift */,
+				469B809C2C2C0D0800DF4FD6 /* LocationService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -707,6 +712,7 @@
 				460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */,
 				1F16B8282BA9ABE200753F82 /* FriendCollectionViewCell.swift */,
 				1F16B82B2BA9AC1700753F82 /* CapsuleMapVC+Extensions.swift */,
+				469B809A2C29A45900DF4FD6 /* CapsuleMapView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -934,6 +940,7 @@
 				4E2A09CA2B8F86C600911390 /* FadeInAnimator.swift in Sources */,
 				1F5786D92B849AF800C40B08 /* AppDelegate.swift in Sources */,
 				1F8EA39E2B9538DD004856B7 /* UIFont+CustomFont.swift in Sources */,
+				469B809D2C2C0D0800DF4FD6 /* LocationService.swift in Sources */,
 				1FB387352B87A0B300054816 /* SignUpViewController.swift in Sources */,
 				1F367EA62B8F803A00563908 /* UIColor+Hex.swift in Sources */,
 				4EC308DE2B8A200300EEE54C /* MainCapsuleViewModel.swift in Sources */,
@@ -952,6 +959,7 @@
 				1FAB4DF62B8C48AF0054618A /* FriendsViewModel.swift in Sources */,
 				27EA9A922BAB8750009A1D21 /* SignUpOptionViewController.swift in Sources */,
 				1FAACDE12B8FAA520005B993 /* UIImage+RoundImage.swift in Sources */,
+				469B809B2C29A45900DF4FD6 /* CapsuleMapView.swift in Sources */,
 				1F16B82A2BA9ABE200753F82 /* FriendCollectionViewCell.swift in Sources */,
 				1F53E5112BA27D5D004141C7 /* UploadPostViewModel.swift in Sources */,
 				1F5787132B86DBF900C40B08 /* LoginViewController.swift in Sources */,

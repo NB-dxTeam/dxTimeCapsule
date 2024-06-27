@@ -103,14 +103,14 @@ extension CapsuleMapViewController {
     }
     
     func addAnnotations(with annotationsData: [TimeBoxAnnotationData]) {
-        capsuleMaps.removeAnnotations(capsuleMaps.annotations) // Remove all current annotations
+        capsuleMapView.mapView.removeAnnotations(capsuleMapView.mapView.annotations) // Remove all current annotations
         
         for annotationData in annotationsData {
             guard let location = annotationData.timeBox.location else { continue }
             let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
             
             let annotation = TimeBoxAnnotation(coordinate: coordinate, timeBoxAnnotationData: annotationData)
-            capsuleMaps.addAnnotation(annotation)
+            capsuleMapView.mapView.addAnnotation(annotation)
         }
     }
 

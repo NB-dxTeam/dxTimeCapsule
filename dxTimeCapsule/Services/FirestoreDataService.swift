@@ -11,23 +11,6 @@ class FirestoreDataService {
     
     private let db = Firestore.firestore()
     
-    // 사용자의 UID를 기반으로 타임캡슐을 찾고, 태그된 친구의 UID를 가져오는 함수
-    func fetchTaggedFriendUIDs(forUserUID userUID: String, completion: @escaping ([String]?) -> Void) {
-        db.collection("timeCapsules").whereField("uid", isEqualTo: userUID).getDocuments { (snapshot, error) in
-            guard let documents = snapshot?.documents, error == nil else {
-                completion(nil)
-                return
-            }
-            
-            let taggedFriendUIDs = documents.flatMap { document in
-                // 태그된 친구의 UID 배열을 추출
-                return document.data()["tagFriendUid"] as? [String] ?? []
-            }
-            
-            completion(taggedFriendUIDs)
-        }
-    }
-    
     // 태그된 친구의 UID 배열을 기반으로 users 콜렉션에서 친구의 정보를 가져오는 함수
     func fetchFriendsInfo(byUIDs uids: [String], completion: @escaping ([User]?) -> Void) {
         // uids 배열이 비어 있는지 확인
@@ -54,6 +37,27 @@ class FirestoreDataService {
             }
             
             completion(friendsInfo)
+        }
+    }
+    
+    func fetchTimeBoxs(userId: String, filter: CapsuleFilterButtons, completion: @escaping ([QueryDocumentSnapshot]?) -> Void) {
+        var query: Query
+        switch filter {
+        case .all:
+            query = db.collection("timeCapsules").whereField("uid", isEqualTo: userId).order(by: "opentimeBoxDate", descending: false)
+        case .locked:
+            query = db.collection("timeCapsules").whereField("uid", isEqualTo: userId).whereField("isOpened", isEqualTo: false)
+        case .opened:
+            query = db.collection("timeCapsules").whereField("uid", isEqualTo: userId).whereField("isOpened", isEqualTo: true)
+        }
+        
+        query.getDocuments { querySnapshot, error in
+            guard let documents = querySnapshot?.documents else {
+                print("Error fetching documents: \(error!)")
+                completion(nil)
+                return
+            }
+            completion(documents)
         }
     }
 }
