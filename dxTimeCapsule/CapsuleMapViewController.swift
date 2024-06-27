@@ -33,7 +33,6 @@ class CapsuleMapViewController: UIViewController {
         return collectionView
     }()
     
-    
     override func loadView() {
         view = capsuleMapView
     }
@@ -229,31 +228,14 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
     // Firestore 쿼리 결과를 처리하는 함수
     private func dataCapsule(documents: [QueryDocumentSnapshot]) {
         let group = DispatchGroup()
-        
         var tempTimeBoxes = [TimeBox]()
         var tempAnnotationsData = [TimeBoxAnnotationData]()
         
         for doc in documents {
             let data = doc.data()
-            let geoPoint = data["location"] as? GeoPoint
-            let timeBox = TimeBox(
-                id: doc.documentID,
-                uid: data["uid"] as? String ?? "",
-                userName: data["userName"] as? String ?? "",
-                imageURL: data["imageURL"] as? [String],
-                location: geoPoint,
-                addressTitle: data["addressTitle"] as? String ?? "",
-                address: data["address"] as? String ?? "",
-                description: data["description"] as? String,
-                tagFriendUid: data["tagFriendUid"] as? [String],
-                createTimeBoxDate: Timestamp(date: (data["createTimeBoxDate"] as? Timestamp)?.dateValue() ?? Date()),
-                openTimeBoxDate: Timestamp(date: (data["openTimeBoxDate"] as? Timestamp)?.dateValue() ?? Date()),
-                isOpened: data["isOpened"] as? Bool ?? false
-            )
-            
+            let timeBox = TimeBoxFactory.createTimeBox(from: data, documentID: doc.documentID)
             tempTimeBoxes.append(timeBox)
                     
-            // Always enter the group regardless of whether there are friend tags or not.
             group.enter()
             
             if let tagFriendUids = timeBox.tagFriendUid, !tagFriendUids.isEmpty {
@@ -265,7 +247,7 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
                     tempAnnotationsData.append(annotationData)
                 }
             } else {
-                // If there are no friend tags, still add the annotation data with an empty friendsInfo.
+                
                 let annotationData = TimeBoxAnnotationData(timeBox: timeBox, friendsInfo: [])
                 tempAnnotationsData.append(annotationData)
                 group.leave()
@@ -274,7 +256,6 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
         
         group.notify(queue: .main) {
             self.timeBoxes = tempTimeBoxes
-            // Call the refactored addAnnotations method with tempAnnotationsData.
             self.addAnnotations(with: tempAnnotationsData)
         }
     }
@@ -372,7 +353,6 @@ extension CapsuleMapViewController: MKMapViewDelegate {
         capsuleMapView.mapView.layer.cornerRadius = 0
         
         // 애니메이션 효과가 추가 되어 부드럽게 화면 확대 및 이동
-        //capsuleMaps.setUserTrackingMode(.follow, animated: true)
         capsuleMapView.mapView.setUserTrackingMode(.followWithHeading, animated: true)
         
         let initalLocation = CLLocation(latitude: 35.9333, longitude: 127.9933)
@@ -381,51 +361,22 @@ extension CapsuleMapViewController: MKMapViewDelegate {
         capsuleMapView.mapView.setRegion(coordinateRegion, animated: true)
     }
     
-    // 지도를 스크롤 및 확대할 때, 호출 됨. 즉, 지도 영역이 변경될 때 호출
-    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        print("지도 위치 변경")
-    }
-    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard let timeBoxAnnotation = annotation as? TimeBoxAnnotation else { return nil }
-        
         let identifier = "CustomAnnotationView"
-        
-        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView
-        
-        if annotationView == nil {
-            print("새 MKMarkerAnnotationView 생성")
-            annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-            annotationView?.canShowCallout = true
-            annotationView?.animatesWhenAdded = true
-            annotationView?.glyphImage = UIImage(named: "boximage1")
-            annotationView?.glyphTintColor = .white
-            annotationView?.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .systemGray4 : .systemRed
-            
-            // 클러스터링을 위한 clusteringIdentifier 설정
-            annotationView?.clusteringIdentifier = "timeBoxCluster"
-        } else {
-            print("MKMarkerAnnotationView 재사용")
-            annotationView?.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .systemGray4 : .systemRed
-        }
-        
-        // 클러스터링을 위한 clusteringIdentifier 설정
-        annotationView?.clusteringIdentifier = "timeBoxCluster"
-        
-        annotationView?.annotation = annotation
-        annotationView?.canShowCallout = true
-        annotationView?.animatesWhenAdded = true
-        annotationView?.glyphImage = UIImage(named: "boximage1")
-        annotationView?.glyphTintColor = .white
-        annotationView?.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .systemGray4 : .systemRed
-        
-        if let timeBoxAnnotation = annotation as? TimeBoxAnnotation {
-            annotationView?.detailCalloutAccessoryView = configureDetailView(for: timeBoxAnnotation)
-        } else {
-        }
-        
+           
+           var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView
+           
+           if annotationView == nil {
+               print("새 MKMarkerAnnotationView 생성")
+               annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+               configureAnnotationView(annotationView, with: timeBoxAnnotation)
+           } else {
+               print("MKMarkerAnnotationView 재사용")
+               configureAnnotationView(annotationView, with: timeBoxAnnotation)
+           }
+           
         return annotationView
-        
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
@@ -438,6 +389,18 @@ extension CapsuleMapViewController: MKMapViewDelegate {
             }
         }
         
+    }
+    
+    func configureAnnotationView(_ annotationView: MKMarkerAnnotationView?, with timeBoxAnnotation: TimeBoxAnnotation) {
+        guard let annotationView = annotationView else { return }
+        
+        annotationView.canShowCallout = true
+        annotationView.animatesWhenAdded = true
+        annotationView.glyphImage = UIImage(named: "boximage1")
+        annotationView.glyphTintColor = .white
+        annotationView.markerTintColor = timeBoxAnnotation.timeBoxAnnotationData?.timeBox.isOpened ?? false ? .systemGray4 : .systemRed
+        annotationView.clusteringIdentifier = "timeBoxCluster"
+        annotationView.detailCalloutAccessoryView = configureDetailView(for: timeBoxAnnotation)
     }
 }
 
@@ -461,16 +424,6 @@ extension CapsuleMapViewController: UICollectionViewDataSource, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    }
-}
-
-// MARK: - UISheetPresentationControllerDelegate
-extension CapsuleMapViewController: UISheetPresentationControllerDelegate {
-    func sheetPresentationControllerDidChangeSelectedDetentIdentifier(_ sheetPresentationController: UISheetPresentationController) {
-        guard let detentIdentifier = sheetPresentationController.selectedDetentIdentifier else {
-            return
-        }
-       
     }
 }
 

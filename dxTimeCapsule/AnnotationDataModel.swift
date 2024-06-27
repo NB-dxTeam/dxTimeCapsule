@@ -1,14 +1,17 @@
 //
-//  TimeBoxAnnotation.swift
+//  Annotation.swift
 //  dxTimeCapsule
 //
-//  Created by YeongHo Ha on 3/19/24.
+//  Created by YeongHo Ha on 6/24/24.
 //
 
-import UIKit
+import Foundation
 import MapKit
-import SnapKit
 
+struct TimeBoxAnnotationData {
+    var timeBox: TimeBox
+    var friendsInfo: [User]
+}
 
 class TimeBoxAnnotation: NSObject, MKAnnotation {
     dynamic var coordinate: CLLocationCoordinate2D

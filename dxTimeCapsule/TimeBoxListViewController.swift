@@ -78,22 +78,8 @@ class TimeBoxListViewController: UIViewController {
                   let location = data["location"] as? GeoPoint? else {
                 return nil
             }
-            
-            return TimeBox(
-                id: doc.documentID,
-                uid: data["uid"] as? String ?? "",
-                userName: data["userName"] as? String ?? "",
-                thumbnailURL: data["thumbnailURL"] as? String,
-                imageURL: data["imageURL"] as? [String],
-                location: location,
-                addressTitle: data["addressTitle"] as? String ?? "",
-                address: data["address"] as? String ?? "",
-                description: data["description"] as? String,
-                tagFriendUid: data["tagFriendUid"] as? [String],
-                createTimeBoxDate: Timestamp(date: (createTimeBoxDate)),
-                openTimeBoxDate: Timestamp(date: (openTimeBoxDate)),
-                isOpened: data["isOpened"] as? Bool ?? false
-            )
+                
+                return TimeBoxFactory.createTimeBox(from: data, documentID: doc.documentID)
         }
         
         self.timeBoxes = timeBoxes

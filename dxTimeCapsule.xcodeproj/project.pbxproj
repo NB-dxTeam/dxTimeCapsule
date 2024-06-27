@@ -24,7 +24,6 @@
 		1F1071B92B95CC67009E201A /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1F1071B82B95CC67009E201A /* Pretendard-Bold.otf */; };
 		1F16B8242BA9A33A00753F82 /* TermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B8232BA9A33A00753F82 /* TermsViewController.swift */; };
 		1F16B8262BA9A46500753F82 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B8252BA9A46500753F82 /* AuthService.swift */; };
-		1F16B8292BA9ABE200753F82 /* TimeBoxAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B8272BA9ABE200753F82 /* TimeBoxAnnotation.swift */; };
 		1F16B82A2BA9ABE200753F82 /* FriendCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B8282BA9ABE200753F82 /* FriendCollectionViewCell.swift */; };
 		1F16B82C2BA9AC1700753F82 /* CapsuleMapVC+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B82B2BA9AC1700753F82 /* CapsuleMapVC+Extensions.swift */; };
 		1F2450182B9B4D74002C68BB /* PostWritingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2450172B9B4D74002C68BB /* PostWritingViewController.swift */; };
@@ -123,7 +122,8 @@
 		27FC128B2B9A64E5008CBEB8 /* UpcomingTCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FC128A2B9A64E5008CBEB8 /* UpcomingTCViewController.swift */; };
 		27FD43CC2B9CD8EA00D83B27 /* NewUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FD43CB2B9CD8E900D83B27 /* NewUserViewController.swift */; };
 		460FE7672B8A200D00AF8086 /* LockedCapsuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */; };
-		469B80992C295BBC00DF4FD6 /* TimeBoxAnnotationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469B80982C295BBC00DF4FD6 /* TimeBoxAnnotationData.swift */; };
+		4620C8422C2DACD000BA1CD4 /* TimeBoxFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4620C8412C2DACD000BA1CD4 /* TimeBoxFactory.swift */; };
+		469B80992C295BBC00DF4FD6 /* AnnotationDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469B80982C295BBC00DF4FD6 /* AnnotationDataModel.swift */; };
 		469B809B2C29A45900DF4FD6 /* CapsuleMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469B809A2C29A45900DF4FD6 /* CapsuleMapView.swift */; };
 		469B809D2C2C0D0800DF4FD6 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469B809C2C2C0D0800DF4FD6 /* LocationService.swift */; };
 		46C1AA772BB1F2DE007604D6 /* UIResponder+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C1AA762BB1F2DE007604D6 /* UIResponder+Extension.swift */; };
@@ -164,7 +164,6 @@
 		1F1071B82B95CC67009E201A /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
 		1F16B8232BA9A33A00753F82 /* TermsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsViewController.swift; sourceTree = "<group>"; };
 		1F16B8252BA9A46500753F82 /* AuthService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
-		1F16B8272BA9ABE200753F82 /* TimeBoxAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeBoxAnnotation.swift; sourceTree = "<group>"; };
 		1F16B8282BA9ABE200753F82 /* FriendCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendCollectionViewCell.swift; sourceTree = "<group>"; };
 		1F16B82B2BA9AC1700753F82 /* CapsuleMapVC+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CapsuleMapVC+Extensions.swift"; sourceTree = "<group>"; };
 		1F2450172B9B4D74002C68BB /* PostWritingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostWritingViewController.swift; sourceTree = "<group>"; };
@@ -233,8 +232,9 @@
 		27FD43CB2B9CD8E900D83B27 /* NewUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewUserViewController.swift; sourceTree = "<group>"; };
 		29B7158E13240DE5CE715E16 /* Pods_dxTimeCapsule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dxTimeCapsule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedCapsuleCell.swift; sourceTree = "<group>"; };
+		4620C8412C2DACD000BA1CD4 /* TimeBoxFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBoxFactory.swift; sourceTree = "<group>"; };
 		467D1DE22B972499005249B1 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		469B80982C295BBC00DF4FD6 /* TimeBoxAnnotationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBoxAnnotationData.swift; sourceTree = "<group>"; };
+		469B80982C295BBC00DF4FD6 /* AnnotationDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationDataModel.swift; sourceTree = "<group>"; };
 		469B809A2C29A45900DF4FD6 /* CapsuleMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleMapView.swift; sourceTree = "<group>"; };
 		469B809C2C2C0D0800DF4FD6 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		46B655792B9891FE001EFF23 /* CapsuleAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapsuleAnnotation.swift; sourceTree = "<group>"; };
@@ -700,8 +700,8 @@
 		469B80932C295B3E00DF4FD6 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				469B80982C295BBC00DF4FD6 /* TimeBoxAnnotationData.swift */,
-				1F16B8272BA9ABE200753F82 /* TimeBoxAnnotation.swift */,
+				469B80982C295BBC00DF4FD6 /* AnnotationDataModel.swift */,
+				4620C8412C2DACD000BA1CD4 /* TimeBoxFactory.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -916,7 +916,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FB3F4E92BAB04C10019416B /* MessageModalViewController.swift in Sources */,
-				469B80992C295BBC00DF4FD6 /* TimeBoxAnnotationData.swift in Sources */,
+				469B80992C295BBC00DF4FD6 /* AnnotationDataModel.swift in Sources */,
 				FFC457642B8F0F36000761E9 /* UserProfileViewModel.swift in Sources */,
 				27EA9A942BAE5ED3009A1D21 /* OpenedTCViewModel.swift in Sources */,
 				1F52F8B92B9CDADC00974F0B /* TagFriendListTableCell.swift in Sources */,
@@ -969,6 +969,7 @@
 				D22B171F2B973416006CAEA6 /* SceneDelegate.swift in Sources */,
 				1F019A602BADB89B00F727D2 /* BottomSheetControllerViewModel.swift in Sources */,
 				1F0B91082B9026020022EDD9 /* UIImageView+RoundImage.swift in Sources */,
+				4620C8422C2DACD000BA1CD4 /* TimeBoxFactory.swift in Sources */,
 				1FE313B12B98114700E02045 /* LocationHistoryViewModel.swift in Sources */,
 				46C1AA772BB1F2DE007604D6 /* UIResponder+Extension.swift in Sources */,
 				27966F092BA06A41009EC5F3 /* HomeViewControllerModel.swift in Sources */,
@@ -979,7 +980,6 @@
 				1F52DE1D2B972C9000EE2E1E /* TimeBoxListViewController.swift in Sources */,
 				1F24501F2B9B82D3002C68BB /* HalfModalPresentationController.swift in Sources */,
 				1F5786F22B849CA900C40B08 /* AuthenticationViewModel.swift in Sources */,
-				1F16B8292BA9ABE200753F82 /* TimeBoxAnnotation.swift in Sources */,
 				1F2450242B9BF0A4002C68BB /* DatePickerModalViewController.swift in Sources */,
 				1F019A4F2BACCA2400F727D2 /* FriendsSelectionViewController.swift in Sources */,
 				1F9DA7B12B8C93BD00A74D84 /* SearchUserTableViewCell.swift in Sources */,

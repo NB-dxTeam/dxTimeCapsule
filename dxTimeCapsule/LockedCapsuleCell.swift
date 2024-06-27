@@ -14,6 +14,7 @@ class LockedCapsuleCell: UICollectionViewCell {
     
     // MARK: - Properties
     static let identifier = "LockedCapsuleCell"
+    
     lazy var registerImage: UIImageView = {
         let image = UIImageView()
         image.contentMode = .scaleAspectFill
@@ -26,8 +27,8 @@ class LockedCapsuleCell: UICollectionViewCell {
     lazy var dDayBackgroundView: UIView = {
         let view = UIView()
         view.backgroundColor = .systemBlue
-        view.layer.cornerRadius = 11 // 모서리 둥글기 반지름 설정
-        view.clipsToBounds = true // 모서리 둥글기 적용을 위해 필요
+        view.layer.cornerRadius = 11
+        view.clipsToBounds = true
         return view
     }()
     
@@ -41,7 +42,7 @@ class LockedCapsuleCell: UICollectionViewCell {
         label.textAlignment = .center
         return label
     }()
-    lazy var addressTitle: UILabel = { // userLocation
+    lazy var addressTitle: UILabel = {
         let label = UILabel()
         label.textColor = .black
         label.font = UIFont.boldSystemFont(ofSize: 60)
@@ -49,7 +50,7 @@ class LockedCapsuleCell: UICollectionViewCell {
         label.minimumScaleFactor = 0.2
         return label
     }()
-    lazy var creationDate: UILabel = { // creationDate
+    lazy var creationDate: UILabel = {
         let label = UILabel()
         label.textColor = .gray
         label.font = UIFont.systemFont(ofSize: 44)
@@ -61,7 +62,6 @@ class LockedCapsuleCell: UICollectionViewCell {
     
     // MARK: - Initialization
     
-    // 초기화 메서드
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
@@ -108,7 +108,6 @@ class LockedCapsuleCell: UICollectionViewCell {
             }
         }
 
-        // 사용자 위치를 설정
         // 사용자 위치 설정
         self.addressTitle.text = timeBox.addressTitle ?? "Unknown location"
         
@@ -148,15 +147,6 @@ class LockedCapsuleCell: UICollectionViewCell {
             make.center.equalToSuperview()
             make.edges.equalToSuperview().inset(UIEdgeInsets(top: 2, left: 8, bottom: 2, right: 8)) // 여백 조정
         }
-//        dDay.snp.makeConstraints { make in
-//            let offset1 = UIScreen.main.bounds.height * (0.3/16.0)
-//            let offset2 = UIScreen.main.bounds.height * (0.35/16.0)
-//            make.top.equalTo(registerImage.snp.bottom).offset(offset1)
-//            make.bottom.equalTo(addressTitle.snp.bottom)
-//            make.leading.equalToSuperview().inset(30)
-//            make.width.equalTo(registerImage.snp.width).multipliedBy(0.17/1.0)
-//            make.height.equalTo(offset2)
-//        }
         
         addressTitle.snp.makeConstraints { make in
             let offset1 = UIScreen.main.bounds.height * (0.3/16.0)
