@@ -55,7 +55,13 @@ class CapsuleMapViewController: UIViewController {
             showModalVC()
         }
     }
-
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: .capsuleButtonTapped, object: nil)
+        print("Notification remove")
+    }
+    
     private func configureNavigationBar() {
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
@@ -120,21 +126,32 @@ class CapsuleMapViewController: UIViewController {
     }
     
     private func configureButtons() {
+        setupButtonActions()
+        setupFilterButtonActions()
+    }
+    
+    private func setupButtonActions() {
         capsuleMapView.tapDidModalButton.addTarget(self, action: #selector(modalButton), for: .touchUpInside)
         capsuleMapView.zoomOutButton.addTarget(self, action: #selector(zoomOut), for: .touchUpInside)
         capsuleMapView.zoomInButton.addTarget(self, action: #selector(zoomIn), for: .touchUpInside)
-        
-        // 필터 버튼 액션 추가
-        capsuleMapView.allButton.addAction(UIAction { [weak self] _ in
-            self?.buttonTapped(name: "all")
-        }, for: .touchUpInside)
-        capsuleMapView.lockedButton.addAction(UIAction { [weak self] _ in
-            self?.buttonTapped(name: "locked")
-        }, for: .touchUpInside)
-        capsuleMapView.openedButton.addAction(UIAction { [weak self] _ in
-            self?.buttonTapped(name: "opened")
-        }, for: .touchUpInside)
     }
+    
+    private func setupFilterButtonActions() {
+        let buttonActions: [(UIButton, String)] = [
+            (capsuleMapView.allButton, "all"),
+            (capsuleMapView.lockedButton, "locked"),
+            (capsuleMapView.openedButton, "opened")
+        ]
+        
+        for (button, name) in buttonActions {
+            button.addAction(UIAction { [weak self] _ in
+                guard let self = self else { return }
+                self.buttonTapped(name: name)
+            }, for: .touchUpInside)
+        }
+    }
+    
+    
     
     // 버튼이 눌렸을 때 호출되는 메서드
     private func buttonTapped(name: String) {
@@ -222,8 +239,7 @@ extension CapsuleMapViewController {
     }
 }
 
-// MARK: - CLLocationManagerDelegate
-extension CapsuleMapViewController: CLLocationManagerDelegate {
+extension CapsuleMapViewController {
     
     // Firestore 쿼리 결과를 처리하는 함수
     private func dataCapsule(documents: [QueryDocumentSnapshot]) {
@@ -263,7 +279,6 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
     private func loadCapsuleInfos(button: CapsuleFilterButtons) {
         let db = Firestore.firestore()
         guard let userId = Auth.auth().currentUser?.uid else { return }
-        
         var query: Query
         switch button {
         case .all:
@@ -288,7 +303,6 @@ extension CapsuleMapViewController: CLLocationManagerDelegate {
             self?.dataCapsule(documents: documents)
         }
     }
-    
 }
 extension CapsuleMapViewController {
     func showModalVC() {

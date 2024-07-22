@@ -35,7 +35,12 @@ class TimeBoxListViewController: UIViewController {
         setupUI()
         configCollection()
         loadDataForStatus(.all)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleCapsuleButtonTapped(notification:)), name: .capsuleButtonTapped, object: nil)
+        NotificationCenter.default.addObserver(forName: .capsuleButtonTapped, object: nil, queue: .main) {[weak self] notification in
+            guard let self = self else { return }
+            self.handleCapsuleButtonTapped(notification: notification)
+        }
+        
+        //(self, selector: #selector(handleCapsuleButtonTapped(notification:)), name: .capsuleButtonTapped, object: nil)
     }
     
     // addsubView, autolayout
@@ -69,17 +74,16 @@ class TimeBoxListViewController: UIViewController {
         }
     }
     
+    @objc func handleCapsuleButtonTapped(notification: Notification) {
+        guard let status = notification.userInfo?["status"] as? CapsuleFilterButtons else { return }
+        loadDataForStatus(status)
+    }
+    
+    
     private func dataCapsule(documents: [QueryDocumentSnapshot]) {
             let timeBoxes = documents.compactMap { doc -> TimeBox? in
             let data = doc.data()
-            
-            guard let createTimeBoxDate = (data["createTimeBoxDate"] as? Timestamp)?.dateValue(),
-                  let openTimeBoxDate = (data["openTimeBoxDate"] as? Timestamp)?.dateValue(),
-                  let location = data["location"] as? GeoPoint? else {
-                return nil
-            }
-                
-                return TimeBoxFactory.createTimeBox(from: data, documentID: doc.documentID)
+            return TimeBoxFactory.createTimeBox(from: data, documentID: doc.documentID)
         }
         
         self.timeBoxes = timeBoxes
@@ -127,15 +131,7 @@ class TimeBoxListViewController: UIViewController {
         }
     }
     
-    @objc func handleCapsuleButtonTapped(notification: Notification) {
-        guard let status = notification.userInfo?["status"] as? CapsuleFilterButtons else { return }
-        loadDataForStatus(status)
     }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-}
 
 extension TimeBoxListViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     // MARK: - UICollectionViewDataSource
