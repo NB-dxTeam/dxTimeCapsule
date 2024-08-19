@@ -83,7 +83,7 @@ class TimeBoxListViewController: UIViewController {
     private func dataCapsule(documents: [QueryDocumentSnapshot]) {
             let timeBoxes = documents.compactMap { doc -> TimeBox? in
             let data = doc.data()
-            return TimeBoxFactory.createTimeBox(from: data, documentID: doc.documentID)
+            return TimeBoxCreated.createTimeBox(from: data, documentID: doc.documentID)
         }
         
         self.timeBoxes = timeBoxes

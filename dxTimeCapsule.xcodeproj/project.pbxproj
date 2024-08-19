@@ -122,7 +122,8 @@
 		27FC128B2B9A64E5008CBEB8 /* UpcomingTCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FC128A2B9A64E5008CBEB8 /* UpcomingTCViewController.swift */; };
 		27FD43CC2B9CD8EA00D83B27 /* NewUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FD43CB2B9CD8E900D83B27 /* NewUserViewController.swift */; };
 		460FE7672B8A200D00AF8086 /* LockedCapsuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */; };
-		4620C8422C2DACD000BA1CD4 /* TimeBoxFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4620C8412C2DACD000BA1CD4 /* TimeBoxFactory.swift */; };
+		4620C8422C2DACD000BA1CD4 /* TimeBoxCreated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4620C8412C2DACD000BA1CD4 /* TimeBoxCreated.swift */; };
+		468CA5802C73310900A6666C /* FilterAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468CA57F2C73310900A6666C /* FilterAction.swift */; };
 		469B80992C295BBC00DF4FD6 /* AnnotationDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469B80982C295BBC00DF4FD6 /* AnnotationDataModel.swift */; };
 		469B809B2C29A45900DF4FD6 /* CapsuleMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469B809A2C29A45900DF4FD6 /* CapsuleMapView.swift */; };
 		469B809D2C2C0D0800DF4FD6 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469B809C2C2C0D0800DF4FD6 /* LocationService.swift */; };
@@ -232,8 +233,9 @@
 		27FD43CB2B9CD8E900D83B27 /* NewUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewUserViewController.swift; sourceTree = "<group>"; };
 		29B7158E13240DE5CE715E16 /* Pods_dxTimeCapsule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dxTimeCapsule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		460FE7662B8A200D00AF8086 /* LockedCapsuleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedCapsuleCell.swift; sourceTree = "<group>"; };
-		4620C8412C2DACD000BA1CD4 /* TimeBoxFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBoxFactory.swift; sourceTree = "<group>"; };
+		4620C8412C2DACD000BA1CD4 /* TimeBoxCreated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBoxCreated.swift; sourceTree = "<group>"; };
 		467D1DE22B972499005249B1 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		468CA57F2C73310900A6666C /* FilterAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterAction.swift; sourceTree = "<group>"; };
 		469B80982C295BBC00DF4FD6 /* AnnotationDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationDataModel.swift; sourceTree = "<group>"; };
 		469B809A2C29A45900DF4FD6 /* CapsuleMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleMapView.swift; sourceTree = "<group>"; };
 		469B809C2C2C0D0800DF4FD6 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
@@ -687,9 +689,18 @@
 			path = "Mapkit+Annotation";
 			sourceTree = "<group>";
 		};
+		468CA57E2C7330B400A6666C /* Filters */ = {
+			isa = PBXGroup;
+			children = (
+				468CA57F2C73310900A6666C /* FilterAction.swift */,
+			);
+			name = Filters;
+			sourceTree = "<group>";
+		};
 		469B808F2C295A2000DF4FD6 /* CapsulesMap */ = {
 			isa = PBXGroup;
 			children = (
+				468CA57E2C7330B400A6666C /* Filters */,
 				469B80932C295B3E00DF4FD6 /* Models */,
 				469B80972C295B5000DF4FD6 /* Cotrollers */,
 				469B80952C295B4C00DF4FD6 /* Views */,
@@ -701,7 +712,7 @@
 			isa = PBXGroup;
 			children = (
 				469B80982C295BBC00DF4FD6 /* AnnotationDataModel.swift */,
-				4620C8412C2DACD000BA1CD4 /* TimeBoxFactory.swift */,
+				4620C8412C2DACD000BA1CD4 /* TimeBoxCreated.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -969,7 +980,7 @@
 				D22B171F2B973416006CAEA6 /* SceneDelegate.swift in Sources */,
 				1F019A602BADB89B00F727D2 /* BottomSheetControllerViewModel.swift in Sources */,
 				1F0B91082B9026020022EDD9 /* UIImageView+RoundImage.swift in Sources */,
-				4620C8422C2DACD000BA1CD4 /* TimeBoxFactory.swift in Sources */,
+				4620C8422C2DACD000BA1CD4 /* TimeBoxCreated.swift in Sources */,
 				1FE313B12B98114700E02045 /* LocationHistoryViewModel.swift in Sources */,
 				46C1AA772BB1F2DE007604D6 /* UIResponder+Extension.swift in Sources */,
 				27966F092BA06A41009EC5F3 /* HomeViewControllerModel.swift in Sources */,
@@ -996,6 +1007,7 @@
 				1F9DA7AF2B8C922800A74D84 /* SearchUserViewController.swift in Sources */,
 				1FE313AF2B9810CA00E02045 /* LocationHistoryModel.swift in Sources */,
 				1F0B91062B901D170022EDD9 /* Etc.swift in Sources */,
+				468CA5802C73310900A6666C /* FilterAction.swift in Sources */,
 				D25B20EB2B89CD02006CEED8 /* SplashViewController.swift in Sources */,
 				1F0D3B2C2B89AA2B00A31E82 /* PhotoUploadViewController.swift in Sources */,
 				1FD2B7BC2B96C04B00896F9C /* CustomPresentationDetentsModel.swift in Sources */,

@@ -9,7 +9,7 @@ import Foundation
 import FirebaseFirestore
 
 
-class TimeBoxFactory {
+class TimeBoxCreated {
     static func createTimeBox(from data: [String: Any], documentID: String) -> TimeBox {
         let geoPoint = data["location"] as? GeoPoint
         return TimeBox(

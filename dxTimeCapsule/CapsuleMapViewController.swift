@@ -15,10 +15,10 @@ class CapsuleMapViewController: UIViewController {
     var selectedTimeBoxAnnotationData: TimeBoxAnnotationData?
     var timeBoxes: [TimeBox] = []
     var currentDetent: String? = nil
+    var selectedButton: UIButton?
     // 원래 지도의 중심 위치를 저장할 변수
     private var originalCenterCoordinate: CLLocationCoordinate2D?
     private var shouldShowModal = false
-    private var selectedButton: UIButton?
     
     lazy var friendsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -33,10 +33,13 @@ class CapsuleMapViewController: UIViewController {
         return collectionView
     }()
     
+    
+    // 컨트롤러의 view 계층 구조 생성
     override func loadView() {
         view = capsuleMapView
     }
     
+    // view 계층 구조가 메모리에 로드되었으며, 초기화 작업을 수행
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -46,9 +49,14 @@ class CapsuleMapViewController: UIViewController {
         setupMapView()
         updateButtonSelection(capsuleMapView.allButton)
         selectedButton = capsuleMapView.allButton
-        loadCapsuleInfos(button: .all)
     }
     
+    // view가 화면에 나타나기 직전에 호출. ex) 애니메이션 시작, view를 업데이트
+    override func viewWillAppear(_ animated: Bool) {
+        
+    }
+    
+    // view가 화면에 나타나면 호출. ex) 애니메이션 종료, view 상태를 업데이트
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if shouldShowModal {
@@ -56,10 +64,22 @@ class CapsuleMapViewController: UIViewController {
         }
     }
     
+    // view가 화면에서 사라지기 직전에 호출. ex) 데이터 저장, 애니메이션 시작
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        NotificationCenter.default.removeObserver(self, name: .capsuleButtonTapped, object: nil)
-        print("Notification remove")
+        
+    }
+    
+    // view가 화면에서 사라지면 호출. ex) 애니메이션 종료, view의 상태를 업데이트
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+    }
+    
+    // 객체 메모리 해제
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+        print("NotificationCenter removeObserver")
     }
     
     private func configureNavigationBar() {
@@ -155,38 +175,27 @@ class CapsuleMapViewController: UIViewController {
     
     // 버튼이 눌렸을 때 호출되는 메서드
     private func buttonTapped(name: String) {
-        let buttonToSelect: UIButton
         capsuleMapView.mapView.removeAnnotations(capsuleMapView.mapView.annotations)
         
-        let status: CapsuleFilterButtons
+        let action: BoxFilterAction
         switch name {
         case "all":
             // 'All' 버튼 로직
-            loadCapsuleInfos(button: .all)
-            buttonToSelect = capsuleMapView.allButton
-            status = .all
-            showModalVC()
+            action = AllFilterAction(viewController: self)
         case "locked":
             // 'Locked' 버튼 로직
-            loadCapsuleInfos(button: .locked)
-            buttonToSelect = capsuleMapView.lockedButton
-            status = .locked
-            showModalVC()
-
+            action = LockedFilterAction(viewController: self)
         case "opened":
             // 'Opened' 버튼 로직
-            loadCapsuleInfos(button: .opened)
-            buttonToSelect = capsuleMapView.openedButton
-            status = .opened
-            showModalVC()
+            action = OpenedFilterAction(viewController: self)
         default:
             return
         }
-        NotificationCenter.default.post(name: .capsuleButtonTapped, object: nil, userInfo: ["status": status])
-        updateButtonSelection(buttonToSelect)
-        selectedButton = buttonToSelect
+        action.performAction()
+        NotificationCenter.default.post(name: .capsuleButtonTapped, object: nil, userInfo: ["status": name])
     }
-    private func updateButtonSelection(_ selectedButton: UIButton) {
+    
+    func updateButtonSelection(_ selectedButton: UIButton) {
         // 모든 버튼을 기본 상태로 리셋
         [capsuleMapView.allButton, capsuleMapView.lockedButton, capsuleMapView.openedButton].forEach {
             $0.backgroundColor = .white.withAlphaComponent(0.75)
@@ -196,6 +205,8 @@ class CapsuleMapViewController: UIViewController {
         // 선택된 필터 버튼의 스타일을 변경
         selectedButton.backgroundColor = UIColor(hex: "#d65451") // 필터 선택 시 배경 색상
         selectedButton.setTitleColor(.white, for: .normal)
+        
+        self.selectedButton = selectedButton
     }
     
 }
@@ -249,7 +260,7 @@ extension CapsuleMapViewController {
         
         for doc in documents {
             let data = doc.data()
-            let timeBox = TimeBoxFactory.createTimeBox(from: data, documentID: doc.documentID)
+            let timeBox = TimeBoxCreated.createTimeBox(from: data, documentID: doc.documentID)
             tempTimeBoxes.append(timeBox)
                     
             group.enter()
@@ -276,7 +287,7 @@ extension CapsuleMapViewController {
         }
     }
     // 데이터 정보 불러오기
-    private func loadCapsuleInfos(button: CapsuleFilterButtons) {
+    func loadCapsuleInfos(button: CapsuleFilterButtons) {
         let db = Firestore.firestore()
         guard let userId = Auth.auth().currentUser?.uid else { return }
         var query: Query
